@@ -104,7 +104,7 @@ img {
 .entry-shell {
   display: grid;
   min-height: 100dvh;
-  padding: clamp(20px, 5vw, 64px);
+  padding: clamp(16px, 3vw, 36px);
   background:
     radial-gradient(circle at 12% 18%, rgba(231, 170, 66, 0.2), transparent 28rem),
     radial-gradient(circle at 88% 78%, rgba(47, 125, 104, 0.18), transparent 32rem),
@@ -113,8 +113,8 @@ img {
 }
 
 .entry-card {
-  width: min(860px, 100%);
-  padding: clamp(28px, 6vw, 70px);
+  width: min(980px, 100%);
+  padding: clamp(24px, 4vw, 44px);
   border: 1px solid rgba(24, 51, 49, 0.13);
   border-radius: 34px 34px 12px 34px;
   background: rgba(255, 253, 248, 0.92);
@@ -132,29 +132,29 @@ img {
 }
 
 .brand-mark.large {
-  width: 66px;
-  height: 66px;
-  font-size: 16px;
+  width: 54px;
+  height: 54px;
+  font-size: 13px;
 }
 
 .entry-copy {
-  margin-top: clamp(36px, 7vw, 70px);
+  margin-top: clamp(22px, 4vw, 38px);
 }
 
 .entry-copy h1 {
   margin: 0;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: clamp(36px, 7vw, 72px);
-  line-height: 1.12;
+  font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.16;
   letter-spacing: -0.065em;
 }
 
 .entry-copy p {
   max-width: 620px;
-  margin: 20px 0 0;
+  margin: 12px 0 0;
   color: var(--ink-soft);
-  font-size: clamp(15px, 2vw, 18px);
-  line-height: 1.7;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.6;
 }
 
 .entry-assurance {
@@ -193,20 +193,20 @@ img {
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 26px;
+  margin-top: 18px;
 }
 
 .entry-source-grid {
   display: grid;
-  margin-top: 34px;
+  margin-top: 24px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
 .entry-source-button {
   display: grid;
-  min-height: 154px;
-  padding: 20px;
+  min-height: 124px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--white);
@@ -240,7 +240,7 @@ img {
 }
 
 .entry-source-button strong {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .entry-source-button small {
@@ -251,8 +251,8 @@ img {
 .google-start-button,
 .entry-preview-button,
 .entry-recovery-button {
-  min-height: 54px;
-  padding: 0 20px;
+  min-height: 46px;
+  padding: 0 16px;
   border-radius: 14px;
   font-weight: 900;
 }
@@ -1232,7 +1232,7 @@ img {
 .asset-picker-dialog h2 {
   margin: 5px 0 0;
   font-family: inherit;
-  font-size: clamp(22px, 3vw, 34px);
+  font-size: clamp(20px, 2.4vw, 27px);
 }
 
 .asset-picker-close {
@@ -1775,7 +1775,7 @@ img {
 .blank-confirm-dialog h2 {
   margin: 16px 0 8px;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: clamp(26px, 5vw, 38px);
+  font-size: clamp(22px, 4vw, 30px);
 }
 
 .blank-confirm-dialog p {
@@ -2262,16 +2262,16 @@ img {
   }
 
   .entry-card {
-    padding: 24px 18px;
+    padding: 20px 16px;
     border-radius: 24px 24px 8px 24px;
   }
 
   .entry-copy {
-    margin-top: 34px;
+    margin-top: 22px;
   }
 
   .entry-copy h1 {
-    font-size: clamp(34px, 9.5vw, 46px);
+    font-size: clamp(26px, 7.5vw, 34px);
   }
 
   .entry-source-grid {
@@ -2279,7 +2279,8 @@ img {
   }
 
   .entry-source-button {
-    min-height: 104px;
+    min-height: 86px;
+    padding: 13px;
     grid-template-columns: 38px 1fr;
     grid-template-rows: auto auto;
   }
@@ -2586,7 +2587,7 @@ img {
   }
 
   .character-layer {
-    inset: 50px 0 250px;
+    inset: 50px 0 205px;
   }
 
   .stage-character {
@@ -2607,15 +2608,15 @@ img {
     right: 8px;
     bottom: max(8px, env(safe-area-inset-bottom));
     left: 8px;
-    min-height: 220px;
-    padding: 14px;
+    min-height: 172px;
+    padding: 12px;
     border-radius: 18px 18px 18px 6px;
   }
 
   .dialogue-box p {
-    max-height: 104px;
-    margin: 10px 0 12px;
-    font-size: 17px;
+    max-height: 78px;
+    margin: 7px 0 9px;
+    font-size: 15px;
     overflow-y: auto;
   }
 
@@ -2686,7 +2687,7 @@ img {
 
 .creator-shell {
   min-height: 100dvh;
-  padding-bottom: 126px;
+  padding-bottom: 100px;
   background:
     radial-gradient(circle at 6% 8%, rgba(231, 170, 66, 0.1), transparent 28rem),
     radial-gradient(circle at 96% 24%, rgba(47, 125, 104, 0.1), transparent 32rem),
@@ -2698,7 +2699,7 @@ img {
   z-index: 35;
   top: 0;
   display: flex;
-  min-height: 76px;
+  min-height: 64px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
@@ -2742,7 +2743,7 @@ img {
 
 .creator-brand strong {
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .creator-brand small {
@@ -2799,7 +2800,7 @@ img {
 
 .creator-project-bar {
   display: grid;
-  padding: 24px 0 16px;
+  padding: 14px 0 10px;
   grid-template-columns: minmax(260px, 0.75fr) minmax(320px, 1.25fr) auto;
   gap: 12px;
 }
@@ -2818,7 +2819,7 @@ img {
 
 .creator-project-bar input {
   width: 100%;
-  min-height: 48px;
+  min-height: 42px;
   padding: 0 14px;
 }
 
@@ -2842,7 +2843,7 @@ img {
   display: grid;
   grid-template-columns: minmax(220px, 0.7fr) minmax(380px, 1.3fr);
   gap: 18px;
-  padding: 20px;
+  padding: 14px 16px;
   border: 1px solid #c7ddd4;
   border-radius: 20px;
   background: linear-gradient(135deg, var(--mint), var(--white));
@@ -2918,14 +2919,14 @@ img {
 
 .creator-primary-nav {
   display: grid;
-  margin-top: 16px;
+  margin-top: 10px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
 .creator-primary-nav > button {
   display: flex;
-  min-height: 68px;
+  min-height: 56px;
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
@@ -2980,7 +2981,7 @@ img {
 }
 
 .planning-workspace {
-  padding: clamp(20px, 4vw, 44px);
+  padding: clamp(16px, 2.5vw, 28px);
 }
 
 .workspace-heading {
@@ -2988,7 +2989,7 @@ img {
   align-items: end;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 
 .workspace-heading h1,
@@ -2998,12 +2999,12 @@ img {
 
 .workspace-heading h1 {
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(25px, 2.7vw, 34px);
   letter-spacing: -0.045em;
 }
 
 .workspace-heading p {
-  margin-top: 8px;
+  margin-top: 5px;
   color: var(--ink-soft);
 }
 
@@ -3015,7 +3016,7 @@ img {
 
 .planning-card {
   min-width: 0;
-  padding: 22px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: 20px;
   background: var(--white);
@@ -3057,7 +3058,7 @@ img {
 .card-heading strong {
   margin-top: 3px;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .planning-two-columns,
@@ -3075,14 +3076,14 @@ img {
 }
 
 .editor-only-field {
-  padding: 12px;
+  padding: 9px;
   border: 1px solid #e0c987;
   border-radius: 14px;
   background: rgba(248, 230, 184, 0.24);
 }
 
 .chapter-resource-details {
-  padding: 14px;
+  padding: 11px;
   border: 1px solid #bfd7cc;
   border-radius: 16px;
   background: rgba(214, 234, 223, 0.28);
@@ -3106,7 +3107,7 @@ img {
 
 .chapter-rail {
   min-width: 0;
-  padding: 16px 12px;
+  padding: 12px 10px;
   border-right: 1px solid var(--line);
   background: rgba(238, 229, 213, 0.46);
 }
@@ -3140,11 +3141,11 @@ img {
 .chapter-rail > button:not(.chapter-rail-heading button) {
   display: flex;
   width: 100%;
-  min-height: 66px;
+  min-height: 56px;
   align-items: start;
   gap: 10px;
   margin-bottom: 7px;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid transparent;
   border-radius: 13px;
   background: transparent;
@@ -3183,7 +3184,7 @@ img {
 .resource-pool {
   display: grid;
   margin-top: 10px;
-  padding: 12px;
+  padding: 9px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--white);
@@ -3317,7 +3318,7 @@ img {
 }
 
 .making-toolbar {
-  min-height: 72px;
+  min-height: 60px;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 14px;
@@ -3396,8 +3397,8 @@ img {
 
 .making-layout {
   display: grid;
-  min-height: 680px;
-  grid-template-columns: 230px minmax(0, 1fr);
+  min-height: 540px;
+  grid-template-columns: 210px minmax(0, 1fr);
 }
 
 .mobile-chapter-picker {
@@ -3406,14 +3407,14 @@ img {
 
 .editor-main {
   min-width: 0;
-  padding: clamp(18px, 3vw, 36px);
+  padding: clamp(14px, 2vw, 24px);
 }
 
 .chapter-editor-heading {
   align-items: end;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 16px;
+  margin-bottom: 11px;
 }
 
 .chapter-editor-heading h1,
@@ -3423,7 +3424,7 @@ img {
 
 .chapter-editor-heading h1 {
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
-  font-size: clamp(27px, 3vw, 40px);
+  font-size: clamp(24px, 2.5vw, 32px);
 }
 
 .chapter-editor-heading p {
@@ -3442,8 +3443,8 @@ img {
 
 .chapter-guide-panel {
   display: grid;
-  margin-bottom: 14px;
-  padding: 14px;
+  margin-bottom: 10px;
+  padding: 10px;
   border: 1px solid #dfc77e;
   border-radius: 16px;
   background: rgba(248, 230, 184, 0.3);
@@ -3484,8 +3485,8 @@ img {
 }
 
 .chapter-resource-panel {
-  margin-bottom: 14px;
-  padding: 16px;
+  margin-bottom: 10px;
+  padding: 12px;
   border: 1px solid #bdd6cb;
   border-radius: 18px;
   background: rgba(214, 234, 223, 0.34);
@@ -3500,7 +3501,7 @@ img {
 
 .panel-title h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .chapter-default-grid,
@@ -3561,11 +3562,11 @@ img {
 .script-scene-card {
   display: grid;
   align-items: start;
-  padding: 14px;
+  padding: 10px;
   border-bottom: 1px solid var(--line);
   background: white;
-  grid-template-columns: 60px minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-columns: 50px minmax(0, 1fr) auto;
+  gap: 9px;
 }
 
 .script-scene-card.active {
@@ -3616,8 +3617,8 @@ img {
 
 .scene-writing-fields > textarea {
   width: 100%;
-  min-height: 82px;
-  padding: 12px;
+  min-height: 68px;
+  padding: 9px 10px;
   line-height: 1.6;
   resize: vertical;
 }
@@ -3691,7 +3692,7 @@ img {
 }
 
 .empty-script {
-  padding: 54px 20px;
+  padding: 34px 18px;
   text-align: center;
 }
 
@@ -3707,7 +3708,7 @@ img {
 }
 
 .add-scene-row button {
-  min-height: 50px;
+  min-height: 44px;
   border: 2px dashed #abcabc;
   border-radius: 13px;
   background: rgba(214, 234, 223, 0.35);
@@ -3737,7 +3738,7 @@ img {
 
 .editable-stage {
   position: relative;
-  min-height: 540px;
+  min-height: 460px;
   aspect-ratio: 16 / 9;
   border-radius: 22px;
   background: #95a99d center / cover;
@@ -3804,8 +3805,8 @@ img {
   bottom: 3%;
   left: 3%;
   display: grid;
-  min-height: 126px;
-  padding: 14px 16px;
+  min-height: 108px;
+  padding: 11px 14px;
   border: 2px solid rgba(255, 255, 255, 0.78);
   border-radius: 18px 18px 18px 6px;
   background: rgba(18, 39, 39, 0.92);
@@ -3827,13 +3828,13 @@ img {
 
 .editable-stage-dialogue textarea {
   width: 100%;
-  min-height: 72px;
+  min-height: 60px;
   padding: 5px 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.55;
   resize: none;
 }
@@ -3855,7 +3856,7 @@ img {
 
 .scene-setting-card,
 .scene-notes-card {
-  padding: 16px;
+  padding: 12px;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--white);
@@ -3965,10 +3966,10 @@ img {
 
 .empty-creator-state {
   display: grid;
-  min-height: 400px;
+  min-height: 260px;
   place-items: center;
   align-content: center;
-  padding: 32px;
+  padding: 22px;
   border: 1px dashed var(--line);
   border-radius: 18px;
   background: radial-gradient(
@@ -3981,13 +3982,13 @@ img {
 
 .empty-creator-state > span {
   display: grid;
-  width: 62px;
-  height: 62px;
+  width: 50px;
+  height: 50px;
   place-items: center;
   border-radius: 20px 20px 20px 6px;
   background: var(--mint);
   color: var(--mint-strong);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 900;
 }
 
@@ -3995,6 +3996,11 @@ img {
 .empty-creator-state h2,
 .empty-creator-state p {
   margin: 8px 0 0;
+}
+
+.empty-creator-state h1,
+.empty-creator-state h2 {
+  font-size: clamp(20px, 2.4vw, 26px);
 }
 
 .empty-creator-state p {
@@ -4011,7 +4017,7 @@ img {
 }
 
 .no-chapter {
-  margin: 24px;
+  margin: 14px;
 }
 
 .creator-apply-dock {
@@ -4021,7 +4027,7 @@ img {
   bottom: 20px;
   left: 20px;
   max-width: 780px;
-  min-height: 72px;
+  min-height: 62px;
   justify-content: space-between;
   gap: 18px;
   margin: auto;
@@ -4061,7 +4067,7 @@ img {
 
 .creator-footer {
   display: flex;
-  padding: 28px 0 14px;
+  padding: 18px 0 10px;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
@@ -4106,7 +4112,7 @@ img {
   }
 
   .editable-stage {
-    min-height: 460px;
+    min-height: 420px;
   }
 }
 
@@ -4169,7 +4175,7 @@ img {
   }
 
   .planning-chapter-rail > button {
-    min-width: 200px;
+    min-width: 170px;
   }
 
   .making-layout {
@@ -4221,7 +4227,7 @@ img {
   }
 
   .editable-stage {
-    min-height: 400px;
+    min-height: 340px;
   }
 
   .creator-apply-dock {
@@ -4256,9 +4262,10 @@ img {
   }
 
   .creator-header-actions .apply-button,
-  .creator-header-actions .play-button {
-    min-height: 40px;
-    padding: 0 10px;
+  .creator-header-actions .play-button,
+  .creator-header-actions .quiet-button {
+    min-height: 36px;
+    padding: 0 8px;
     font-size: 10px;
   }
 
@@ -4273,7 +4280,7 @@ img {
   }
 
   .creator-project-bar {
-    padding-top: 14px;
+    padding-top: 10px;
     grid-template-columns: 1fr;
   }
 
@@ -4304,7 +4311,7 @@ img {
   }
 
   .creator-primary-nav > button {
-    min-height: 58px;
+    min-height: 48px;
     justify-content: center;
     padding: 8px 5px;
     text-align: center;
@@ -4320,7 +4327,7 @@ img {
   }
 
   .planning-workspace {
-    padding: 16px 12px;
+    padding: 12px 10px;
   }
 
   .workspace-heading {
@@ -4329,11 +4336,11 @@ img {
   }
 
   .workspace-heading h1 {
-    font-size: 29px;
+    font-size: 25px;
   }
 
   .planning-card {
-    padding: 15px;
+    padding: 12px;
   }
 
   .planning-two-columns,
@@ -4365,7 +4372,7 @@ img {
   }
 
   .editor-main {
-    padding: 14px 10px;
+    padding: 10px 8px;
   }
 
   .chapter-editor-heading {
@@ -4411,15 +4418,15 @@ img {
   }
 
   .editable-stage {
-    min-height: 440px;
-    aspect-ratio: 3 / 4;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
     border-radius: 15px;
   }
 
   .editable-character-slot {
-    bottom: 150px;
+    bottom: 116px;
     width: 58%;
-    height: 67%;
+    height: 72%;
   }
 
   .editable-character-slot.left {
@@ -4440,13 +4447,13 @@ img {
     right: 8px;
     bottom: 8px;
     left: 8px;
-    min-height: 142px;
-    padding: 12px;
+    min-height: 108px;
+    padding: 9px 10px;
   }
 
   .editable-stage-dialogue textarea {
-    min-height: 92px;
-    font-size: 16px;
+    min-height: 62px;
+    font-size: 15px;
   }
 
   .scene-setting-card,

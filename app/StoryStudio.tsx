@@ -636,7 +636,7 @@ export function StoryStudio() {
   );
   const [playIndex, setPlayIndex] = useState(0);
   const [projectToolsOpen, setProjectToolsOpen] = useState(false);
-  const [chapterGuideOpen, setChapterGuideOpen] = useState(true);
+  const [chapterGuideOpen, setChapterGuideOpen] = useState(false);
   const [chapterResourcesOpen, setChapterResourcesOpen] = useState(false);
   const [sceneNotesOpen, setSceneNotesOpen] = useState(false);
   const [favoriteAssets, setFavoriteAssets] = useState<string[]>([]);
@@ -1787,7 +1787,7 @@ export function StoryStudio() {
                     }
                   />
                 </label>
-                <details className="chapter-resource-details" open>
+                <details className="chapter-resource-details">
                   <summary>이 챕터에서 사용할 자료 먼저 정하기</summary>
                   <p>
                     장면 편집의 드롭다운에는 여기에서 고른 자료만 표시돼요.
