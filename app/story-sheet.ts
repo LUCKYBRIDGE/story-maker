@@ -360,20 +360,24 @@ export function buildProjectFromSheet(
     id: extractSheetId(sheetUrl)
       ? `sheet-${extractSheetId(sheetUrl)}`
       : `excel-${Date.now()}`,
-    title: getValue(projectRow, "작품 제목", "title") || "이름 없는 이야기",
+    title:
+      getValue(projectRow, "이야기 제목", "작품 제목", "title") ||
+      "이름 없는 이야기",
     description:
       getValue(projectRow, "작품 소개", "description") || "불러온 이야기",
     planning: {
       premise: getValue(projectRow, "한 줄 이야기", "premise"),
-      theme: getValue(projectRow, "주제", "theme"),
+      theme: getValue(projectRow, "이야기 주제", "주제", "theme"),
       mainCharacter: getValue(
         projectRow,
+        "핵심 인물",
         "이야기의 주인공",
         "main_character",
       ),
       mainGoal: getValue(projectRow, "주인공이 바라는 것", "main_goal"),
       centralProblem: getValue(
         projectRow,
+        "주요 갈등",
         "이야기의 중심 문제",
         "central_problem",
       ),
@@ -387,8 +391,15 @@ export function buildProjectFromSheet(
       ending: getValue(projectRow, "끝", "ending"),
       characterNotes: getValue(
         projectRow,
+        "인물 설정",
         "등장인물 구상",
         "character_notes",
+      ),
+      worldNotes: getValue(
+        projectRow,
+        "배경·세계 설정",
+        "세계관 설정",
+        "world_notes",
       ),
       mood: getValue(projectRow, "전체 분위기", "mood"),
       openQuestions: getValue(

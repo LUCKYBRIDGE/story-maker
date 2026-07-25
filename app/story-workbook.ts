@@ -114,7 +114,7 @@ export async function downloadStoryWorkbook(
     "시작하기",
     [
       ["순서", "안내"],
-      [1, "웹 또는 이 Excel에서 작품 제목, 화자, 챕터, 장면을 편집하세요."],
+      [1, "웹 또는 이 Excel에서 이야기 제목, 화자, 챕터, 장면을 편집하세요."],
       [2, "Excel을 고친 뒤 웹에서 ‘Excel 파일 열기’를 눌러 다시 불러오세요."],
       [3, "웹에서 고친 내용은 ‘Excel로 저장’을 눌러 새 파일로 보관하세요."],
       [4, "화자 이름과 캐릭터 이미지 이름은 서로 다른 값입니다."],
@@ -129,18 +129,19 @@ export async function downloadStoryWorkbook(
     "작품",
     [
       [
-        "작품 제목",
+        "이야기 제목",
         "작품 소개",
         "한 줄 이야기",
-        "주제",
-        "이야기의 주인공",
+        "이야기 주제",
+        "핵심 인물",
         "주인공이 바라는 것",
-        "이야기의 중심 문제",
+        "주요 갈등",
         "마지막에 달라지는 점",
         "처음",
         "가운데",
         "끝",
-        "등장인물 구상",
+        "인물 설정",
+        "배경·세계 설정",
         "전체 분위기",
         "아직 정하지 못한 것",
         "자유 창작 메모",
@@ -158,12 +159,13 @@ export async function downloadStoryWorkbook(
         project.planning.middle,
         project.planning.ending,
         project.planning.characterNotes,
+        project.planning.worldNotes,
         project.planning.mood,
         project.planning.openQuestions,
         project.planning.freeNotes,
       ],
     ],
-    [30, 46, 52, 28, 32, 48, 48, 48, 52, 52, 52, 52, 28, 52, 52],
+    [30, 46, 52, 28, 32, 48, 48, 48, 52, 52, 52, 52, 52, 28, 52, 52],
   );
 
   addSheet(

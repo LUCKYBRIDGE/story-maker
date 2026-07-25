@@ -42,6 +42,7 @@ export type StoryPlanning = {
   middle: string;
   ending: string;
   characterNotes: string;
+  worldNotes: string;
   mood: string;
   openQuestions: string;
   freeNotes: string;
@@ -75,6 +76,7 @@ export const DEFAULT_PROJECT: StoryProject = {
     middle: "자라는 토끼에게 용궁의 이야기 잔치에 함께 가자고 제안합니다.",
     ending: "두 친구는 용궁에서 자신들이 정한 새로운 이야기를 시작합니다.",
     characterNotes: "토끼는 영리하고 조심스럽습니다. 자라는 미안한 마음을 솔직하게 말하려 합니다.",
+    worldNotes: "들판은 편안하고 익숙한 공간, 용궁은 낯설지만 새로운 이야기를 만들 수 있는 공간입니다.",
     mood: "모험 · 긴장 · 우정",
     openQuestions: "토끼는 언제 자라를 다시 믿게 될까?\n용궁의 이야기 잔치에서는 무슨 일이 생길까?",
     freeNotes: "처음에는 서로 거리를 두고, 마지막에는 같은 방향을 바라보게 연출한다.",
@@ -285,6 +287,7 @@ export function createBlankProject(): StoryProject {
       middle: "",
       ending: "",
       characterNotes: "",
+      worldNotes: "",
       mood: "",
       openQuestions: "",
       freeNotes: "",
@@ -311,6 +314,7 @@ export function cloneProject(project: StoryProject): StoryProject {
     middle: cloned.planning?.middle ?? "",
     ending: cloned.planning?.ending ?? "",
     characterNotes: cloned.planning?.characterNotes ?? "",
+    worldNotes: cloned.planning?.worldNotes ?? "",
     mood: cloned.planning?.mood ?? "",
     openQuestions: cloned.planning?.openQuestions ?? "",
     freeNotes: cloned.planning?.freeNotes ?? "",

@@ -734,7 +734,7 @@ export function StoryStudio() {
   const storyChecklist = [
     { label: "이야기 제목", ready: Boolean(draft.title.trim()) },
     {
-      label: "주인공",
+      label: "핵심 인물",
       ready: Boolean(draft.planning.mainCharacter.trim()),
     },
     {
@@ -742,7 +742,7 @@ export function StoryStudio() {
       ready: Boolean(draft.planning.mainGoal.trim()),
     },
     {
-      label: "중심 문제",
+      label: "주요 갈등",
       ready: Boolean(draft.planning.centralProblem.trim()),
     },
     {
@@ -1136,7 +1136,7 @@ export function StoryStudio() {
           reject(new DOMException("Aborted", "AbortError"));
         });
       });
-      if (!draft.title.trim()) throw new Error("작품 제목을 써 주세요.");
+      if (!draft.title.trim()) throw new Error("이야기 제목을 써 주세요.");
       if (draft.chapters.length === 0) {
         throw new Error("챕터를 하나 만들어 주세요.");
       }
@@ -1512,7 +1512,7 @@ export function StoryStudio() {
 
       <section className="creator-project-bar">
         <label>
-          <span>작품 제목</span>
+          <span>이야기 제목</span>
           <input
             value={draft.title}
             onChange={(event) =>
@@ -1667,6 +1667,50 @@ export function StoryStudio() {
 
           {planningView === "story" ? (
             <div className="story-planning-layout">
+              <section className="planning-card story-basics-card">
+                <div className="card-heading">
+                  <span>창작 메모 · 기본 설정</span>
+                  <strong>이야기의 이름과 중심 생각</strong>
+                </div>
+                <div className="story-basics-grid">
+                  <label className="field">
+                    <span>이야기 제목</span>
+                    <input
+                      value={draft.title}
+                      onChange={(event) =>
+                        setDraft((project) => ({
+                          ...project,
+                          title: event.target.value,
+                        }))
+                      }
+                      placeholder="이야기의 제목을 지어 보세요."
+                    />
+                  </label>
+                  <label className="field">
+                    <span>이야기 주제</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.theme}
+                      onChange={(event) =>
+                        updatePlanning({ theme: event.target.value })
+                      }
+                      placeholder="이야기에서 중요하게 다룰 생각"
+                    />
+                  </label>
+                  <label className="field">
+                    <span>전체 분위기</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.mood}
+                      onChange={(event) =>
+                        updatePlanning({ mood: event.target.value })
+                      }
+                      placeholder="모험, 긴장, 재미처럼 써 보세요."
+                    />
+                  </label>
+                </div>
+              </section>
+
               <section className="planning-card story-compass-card">
                 <div className="card-heading">
                   <span>이야기 나침반</span>
@@ -1678,7 +1722,7 @@ export function StoryStudio() {
                 </p>
                 <div className="story-compass-grid">
                   <label className="field compass-field">
-                    <span>누구의 이야기인가요?</span>
+                    <span>핵심 인물은 누구인가요?</span>
                     <textarea
                       rows={2}
                       value={draft.planning.mainCharacter}
@@ -1700,7 +1744,7 @@ export function StoryStudio() {
                     />
                   </label>
                   <label className="field compass-field">
-                    <span>무엇이 앞을 막나요?</span>
+                    <span>주요 갈등은 무엇인가요?</span>
                     <textarea
                       rows={2}
                       value={draft.planning.centralProblem}
@@ -1815,44 +1859,32 @@ export function StoryStudio() {
 
               <section className="planning-card story-details-card">
                 <div className="card-heading">
-                  <span>인물과 분위기</span>
-                  <strong>이야기답게 만드는 재료</strong>
+                  <span>창작 메모 · 세부 설정</span>
+                  <strong>인물과 배경을 구체적으로 정하기</strong>
                 </div>
                 <div className="planning-two-columns">
                   <label className="field">
-                    <span>등장인물 구상</span>
+                    <span>인물 설정</span>
                     <textarea
-                      rows={5}
+                      rows={7}
                       value={draft.planning.characterNotes}
                       onChange={(event) =>
                         updatePlanning({ characterNotes: event.target.value })
                       }
-                      placeholder="인물마다 성격, 관계, 원하는 것을 한 줄씩 적어 보세요."
+                      placeholder={"이름 / 이야기에서의 역할\n성격 / 바라는 것 / 다른 인물과의 관계\n이야기 끝에서 달라지는 점"}
                     />
                   </label>
-                  <div className="planning-stacked-fields">
-                    <label className="field">
-                      <span>주제·중요하게 다룰 내용</span>
-                      <textarea
-                        rows={2}
-                        value={draft.planning.theme}
-                        onChange={(event) =>
-                          updatePlanning({ theme: event.target.value })
-                        }
-                      />
-                    </label>
-                    <label className="field">
-                      <span>전체 분위기</span>
-                      <textarea
-                        rows={2}
-                        value={draft.planning.mood}
-                        onChange={(event) =>
-                          updatePlanning({ mood: event.target.value })
-                        }
-                        placeholder="모험, 긴장, 재미처럼 써 보세요."
-                      />
-                    </label>
-                  </div>
+                  <label className="field">
+                    <span>배경·세계 설정</span>
+                    <textarea
+                      rows={7}
+                      value={draft.planning.worldNotes}
+                      onChange={(event) =>
+                        updatePlanning({ worldNotes: event.target.value })
+                      }
+                      placeholder={"언제, 어디에서 벌어지는 이야기인가요?\n이 세계에서 꼭 지켜야 하는 규칙이나 특별한 장소가 있나요?"}
+                    />
+                  </label>
                 </div>
               </section>
 
@@ -2319,8 +2351,9 @@ export function StoryStudio() {
                     <div className="story-direction-strip">
                       <span>전체 이야기 나침반</span>
                       <strong>
-                        {draft.planning.mainCharacter || "주인공 미정"} ·{" "}
-                        {draft.planning.mainGoal || "바라는 것 미정"} · 문제:{" "}
+                        핵심 인물:{" "}
+                        {draft.planning.mainCharacter || "아직 정하지 않음"} ·{" "}
+                        {draft.planning.mainGoal || "바라는 것 미정"} · 주요 갈등:{" "}
                         {draft.planning.centralProblem || "아직 정하지 않음"}
                       </strong>
                     </div>

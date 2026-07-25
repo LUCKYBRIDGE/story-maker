@@ -50,6 +50,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /planning:\s*StoryPlanning/);
   assert.match(storyData, /mainCharacter:\s*string/);
   assert.match(storyData, /centralProblem:\s*string/);
+  assert.match(storyData, /worldNotes:\s*string/);
   assert.match(storyData, /openQuestions:\s*string/);
   assert.match(storyData, /chapterSpeakerNames:\s*string\[\]/);
   assert.match(storyData, /characterAssetIds:\s*string\[\]/);
@@ -84,7 +85,10 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyAssets, /tags:\s*string\[\]/);
   assert.match(workbook, /downloadStoryWorkbook/);
   assert.match(workbook, /한 줄 이야기/);
-  assert.match(workbook, /이야기의 주인공/);
+  assert.match(workbook, /핵심 인물/);
+  assert.match(workbook, /주요 갈등/);
+  assert.match(workbook, /인물 설정/);
+  assert.match(workbook, /배경·세계 설정/);
   assert.match(workbook, /아직 정하지 못한 것/);
   assert.match(workbook, /이 챕터 화자/);
   assert.match(workbook, /장면 역할/);
