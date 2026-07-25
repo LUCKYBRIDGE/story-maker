@@ -4701,9 +4701,57 @@ img {
   grid-column: 1 / -1;
 }
 
+.structure-mode-picker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.structure-mode-picker button {
+  display: grid;
+  min-height: 58px;
+  align-content: center;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+.structure-mode-picker button b {
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.structure-mode-picker button span {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.structure-mode-picker button.active {
+  border-color: var(--mint-strong);
+  background: rgba(214, 234, 223, 0.55);
+  box-shadow: inset 0 0 0 1px var(--mint-strong);
+  color: var(--ink);
+}
+
 .guided-arc-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-top: 12px;
+}
+
+.guided-arc-grid.mode-five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.guided-arc-grid.mode-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.guided-arc-grid.mode-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .arc-step {
@@ -4966,8 +5014,10 @@ img {
     grid-template-columns: minmax(0, 1fr) 240px;
   }
 
-  .guided-arc-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .guided-arc-grid.mode-five,
+  .guided-arc-grid.mode-four,
+  .guided-arc-grid.mode-three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .story-details-card,
@@ -4990,10 +5040,6 @@ img {
 
   .story-check-card ul {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .guided-arc-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .chapter-planning-grid {
@@ -5024,9 +5070,15 @@ img {
 
   .story-compass-grid,
   .story-basics-grid,
-  .guided-arc-grid,
+  .structure-mode-picker,
   .story-details-card .planning-two-columns,
   .idea-parking-card .planning-two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .guided-arc-grid.mode-five,
+  .guided-arc-grid.mode-four,
+  .guided-arc-grid.mode-three {
     grid-template-columns: 1fr;
   }
 

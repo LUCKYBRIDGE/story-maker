@@ -43,6 +43,97 @@ const BACKGROUND_ASSETS = STORY_ASSETS.filter(
   (asset) => asset.type === "background",
 );
 
+type StoryArcKey = "opening" | "middle" | "crisis" | "climax" | "ending";
+
+const STORY_STRUCTURE_OPTIONS: Array<{
+  mode: StoryProject["planning"]["structureMode"];
+  title: string;
+  shortTitle: string;
+  steps: Array<{ label: string; guide: string; key: StoryArcKey }>;
+}> = [
+  {
+    mode: "five",
+    title: "발단 → 전개 → 위기 → 절정 → 결말",
+    shortTitle: "5단계",
+    steps: [
+      {
+        label: "발단",
+        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
+        key: "opening",
+      },
+      {
+        label: "전개",
+        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
+        key: "middle",
+      },
+      {
+        label: "위기",
+        guide: "가장 큰 어려움이 닥치고, 어떤 선택 앞에 서나요?",
+        key: "crisis",
+      },
+      {
+        label: "절정",
+        guide: "갈등을 풀기 위해 주인공이 하는 가장 중요한 행동은?",
+        key: "climax",
+      },
+      {
+        label: "결말",
+        guide: "행동의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
+        key: "ending",
+      },
+    ],
+  },
+  {
+    mode: "four",
+    title: "발단 → 전개 → 위기 → 결말",
+    shortTitle: "4단계",
+    steps: [
+      {
+        label: "발단",
+        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
+        key: "opening",
+      },
+      {
+        label: "전개",
+        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
+        key: "middle",
+      },
+      {
+        label: "위기",
+        guide: "가장 큰 어려움이 닥치고, 주인공은 무엇을 선택하나요?",
+        key: "crisis",
+      },
+      {
+        label: "결말",
+        guide: "선택의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
+        key: "ending",
+      },
+    ],
+  },
+  {
+    mode: "three",
+    title: "처음 → 중간 → 끝",
+    shortTitle: "3단계",
+    steps: [
+      {
+        label: "처음",
+        guide: "누가 어디에 있고, 어떤 일이 시작되나요?",
+        key: "opening",
+      },
+      {
+        label: "중간",
+        guide: "어떤 문제가 생기고, 인물은 무엇을 하나요?",
+        key: "middle",
+      },
+      {
+        label: "끝",
+        guide: "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
+        key: "ending",
+      },
+    ],
+  },
+];
+
 function normalizeSearch(value: string) {
   return value
     .trim()
@@ -731,6 +822,10 @@ export function StoryStudio() {
   const sortedChapters = draft.chapters
     .slice()
     .sort((a, b) => a.order - b.order);
+  const selectedStructure =
+    STORY_STRUCTURE_OPTIONS.find(
+      (option) => option.mode === draft.planning.structureMode,
+    ) ?? STORY_STRUCTURE_OPTIONS[0];
   const storyChecklist = [
     { label: "이야기 제목", ready: Boolean(draft.title.trim()) },
     {
@@ -752,13 +847,9 @@ export function StoryStudio() {
       ready: Boolean(draft.planning.centralProblem.trim()),
     },
     {
-      label: "5단계 줄거리",
-      ready: Boolean(
-        draft.planning.opening.trim() &&
-          draft.planning.middle.trim() &&
-          draft.planning.crisis.trim() &&
-          draft.planning.climax.trim() &&
-          draft.planning.ending.trim(),
+      label: `${selectedStructure.shortTitle} 줄거리`,
+      ready: selectedStructure.steps.every(
+        (step) => draft.planning[step.key].trim(),
       ),
     },
     { label: "챕터", ready: draft.chapters.length > 0 },
@@ -1658,7 +1749,7 @@ export function StoryStudio() {
               <span>1</span>
               <div>
                 <strong>전체 이야기 구성</strong>
-                <small>소재·인물·갈등·5단계 줄거리</small>
+                <small>구성 방식·소재·인물·갈등</small>
               </div>
             </button>
             <button
@@ -1844,57 +1935,49 @@ export function StoryStudio() {
               <section className="planning-card story-arc-card">
                 <div className="card-heading">
                   <span>이야기 뼈대</span>
-                  <strong>발단 · 전개 · 위기 · 절정 · 결말</strong>
+                  <strong>{selectedStructure.title}</strong>
                 </div>
                 <p className="planning-help">
-                  널리 쓰이는 5단계 이야기 구성입니다. 짧은 이야기라면 한두
-                  문장씩만 적어도 충분해요.
+                  이야기의 길이와 난이도에 맞는 구성을 고르세요. 바꾸더라도
+                  이미 쓴 내용은 지워지지 않아요.
                 </p>
-                <div className="story-arc-grid guided-arc-grid">
-                  {[
-                    [
-                      "발단",
-                      "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
-                      "opening",
-                      draft.planning.opening,
-                    ],
-                    [
-                      "전개",
-                      "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
-                      "middle",
-                      draft.planning.middle,
-                    ],
-                    [
-                      "위기",
-                      "가장 큰 어려움이 닥치고, 어떤 선택 앞에 서나요?",
-                      "crisis",
-                      draft.planning.crisis,
-                    ],
-                    [
-                      "절정",
-                      "갈등을 풀기 위해 주인공이 하는 가장 중요한 행동은?",
-                      "climax",
-                      draft.planning.climax,
-                    ],
-                    [
-                      "결말",
-                      "행동의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
-                      "ending",
-                      draft.planning.ending,
-                    ],
-                  ].map(([label, guide, key, value], index) => (
-                    <label className="field arc-step" key={key}>
+                <div
+                  className="structure-mode-picker"
+                  role="group"
+                  aria-label="이야기 구성 방식"
+                >
+                  {STORY_STRUCTURE_OPTIONS.map((option) => (
+                    <button
+                      className={
+                        option.mode === selectedStructure.mode ? "active" : ""
+                      }
+                      key={option.mode}
+                      onClick={() =>
+                        updatePlanning({ structureMode: option.mode })
+                      }
+                      type="button"
+                    >
+                      <b>{option.shortTitle}</b>
+                      <span>{option.title}</span>
+                    </button>
+                  ))}
+                </div>
+                <div
+                  className={`story-arc-grid guided-arc-grid mode-${selectedStructure.mode}`}
+                >
+                  {selectedStructure.steps.map((step, index) => (
+                    <label className="field arc-step" key={step.key}>
                       <span>
                         <b>{index + 1}</b>
-                        {label}
+                        {step.label}
                       </span>
-                      <small>{guide}</small>
+                      <small>{step.guide}</small>
                       <textarea
                         rows={5}
-                        value={value}
+                        value={draft.planning[step.key]}
                         onChange={(event) =>
                           updatePlanning({
-                            [key]: event.target.value,
+                            [step.key]: event.target.value,
                           } as Partial<StoryProject["planning"]>)
                         }
                       />

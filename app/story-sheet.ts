@@ -87,6 +87,15 @@ function getValue(row: CsvRow, ...keys: string[]) {
   return "";
 }
 
+function parseStructureMode(value: string): StoryProject["planning"]["structureMode"] {
+  const normalized = value.trim().toLowerCase();
+  if (["4단계", "four", "4"].includes(normalized)) return "four";
+  if (["3단계", "three", "3", "처음-중간-끝"].includes(normalized)) {
+    return "three";
+  }
+  return "five";
+}
+
 function isEnabled(row: CsvRow) {
   const value = getValue(row, "사용", "enabled", "활성").toLowerCase();
   return !["false", "no", "아니요", "0", "사용 안 함"].includes(value);
@@ -367,6 +376,9 @@ export function buildProjectFromSheet(
       getValue(projectRow, "작품 소개", "description") || "불러온 이야기",
     planning: {
       premise: getValue(projectRow, "한 줄 이야기", "premise"),
+      structureMode: parseStructureMode(
+        getValue(projectRow, "구성 방식", "structure_mode"),
+      ),
       material: getValue(projectRow, "이야기 소재", "소재", "material"),
       theme: getValue(projectRow, "이야기 주제", "주제", "theme"),
       mainCharacter: getValue(

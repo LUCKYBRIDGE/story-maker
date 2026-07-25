@@ -132,6 +132,7 @@ export async function downloadStoryWorkbook(
         "이야기 제목",
         "작품 소개",
         "한 줄 이야기",
+        "구성 방식",
         "이야기 소재",
         "이야기 주제",
         "핵심 인물",
@@ -154,6 +155,11 @@ export async function downloadStoryWorkbook(
         project.title,
         project.description,
         project.planning.premise,
+        project.planning.structureMode === "five"
+          ? "5단계"
+          : project.planning.structureMode === "four"
+            ? "4단계"
+            : "3단계",
         project.planning.material,
         project.planning.theme,
         project.planning.mainCharacter,
@@ -173,7 +179,7 @@ export async function downloadStoryWorkbook(
         project.planning.freeNotes,
       ],
     ],
-    [30, 46, 52, 38, 28, 32, 48, 48, 48, 48, 52, 52, 52, 52, 52, 52, 52, 28, 52, 52],
+    [30, 46, 52, 18, 38, 28, 32, 48, 48, 48, 48, 52, 52, 52, 52, 52, 52, 52, 28, 52, 52],
   );
 
   addSheet(

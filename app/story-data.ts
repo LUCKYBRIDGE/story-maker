@@ -33,6 +33,7 @@ export type StoryLine = {
 
 export type StoryPlanning = {
   premise: string;
+  structureMode: "five" | "four" | "three";
   material: string;
   theme: string;
   mainCharacter: string;
@@ -71,6 +72,7 @@ export const DEFAULT_PROJECT: StoryProject = {
   description: "놀퀴즈 이미지로 시작하는 첫 번째 이야기",
   planning: {
     premise: "토끼와 자라가 서로 솔직하게 이야기하며 새로운 모험을 시작합니다.",
+    structureMode: "five",
     material: "옛이야기 속 토끼와 자라가 다시 만나 새로운 모험을 선택한다.",
     theme: "정직하게 말하기와 서로 믿는 마음",
     mainCharacter: "토끼와 자라",
@@ -286,6 +288,7 @@ export function createBlankProject(): StoryProject {
     description: "",
     planning: {
       premise: "",
+      structureMode: "five",
       material: "",
       theme: "",
       mainCharacter: "",
@@ -317,6 +320,7 @@ export function cloneProject(project: StoryProject): StoryProject {
   const cloned = JSON.parse(JSON.stringify(project)) as StoryProject;
   cloned.planning = {
     premise: cloned.planning?.premise ?? "",
+    structureMode: cloned.planning?.structureMode ?? "five",
     material: cloned.planning?.material ?? "",
     theme: cloned.planning?.theme ?? "",
     mainCharacter: cloned.planning?.mainCharacter ?? "",
