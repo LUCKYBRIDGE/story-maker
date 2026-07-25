@@ -128,10 +128,30 @@ export async function downloadStoryWorkbook(
     workbook,
     "작품",
     [
-      ["작품 제목", "작품 소개"],
-      [project.title, project.description],
+      [
+        "작품 제목",
+        "작품 소개",
+        "한 줄 이야기",
+        "주제",
+        "처음",
+        "가운데",
+        "끝",
+        "등장인물 구상",
+        "전체 분위기",
+      ],
+      [
+        project.title,
+        project.description,
+        project.planning.premise,
+        project.planning.theme,
+        project.planning.opening,
+        project.planning.middle,
+        project.planning.ending,
+        project.planning.characterNotes,
+        project.planning.mood,
+      ],
     ],
-    [32, 64],
+    [30, 46, 52, 28, 52, 52, 52, 52, 28],
   );
 
   addSheet(
@@ -159,6 +179,13 @@ export async function downloadStoryWorkbook(
         "배경 이미지",
         "왼쪽 기본 이미지",
         "오른쪽 기본 이미지",
+        "챕터 역할",
+        "분위기",
+        "꼭 들어갈 사건",
+        "다음 챕터 아이디어",
+        "이 챕터 화자",
+        "캐릭터 이미지 목록",
+        "장소·배경 목록",
       ],
       ...project.chapters
         .slice()
@@ -171,9 +198,16 @@ export async function downloadStoryWorkbook(
           assetName(chapter.backgroundId),
           assetName(chapter.leftAssetId),
           assetName(chapter.rightAssetId),
+          chapter.purpose,
+          chapter.mood,
+          chapter.keyEvents,
+          chapter.nextChapterIdea,
+          chapter.chapterSpeakerNames.join(", "),
+          chapter.characterAssetIds.map(assetName).filter(Boolean).join(", "),
+          chapter.backgroundAssetIds.map(assetName).filter(Boolean).join(", "),
         ]),
     ],
-    [22, 9, 28, 44, 34, 34, 34],
+    [22, 9, 28, 44, 34, 34, 34, 44, 28, 52, 44, 36, 64, 64],
   );
 
   addSheet(
@@ -191,6 +225,9 @@ export async function downloadStoryWorkbook(
         "왼쪽 이미지",
         "오른쪽 이미지",
         "장면 배경",
+        "장면 역할",
+        "감정 메모",
+        "연출 메모",
       ],
       ...project.lines
         .slice()
@@ -219,9 +256,12 @@ export async function downloadStoryWorkbook(
           assetName(line.leftAssetId),
           assetName(line.rightAssetId),
           assetName(line.backgroundId),
+          line.purposeNote,
+          line.emotionNote,
+          line.directionNote,
         ]),
     ],
-    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34],
+    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48],
   );
 
   addSheet(

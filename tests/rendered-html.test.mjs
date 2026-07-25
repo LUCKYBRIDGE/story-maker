@@ -47,15 +47,22 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   ]);
 
   assert.match(storyData, /speakerNames:\s*string\[\]/);
+  assert.match(storyData, /planning:\s*StoryPlanning/);
+  assert.match(storyData, /chapterSpeakerNames:\s*string\[\]/);
+  assert.match(storyData, /characterAssetIds:\s*string\[\]/);
+  assert.match(storyData, /backgroundAssetIds:\s*string\[\]/);
   assert.match(storyData, /function createBlankProject/);
-  assert.match(studio, /function SpeakerNameSelect/);
+  assert.match(studio, /function AddSpeaker/);
   assert.match(studio, /\+ 화자 추가/);
-  assert.match(studio, /한 번 추가한 이름은 다른 장면에서도 계속 고를 수 있어요/);
-  assert.match(studio, /고른 이미지의 파일명과는 관계없이 표시됩니다/);
-  assert.match(studio, /그림으로 고르기/);
+  assert.match(studio, /화자 이름/);
+  assert.match(studio, /이미지 선택/);
+  assert.match(studio, /\+ 자료 추가/);
   assert.match(studio, /asset-picker-grid/);
-  assert.match(studio, /대본 전체 보기/);
-  assert.match(studio, /장면 자세히 편집/);
+  assert.match(studio, /스토리 구상/);
+  assert.match(studio, /챕터 전체 편집/);
+  assert.match(studio, /현재 장면 편집/);
+  assert.match(studio, /편집할 때만 보는/);
+  assert.match(studio, /현재 편집/);
   assert.match(studio, /즐겨찾기/);
   assert.match(studio, /최근 사용/);
   assert.match(studio, /태그 모두 지우기/);
@@ -67,6 +74,9 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);
   assert.match(workbook, /downloadStoryWorkbook/);
+  assert.match(workbook, /한 줄 이야기/);
+  assert.match(workbook, /이 챕터 화자/);
+  assert.match(workbook, /장면 역할/);
   assert.match(workbook, /\["화자 이름"\]/);
   assert.doesNotMatch(workbook, /\["사용",\s*"화자 이름"\]/);
   assert.doesNotMatch(studio, /saveProjectToGoogleSheet/);
