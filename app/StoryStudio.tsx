@@ -23,6 +23,7 @@ import {
 } from "./story-sheet";
 
 type WorkspaceMode = "plan" | "create";
+type PlanningView = "story" | "chapters";
 type EditorMode = "chapter" | "scene";
 type ImageView = "text" | "small";
 type AssetView = "all" | "favorites" | "recent";
@@ -626,6 +627,8 @@ export function StoryStudio() {
   const [view, setView] = useState<"studio" | "play">("studio");
   const [workspaceMode, setWorkspaceMode] =
     useState<WorkspaceMode>("create");
+  const [planningView, setPlanningView] =
+    useState<PlanningView>("story");
   const [editorMode, setEditorMode] = useState<EditorMode>("chapter");
   const [imageView, setImageView] = useState<ImageView>("text");
   const [selectedChapterId, setSelectedChapterId] = useState(
@@ -728,6 +731,31 @@ export function StoryStudio() {
   const sortedChapters = draft.chapters
     .slice()
     .sort((a, b) => a.order - b.order);
+  const storyChecklist = [
+    { label: "이야기 제목", ready: Boolean(draft.title.trim()) },
+    {
+      label: "주인공",
+      ready: Boolean(draft.planning.mainCharacter.trim()),
+    },
+    {
+      label: "바라는 것",
+      ready: Boolean(draft.planning.mainGoal.trim()),
+    },
+    {
+      label: "중심 문제",
+      ready: Boolean(draft.planning.centralProblem.trim()),
+    },
+    {
+      label: "처음·가운데·끝",
+      ready: Boolean(
+        draft.planning.opening.trim() &&
+          draft.planning.middle.trim() &&
+          draft.planning.ending.trim(),
+      ),
+    },
+    { label: "챕터", ready: draft.chapters.length > 0 },
+  ];
+  const readyStoryItems = storyChecklist.filter((item) => item.ready).length;
 
   function updatePlanning(
     changes: Partial<StoryProject["planning"]>,
@@ -736,6 +764,17 @@ export function StoryStudio() {
       ...project,
       planning: { ...project.planning, ...changes },
     }));
+  }
+
+  function openChapterPlan(chapterId: string) {
+    selectChapter(chapterId);
+    setPlanningView("chapters");
+  }
+
+  function openChapterWriter(chapterId: string) {
+    selectChapter(chapterId);
+    setWorkspaceMode("create");
+    setEditorMode("chapter");
   }
 
   function updateChapter(chapterId: string, changes: Partial<Chapter>) {
@@ -822,6 +861,7 @@ export function StoryStudio() {
       ...project,
       chapters: [...project.chapters, chapter],
     }));
+    setPlanningView("chapters");
     setSelectedChapterId(id);
     setSelectedLineId("");
     setChapterGuideOpen(true);
@@ -1259,6 +1299,7 @@ export function StoryStudio() {
     setSelectedChapterId("");
     setSelectedLineId("");
     setWorkspaceMode("plan");
+    setPlanningView("story");
     setEditorMode("chapter");
     setCreatorAccess("local");
     setBlankConfirmOpen(false);
@@ -1601,260 +1642,541 @@ export function StoryStudio() {
               바로 이야기 쓰기
             </button>
           </header>
-          <div className="planning-grid">
-            <section className="planning-card story-plan-card">
-              <div className="card-heading">
-                <span>전체 이야기</span>
-                <strong>스토리 구상</strong>
+          <nav className="planning-view-switch" aria-label="구상 화면 선택">
+            <button
+              className={planningView === "story" ? "active" : ""}
+              onClick={() => setPlanningView("story")}
+            >
+              <span>1</span>
+              <div>
+                <strong>전체 이야기 구성</strong>
+                <small>주인공·문제·처음·가운데·끝</small>
               </div>
-              <label className="field wide">
-                <span>한 줄 이야기</span>
-                <textarea
-                  rows={2}
-                  value={draft.planning.premise}
-                  onChange={(event) =>
-                    updatePlanning({ premise: event.target.value })
-                  }
-                  placeholder="누가 어떤 일을 겪는 이야기인가요?"
-                />
-              </label>
-              <div className="planning-two-columns">
-                <label className="field">
-                  <span>주제·중요하게 다룰 내용</span>
-                  <textarea
-                    rows={3}
-                    value={draft.planning.theme}
-                    onChange={(event) =>
-                      updatePlanning({ theme: event.target.value })
-                    }
-                  />
-                </label>
-                <label className="field">
-                  <span>전체 분위기</span>
-                  <textarea
-                    rows={3}
-                    value={draft.planning.mood}
-                    onChange={(event) =>
-                      updatePlanning({ mood: event.target.value })
-                    }
-                    placeholder="모험, 긴장, 재미처럼 써 보세요."
-                  />
-                </label>
+            </button>
+            <button
+              className={planningView === "chapters" ? "active" : ""}
+              onClick={() => setPlanningView("chapters")}
+            >
+              <span>2</span>
+              <div>
+                <strong>챕터 흐름 구성</strong>
+                <small>사건을 나누고 장면 쓰기로 연결</small>
               </div>
-              <label className="field wide">
-                <span>등장인물 구상</span>
-                <textarea
-                  rows={4}
-                  value={draft.planning.characterNotes}
-                  onChange={(event) =>
-                    updatePlanning({ characterNotes: event.target.value })
-                  }
-                  placeholder="등장인물의 역할, 원하는 것, 성격과 변화를 적어 보세요."
-                />
-              </label>
-              <div className="story-arc-grid">
-                {[
-                  ["처음", "opening", draft.planning.opening],
-                  ["가운데", "middle", draft.planning.middle],
-                  ["끝", "ending", draft.planning.ending],
-                ].map(([label, key, value]) => (
-                  <label className="field" key={key}>
-                    <span>{label}</span>
-                    <textarea
-                      rows={5}
-                      value={value}
-                      onChange={(event) =>
-                        updatePlanning({
-                          [key]: event.target.value,
-                        } as Partial<StoryProject["planning"]>)
-                      }
-                    />
-                  </label>
-                ))}
-              </div>
-            </section>
+            </button>
+          </nav>
 
-            <aside className="chapter-rail planning-chapter-rail">
-              <div className="chapter-rail-heading">
-                <div>
-                  <span className="eyebrow">챕터 구상</span>
-                  <strong>챕터 목록</strong>
+          {planningView === "story" ? (
+            <div className="story-planning-layout">
+              <section className="planning-card story-compass-card">
+                <div className="card-heading">
+                  <span>이야기 나침반</span>
+                  <strong>네 가지를 먼저 정해 보세요</strong>
                 </div>
-                <button onClick={addChapter} aria-label="챕터 추가">
-                  +
-                </button>
-              </div>
-              {sortedChapters.map((chapter) => (
-                <button
-                  key={chapter.id}
-                  className={chapter.id === selectedChapter?.id ? "active" : ""}
-                  onClick={() => selectChapter(chapter.id)}
-                >
-                  <span>{chapter.order}</span>
-                  <div>
-                    <strong>{chapter.title || `챕터 ${chapter.order}`}</strong>
-                    <small>{chapter.summary || "아직 구상 중"}</small>
-                  </div>
-                </button>
-              ))}
-            </aside>
-
-            {selectedChapter ? (
-              <section className="planning-card chapter-plan-card">
-                <div className="card-heading with-actions">
-                  <div>
-                    <span>챕터 {selectedChapter.order}</span>
-                    <strong>챕터 구상 메모</strong>
-                  </div>
-                  <button
-                    className="danger-link"
-                    onClick={() => removeChapter(selectedChapter.id)}
-                  >
-                    챕터 삭제
-                  </button>
-                </div>
-                <label className="field wide">
-                  <span>챕터 제목 · 플레이에도 표시</span>
-                  <input
-                    value={selectedChapter.title}
-                    onChange={(event) =>
-                      updateChapter(selectedChapter.id, {
-                        title: event.target.value,
-                      })
-                    }
-                    placeholder={`챕터 ${selectedChapter.order} 제목`}
-                  />
-                </label>
-                <label className="field wide editor-only-field">
-                  <span>이 챕터의 주요 내용 · 편집 메모</span>
-                  <textarea
-                    rows={3}
-                    value={selectedChapter.summary}
-                    onChange={(event) =>
-                      updateChapter(selectedChapter.id, {
-                        summary: event.target.value,
-                      })
-                    }
-                  />
-                </label>
-                <div className="planning-two-columns">
-                  <label className="field editor-only-field">
-                    <span>이 챕터의 역할</span>
+                <p className="planning-help">
+                  정답을 쓰는 칸이 아니에요. 생각이 바뀌면 언제든 다시 고칠 수
+                  있어요.
+                </p>
+                <div className="story-compass-grid">
+                  <label className="field compass-field">
+                    <span>누구의 이야기인가요?</span>
                     <textarea
-                      rows={3}
-                      value={selectedChapter.purpose}
+                      rows={2}
+                      value={draft.planning.mainCharacter}
                       onChange={(event) =>
-                        updateChapter(selectedChapter.id, {
-                          purpose: event.target.value,
-                        })
+                        updatePlanning({ mainCharacter: event.target.value })
                       }
+                      placeholder="예: 다시 만난 토끼와 자라"
                     />
                   </label>
-                  <label className="field editor-only-field">
-                    <span>분위기·감정 흐름</span>
+                  <label className="field compass-field">
+                    <span>무엇을 바라고 있나요?</span>
                     <textarea
-                      rows={3}
-                      value={selectedChapter.mood}
+                      rows={2}
+                      value={draft.planning.mainGoal}
                       onChange={(event) =>
-                        updateChapter(selectedChapter.id, {
-                          mood: event.target.value,
-                        })
+                        updatePlanning({ mainGoal: event.target.value })
                       }
+                      placeholder="주인공이 꼭 이루고 싶은 것"
+                    />
+                  </label>
+                  <label className="field compass-field">
+                    <span>무엇이 앞을 막나요?</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.centralProblem}
+                      onChange={(event) =>
+                        updatePlanning({ centralProblem: event.target.value })
+                      }
+                      placeholder="사건, 오해, 두려움, 상대 인물"
+                    />
+                  </label>
+                  <label className="field compass-field">
+                    <span>마지막에 무엇이 달라지나요?</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.endingChange}
+                      onChange={(event) =>
+                        updatePlanning({ endingChange: event.target.value })
+                      }
+                      placeholder="인물의 마음, 관계 또는 상황의 변화"
                     />
                   </label>
                 </div>
-                <label className="field wide editor-only-field">
-                  <span>꼭 들어갈 사건 · 한 줄에 하나씩</span>
-                  <textarea
-                    rows={4}
-                    value={selectedChapter.keyEvents}
-                    onChange={(event) =>
-                      updateChapter(selectedChapter.id, {
-                        keyEvents: event.target.value,
-                      })
-                    }
-                  />
-                </label>
-                <label className="field wide editor-only-field">
-                  <span>다음 챕터로 이어질 내용</span>
+                <label className="field wide premise-field">
+                  <span>한 줄로 이어 보기</span>
                   <textarea
                     rows={2}
-                    value={selectedChapter.nextChapterIdea}
+                    value={draft.planning.premise}
                     onChange={(event) =>
-                      updateChapter(selectedChapter.id, {
-                        nextChapterIdea: event.target.value,
-                      })
+                      updatePlanning({ premise: event.target.value })
                     }
+                    placeholder="누가, 무엇을 바라지만, 어떤 문제를 만나, 어떻게 달라지는 이야기"
                   />
                 </label>
-                <details className="chapter-resource-details">
-                  <summary>이 챕터에서 사용할 자료 먼저 정하기</summary>
-                  <p>
-                    장면 편집의 드롭다운에는 여기에서 고른 자료만 표시돼요.
-                  </p>
-                  <section className="resource-pool">
-                    <div className="resource-pool-heading">
-                      <strong>화자 이름</strong>
-                      <span>{selectedChapter.chapterSpeakerNames.length}개</span>
-                    </div>
-                    <div className="resource-chip-list">
-                      {selectedChapter.chapterSpeakerNames.map((name) => (
-                        <span className="resource-chip" key={name}>
-                          {name}
-                        </span>
-                      ))}
-                      {selectedChapter.chapterSpeakerNames.length === 0 && (
-                        <span className="empty-resource-copy">
-                          아직 고른 화자가 없어요.
-                        </span>
-                      )}
-                    </div>
-                    <AddSpeaker
-                      onAdd={(name) => addSpeaker(name, false)}
-                    />
-                  </section>
-                  <ResourcePool
-                    title="캐릭터 이미지"
-                    type="character"
-                    ids={selectedChapter.characterAssetIds}
-                    favoriteIds={favoriteAssets}
-                    recentIds={recentAssets}
-                    onToggleFavorite={toggleFavorite}
-                    onAdd={(id) => addAssetToChapter(id, "character")}
-                    onRemove={(id) => removeAsset(id, "character")}
-                  />
-                  <ResourcePool
-                    title="장소·배경"
-                    type="background"
-                    ids={selectedChapter.backgroundAssetIds}
-                    favoriteIds={favoriteAssets}
-                    recentIds={recentAssets}
-                    onToggleFavorite={toggleFavorite}
-                    onAdd={(id) => addAssetToChapter(id, "background")}
-                    onRemove={(id) => removeAsset(id, "background")}
-                  />
-                </details>
+              </section>
+
+              <aside className="planning-card story-check-card">
+                <div className="card-heading">
+                  <span>구성 점검</span>
+                  <strong>
+                    {readyStoryItems}/{storyChecklist.length} 준비
+                  </strong>
+                </div>
+                <progress
+                  value={readyStoryItems}
+                  max={storyChecklist.length}
+                  aria-label="전체 이야기 구성 진행"
+                />
+                <ul>
+                  {storyChecklist.map((item) => (
+                    <li className={item.ready ? "ready" : ""} key={item.label}>
+                      <span>{item.ready ? "✓" : "○"}</span>
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+                <p>
+                  모두 채우지 않아도 이야기를 쓸 수 있어요. 막혔을 때 돌아와
+                  확인하는 안내판입니다.
+                </p>
                 <button
-                  className="primary-button full-button"
-                  onClick={() => {
-                    setWorkspaceMode("create");
-                    setEditorMode("chapter");
-                  }}
+                  className="primary-button"
+                  onClick={() => setPlanningView("chapters")}
                 >
-                  이 챕터 전체 편집으로 이동
+                  챕터로 나누기
                 </button>
+              </aside>
+
+              <section className="planning-card story-arc-card">
+                <div className="card-heading">
+                  <span>이야기 뼈대</span>
+                  <strong>처음 · 가운데 · 끝</strong>
+                </div>
+                <div className="story-arc-grid guided-arc-grid">
+                  {[
+                    [
+                      "처음",
+                      "누구와 어디를 보여 주고, 어떤 일이 시작되나요?",
+                      "opening",
+                      draft.planning.opening,
+                    ],
+                    [
+                      "가운데",
+                      "문제가 커지고, 인물은 무엇을 시도하거나 선택하나요?",
+                      "middle",
+                      draft.planning.middle,
+                    ],
+                    [
+                      "끝",
+                      "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
+                      "ending",
+                      draft.planning.ending,
+                    ],
+                  ].map(([label, guide, key, value], index) => (
+                    <label className="field arc-step" key={key}>
+                      <span>
+                        <b>{index + 1}</b>
+                        {label}
+                      </span>
+                      <small>{guide}</small>
+                      <textarea
+                        rows={5}
+                        value={value}
+                        onChange={(event) =>
+                          updatePlanning({
+                            [key]: event.target.value,
+                          } as Partial<StoryProject["planning"]>)
+                        }
+                      />
+                    </label>
+                  ))}
+                </div>
               </section>
-            ) : (
-              <section className="empty-creator-state">
-                <span>1</span>
-                <h2>첫 챕터를 구상해 보세요</h2>
-                <p>챕터를 만든 뒤 주요 내용과 사용할 자료를 정할 수 있어요.</p>
-                <button className="primary-button" onClick={addChapter}>
-                  + 첫 챕터 만들기
-                </button>
+
+              <section className="planning-card story-details-card">
+                <div className="card-heading">
+                  <span>인물과 분위기</span>
+                  <strong>이야기답게 만드는 재료</strong>
+                </div>
+                <div className="planning-two-columns">
+                  <label className="field">
+                    <span>등장인물 구상</span>
+                    <textarea
+                      rows={5}
+                      value={draft.planning.characterNotes}
+                      onChange={(event) =>
+                        updatePlanning({ characterNotes: event.target.value })
+                      }
+                      placeholder="인물마다 성격, 관계, 원하는 것을 한 줄씩 적어 보세요."
+                    />
+                  </label>
+                  <div className="planning-stacked-fields">
+                    <label className="field">
+                      <span>주제·중요하게 다룰 내용</span>
+                      <textarea
+                        rows={2}
+                        value={draft.planning.theme}
+                        onChange={(event) =>
+                          updatePlanning({ theme: event.target.value })
+                        }
+                      />
+                    </label>
+                    <label className="field">
+                      <span>전체 분위기</span>
+                      <textarea
+                        rows={2}
+                        value={draft.planning.mood}
+                        onChange={(event) =>
+                          updatePlanning({ mood: event.target.value })
+                        }
+                        placeholder="모험, 긴장, 재미처럼 써 보세요."
+                      />
+                    </label>
+                  </div>
+                </div>
               </section>
-            )}
-          </div>
+
+              <section className="planning-card idea-parking-card">
+                <div className="card-heading">
+                  <span>아이디어 보관함</span>
+                  <strong>아직 결정하지 않아도 되는 생각</strong>
+                </div>
+                <div className="planning-two-columns">
+                  <label className="field editor-only-field">
+                    <span>아직 정하지 못한 것 · 한 줄에 하나씩</span>
+                    <textarea
+                      rows={5}
+                      value={draft.planning.openQuestions}
+                      onChange={(event) =>
+                        updatePlanning({ openQuestions: event.target.value })
+                      }
+                      placeholder={"결말은 밝게 끝낼까?\n새 인물을 등장시킬까?"}
+                    />
+                  </label>
+                  <label className="field editor-only-field">
+                    <span>자유 창작 메모</span>
+                    <textarea
+                      rows={5}
+                      value={draft.planning.freeNotes}
+                      onChange={(event) =>
+                        updatePlanning({ freeNotes: event.target.value })
+                      }
+                      placeholder="떠오른 대사, 연출, 장소처럼 잊고 싶지 않은 생각"
+                    />
+                  </label>
+                </div>
+              </section>
+            </div>
+          ) : (
+            <div className="chapter-planning-workspace">
+              <section className="chapter-flow-board">
+                <div className="chapter-flow-heading">
+                  <div>
+                    <span className="eyebrow">구성 한눈에 보기</span>
+                    <h2>챕터가 어떻게 이어지는지 확인하세요</h2>
+                    <p>
+                      각 챕터에서 한 가지 중요한 변화가 생기면 흐름을 이해하기
+                      쉬워요.
+                    </p>
+                  </div>
+                  <button className="primary-button" onClick={addChapter}>
+                    + 챕터 추가
+                  </button>
+                </div>
+                <div className="chapter-flow-list">
+                  {sortedChapters.map((chapter) => {
+                    const filledItems = [
+                      chapter.title,
+                      chapter.summary,
+                      chapter.purpose,
+                      chapter.keyEvents,
+                    ].filter((value) => value.trim()).length;
+                    const eventCount = chapter.keyEvents
+                      .split("\n")
+                      .filter((value) => value.trim()).length;
+                    const sceneCount = draft.lines.filter(
+                      (line) => line.chapterId === chapter.id,
+                    ).length;
+                    return (
+                      <article
+                        className={`chapter-flow-card ${
+                          chapter.id === selectedChapter?.id ? "active" : ""
+                        }`}
+                        key={chapter.id}
+                      >
+                        <header>
+                          <span>{chapter.order}</span>
+                          <div>
+                            <strong>
+                              {chapter.title || `챕터 ${chapter.order}`}
+                            </strong>
+                            <small>
+                              구상 {filledItems}/4 · 사건 {eventCount} · 장면{" "}
+                              {sceneCount}
+                            </small>
+                          </div>
+                        </header>
+                        <p>{chapter.summary || "이 챕터에서 달라지는 일을 적어 보세요."}</p>
+                        <div className="chapter-flow-link">
+                          <span>다음으로</span>
+                          <strong>
+                            {chapter.nextChapterIdea || "아직 연결 메모가 없어요."}
+                          </strong>
+                        </div>
+                        <div className="chapter-flow-actions">
+                          <button onClick={() => openChapterPlan(chapter.id)}>
+                            구상 다듬기
+                          </button>
+                          <button onClick={() => openChapterWriter(chapter.id)}>
+                            대사 쓰기
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                  {sortedChapters.length === 0 && (
+                    <button className="chapter-flow-empty" onClick={addChapter}>
+                      <strong>첫 챕터 만들기</strong>
+                      <span>이야기의 시작에서 일어날 일을 정해 보세요.</span>
+                    </button>
+                  )}
+                </div>
+              </section>
+
+              <div className="planning-grid chapter-planning-grid">
+                <aside className="chapter-rail planning-chapter-rail">
+                  <div className="chapter-rail-heading">
+                    <div>
+                      <span className="eyebrow">챕터 구상</span>
+                      <strong>챕터 목록</strong>
+                    </div>
+                    <button onClick={addChapter} aria-label="챕터 추가">
+                      +
+                    </button>
+                  </div>
+                  {sortedChapters.map((chapter) => (
+                    <button
+                      key={chapter.id}
+                      className={
+                        chapter.id === selectedChapter?.id ? "active" : ""
+                      }
+                      onClick={() => selectChapter(chapter.id)}
+                    >
+                      <span>{chapter.order}</span>
+                      <div>
+                        <strong>
+                          {chapter.title || `챕터 ${chapter.order}`}
+                        </strong>
+                        <small>{chapter.summary || "아직 구상 중"}</small>
+                      </div>
+                    </button>
+                  ))}
+                </aside>
+
+                {selectedChapter ? (
+                  <section className="planning-card chapter-plan-card">
+                    <div className="card-heading with-actions">
+                      <div>
+                        <span>챕터 {selectedChapter.order}</span>
+                        <strong>한 챕터의 변화 만들기</strong>
+                      </div>
+                      <button
+                        className="danger-link"
+                        onClick={() => removeChapter(selectedChapter.id)}
+                      >
+                        챕터 삭제
+                      </button>
+                    </div>
+                    <div className="chapter-plan-status">
+                      <span>
+                        구상{" "}
+                        {
+                          [
+                            selectedChapter.title,
+                            selectedChapter.summary,
+                            selectedChapter.purpose,
+                            selectedChapter.keyEvents,
+                          ].filter((value) => value.trim()).length
+                        }
+                        /4
+                      </span>
+                      <span>
+                        장면 {selectedChapterLines.length}개
+                      </span>
+                      <span>
+                        화자 {selectedChapter.chapterSpeakerNames.length}명
+                      </span>
+                    </div>
+                    <label className="field wide">
+                      <span>챕터 제목 · 플레이에도 표시</span>
+                      <input
+                        value={selectedChapter.title}
+                        onChange={(event) =>
+                          updateChapter(selectedChapter.id, {
+                            title: event.target.value,
+                          })
+                        }
+                        placeholder={`챕터 ${selectedChapter.order} 제목`}
+                      />
+                    </label>
+                    <label className="field wide editor-only-field">
+                      <span>이 챕터에서 가장 중요하게 달라지는 일</span>
+                      <textarea
+                        rows={3}
+                        value={selectedChapter.summary}
+                        onChange={(event) =>
+                          updateChapter(selectedChapter.id, {
+                            summary: event.target.value,
+                          })
+                        }
+                        placeholder="이 챕터를 한 문장으로 요약해 보세요."
+                      />
+                    </label>
+                    <div className="planning-two-columns">
+                      <label className="field editor-only-field">
+                        <span>전체 이야기에서 맡은 역할</span>
+                        <textarea
+                          rows={3}
+                          value={selectedChapter.purpose}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              purpose: event.target.value,
+                            })
+                          }
+                          placeholder="인물 소개, 문제 시작, 중요한 선택, 마무리"
+                        />
+                      </label>
+                      <label className="field editor-only-field">
+                        <span>인물의 감정은 어떻게 바뀌나요?</span>
+                        <textarea
+                          rows={3}
+                          value={selectedChapter.mood}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              mood: event.target.value,
+                            })
+                          }
+                          placeholder="예: 경계 → 궁금함 → 결심"
+                        />
+                      </label>
+                    </div>
+                    <label className="field wide editor-only-field">
+                      <span>꼭 일어날 사건 · 한 줄에 하나씩</span>
+                      <textarea
+                        rows={4}
+                        value={selectedChapter.keyEvents}
+                        onChange={(event) =>
+                          updateChapter(selectedChapter.id, {
+                            keyEvents: event.target.value,
+                          })
+                        }
+                        placeholder={"자라가 찾아온다.\n토끼가 이야기를 듣기로 한다."}
+                      />
+                    </label>
+                    <label className="field wide editor-only-field">
+                      <span>다음 챕터가 궁금해지게 만드는 연결</span>
+                      <textarea
+                        rows={2}
+                        value={selectedChapter.nextChapterIdea}
+                        onChange={(event) =>
+                          updateChapter(selectedChapter.id, {
+                            nextChapterIdea: event.target.value,
+                          })
+                        }
+                        placeholder="다음에 해결하거나 보여 줄 일"
+                      />
+                    </label>
+                    <details className="chapter-resource-details">
+                      <summary>이 챕터에서 사용할 화자·이미지 정하기</summary>
+                      <p>
+                        장면 편집의 드롭다운에는 여기에서 고른 자료만 표시돼요.
+                      </p>
+                      <section className="resource-pool">
+                        <div className="resource-pool-heading">
+                          <strong>화자 이름</strong>
+                          <span>
+                            {selectedChapter.chapterSpeakerNames.length}개
+                          </span>
+                        </div>
+                        <div className="resource-chip-list">
+                          {selectedChapter.chapterSpeakerNames.map((name) => (
+                            <span className="resource-chip" key={name}>
+                              {name}
+                            </span>
+                          ))}
+                          {selectedChapter.chapterSpeakerNames.length === 0 && (
+                            <span className="empty-resource-copy">
+                              아직 고른 화자가 없어요.
+                            </span>
+                          )}
+                        </div>
+                        <AddSpeaker
+                          onAdd={(name) => addSpeaker(name, false)}
+                        />
+                      </section>
+                      <ResourcePool
+                        title="캐릭터 이미지"
+                        type="character"
+                        ids={selectedChapter.characterAssetIds}
+                        favoriteIds={favoriteAssets}
+                        recentIds={recentAssets}
+                        onToggleFavorite={toggleFavorite}
+                        onAdd={(id) => addAssetToChapter(id, "character")}
+                        onRemove={(id) => removeAsset(id, "character")}
+                      />
+                      <ResourcePool
+                        title="장소·배경"
+                        type="background"
+                        ids={selectedChapter.backgroundAssetIds}
+                        favoriteIds={favoriteAssets}
+                        recentIds={recentAssets}
+                        onToggleFavorite={toggleFavorite}
+                        onAdd={(id) => addAssetToChapter(id, "background")}
+                        onRemove={(id) => removeAsset(id, "background")}
+                      />
+                    </details>
+                    <button
+                      className="primary-button full-button"
+                      onClick={() => openChapterWriter(selectedChapter.id)}
+                    >
+                      이 챕터의 대사·해설 쓰기
+                    </button>
+                  </section>
+                ) : (
+                  <section className="empty-creator-state">
+                    <span>1</span>
+                    <h2>첫 챕터를 구상해 보세요</h2>
+                    <p>
+                      챕터를 만든 뒤 주요 변화와 사건을 정할 수 있어요.
+                    </p>
+                    <button className="primary-button" onClick={addChapter}>
+                      + 첫 챕터 만들기
+                    </button>
+                  </section>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       ) : (
         <section className="making-workspace">
@@ -1994,8 +2316,16 @@ export function StoryStudio() {
 
                 {chapterGuideOpen && (
                   <section className="chapter-guide-panel">
+                    <div className="story-direction-strip">
+                      <span>전체 이야기 나침반</span>
+                      <strong>
+                        {draft.planning.mainCharacter || "주인공 미정"} ·{" "}
+                        {draft.planning.mainGoal || "바라는 것 미정"} · 문제:{" "}
+                        {draft.planning.centralProblem || "아직 정하지 않음"}
+                      </strong>
+                    </div>
                     <div>
-                      <span>편집할 때만 보는 챕터 메모</span>
+                      <span>이 챕터에서 달라지는 일</span>
                       <strong>
                         {selectedChapter.summary || "주요 내용을 적어 보세요."}
                       </strong>

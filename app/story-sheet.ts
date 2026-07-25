@@ -366,6 +366,22 @@ export function buildProjectFromSheet(
     planning: {
       premise: getValue(projectRow, "한 줄 이야기", "premise"),
       theme: getValue(projectRow, "주제", "theme"),
+      mainCharacter: getValue(
+        projectRow,
+        "이야기의 주인공",
+        "main_character",
+      ),
+      mainGoal: getValue(projectRow, "주인공이 바라는 것", "main_goal"),
+      centralProblem: getValue(
+        projectRow,
+        "이야기의 중심 문제",
+        "central_problem",
+      ),
+      endingChange: getValue(
+        projectRow,
+        "마지막에 달라지는 점",
+        "ending_change",
+      ),
       opening: getValue(projectRow, "처음", "opening"),
       middle: getValue(projectRow, "가운데", "middle"),
       ending: getValue(projectRow, "끝", "ending"),
@@ -375,6 +391,12 @@ export function buildProjectFromSheet(
         "character_notes",
       ),
       mood: getValue(projectRow, "전체 분위기", "mood"),
+      openQuestions: getValue(
+        projectRow,
+        "아직 정하지 못한 것",
+        "open_questions",
+      ),
+      freeNotes: getValue(projectRow, "자유 창작 메모", "free_notes"),
     },
     sheetUrl,
     sheetEditable: false,

@@ -34,11 +34,17 @@ export type StoryLine = {
 export type StoryPlanning = {
   premise: string;
   theme: string;
+  mainCharacter: string;
+  mainGoal: string;
+  centralProblem: string;
+  endingChange: string;
   opening: string;
   middle: string;
   ending: string;
   characterNotes: string;
   mood: string;
+  openQuestions: string;
+  freeNotes: string;
 };
 
 export type StoryProject = {
@@ -61,11 +67,17 @@ export const DEFAULT_PROJECT: StoryProject = {
   planning: {
     premise: "토끼와 자라가 서로 솔직하게 이야기하며 새로운 모험을 시작합니다.",
     theme: "정직하게 말하기와 서로 믿는 마음",
+    mainCharacter: "토끼와 자라",
+    mainGoal: "서로를 다시 믿고 함께 새로운 이야기를 만들고 싶다.",
+    centralProblem: "예전에 서로를 속였던 기억 때문에 쉽게 믿기 어렵다.",
+    endingChange: "두 친구가 자기 생각을 솔직히 말하고 함께 결말을 정한다.",
     opening: "들판에서 지친 자라가 토끼를 찾아옵니다.",
     middle: "자라는 토끼에게 용궁의 이야기 잔치에 함께 가자고 제안합니다.",
     ending: "두 친구는 용궁에서 자신들이 정한 새로운 이야기를 시작합니다.",
     characterNotes: "토끼는 영리하고 조심스럽습니다. 자라는 미안한 마음을 솔직하게 말하려 합니다.",
     mood: "모험 · 긴장 · 우정",
+    openQuestions: "토끼는 언제 자라를 다시 믿게 될까?\n용궁의 이야기 잔치에서는 무슨 일이 생길까?",
+    freeNotes: "처음에는 서로 거리를 두고, 마지막에는 같은 방향을 바라보게 연출한다.",
   },
   sheetUrl: "",
   sheetEditable: false,
@@ -265,11 +277,17 @@ export function createBlankProject(): StoryProject {
     planning: {
       premise: "",
       theme: "",
+      mainCharacter: "",
+      mainGoal: "",
+      centralProblem: "",
+      endingChange: "",
       opening: "",
       middle: "",
       ending: "",
       characterNotes: "",
       mood: "",
+      openQuestions: "",
+      freeNotes: "",
     },
     sheetUrl: "",
     sheetEditable: false,
@@ -285,11 +303,17 @@ export function cloneProject(project: StoryProject): StoryProject {
   cloned.planning = {
     premise: cloned.planning?.premise ?? "",
     theme: cloned.planning?.theme ?? "",
+    mainCharacter: cloned.planning?.mainCharacter ?? "",
+    mainGoal: cloned.planning?.mainGoal ?? "",
+    centralProblem: cloned.planning?.centralProblem ?? "",
+    endingChange: cloned.planning?.endingChange ?? "",
     opening: cloned.planning?.opening ?? "",
     middle: cloned.planning?.middle ?? "",
     ending: cloned.planning?.ending ?? "",
     characterNotes: cloned.planning?.characterNotes ?? "",
     mood: cloned.planning?.mood ?? "",
+    openQuestions: cloned.planning?.openQuestions ?? "",
+    freeNotes: cloned.planning?.freeNotes ?? "",
   };
   const namesFromLines = cloned.lines
     .filter((line) => line.type === "dialogue")
