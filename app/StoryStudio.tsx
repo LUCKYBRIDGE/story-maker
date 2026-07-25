@@ -734,6 +734,12 @@ export function StoryStudio() {
   const storyChecklist = [
     { label: "이야기 제목", ready: Boolean(draft.title.trim()) },
     {
+      label: "소재·주제",
+      ready: Boolean(
+        draft.planning.material.trim() && draft.planning.theme.trim(),
+      ),
+    },
+    {
       label: "핵심 인물",
       ready: Boolean(draft.planning.mainCharacter.trim()),
     },
@@ -746,10 +752,12 @@ export function StoryStudio() {
       ready: Boolean(draft.planning.centralProblem.trim()),
     },
     {
-      label: "처음·가운데·끝",
+      label: "5단계 줄거리",
       ready: Boolean(
         draft.planning.opening.trim() &&
           draft.planning.middle.trim() &&
+          draft.planning.crisis.trim() &&
+          draft.planning.climax.trim() &&
           draft.planning.ending.trim(),
       ),
     },
@@ -1650,7 +1658,7 @@ export function StoryStudio() {
               <span>1</span>
               <div>
                 <strong>전체 이야기 구성</strong>
-                <small>주인공·문제·처음·가운데·끝</small>
+                <small>소재·인물·갈등·5단계 줄거리</small>
               </div>
             </button>
             <button
@@ -1687,6 +1695,17 @@ export function StoryStudio() {
                     />
                   </label>
                   <label className="field">
+                    <span>이야기 소재</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.material}
+                      onChange={(event) =>
+                        updatePlanning({ material: event.target.value })
+                      }
+                      placeholder="이야기의 출발점이 되는 사건, 경험, 상상"
+                    />
+                  </label>
+                  <label className="field">
                     <span>이야기 주제</span>
                     <textarea
                       rows={2}
@@ -1714,7 +1733,7 @@ export function StoryStudio() {
               <section className="planning-card story-compass-card">
                 <div className="card-heading">
                   <span>이야기 나침반</span>
-                  <strong>네 가지를 먼저 정해 보세요</strong>
+                  <strong>이야기의 핵심 다섯 가지</strong>
                 </div>
                 <p className="planning-help">
                   정답을 쓰는 칸이 아니에요. 생각이 바뀌면 언제든 다시 고칠 수
@@ -1752,6 +1771,17 @@ export function StoryStudio() {
                         updatePlanning({ centralProblem: event.target.value })
                       }
                       placeholder="사건, 오해, 두려움, 상대 인물"
+                    />
+                  </label>
+                  <label className="field compass-field">
+                    <span>실패하면 어떤 일이 생기나요?</span>
+                    <textarea
+                      rows={2}
+                      value={draft.planning.stakes}
+                      onChange={(event) =>
+                        updatePlanning({ stakes: event.target.value })
+                      }
+                      placeholder="포기하거나 실패했을 때 잃게 되는 것"
                     />
                   </label>
                   <label className="field compass-field">
@@ -1814,25 +1844,41 @@ export function StoryStudio() {
               <section className="planning-card story-arc-card">
                 <div className="card-heading">
                   <span>이야기 뼈대</span>
-                  <strong>처음 · 가운데 · 끝</strong>
+                  <strong>발단 · 전개 · 위기 · 절정 · 결말</strong>
                 </div>
+                <p className="planning-help">
+                  널리 쓰이는 5단계 이야기 구성입니다. 짧은 이야기라면 한두
+                  문장씩만 적어도 충분해요.
+                </p>
                 <div className="story-arc-grid guided-arc-grid">
                   {[
                     [
-                      "처음",
-                      "누구와 어디를 보여 주고, 어떤 일이 시작되나요?",
+                      "발단",
+                      "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
                       "opening",
                       draft.planning.opening,
                     ],
                     [
-                      "가운데",
-                      "문제가 커지고, 인물은 무엇을 시도하거나 선택하나요?",
+                      "전개",
+                      "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
                       "middle",
                       draft.planning.middle,
                     ],
                     [
-                      "끝",
-                      "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
+                      "위기",
+                      "가장 큰 어려움이 닥치고, 어떤 선택 앞에 서나요?",
+                      "crisis",
+                      draft.planning.crisis,
+                    ],
+                    [
+                      "절정",
+                      "갈등을 풀기 위해 주인공이 하는 가장 중요한 행동은?",
+                      "climax",
+                      draft.planning.climax,
+                    ],
+                    [
+                      "결말",
+                      "행동의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
                       "ending",
                       draft.planning.ending,
                     ],
@@ -2354,7 +2400,9 @@ export function StoryStudio() {
                         핵심 인물:{" "}
                         {draft.planning.mainCharacter || "아직 정하지 않음"} ·{" "}
                         {draft.planning.mainGoal || "바라는 것 미정"} · 주요 갈등:{" "}
-                        {draft.planning.centralProblem || "아직 정하지 않음"}
+                        {draft.planning.centralProblem || "아직 정하지 않음"} ·
+                        실패하면:{" "}
+                        {draft.planning.stakes || "아직 정하지 않음"}
                       </strong>
                     </div>
                     <div>

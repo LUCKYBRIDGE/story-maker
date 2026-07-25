@@ -48,8 +48,12 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
 
   assert.match(storyData, /speakerNames:\s*string\[\]/);
   assert.match(storyData, /planning:\s*StoryPlanning/);
+  assert.match(storyData, /material:\s*string/);
   assert.match(storyData, /mainCharacter:\s*string/);
   assert.match(storyData, /centralProblem:\s*string/);
+  assert.match(storyData, /stakes:\s*string/);
+  assert.match(storyData, /crisis:\s*string/);
+  assert.match(storyData, /climax:\s*string/);
   assert.match(storyData, /worldNotes:\s*string/);
   assert.match(storyData, /openQuestions:\s*string/);
   assert.match(storyData, /chapterSpeakerNames:\s*string\[\]/);
@@ -66,6 +70,9 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /전체 이야기 구성/);
   assert.match(studio, /챕터 흐름 구성/);
   assert.match(studio, /이야기 나침반/);
+  assert.match(studio, /이야기 소재/);
+  assert.match(studio, /실패하면 어떤 일이 생기나요/);
+  assert.match(studio, /발단 · 전개 · 위기 · 절정 · 결말/);
   assert.match(studio, /구성 점검/);
   assert.match(studio, /아이디어 보관함/);
   assert.match(studio, /구상 다듬기/);
@@ -85,8 +92,12 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyAssets, /tags:\s*string\[\]/);
   assert.match(workbook, /downloadStoryWorkbook/);
   assert.match(workbook, /한 줄 이야기/);
+  assert.match(workbook, /이야기 소재/);
   assert.match(workbook, /핵심 인물/);
   assert.match(workbook, /주요 갈등/);
+  assert.match(workbook, /실패하면 생기는 일/);
+  assert.match(workbook, /"위기"/);
+  assert.match(workbook, /"절정"/);
   assert.match(workbook, /인물 설정/);
   assert.match(workbook, /배경·세계 설정/);
   assert.match(workbook, /아직 정하지 못한 것/);

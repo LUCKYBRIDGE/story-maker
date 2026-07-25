@@ -367,6 +367,7 @@ export function buildProjectFromSheet(
       getValue(projectRow, "작품 소개", "description") || "불러온 이야기",
     planning: {
       premise: getValue(projectRow, "한 줄 이야기", "premise"),
+      material: getValue(projectRow, "이야기 소재", "소재", "material"),
       theme: getValue(projectRow, "이야기 주제", "주제", "theme"),
       mainCharacter: getValue(
         projectRow,
@@ -381,14 +382,22 @@ export function buildProjectFromSheet(
         "이야기의 중심 문제",
         "central_problem",
       ),
+      stakes: getValue(
+        projectRow,
+        "실패하면 생기는 일",
+        "위험",
+        "stakes",
+      ),
       endingChange: getValue(
         projectRow,
         "마지막에 달라지는 점",
         "ending_change",
       ),
-      opening: getValue(projectRow, "처음", "opening"),
-      middle: getValue(projectRow, "가운데", "middle"),
-      ending: getValue(projectRow, "끝", "ending"),
+      opening: getValue(projectRow, "발단", "처음", "opening"),
+      middle: getValue(projectRow, "전개", "가운데", "middle"),
+      crisis: getValue(projectRow, "위기", "crisis"),
+      climax: getValue(projectRow, "절정", "climax"),
+      ending: getValue(projectRow, "결말", "끝", "ending"),
       characterNotes: getValue(
         projectRow,
         "인물 설정",

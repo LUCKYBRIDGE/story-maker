@@ -4579,7 +4579,7 @@ img {
 
 .story-basics-grid {
   display: grid;
-  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr) minmax(180px, 0.7fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
 }
 
@@ -4598,6 +4598,10 @@ img {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
+}
+
+.story-compass-grid > .compass-field:last-child {
+  grid-column: 1 / -1;
 }
 
 .compass-field {
@@ -4698,6 +4702,7 @@ img {
 }
 
 .guided-arc-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-top: 12px;
 }
 
@@ -4961,12 +4966,8 @@ img {
     grid-template-columns: minmax(0, 1fr) 240px;
   }
 
-  .story-basics-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .story-basics-grid > .field:first-child {
-    grid-column: 1 / -1;
+  .guided-arc-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .story-details-card,
@@ -4989,6 +4990,10 @@ img {
 
   .story-check-card ul {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .guided-arc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .chapter-planning-grid {
@@ -5026,6 +5031,10 @@ img {
   }
 
   .story-basics-grid > .field:first-child {
+    grid-column: 1;
+  }
+
+  .story-compass-grid > .compass-field:last-child {
     grid-column: 1;
   }
 
