@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -71,8 +71,14 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /RABBIT_TURTLE_CONTINUATION_TEMPLATE_2/);
   assert.match(storyData, /continuation-chapter-2/);
   assert.match(storyData, /palace-continuation-chapter-2/);
-  assert.match(storyData, /자라가 토끼를 설득하는 첫 말을 직접 써 보세요/);
+  assert.match(storyData, /자라가 토끼에게 건네는 첫 말을 직접 써 보세요/);
   assert.match(storyData, /결박된 토끼가 살아남기 위해 하는 첫 말을 직접 써 보세요/);
+  assert.match(storyData, /어두워진 용궁 대청에 조개등 불빛이 켜졌다/);
+  assert.match(storyData, /용궁에서 작은 잔치가 열리오/);
+  assert.match(storyData, /호위들을 도와 토끼를 묶어라/);
+  assert.match(storyData, /원작의 선택지는 제거되어 있습니다/);
+  assert.match(studio, /function shouldMirrorAsset/);
+  assert.match(studio, /CHARACTER_FACING/);
   assert.match(studio, /function AddSpeaker/);
   assert.match(studio, /\+ 화자 추가/);
   assert.match(studio, /화자 이름/);
@@ -105,8 +111,8 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /빈 작품 시작/);
   assert.match(studio, /function startRabbitTurtleContinuation1/);
   assert.match(studio, /function startRabbitTurtleContinuation2/);
-  assert.match(studio, /시작할 곳: 자라의 첫 설득/);
-  assert.match(studio, /시작할 곳: 토끼의 첫 대응/);
+  assert.match(studio, /시작할 곳:\s*자라의 첫 설득/);
+  assert.match(studio, /시작할 곳:\s*토끼의 첫 대응/);
   assert.match(studio, /처음부터 읽고 고치기/);
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
@@ -131,4 +137,29 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(workbook, /\["화자 이름"\]/);
   assert.doesNotMatch(workbook, /\["사용",\s*"화자 이름"\]/);
   assert.doesNotMatch(studio, /saveProjectToGoogleSheet/);
+
+  const catalogAssetIds = new Set(
+    [...storyAssets.matchAll(/"id":\s*"([^"]+)"/g)].map((match) => match[1]),
+  );
+  const templateAssetIds = new Set(
+    [
+      ...storyData.matchAll(
+        /"(rabbit-turtle\.(?:character|background)\.[^"]+)"/g,
+      ),
+    ].map((match) => match[1]),
+  );
+
+  for (const assetId of templateAssetIds) {
+    assert.ok(
+      catalogAssetIds.has(assetId),
+      `템플릿 이미지가 자료 목록에 없습니다: ${assetId}`,
+    );
+  }
+
+  const catalogSources = [
+    ...storyAssets.matchAll(/"src":\s*"([^"]+)"/g),
+  ].map((match) => match[1]);
+  for (const source of catalogSources) {
+    await access(new URL(`../public${source}`, import.meta.url));
+  }
 });

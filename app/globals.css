@@ -2183,6 +2183,14 @@ img {
   transform: scale(0.97);
 }
 
+.stage-character.mirrored {
+  transform: scaleX(-1);
+}
+
+.stage-character.mirrored.listener {
+  transform: scaleX(-1) scale(0.97);
+}
+
 .dialogue-box {
   position: absolute;
   z-index: 5;
@@ -3901,6 +3909,11 @@ img {
   right: 0;
 }
 
+.scene-thumb-character.mirrored,
+.editable-stage-character.mirrored {
+  transform: scaleX(-1);
+}
+
 .scene-thumbnail > span {
   position: absolute;
   right: 5px;
@@ -4779,17 +4792,17 @@ img {
   }
 
   .editable-character-slot {
-    bottom: 116px;
-    width: 58%;
-    height: 72%;
+    bottom: 40%;
+    width: 48%;
+    height: 58%;
   }
 
   .editable-character-slot.left {
-    left: -8%;
+    left: 0;
   }
 
   .editable-character-slot.right {
-    right: -8%;
+    right: 0;
   }
 
   .editable-character-slot .asset-open-button {

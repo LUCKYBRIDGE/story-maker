@@ -44,6 +44,14 @@ const CHARACTER_ASSETS = STORY_ASSETS.filter(
 const BACKGROUND_ASSETS = STORY_ASSETS.filter(
   (asset) => asset.type === "background",
 );
+const CHARACTER_FACING = new Map<string, "left" | "right">([
+  ["rabbit-turtle.character.turtle-unified-720x900", "left"],
+  ["rabbit-turtle.character.turtle-child-unified-720x900", "left"],
+  ["rabbit-turtle.character.rabbit-white-unified-720x900", "right"],
+  ["rabbit-turtle.character.dragonking-unified-720x900", "left"],
+  ["rabbit-turtle.character.dragonking-young-unified-720x900", "left"],
+  ["rabbit-turtle.character.physician-unified-720x900", "right"],
+]);
 const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
 const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
 
@@ -148,6 +156,12 @@ function normalizeSearch(value: string) {
 
 function assetName(assetId: string) {
   return ASSET_BY_ID.get(assetId)?.displayName ?? "";
+}
+
+function shouldMirrorAsset(assetId: string, side: "left" | "right") {
+  const currentFacing = CHARACTER_FACING.get(assetId);
+  const inwardFacing = side === "left" ? "right" : "left";
+  return Boolean(currentFacing && currentFacing !== inwardFacing);
 }
 
 function unique(values: string[]) {
@@ -655,12 +669,16 @@ function SceneThumbnail({
       <AssetPreview
         assetId={leftId}
         alt=""
-        className="scene-thumb-character left"
+        className={`scene-thumb-character left ${
+          shouldMirrorAsset(leftId, "left") ? "mirrored" : ""
+        }`}
       />
       <AssetPreview
         assetId={rightId}
         alt=""
-        className="scene-thumb-character right"
+        className={`scene-thumb-character right ${
+          shouldMirrorAsset(rightId, "right") ? "mirrored" : ""
+        }`}
       />
       <span>{line.speakerName || "해설"}</span>
     </div>
@@ -745,14 +763,14 @@ function StoryPlayer({
             alt={assetName(leftId) || "왼쪽 캐릭터"}
             className={`stage-character left ${
               line?.speaker === "right" ? "listener" : ""
-            }`}
+            } ${shouldMirrorAsset(leftId, "left") ? "mirrored" : ""}`}
           />
           <AssetPreview
             assetId={rightId}
             alt={assetName(rightId) || "오른쪽 캐릭터"}
             className={`stage-character right ${
               line?.speaker === "left" ? "listener" : ""
-            }`}
+            } ${shouldMirrorAsset(rightId, "right") ? "mirrored" : ""}`}
           />
         </section>
         <section
@@ -1722,7 +1740,8 @@ export function StoryStudio() {
                     자라는 토끼를 어떻게 용궁으로 데려갈까요?
                   </small>
                   <em>
-                    준비된 내용: 두 인물의 만남 · 시작할 곳: 자라의 첫 설득
+                    준비된 내용: 용왕의 명령과 두 인물의 만남 · 시작할 곳:
+                    자라의 첫 설득
                   </em>
                 </span>
                 <b>이어서 쓰기</b>
@@ -1738,7 +1757,8 @@ export function StoryStudio() {
                     결박된 토끼는 어떻게 위기를 벗어날까요?
                   </small>
                   <em>
-                    준비된 내용: 용궁 도착과 결박 · 시작할 곳: 토끼의 첫 대응
+                    준비된 내용: 용왕의 명령·잔치 초대·용궁 결박 · 시작할 곳:
+                    토끼의 첫 대응
                   </em>
                 </span>
                 <b>이어서 쓰기</b>
@@ -3187,7 +3207,11 @@ export function StoryStudio() {
                             <AssetPreview
                               assetId={effectiveId}
                               alt={assetName(effectiveId) || `${side} 캐릭터`}
-                              className="editable-stage-character"
+                              className={`editable-stage-character ${
+                                shouldMirrorAsset(effectiveId, side)
+                                  ? "mirrored"
+                                  : ""
+                              }`}
                             />
                             <AssetPickerButton
                               type="character"
