@@ -13,6 +13,7 @@ import {
   createBlankProject,
   DEFAULT_PROJECT,
   RABBIT_TURTLE_CONTINUATION_TEMPLATE,
+  RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
   type Chapter,
   type StoryLine,
   type StoryProject,
@@ -1406,8 +1407,13 @@ export function StoryStudio() {
     setNotice("빈 작품을 열었어요. 구상부터 시작하거나 바로 챕터를 만드세요.");
   }
 
-  function startRabbitTurtleContinuation() {
-    const template = cloneProject(RABBIT_TURTLE_CONTINUATION_TEMPLATE);
+  function startContinuationTemplate(
+    source: StoryProject,
+    continuationChapterId: string,
+    continuationLineId: string,
+    message: string,
+  ) {
+    const template = cloneProject(source);
     const playableLines = template.lines.filter((line) => line.text.trim());
     const playableStart = cloneProject({
       ...template,
@@ -1420,16 +1426,32 @@ export function StoryStudio() {
     setDraft(template);
     setActive(playableStart);
     localStorage.setItem(ACTIVE_KEY, JSON.stringify(playableStart));
-    setSelectedChapterId("continuation-chapter-2");
-    setSelectedLineId("continuation-line-6");
+    setSelectedChapterId(continuationChapterId);
+    setSelectedLineId(continuationLineId);
     setWorkspaceMode("create");
     setEditorMode("scene");
     setChapterGuideOpen(true);
     setChapterResourcesOpen(false);
     setSceneNotesOpen(false);
     setCreatorAccess("local");
-    setNotice(
+    setNotice(message);
+  }
+
+  function startRabbitTurtleContinuation1() {
+    startContinuationTemplate(
+      RABBIT_TURTLE_CONTINUATION_TEMPLATE,
+      "continuation-chapter-2",
+      "continuation-line-6",
       "토끼와 자라가 만난 다음 장면을 열었어요. 자라의 첫 말부터 이어 써 보세요.",
+    );
+  }
+
+  function startRabbitTurtleContinuation2() {
+    startContinuationTemplate(
+      RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
+      "palace-continuation-chapter-2",
+      "palace-continuation-line-7",
+      "용궁에 묶인 토끼의 다음 장면을 열었어요. 토끼의 첫 말부터 이어 써 보세요.",
     );
   }
 
@@ -1539,22 +1561,40 @@ export function StoryStudio() {
               </div>
               <small>준비된 앞부분을 읽고, 빈 장면부터 직접 이어 씁니다.</small>
             </div>
-            <button
-              className="entry-template-card"
-              onClick={startRabbitTurtleContinuation}
-            >
-              <span className="template-number">01</span>
-              <span className="template-copy">
-                <strong>토끼와 자라 · 땅에서 만난 뒤</strong>
-                <small>
-                  자라는 토끼를 어떻게 용궁으로 데려갈까요?
-                </small>
-                <em>
-                  준비된 내용: 두 인물의 만남 · 시작할 곳: 자라의 첫 설득
-                </em>
-              </span>
-              <b>이어서 쓰기</b>
-            </button>
+            <div className="entry-template-list">
+              <button
+                className="entry-template-card"
+                onClick={startRabbitTurtleContinuation1}
+              >
+                <span className="template-number">01</span>
+                <span className="template-copy">
+                  <strong>토끼와 자라 템플릿 1 · 땅에서 만난 뒤</strong>
+                  <small>
+                    자라는 토끼를 어떻게 용궁으로 데려갈까요?
+                  </small>
+                  <em>
+                    준비된 내용: 두 인물의 만남 · 시작할 곳: 자라의 첫 설득
+                  </em>
+                </span>
+                <b>이어서 쓰기</b>
+              </button>
+              <button
+                className="entry-template-card"
+                onClick={startRabbitTurtleContinuation2}
+              >
+                <span className="template-number">02</span>
+                <span className="template-copy">
+                  <strong>토끼와 자라 템플릿 2 · 용궁에 묶인 토끼</strong>
+                  <small>
+                    결박된 토끼는 어떻게 위기를 벗어날까요?
+                  </small>
+                  <em>
+                    준비된 내용: 용궁 도착과 결박 · 시작할 곳: 토끼의 첫 대응
+                  </em>
+                </span>
+                <b>이어서 쓰기</b>
+              </button>
+            </div>
           </section>
           <input
             ref={excelInputRef}

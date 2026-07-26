@@ -277,10 +277,16 @@ img {
   text-align: right;
 }
 
+.entry-template-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .entry-template-card {
   display: grid;
-  min-height: 94px;
-  align-items: center;
+  min-height: 142px;
+  align-items: start;
   gap: 14px;
   padding: 14px 16px;
   border: 1px solid #d9bd6c;
@@ -290,7 +296,7 @@ img {
     var(--white);
   color: var(--ink);
   text-align: left;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-columns: 46px minmax(0, 1fr);
 }
 
 .entry-template-card:hover {
@@ -333,6 +339,8 @@ img {
 }
 
 .entry-template-card > b {
+  grid-column: 2;
+  justify-self: start;
   padding: 9px 12px;
   border-radius: 10px;
   background: var(--ink);
@@ -2240,6 +2248,10 @@ img {
 }
 
 @media (max-width: 860px) {
+  .entry-template-list {
+    grid-template-columns: 1fr;
+  }
+
   .asset-picker-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2396,11 +2408,6 @@ img {
     min-height: 0;
     align-items: start;
     grid-template-columns: 42px minmax(0, 1fr);
-  }
-
-  .entry-template-card > b {
-    grid-column: 2;
-    justify-self: start;
   }
 
   .entry-actions {

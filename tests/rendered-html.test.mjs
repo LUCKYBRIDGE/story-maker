@@ -34,8 +34,10 @@ test("서버가 로그인 없는 이야기별 시작 화면을 렌더링한다",
   assert.match(html, /Excel 파일 열기/);
   assert.match(html, /Google 시트 불러오기/);
   assert.match(html, /이어쓰기 템플릿/);
-  assert.match(html, /토끼와 자라 · 땅에서 만난 뒤/);
+  assert.match(html, /토끼와 자라 템플릿 1 · 땅에서 만난 뒤/);
   assert.match(html, /자라는 토끼를 어떻게 용궁으로 데려갈까요/);
+  assert.match(html, /토끼와 자라 템플릿 2 · 용궁에 묶인 토끼/);
+  assert.match(html, /결박된 토끼는 어떻게 위기를 벗어날까요/);
   assert.match(html, /예시 작품 먼저 플레이/);
   assert.doesNotMatch(html, /Google로 시작하기/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
@@ -65,8 +67,11 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /backgroundAssetIds:\s*string\[\]/);
   assert.match(storyData, /function createBlankProject/);
   assert.match(storyData, /RABBIT_TURTLE_CONTINUATION_TEMPLATE/);
+  assert.match(storyData, /RABBIT_TURTLE_CONTINUATION_TEMPLATE_2/);
   assert.match(storyData, /continuation-chapter-2/);
+  assert.match(storyData, /palace-continuation-chapter-2/);
   assert.match(storyData, /자라가 토끼를 설득하는 첫 말을 직접 써 보세요/);
+  assert.match(storyData, /결박된 토끼가 살아남기 위해 하는 첫 말을 직접 써 보세요/);
   assert.match(studio, /function AddSpeaker/);
   assert.match(studio, /\+ 화자 추가/);
   assert.match(studio, /화자 이름/);
@@ -97,8 +102,10 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /Excel로 저장/);
   assert.match(studio, /시트에서 불러오기/);
   assert.match(studio, /빈 작품 시작/);
-  assert.match(studio, /function startRabbitTurtleContinuation/);
+  assert.match(studio, /function startRabbitTurtleContinuation1/);
+  assert.match(studio, /function startRabbitTurtleContinuation2/);
   assert.match(studio, /시작할 곳: 자라의 첫 설득/);
+  assert.match(studio, /시작할 곳: 토끼의 첫 대응/);
   assert.match(studio, /이야기별_구글시트_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);
