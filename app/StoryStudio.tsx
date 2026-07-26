@@ -158,6 +158,36 @@ function projectContent(project: StoryProject) {
   return JSON.stringify({ ...project, updatedAt: "" });
 }
 
+function findContinuationPoint(
+  project: StoryProject,
+): NonNullable<StoryProject["continuation"]> | null {
+  if (
+    project.continuation &&
+    project.chapters.some(
+      (chapter) => chapter.id === project.continuation?.chapterId,
+    ) &&
+    project.lines.some((line) => line.id === project.continuation?.lineId)
+  ) {
+    return project.continuation;
+  }
+
+  const continuationChapter = project.chapters
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .find((chapter) => chapter.title.includes("이어 쓰기"));
+  const continuationLine = project.lines
+    .filter((line) => line.chapterId === continuationChapter?.id)
+    .sort((a, b) => a.order - b.order)[0];
+
+  return continuationChapter && continuationLine
+    ? {
+        chapterId: continuationChapter.id,
+        lineId: continuationLine.id,
+        label: continuationChapter.summary || "이어서 쓸 첫 장면",
+      }
+    : null;
+}
+
 function AssetPreview({
   assetId,
   className,
@@ -684,7 +714,7 @@ function StoryPlayer({
       >
         <header className="player-topbar">
           <div>
-            <span className="eyebrow">이야기별 플레이</span>
+            <span className="eyebrow">놀퀴즈 스토리 플레이</span>
             <strong>{project.title}</strong>
           </div>
           <div className="player-top-actions">
@@ -793,9 +823,12 @@ export function StoryStudio() {
   );
   const [playIndex, setPlayIndex] = useState(0);
   const [projectToolsOpen, setProjectToolsOpen] = useState(false);
+  const [mobileProjectOpen, setMobileProjectOpen] = useState(false);
+  const [mobileEditorToolsOpen, setMobileEditorToolsOpen] = useState(false);
   const [chapterGuideOpen, setChapterGuideOpen] = useState(false);
   const [chapterResourcesOpen, setChapterResourcesOpen] = useState(false);
   const [sceneNotesOpen, setSceneNotesOpen] = useState(false);
+  const [sceneSettingsOpen, setSceneSettingsOpen] = useState(false);
   const [favoriteAssets, setFavoriteAssets] = useState<string[]>([]);
   const [recentAssets, setRecentAssets] = useState<string[]>([]);
   const [notice, setNotice] = useState(
@@ -885,6 +918,18 @@ export function StoryStudio() {
   const sortedChapters = draft.chapters
     .slice()
     .sort((a, b) => a.order - b.order);
+  const orderedDraftLines = sortedChapters.flatMap((chapter) =>
+    draft.lines
+      .filter((line) => line.chapterId === chapter.id)
+      .sort((a, b) => a.order - b.order),
+  );
+  const selectedStoryLineIndex = selectedLine
+    ? orderedDraftLines.findIndex((line) => line.id === selectedLine.id)
+    : -1;
+  const continuationPoint = findContinuationPoint(draft);
+  const isAtContinuationPoint =
+    continuationPoint?.chapterId === selectedChapter?.id &&
+    continuationPoint?.lineId === selectedLine?.id;
   const selectedStructure =
     STORY_STRUCTURE_OPTIONS.find(
       (option) => option.mode === draft.planning.structureMode,
@@ -999,6 +1044,43 @@ export function StoryStudio() {
       .filter((line) => line.chapterId === chapterId)
       .sort((a, b) => a.order - b.order)[0];
     setSelectedLineId(firstLine?.id ?? "");
+  }
+
+  function selectStoryLine(line: StoryLine) {
+    setSelectedChapterId(line.chapterId);
+    setSelectedLineId(line.id);
+  }
+
+  function moveThroughStory(direction: -1 | 1) {
+    const nextLine = orderedDraftLines[selectedStoryLineIndex + direction];
+    if (nextLine) selectStoryLine(nextLine);
+  }
+
+  function editStoryFromBeginning() {
+    const firstLine = orderedDraftLines[0];
+    if (!firstLine) return;
+    setWorkspaceMode("create");
+    setEditorMode("scene");
+    selectStoryLine(firstLine);
+    setSceneSettingsOpen(false);
+    setNotice(
+      "첫 장면부터 차례로 읽고 고칠 수 있어요. ‘다음 장면’을 누르면 챕터를 넘어 계속 이어집니다.",
+    );
+  }
+
+  function returnToContinuationPoint() {
+    if (!continuationPoint) return;
+    const continuationLine = draft.lines.find(
+      (line) => line.id === continuationPoint.lineId,
+    );
+    if (!continuationLine) return;
+    setWorkspaceMode("create");
+    setEditorMode("scene");
+    selectStoryLine(continuationLine);
+    setSceneSettingsOpen(false);
+    setNotice(
+      `${continuationPoint.label} 장면으로 돌아왔어요. 여기서부터 이야기를 이어 써 보세요.`,
+    );
   }
 
   function addChapter() {
@@ -1463,6 +1545,9 @@ export function StoryStudio() {
     setWorkspaceMode("plan");
     setPlanningView("story");
     setEditorMode("chapter");
+    setMobileProjectOpen(false);
+    setMobileEditorToolsOpen(false);
+    setSceneSettingsOpen(false);
     setCreatorAccess("local");
     setBlankConfirmOpen(false);
     setNotice("빈 작품을 열었어요. 구상부터 시작하거나 바로 챕터를 만드세요.");
@@ -1491,7 +1576,10 @@ export function StoryStudio() {
     setSelectedLineId(continuationLineId);
     setWorkspaceMode("create");
     setEditorMode("scene");
-    setChapterGuideOpen(true);
+    setMobileProjectOpen(false);
+    setMobileEditorToolsOpen(false);
+    setSceneSettingsOpen(false);
+    setChapterGuideOpen(false);
     setChapterResourcesOpen(false);
     setSceneNotesOpen(false);
     setCreatorAccess("local");
@@ -1562,8 +1650,8 @@ export function StoryStudio() {
       <main className="entry-shell">
         <section className="entry-card" aria-labelledby="entry-title">
           <div className="entry-brand">
-            <span className="brand-mark large">이야기별</span>
-            <span>STORYGAME STUDIO</span>
+            <span className="brand-mark large">놀퀴즈</span>
+            <span>NOLQUIZ STORY STUDIO</span>
           </div>
           <div className="entry-copy">
             <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
@@ -1737,9 +1825,12 @@ export function StoryStudio() {
     <main className="creator-shell">
       <header className="creator-header">
         <div className="creator-brand">
-          <span className="brand-mark">이야기별</span>
+          <span className="brand-mark">놀퀴즈</span>
           <div>
-            <strong>스토리게임 스튜디오</strong>
+            <strong>
+              <span className="creator-brand-name">놀퀴즈 </span>
+              스토리 스튜디오
+            </strong>
             <small>{currentLocation}</small>
           </div>
         </div>
@@ -1768,7 +1859,26 @@ export function StoryStudio() {
         </div>
       </header>
 
-      <section className="creator-project-bar">
+      <button
+        className="mobile-panel-toggle project-info-toggle"
+        aria-expanded={mobileProjectOpen}
+        onClick={() => setMobileProjectOpen((current) => !current)}
+      >
+        <span>
+          <strong>작품 정보</strong>
+          <small>
+            {draft.title || "제목 없음"} · 챕터 {draft.chapters.length} · 장면{" "}
+            {draft.lines.length}
+          </small>
+        </span>
+        <b>{mobileProjectOpen ? "접기" : "펼치기"}</b>
+      </button>
+
+      <section
+        className={`creator-project-bar ${
+          mobileProjectOpen ? "mobile-open" : ""
+        }`}
+      >
         <label>
           <span>이야기 제목</span>
           <input
@@ -1811,7 +1921,7 @@ export function StoryStudio() {
             </button>
             <button onClick={saveExcelFile}>Excel로 저장</button>
             <a
-              href="/templates/이야기별_구글시트_템플릿.xlsx"
+              href="/templates/놀퀴즈_스토리_템플릿.xlsx"
               download
             >
               빈 Excel 템플릿
@@ -1852,6 +1962,35 @@ export function StoryStudio() {
       <p className="creator-notice" role="status">
         {notice}
       </p>
+
+      {continuationPoint && (
+        <section
+          className="continuation-edit-bar"
+          aria-label="이어쓰기 편집 안내"
+        >
+          <div>
+            <span className="eyebrow">이어쓰기 작품</span>
+            <strong>
+              앞이야기도 고치고, 이어 쓸 곳으로 돌아올 수 있어요.
+            </strong>
+            <small>
+              준비된 장면도 내 이야기의 일부예요. 처음부터 차례로 읽으며
+              대사와 해설을 바꿔 보세요.
+            </small>
+          </div>
+          <div>
+            <button onClick={editStoryFromBeginning}>
+              처음부터 읽고 고치기
+            </button>
+            <button
+              className={isAtContinuationPoint ? "active" : ""}
+              onClick={returnToContinuationPoint}
+            >
+              이어 쓸 곳으로
+            </button>
+          </div>
+        </section>
+      )}
 
       <nav className="creator-primary-nav" aria-label="창작 과정">
         <button
@@ -2500,7 +2639,25 @@ export function StoryStudio() {
         </section>
       ) : (
         <section className="making-workspace">
-          <header className="making-toolbar">
+          <header
+            className={`making-toolbar ${
+              mobileEditorToolsOpen ? "mobile-open" : ""
+            }`}
+          >
+            <button
+              className="mobile-panel-toggle editor-tools-toggle"
+              aria-expanded={mobileEditorToolsOpen}
+              onClick={() => setMobileEditorToolsOpen((current) => !current)}
+            >
+              <span>
+                <strong>편집 보기</strong>
+                <small>
+                  {editorMode === "chapter" ? "챕터 전체" : "현재 장면"} ·{" "}
+                  {imageView === "text" ? "글만" : "작은 그림"}
+                </small>
+              </span>
+              <b>{mobileEditorToolsOpen ? "접기" : "펼치기"}</b>
+            </button>
             <div className="editor-mode-switch" aria-label="편집 화면 선택">
               <button
                 className={editorMode === "chapter" ? "active" : ""}
@@ -2951,30 +3108,24 @@ export function StoryStudio() {
                   <div className="scene-focus-editor">
                     <div className="scene-focus-nav">
                       <button
-                        disabled={selectedLineIndex <= 0}
-                        onClick={() =>
-                          setSelectedLineId(
-                            selectedChapterLines[selectedLineIndex - 1]?.id ??
-                              selectedLine.id,
-                          )
-                        }
+                        disabled={selectedStoryLineIndex <= 0}
+                        onClick={() => moveThroughStory(-1)}
                       >
                         ← 이전 장면
                       </button>
                       <strong>
-                        장면 {selectedLineIndex + 1}/
-                        {selectedChapterLines.length}
+                        전체 장면 {selectedStoryLineIndex + 1}/
+                        {orderedDraftLines.length}
+                        <small>
+                          챕터 {selectedChapter.order} · 이 챕터{" "}
+                          {selectedLineIndex + 1}/{selectedChapterLines.length}
+                        </small>
                       </strong>
                       <button
                         disabled={
-                          selectedLineIndex >= selectedChapterLines.length - 1
+                          selectedStoryLineIndex >= orderedDraftLines.length - 1
                         }
-                        onClick={() =>
-                          setSelectedLineId(
-                            selectedChapterLines[selectedLineIndex + 1]?.id ??
-                              selectedLine.id,
-                          )
-                        }
+                        onClick={() => moveThroughStory(1)}
                       >
                         다음 장면 →
                       </button>
@@ -3105,7 +3256,23 @@ export function StoryStudio() {
                       </label>
                     </section>
 
-                    <div className="scene-focus-lower">
+                    <button
+                      className="mobile-panel-toggle scene-settings-toggle"
+                      aria-expanded={sceneSettingsOpen}
+                      onClick={() => setSceneSettingsOpen((current) => !current)}
+                    >
+                      <span>
+                        <strong>화자·이미지·장면 설정</strong>
+                        <small>종류, 화자 위치, 캐릭터와 배경</small>
+                      </span>
+                      <b>{sceneSettingsOpen ? "접기" : "펼치기"}</b>
+                    </button>
+
+                    <div
+                      className={`scene-focus-lower ${
+                        sceneSettingsOpen ? "mobile-open" : ""
+                      }`}
+                    >
                       <section className="scene-setting-card">
                         <div className="card-heading">
                           <span>플레이에 표시</span>

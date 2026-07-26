@@ -97,7 +97,7 @@ function safeFileName(title: string) {
     title
       .trim()
       .replace(/[\\/:*?"<>|]/g, "_")
-      .slice(0, 60) || "이야기별_작품"
+      .slice(0, 60) || "놀퀴즈_스토리"
   );
 }
 
@@ -106,7 +106,7 @@ export async function downloadStoryWorkbook(
   assets: StoryAsset[],
 ) {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "이야기별 스토리게임 스튜디오";
+  workbook.creator = "놀퀴즈 스토리 스튜디오";
   workbook.created = new Date();
 
   addSheet(

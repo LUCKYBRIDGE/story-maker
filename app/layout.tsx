@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "이야기별 · 스토리게임 스튜디오",
+  title: "놀퀴즈 스토리 스튜디오",
   description:
-    "토끼와 자라, 옹고집전의 캐릭터와 배경을 골라 나만의 스토리게임을 만드세요.",
+    "대사와 해설을 쓰고 캐릭터와 배경을 골라 나만의 스토리게임을 만드는 놀퀴즈 창작 도구입니다.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

@@ -57,6 +57,11 @@ export type StoryProject = {
   id: string;
   title: string;
   description: string;
+  continuation?: {
+    chapterId: string;
+    lineId: string;
+    label: string;
+  };
   planning: StoryPlanning;
   sheetUrl: string;
   sheetEditable: boolean;
@@ -285,6 +290,11 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
   id: "template-rabbit-turtle-land-meeting",
   title: "토끼와 자라: 땅에서 만난 뒤",
   description: "자라가 토끼를 용궁으로 데려갈 방법을 이어 쓰는 이야기",
+  continuation: {
+    chapterId: "continuation-chapter-2",
+    lineId: "continuation-line-6",
+    label: "자라의 첫 설득",
+  },
   planning: {
     premise: "땅에서 만난 자라는 토끼를 용궁으로 데려가려고 합니다. 그다음 이야기는 어떻게 이어질까요?",
     structureMode: "three",
@@ -467,6 +477,11 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
   id: "template-rabbit-turtle-palace-capture",
   title: "토끼와 자라: 용궁에 묶인 토끼",
   description: "용궁에서 결박된 토끼가 위기를 벗어나는 방법을 이어 쓰는 이야기",
+  continuation: {
+    chapterId: "palace-continuation-chapter-2",
+    lineId: "palace-continuation-line-7",
+    label: "토끼의 첫 대응",
+  },
   planning: {
     premise: "용궁에 도착한 토끼는 자신이 속았다는 사실을 깨닫습니다. 결박된 토끼는 어떻게 위기를 벗어날까요?",
     structureMode: "four",

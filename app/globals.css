@@ -2930,6 +2930,10 @@ img {
   font-size: 16px;
 }
 
+.creator-brand-name {
+  display: none;
+}
+
 .creator-brand small {
   max-width: min(52vw, 700px);
   margin-top: 3px;
@@ -2974,12 +2978,69 @@ img {
 .creator-project-bar,
 .project-tools,
 .creator-notice,
+.continuation-edit-bar,
 .creator-primary-nav,
 .planning-workspace,
 .making-workspace,
 .creator-footer {
   width: min(1440px, calc(100% - clamp(24px, 6vw, 86px)));
   margin-inline: auto;
+}
+
+.mobile-panel-toggle {
+  display: none;
+}
+
+.continuation-edit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 14px;
+  border: 1px solid #d9bd6a;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff8dc, #fffdf5);
+  box-shadow: var(--shadow-small);
+}
+
+.continuation-edit-bar > div:first-child {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.continuation-edit-bar > div:first-child > strong {
+  color: #503b11;
+  font-family: "Iowan Old Style", "Noto Serif KR", serif;
+  font-size: 15px;
+}
+
+.continuation-edit-bar > div:first-child > small {
+  color: #75633c;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.continuation-edit-bar > div:last-child {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 7px;
+}
+
+.continuation-edit-bar button {
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid #c6a64b;
+  border-radius: 11px;
+  background: white;
+  color: #59420d;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.continuation-edit-bar button.active {
+  background: #59420d;
+  color: white;
 }
 
 .creator-project-bar {
@@ -3921,6 +3982,18 @@ img {
   font-weight: 900;
 }
 
+.scene-focus-nav > strong {
+  text-align: center;
+}
+
+.scene-focus-nav > strong small {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 9px;
+  font-weight: 700;
+}
+
 .editable-stage {
   position: relative;
   min-height: 460px;
@@ -4320,6 +4393,70 @@ img {
     justify-content: flex-end;
   }
 
+  .mobile-panel-toggle {
+    width: min(1440px, calc(100% - clamp(24px, 6vw, 86px)));
+    min-height: 48px;
+    margin-inline: auto;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: rgba(255, 253, 248, 0.92);
+    color: var(--ink);
+    text-align: left;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobile-panel-toggle > span {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .mobile-panel-toggle strong,
+  .mobile-panel-toggle small {
+    display: block;
+  }
+
+  .mobile-panel-toggle strong {
+    font-size: 12px;
+  }
+
+  .mobile-panel-toggle small {
+    color: var(--ink-soft);
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-panel-toggle b {
+    flex: 0 0 auto;
+    color: var(--mint-strong);
+    font-size: 10px;
+  }
+
+  .project-info-toggle {
+    display: flex;
+    margin-top: 10px;
+  }
+
+  .creator-project-bar:not(.mobile-open) {
+    display: none;
+  }
+
+  .continuation-edit-bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .continuation-edit-bar > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .creator-project-bar {
     grid-template-columns: 1fr 1fr;
   }
@@ -4327,6 +4464,28 @@ img {
   .project-counts {
     grid-column: 1 / -1;
     justify-content: flex-start;
+  }
+
+  .making-toolbar .editor-tools-toggle {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    flex: 1 0 100%;
+  }
+
+  .making-toolbar:not(.mobile-open) .editor-mode-switch,
+  .making-toolbar:not(.mobile-open) .view-setting {
+    display: none;
+  }
+
+  .scene-focus-editor > .scene-settings-toggle {
+    display: flex;
+    width: 100%;
+    margin: 0;
+  }
+
+  .scene-focus-lower:not(.mobile-open) {
+    display: none;
   }
 
   .project-tools {
@@ -4426,11 +4585,16 @@ img {
   .creator-header {
     display: grid;
     padding: 9px 12px;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr;
+    gap: 7px;
   }
 
   .creator-brand .brand-mark {
     display: none;
+  }
+
+  .creator-brand-name {
+    display: inline;
   }
 
   .creator-brand strong {
@@ -4438,17 +4602,21 @@ img {
   }
 
   .creator-brand small {
-    max-width: 58vw;
+    max-width: calc(100vw - 24px);
     font-size: 10px;
   }
 
   .creator-header-actions {
+    display: grid;
+    width: 100%;
     gap: 5px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .creator-header-actions .apply-button,
   .creator-header-actions .play-button,
   .creator-header-actions .quiet-button {
+    width: 100%;
     min-height: 36px;
     padding: 0 8px;
     font-size: 10px;
@@ -4457,6 +4625,8 @@ img {
   .creator-project-bar,
   .project-tools,
   .creator-notice,
+  .continuation-edit-bar,
+  .mobile-panel-toggle,
   .creator-primary-nav,
   .planning-workspace,
   .making-workspace,

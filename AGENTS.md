@@ -1,4 +1,4 @@
-# 이야기별 Agent Rules
+# 놀퀴즈 스토리 스튜디오 Agent Rules
 
 ## Project State
 - `incubating`

@@ -18,7 +18,7 @@ const assets = JSON.parse(
 );
 
 const workbook = new ExcelJS.Workbook();
-workbook.creator = "이야기별 스토리게임 스튜디오";
+workbook.creator = "놀퀴즈 스토리 스튜디오";
 workbook.created = new Date();
 
 function addSheet(name, rows, widths) {
@@ -190,6 +190,6 @@ addSheet(
 
 const outputDir = path.join(projectRoot, "public/templates");
 await mkdir(outputDir, { recursive: true });
-const outputPath = path.join(outputDir, "이야기별_구글시트_템플릿.xlsx");
+const outputPath = path.join(outputDir, "놀퀴즈_스토리_템플릿.xlsx");
 await workbook.xlsx.writeFile(outputPath);
 console.log(`Generated ${outputPath} with ${assets.length} resources.`);

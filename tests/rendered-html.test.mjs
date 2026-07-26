@@ -23,13 +23,14 @@ async function render() {
   );
 }
 
-test("서버가 로그인 없는 이야기별 시작 화면을 렌더링한다", async () => {
+test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면을 렌더링한다", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>이야기별 · 스토리게임 스튜디오<\/title>/i);
+  assert.match(html, /<title>놀퀴즈 스토리 스튜디오<\/title>/i);
+  assert.match(html, /놀퀴즈/);
   assert.match(html, /웹에서 새 작품/);
   assert.match(html, /Excel 파일 열기/);
   assert.match(html, /Google 시트 불러오기/);
@@ -106,7 +107,11 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /function startRabbitTurtleContinuation2/);
   assert.match(studio, /시작할 곳: 자라의 첫 설득/);
   assert.match(studio, /시작할 곳: 토끼의 첫 대응/);
-  assert.match(studio, /이야기별_구글시트_템플릿\.xlsx/);
+  assert.match(studio, /처음부터 읽고 고치기/);
+  assert.match(studio, /이어 쓸 곳으로/);
+  assert.match(studio, /function moveThroughStory/);
+  assert.match(studio, /화자·이미지·장면 설정/);
+  assert.match(studio, /놀퀴즈_스토리_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);
   assert.match(workbook, /downloadStoryWorkbook/);
