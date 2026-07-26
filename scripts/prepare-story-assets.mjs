@@ -47,12 +47,7 @@ async function worker() {
       },
     );
     await writeFile(inputPath, stdout);
-    const isRabbitTurtleCharacter =
-      asset.type === "character" && asset.story === "토끼와 자라";
-    const isUnifiedFullBody =
-      isRabbitTurtleCharacter && asset.sourcePath.includes("_unified_720x900");
-
-    if (isRabbitTurtleCharacter && !isUnifiedFullBody) {
+    if (asset.framing === "상반신") {
       // 표정·동작 자료는 상반신 크기와 투명 여백이 서로 다르다.
       // 실제 그림을 같은 500px 영역 안에 맞추고 시작 높이를 통일한 뒤
       // 720×900 캔버스에 놓아, 편집·미리보기·플레이에서 갑작스러운
@@ -73,6 +68,29 @@ async function worker() {
         "720x600",
         "-gravity",
         "south",
+        "-extent",
+        "720x900",
+        "-quality",
+        "86",
+        "-define",
+        "webp:method=6",
+        outputPath,
+      ]);
+    } else if (asset.framing === "전신" || asset.framing === "여러 인물") {
+      const targetBox =
+        asset.framing === "여러 인물" ? "680x760" : "620x820";
+      await run("magick", [
+        inputPath,
+        "-auto-orient",
+        "-strip",
+        "-trim",
+        "+repage",
+        "-resize",
+        targetBox,
+        "-gravity",
+        "south",
+        "-background",
+        "none",
         "-extent",
         "720x900",
         "-quality",

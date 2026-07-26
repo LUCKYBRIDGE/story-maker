@@ -44,6 +44,8 @@ const CHARACTER_ASSETS = STORY_ASSETS.filter(
 const BACKGROUND_ASSETS = STORY_ASSETS.filter(
   (asset) => asset.type === "background",
 );
+const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
+const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
 
 type StoryArcKey = "opening" | "middle" | "crisis" | "climax" | "ending";
 
@@ -202,12 +204,37 @@ function AssetPickerButton({
   const [tags, setTags] = useState<string[]>([]);
   const [view, setView] = useState<AssetView>("all");
   const assets = type === "character" ? CHARACTER_ASSETS : BACKGROUND_ASSETS;
+  const featuredTagGroups = useMemo(
+    () => [
+      {
+        label: "작품",
+        tags: STORY_FILTER_TAGS.filter((tag) =>
+          assets.some((asset) => asset.tags.includes(tag)),
+        ),
+      },
+      ...(type === "character"
+        ? [
+            {
+              label: "구도",
+              tags: FRAMING_FILTER_TAGS.filter((tag) =>
+                assets.some((asset) => asset.tags.includes(tag)),
+              ),
+            },
+          ]
+        : []),
+    ],
+    [assets, type],
+  );
+  const featuredTags = useMemo(
+    () => featuredTagGroups.flatMap((group) => group.tags),
+    [featuredTagGroups],
+  );
   const availableTags = useMemo(
     () =>
-      Array.from(new Set(assets.flatMap((asset) => asset.tags))).sort((a, b) =>
-        a.localeCompare(b, "ko"),
-      ),
-    [assets],
+      Array.from(new Set(assets.flatMap((asset) => asset.tags)))
+        .filter((tag) => !featuredTags.includes(tag))
+        .sort((a, b) => a.localeCompare(b, "ko")),
+    [assets, featuredTags],
   );
   const filteredAssets = useMemo(() => {
     const query = normalizeSearch(search);
@@ -295,6 +322,40 @@ function AssetPickerButton({
                   {text}
                 </button>
               ))}
+            </div>
+            <div className="asset-picker-featured-filters">
+              {featuredTagGroups.map((group) => (
+                <div
+                  className="asset-picker-filter-group"
+                  key={group.label}
+                  aria-label={`${group.label} 태그`}
+                >
+                  <strong>{group.label}</strong>
+                  <div>
+                    {group.tags.map((tag) => (
+                      <button
+                        type="button"
+                        key={tag}
+                        className={tags.includes(tag) ? "active" : ""}
+                        onClick={() =>
+                          setTags((current) => [
+                            ...current.filter(
+                              (value) => !group.tags.includes(value),
+                            ),
+                            ...(current.includes(tag) ? [] : [tag]),
+                          ])
+                        }
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="asset-picker-tag-heading">
+              <strong>태그</strong>
+              <small>여러 개를 고르면 결과가 더 좁아져요.</small>
             </div>
             <div className="asset-picker-tags" aria-label="이미지 태그">
               {availableTags.map((tag) => (

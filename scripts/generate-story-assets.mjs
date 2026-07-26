@@ -161,8 +161,19 @@ const tagAliases = {
   연회장: ["잔치"],
 };
 
-function buildTags(story, group, pose) {
-  const tags = [story, group, pose];
+function classifyFraming({ story, type, group, stem }) {
+  if (type !== "character") return undefined;
+  if (group === "옹고집전 여러 인물" || stem.includes("_group_")) {
+    return "여러 인물";
+  }
+  if (story === "토끼와 자라" && !stem.includes("_unified_720x900")) {
+    return "상반신";
+  }
+  return "전신";
+}
+
+function buildTags(story, group, pose, framing) {
+  const tags = [story, framing, group, pose];
   for (const [keyword, aliases] of Object.entries(tagAliases)) {
     if (`${group} ${pose}`.includes(keyword)) tags.push(...aliases);
   }
@@ -206,6 +217,7 @@ const assets = paths.map((sourcePath) => {
       ? "special"
       : type;
   const [group, pose] = classifyStem(stem, type);
+  const framing = classifyFraming({ story, type, group, stem });
   const baseDisplayName = `${group}_${pose}`.replaceAll(" ", "");
   const seen = (duplicateNames.get(baseDisplayName) ?? 0) + 1;
   duplicateNames.set(baseDisplayName, seen);
@@ -225,7 +237,8 @@ const assets = paths.map((sourcePath) => {
     category,
     group,
     pose,
-    tags: buildTags(story, group, pose),
+    framing,
+    tags: buildTags(story, group, pose, framing),
     src: `/story-assets/${id}.webp`,
     sourcePath,
     copyright: "놀퀴즈",
@@ -244,6 +257,7 @@ export type StoryAsset = {
   category: "character" | "background" | "special";
   group: string;
   pose: string;
+  framing?: "전신" | "상반신" | "여러 인물";
   tags: string[];
   src: string;
   sourcePath: string;

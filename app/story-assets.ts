@@ -10,6 +10,7 @@ export type StoryAsset = {
   category: "character" | "background" | "special";
   group: string;
   pose: string;
+  framing?: "전신" | "상반신" | "여러 인물";
   tags: string[];
   src: string;
   sourcePath: string;
@@ -718,8 +719,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "명령",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "용왕",
       "명령"
     ],
@@ -736,8 +739,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "엄한 명령",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "용왕",
       "엄한 명령"
     ],
@@ -754,8 +759,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "위독",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "용왕",
       "위독"
     ],
@@ -772,8 +779,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "매우 위독",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "용왕",
       "매우 위독"
     ],
@@ -790,8 +799,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "병든 모습",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "용왕",
       "병든 모습"
     ],
@@ -808,8 +819,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "젊은 용왕",
     "pose": "기본",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "젊은 용왕",
       "기본"
     ],
@@ -826,8 +839,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "의관",
     "pose": "걱정",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "의관",
       "걱정",
       "불안"
@@ -845,8 +860,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "미안해서 도망",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "미안해서 도망",
       "달아남"
@@ -864,8 +881,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "약초 꾸러미",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "약초 꾸러미"
     ],
@@ -882,8 +901,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "놀람",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "놀람",
       "깜짝",
@@ -902,8 +923,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "진실을 말함",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "진실을 말함"
     ],
@@ -920,8 +943,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "의심",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "의심"
     ],
@@ -938,8 +963,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "생각",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "토끼",
       "생각"
     ],
@@ -956,8 +983,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "부끄러움",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "자라",
       "부끄러움",
       "미안함"
@@ -975,8 +1004,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "어린 자라",
     "pose": "회상",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "어린 자라",
       "회상"
     ],
@@ -993,8 +1024,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "약초 꾸러미",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "자라",
       "약초 꾸러미"
     ],
@@ -1011,8 +1044,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "제안",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "자라",
       "제안"
     ],
@@ -1029,8 +1064,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "결심",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "자라",
       "결심",
       "다짐"
@@ -1048,8 +1085,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "지침",
+    "framing": "상반신",
     "tags": [
       "토끼와 자라",
+      "상반신",
       "자라",
       "지침",
       "피곤"
@@ -1067,8 +1106,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "회복",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "용왕",
       "회복"
     ],
@@ -1085,8 +1126,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "용왕",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "용왕",
       "기본"
     ],
@@ -1103,10 +1146,11 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "젊은 용왕",
     "pose": "전신",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
-      "젊은 용왕",
-      "전신"
+      "전신",
+      "젊은 용왕"
     ],
     "src": "/story-assets/rabbit-turtle.character.dragonking-young-unified-720x900.webp",
     "sourcePath": "games/ifstory/images/adventure/characters/generated/adventure_dragonking_young_unified_720x900.png",
@@ -1121,8 +1165,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "의관",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "의관",
       "기본"
     ],
@@ -1139,8 +1185,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "토끼",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "토끼",
       "기본"
     ],
@@ -1157,8 +1205,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "어린 자라",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "어린 자라",
       "기본"
     ],
@@ -1175,8 +1225,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "자라",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "토끼와 자라",
+      "전신",
       "자라",
       "기본"
     ],
@@ -1193,8 +1245,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "아이",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "아이",
       "기본"
     ],
@@ -1211,8 +1265,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "단호",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "단호"
     ],
@@ -1229,8 +1285,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "단호",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "단호"
     ],
@@ -1247,8 +1305,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "온화",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "온화"
     ],
@@ -1265,8 +1325,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "온화",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "온화"
     ],
@@ -1283,8 +1345,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "건넴",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "건넴"
     ],
@@ -1301,8 +1365,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "건넴",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "건넴"
     ],
@@ -1319,8 +1385,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "온화",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "온화"
     ],
@@ -1337,8 +1405,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "기본"
     ],
@@ -1355,8 +1425,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "가짜 옹고집",
     "pose": "정체가 드러남",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "가짜 옹고집",
       "정체가 드러남"
     ],
@@ -1373,8 +1445,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집전 여러 인물",
     "pose": "가짜 아이 이야기",
+    "framing": "여러 인물",
     "tags": [
       "옹고집전",
+      "여러 인물",
       "옹고집전 여러 인물",
       "가짜 아이 이야기"
     ],
@@ -1391,8 +1465,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집전 여러 인물",
     "pose": "가짜 하인과 일꾼에게 품삯",
+    "framing": "여러 인물",
     "tags": [
       "옹고집전",
+      "여러 인물",
       "옹고집전 여러 인물",
       "가짜 하인과 일꾼에게 품삯"
     ],
@@ -1409,8 +1485,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집전 여러 인물",
     "pose": "가짜 아내 등장",
+    "framing": "여러 인물",
     "tags": [
       "옹고집전",
+      "여러 인물",
       "옹고집전 여러 인물",
       "가짜 아내 등장"
     ],
@@ -1427,8 +1505,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집전 여러 인물",
     "pose": "가짜 일꾼에게 보상",
+    "framing": "여러 인물",
     "tags": [
       "옹고집전",
+      "여러 인물",
       "옹고집전 여러 인물",
       "가짜 일꾼에게 보상"
     ],
@@ -1445,8 +1525,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집전 여러 인물",
     "pose": "진짜 옹고집과 하인",
+    "framing": "여러 인물",
     "tags": [
       "옹고집전",
+      "여러 인물",
       "옹고집전 여러 인물",
       "진짜 옹고집과 하인"
     ],
@@ -1463,8 +1545,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "사또",
     "pose": "명령",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "사또",
       "명령"
     ],
@@ -1481,8 +1565,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "사또",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "사또",
       "기본"
     ],
@@ -1499,8 +1585,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "포졸",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "포졸",
       "기본"
     ],
@@ -1517,8 +1605,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "분노",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "분노",
       "화남"
@@ -1536,8 +1626,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "빌린 옷",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "빌린 옷"
     ],
@@ -1554,8 +1646,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "빌린 옷",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "빌린 옷"
     ],
@@ -1572,8 +1666,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "이어지는 모습",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "이어지는 모습"
     ],
@@ -1590,8 +1686,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "쫓겨남",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "쫓겨남"
     ],
@@ -1608,8 +1706,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "쫓겨남",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "쫓겨남"
     ],
@@ -1626,8 +1726,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "쫓겨나 애원",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "쫓겨나 애원"
     ],
@@ -1644,8 +1746,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "기본"
     ],
@@ -1662,8 +1766,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "후회",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "후회"
     ],
@@ -1680,8 +1786,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "후회",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "후회"
     ],
@@ -1698,8 +1806,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "결심",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "결심",
       "다짐"
@@ -1717,8 +1827,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "진짜 옹고집",
     "pose": "결심",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "진짜 옹고집",
       "결심",
       "다짐"
@@ -1736,8 +1848,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "둘째 아이",
     "pose": "망설임",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "둘째 아이",
       "망설임"
     ],
@@ -1754,8 +1868,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "둘째 아이",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "둘째 아이",
       "기본"
     ],
@@ -1772,8 +1888,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 하인",
     "pose": "집안일",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 하인",
       "집안일"
     ],
@@ -1790,8 +1908,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 하인",
     "pose": "다침",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 하인",
       "다침"
     ],
@@ -1808,8 +1928,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 하인",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 하인",
       "기본"
     ],
@@ -1826,8 +1948,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "낯선 사람",
     "pose": "정체를 숨김",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "낯선 사람",
       "정체를 숨김"
     ],
@@ -1844,8 +1968,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 아내",
     "pose": "걱정",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 아내",
       "걱정",
       "불안"
@@ -1863,8 +1989,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 아내",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 아내",
       "기본"
     ],
@@ -1881,8 +2009,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "옹고집의 아내",
     "pose": "결심",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "옹고집의 아내",
       "결심",
       "다짐"
@@ -1900,8 +2030,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "일꾼",
     "pose": "부탁",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "일꾼",
       "부탁"
     ],
@@ -1918,8 +2050,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "일꾼",
     "pose": "나무꾼",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "일꾼",
       "나무꾼"
     ],
@@ -1936,8 +2070,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "일꾼",
     "pose": "나무꾼",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "일꾼",
       "나무꾼"
     ],
@@ -1954,8 +2090,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "막내 아이",
     "pose": "조심",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "막내 아이",
       "조심"
     ],
@@ -1972,8 +2110,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "category": "character",
     "group": "막내 아이",
     "pose": "기본",
+    "framing": "전신",
     "tags": [
       "옹고집전",
+      "전신",
       "막내 아이",
       "기본"
     ],
