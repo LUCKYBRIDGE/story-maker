@@ -248,6 +248,99 @@ img {
   line-height: 1.5;
 }
 
+.entry-template-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.entry-template-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.entry-template-heading h2 {
+  margin: 3px 0 0;
+  font-size: 17px;
+  letter-spacing: -0.035em;
+}
+
+.entry-template-heading > small {
+  max-width: 350px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.entry-template-card {
+  display: grid;
+  min-height: 94px;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid #d9bd6c;
+  border-radius: 17px;
+  background:
+    linear-gradient(90deg, rgba(248, 230, 184, 0.62), rgba(255, 255, 255, 0.88)),
+    var(--white);
+  color: var(--ink);
+  text-align: left;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+}
+
+.entry-template-card:hover {
+  border-color: #bb8f25;
+  box-shadow: var(--shadow-small);
+  transform: translateY(-1px);
+}
+
+.template-number {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+  background: #f4cf73;
+  color: #644813;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.template-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.template-copy strong {
+  font-size: 14px;
+}
+
+.template-copy small,
+.template-copy em {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.template-copy em {
+  color: #775b20;
+}
+
+.entry-template-card > b {
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: white;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
 .google-start-button,
 .entry-preview-button,
 .entry-recovery-button {
@@ -2287,6 +2380,27 @@ img {
 
   .entry-source-button > span {
     grid-row: 1 / 3;
+  }
+
+  .entry-template-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .entry-template-heading > small {
+    text-align: left;
+  }
+
+  .entry-template-card {
+    min-height: 0;
+    align-items: start;
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .entry-template-card > b {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .entry-actions {
