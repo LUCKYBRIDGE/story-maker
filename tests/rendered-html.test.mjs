@@ -144,6 +144,14 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
   assert.match(studio, /화자·이미지·장면 설정/);
+  assert.match(studio, /해설 · 이야기 설명/);
+  assert.match(studio, /대사 · 인물이 말함/);
+  assert.match(studio, /장면과 사건을 들려주는 글/);
+  assert.match(studio, /narration-heading/);
+  assert.match(globals, /\.dialogue-box\.narration/);
+  assert.match(globals, /\.script-scene-card\.narration/);
+  assert.match(globals, /\.scene-kind-badge\.narration/);
+  assert.match(globals, /\.editable-stage-dialogue\.narration/);
   assert.match(studio, /놀퀴즈_스토리_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);

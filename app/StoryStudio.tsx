@@ -886,7 +886,7 @@ function SceneThumbnail({
   const background = ASSET_BY_ID.get(backgroundId)?.src;
   return (
     <div
-      className="scene-thumbnail"
+      className={`scene-thumbnail ${line.type}`}
       style={background ? { backgroundImage: `url("${background}")` } : undefined}
     >
       <AssetPreview
@@ -903,7 +903,11 @@ function SceneThumbnail({
           shouldMirrorAsset(rightId, "right") ? "mirrored" : ""
         }`}
       />
-      <span>{line.speakerName || "해설"}</span>
+      <span>
+        {line.type === "narration"
+          ? "해설"
+          : `${line.speakerName || "화자 없음"}의 대사`}
+      </span>
     </div>
   );
 }
@@ -1110,10 +1114,23 @@ function StoryPlayer({
               {lines.length > 0 ? startIndex + 1 : 0} / {lines.length}
             </span>
           </div>
-          <strong className={`speaker-name ${line?.speaker ?? ""}`}>
-            {line?.speakerName || "이야기"}
-          </strong>
-          <p>{line?.text || "이 챕터에는 아직 글이 없어요."}</p>
+          {line?.type === "narration" ? (
+            <>
+              <div className="narration-heading">
+                <span>해설</span>
+              </div>
+              <p className="narration-copy">
+                {line.text || "이 챕터에는 아직 글이 없어요."}
+              </p>
+            </>
+          ) : (
+            <>
+              <strong className={`speaker-name ${line?.speaker ?? ""}`}>
+                {line?.speakerName || "화자 없음"}
+              </strong>
+              <p>{line?.text || "이 챕터에는 아직 글이 없어요."}</p>
+            </>
+          )}
           <div className="player-controls">
             <button
               className="ghost-button"
@@ -3356,7 +3373,7 @@ export function StoryStudio() {
                     <div className="script-scene-list">
                       {selectedChapterLines.map((line, index) => (
                         <article
-                          className={`script-scene-card ${
+                          className={`script-scene-card ${line.type} ${
                             line.id === selectedLine?.id ? "active" : ""
                           }`}
                           key={line.id}
@@ -3371,6 +3388,13 @@ export function StoryStudio() {
                           </div>
                           <div className="scene-writing-fields">
                             <div className="scene-inline-controls">
+                              <span
+                                className={`scene-kind-badge ${line.type}`}
+                              >
+                                {line.type === "narration"
+                                  ? "해설 · 이야기 설명"
+                                  : "대사 · 인물이 말함"}
+                              </span>
                               <select
                                 value={line.type}
                                 aria-label={`장면 ${index + 1} 종류`}
@@ -3650,14 +3674,21 @@ export function StoryStudio() {
                             : ""
                         }`}
                       >
-                        <span>
-                          {selectedLine.type === "narration"
-                            ? "해설"
-                            : `${selectedLine.speakerName || "화자 없음"} · ${
-                                selectedLine.speaker === "right"
-                                  ? "오른쪽"
-                                  : "왼쪽"
-                              }`}
+                        <span className="editable-stage-kind">
+                          <b>
+                            {selectedLine.type === "narration"
+                              ? "해설"
+                              : selectedLine.speakerName || "화자 없음"}
+                          </b>
+                          <small>
+                            {selectedLine.type === "narration"
+                              ? "장면과 사건을 들려주는 글"
+                              : `${
+                                  selectedLine.speaker === "right"
+                                    ? "오른쪽"
+                                    : "왼쪽"
+                                }에서 말하는 대사`}
+                          </small>
                         </span>
                         <textarea
                           rows={3}
