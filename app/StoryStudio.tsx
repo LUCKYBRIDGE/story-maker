@@ -50,10 +50,20 @@ const CHARACTER_FACING = new Map<string, "left" | "right">([
   ["rabbit-turtle.character.rabbit-white-unified-720x900", "right"],
   ["rabbit-turtle.character.dragonking-unified-720x900", "left"],
   ["rabbit-turtle.character.dragonking-young-unified-720x900", "left"],
+  ["rabbit-turtle.character.dragonking-recovered-unified-720x900", "left"],
   ["rabbit-turtle.character.physician-unified-720x900", "right"],
 ]);
 const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
+const USAGE_FILTER_TAGS = ["원작 사용", "추가 연출"];
 const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
+const RABBIT_TURTLE_CHARACTER_ORDER = [
+  "토끼",
+  "자라",
+  "용왕",
+  "의관",
+  "어린 자라",
+  "젊은 용왕",
+];
 
 type StoryArcKey = "opening" | "middle" | "crisis" | "climax" | "ending";
 
@@ -158,10 +168,80 @@ function assetName(assetId: string) {
   return ASSET_BY_ID.get(assetId)?.displayName ?? "";
 }
 
+function assetPlacementClass(assetId: string) {
+  const framing = ASSET_BY_ID.get(assetId)?.framing;
+  if (framing === "상반신") return "framing-upper";
+  if (framing === "여러 인물") return "framing-group";
+  return framing === "전신" ? "framing-full" : "";
+}
+
 function shouldMirrorAsset(assetId: string, side: "left" | "right") {
   const currentFacing = CHARACTER_FACING.get(assetId);
   const inwardFacing = side === "left" ? "right" : "left";
   return Boolean(currentFacing && currentFacing !== inwardFacing);
+}
+
+function assetGroupLabel(asset: StoryAsset, type: StoryAsset["type"]) {
+  return type === "character"
+    ? `${asset.usage} · ${asset.framing ?? "구도 미분류"}`
+    : asset.usage;
+}
+
+function assetGroupRank(asset: StoryAsset, type: StoryAsset["type"]) {
+  const usageRank = asset.usage === "원작 사용" ? 0 : 10;
+  if (type !== "character") return usageRank;
+  const framingRank =
+    asset.framing === "전신"
+      ? 0
+      : asset.framing === "상반신"
+        ? 1
+        : asset.framing === "여러 인물"
+          ? 2
+          : 3;
+  return usageRank + framingRank;
+}
+
+function sortAssets(
+  assets: StoryAsset[],
+  type: StoryAsset["type"],
+): StoryAsset[] {
+  return assets.slice().sort((a, b) => {
+    const groupDifference =
+      assetGroupRank(a, type) - assetGroupRank(b, type);
+    if (groupDifference !== 0) return groupDifference;
+    const storyDifference =
+      (a.story === "토끼와 자라" ? 0 : 1) -
+      (b.story === "토끼와 자라" ? 0 : 1);
+    if (storyDifference !== 0) return storyDifference;
+    if (type === "character" && a.story === "토끼와 자라") {
+      const characterDifference =
+        (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(a.group) + 1 || 99) -
+        (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(b.group) + 1 || 99);
+      if (characterDifference !== 0) return characterDifference;
+      const poseDifference =
+        (a.pose === "기본" || a.pose === "전신" ? 0 : 1) -
+        (b.pose === "기본" || b.pose === "전신" ? 0 : 1);
+      if (poseDifference !== 0) return poseDifference;
+    }
+    const characterDifference = a.group.localeCompare(b.group, "ko");
+    return characterDifference || a.pose.localeCompare(b.pose, "ko");
+  });
+}
+
+function groupAssets(
+  assets: StoryAsset[],
+  type: StoryAsset["type"],
+  preserveOrder = false,
+): Array<{ label: string; assets: StoryAsset[] }> {
+  const groups = new Map<string, StoryAsset[]>();
+  for (const asset of preserveOrder ? assets : sortAssets(assets, type)) {
+    const label = assetGroupLabel(asset, type);
+    groups.set(label, [...(groups.get(label) ?? []), asset]);
+  }
+  return Array.from(groups, ([label, groupedAssets]) => ({
+    label,
+    assets: groupedAssets,
+  }));
 }
 
 function unique(values: string[]) {
@@ -247,12 +327,19 @@ function AssetPickerButton({
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [view, setView] = useState<AssetView>("all");
+  const initializedFilters = useRef(false);
   const assets = type === "character" ? CHARACTER_ASSETS : BACKGROUND_ASSETS;
   const featuredTagGroups = useMemo(
     () => [
       {
         label: "작품",
         tags: STORY_FILTER_TAGS.filter((tag) =>
+          assets.some((asset) => asset.tags.includes(tag)),
+        ),
+      },
+      {
+        label: "자료",
+        tags: USAGE_FILTER_TAGS.filter((tag) =>
           assets.some((asset) => asset.tags.includes(tag)),
         ),
       },
@@ -282,7 +369,7 @@ function AssetPickerButton({
   );
   const filteredAssets = useMemo(() => {
     const query = normalizeSearch(search);
-    return assets
+    const matchedAssets = assets
       .filter((asset) => {
         if (view === "favorites" && !favoriteIds.includes(asset.id)) {
           return false;
@@ -294,20 +381,34 @@ function AssetPickerButton({
             (candidate) => normalizeSearch(candidate).includes(query),
           );
         return matchesSearch && tags.every((tag) => asset.tags.includes(tag));
-      })
-      .sort((a, b) =>
-        view === "recent"
-          ? recentIds.indexOf(a.id) - recentIds.indexOf(b.id)
-          : 0,
-      );
-  }, [assets, favoriteIds, recentIds, search, tags, view]);
+      });
+    return view === "recent"
+      ? matchedAssets.sort(
+          (a, b) => recentIds.indexOf(a.id) - recentIds.indexOf(b.id),
+        )
+      : sortAssets(matchedAssets, type);
+  }, [assets, favoriteIds, recentIds, search, tags, type, view]);
+  const filteredAssetGroups = groupAssets(
+    filteredAssets,
+    type,
+    view === "recent",
+  );
 
   return (
     <>
       <button
         type="button"
         className="asset-open-button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (!initializedFilters.current) {
+            const selectedAsset = value ? ASSET_BY_ID.get(value) : undefined;
+            if (selectedAsset?.type === type) {
+              setTags([selectedAsset.story]);
+            }
+            initializedFilters.current = true;
+          }
+          setOpen(true);
+        }}
       >
         {buttonText}
       </button>
@@ -431,50 +532,82 @@ function AssetPickerButton({
             <p className="asset-picker-count">
               선택한 조건에 맞는 이미지 {filteredAssets.length}개
             </p>
-            <div className="asset-picker-grid">
-              {filteredAssets.map((asset) => (
-                <article
-                  className={`asset-picker-card ${
-                    value === asset.id ? "selected" : ""
-                  }`}
-                  key={asset.id}
-                >
-                  <button
-                    type="button"
-                    className={`asset-picker-favorite ${
-                      favoriteIds.includes(asset.id) ? "active" : ""
-                    }`}
-                    onClick={() => onToggleFavorite(asset.id)}
-                    aria-label={
-                      favoriteIds.includes(asset.id)
-                        ? `${asset.displayName} 즐겨찾기 해제`
-                        : `${asset.displayName} 즐겨찾기`
-                    }
-                  >
-                    {favoriteIds.includes(asset.id) ? "★" : "☆"}
-                  </button>
-                  <button
-                    type="button"
-                    className="asset-picker-option"
-                    onClick={() => {
-                      onSelect(asset.id);
-                      setOpen(false);
-                    }}
-                  >
-                    <span className={`asset-picker-thumb ${asset.type}`}>
-                      <img src={asset.src} alt="" loading="lazy" />
-                    </span>
-                    <strong>{asset.displayName}</strong>
-                    <small>
-                      {asset.story} · {asset.label}
-                    </small>
-                    <span className="asset-tag-summary">
-                      {asset.tags.slice(0, 4).join(" · ")}
-                    </span>
-                    <em>{value === asset.id ? "선택됨" : "이 이미지 선택"}</em>
-                  </button>
-                </article>
+            <div className="asset-picker-results">
+              {filteredAssetGroups.map((group) => (
+                <section className="asset-picker-result-group" key={group.label}>
+                  <header>
+                    <strong>{group.label}</strong>
+                    <span>{group.assets.length}개</span>
+                  </header>
+                  <div className="asset-picker-grid">
+                    {group.assets.map((asset) => (
+                      <article
+                        className={`asset-picker-card ${
+                          value === asset.id ? "selected" : ""
+                        }`}
+                        key={asset.id}
+                      >
+                        <button
+                          type="button"
+                          className={`asset-picker-favorite ${
+                            favoriteIds.includes(asset.id) ? "active" : ""
+                          }`}
+                          onClick={() => onToggleFavorite(asset.id)}
+                          aria-label={
+                            favoriteIds.includes(asset.id)
+                              ? `${asset.displayName} 즐겨찾기 해제`
+                              : `${asset.displayName} 즐겨찾기`
+                          }
+                        >
+                          {favoriteIds.includes(asset.id) ? "★" : "☆"}
+                        </button>
+                        <button
+                          type="button"
+                          className="asset-picker-option"
+                          onClick={() => {
+                            onSelect(asset.id);
+                            setOpen(false);
+                          }}
+                        >
+                          <span className={`asset-picker-thumb ${asset.type}`}>
+                            <img src={asset.src} alt="" loading="lazy" />
+                          </span>
+                          <span className="asset-picker-badges">
+                            <b
+                              className={
+                                asset.usage === "원작 사용"
+                                  ? "original"
+                                  : "additional"
+                              }
+                            >
+                              {asset.usage}
+                            </b>
+                            {asset.framing && <b>{asset.framing}</b>}
+                          </span>
+                          <strong>{asset.displayName}</strong>
+                          <small>
+                            {asset.story} · {asset.label}
+                          </small>
+                          <span className="asset-tag-summary">
+                            {asset.tags.slice(0, 5).join(" · ")}
+                          </span>
+                          <em>
+                            {value === asset.id ? "선택됨" : "이 이미지 선택"}
+                          </em>
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                </section>
               ))}
+              {filteredAssets.length === 0 && (
+                <div className="asset-picker-empty">
+                  <strong>조건에 맞는 이미지가 없어요.</strong>
+                  <button type="button" onClick={() => setTags([])}>
+                    태그 모두 지우기
+                  </button>
+                </div>
+              )}
             </div>
           </section>
         </div>
@@ -511,6 +644,7 @@ function ImageField({
     .filter(
       (asset): asset is StoryAsset => Boolean(asset && asset.type === type),
     );
+  const allowedAssetGroups = groupAssets(allowedAssets, type);
   return (
     <label className="field image-field">
       <span>{label}</span>
@@ -523,10 +657,14 @@ function ImageField({
           <option value="">
             {allowDefault ? "챕터 기본 이미지" : "선택 안 함"}
           </option>
-          {allowedAssets.map((asset) => (
-            <option value={asset.id} key={asset.id}>
-              {asset.displayName}
-            </option>
+          {allowedAssetGroups.map((group) => (
+            <optgroup label={group.label} key={group.label}>
+              {group.assets.map((asset) => (
+                <option value={asset.id} key={asset.id}>
+                  {asset.displayName}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
         <AssetPickerButton
@@ -669,19 +807,119 @@ function SceneThumbnail({
       <AssetPreview
         assetId={leftId}
         alt=""
-        className={`scene-thumb-character left ${
+        className={`scene-thumb-character left ${assetPlacementClass(leftId)} ${
           shouldMirrorAsset(leftId, "left") ? "mirrored" : ""
         }`}
       />
       <AssetPreview
         assetId={rightId}
         alt=""
-        className={`scene-thumb-character right ${
+        className={`scene-thumb-character right ${assetPlacementClass(rightId)} ${
           shouldMirrorAsset(rightId, "right") ? "mirrored" : ""
         }`}
       />
       <span>{line.speakerName || "해설"}</span>
     </div>
+  );
+}
+
+function SceneStagingCopy({
+  chapters,
+  lines,
+  currentLineId,
+  onCopy,
+}: {
+  chapters: Chapter[];
+  lines: StoryLine[];
+  currentLineId: string;
+  onCopy: (sourceLineId: string) => void;
+}) {
+  const [sourceLineId, setSourceLineId] = useState("");
+  const sourceLine = lines.find((line) => line.id === sourceLineId);
+  const sourceChapter = chapters.find(
+    (chapter) => chapter.id === sourceLine?.chapterId,
+  );
+  const availableChapters = chapters
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .map((chapter) => ({
+      chapter,
+      lines: lines
+        .filter(
+          (line) =>
+            line.chapterId === chapter.id && line.id !== currentLineId,
+        )
+        .sort((a, b) => a.order - b.order),
+    }))
+    .filter((group) => group.lines.length > 0);
+
+  return (
+    <section className="scene-staging-copy">
+      <div>
+        <span>장면 배치 가져오기</span>
+        <strong>다른 장면의 이미지 배치를 그대로 사용</strong>
+        <small>
+          대사와 해설은 바꾸지 않고, 배경과 왼쪽·오른쪽 캐릭터만 가져와요.
+        </small>
+      </div>
+      <div className="scene-staging-copy-controls">
+        <select
+          value={sourceLineId}
+          onChange={(event) => setSourceLineId(event.target.value)}
+          aria-label="배치를 가져올 장면"
+        >
+          <option value="">장면을 선택하세요</option>
+          {availableChapters.map(({ chapter, lines: chapterLines }) => (
+            <optgroup
+              label={`${chapter.order}. ${chapter.title || "이름 없는 챕터"}`}
+              key={chapter.id}
+            >
+              {chapterLines.map((line) => (
+                <option value={line.id} key={line.id}>
+                  장면 {line.order} · {line.speakerName || "해설"} ·{" "}
+                  {line.text.trim().slice(0, 24) || "빈 글상자"}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={!sourceLineId}
+          onClick={() => {
+            onCopy(sourceLineId);
+            setSourceLineId("");
+          }}
+        >
+          이 배치 가져오기
+        </button>
+      </div>
+      {sourceLine && sourceChapter && (
+        <div className="scene-staging-copy-preview">
+          <SceneThumbnail chapter={sourceChapter} line={sourceLine} />
+          <span>
+            <strong>
+              {sourceChapter.order}. {sourceChapter.title || "이름 없는 챕터"} ·
+              장면 {sourceLine.order}
+            </strong>
+            <small>
+              왼쪽{" "}
+              {assetName(
+                sourceLine.leftAssetId || sourceChapter.leftAssetId,
+              ) || "없음"}
+              {" · "}오른쪽{" "}
+              {assetName(
+                sourceLine.rightAssetId || sourceChapter.rightAssetId,
+              ) || "없음"}
+              {" · "}배경{" "}
+              {assetName(
+                sourceLine.backgroundId || sourceChapter.backgroundId,
+              ) || "없음"}
+            </small>
+          </span>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -761,14 +999,14 @@ function StoryPlayer({
           <AssetPreview
             assetId={leftId}
             alt={assetName(leftId) || "왼쪽 캐릭터"}
-            className={`stage-character left ${
+            className={`stage-character left ${assetPlacementClass(leftId)} ${
               line?.speaker === "right" ? "listener" : ""
             } ${shouldMirrorAsset(leftId, "left") ? "mirrored" : ""}`}
           />
           <AssetPreview
             assetId={rightId}
             alt={assetName(rightId) || "오른쪽 캐릭터"}
-            className={`stage-character right ${
+            className={`stage-character right ${assetPlacementClass(rightId)} ${
               line?.speaker === "left" ? "listener" : ""
             } ${shouldMirrorAsset(rightId, "right") ? "mirrored" : ""}`}
           />
@@ -1018,6 +1256,51 @@ export function StoryStudio() {
         line.id === lineId ? { ...line, ...changes } : line,
       ),
     }));
+  }
+
+  function copySceneStaging(sourceLineId: string) {
+    if (!selectedLine || !selectedChapter) return;
+    const sourceLine = draft.lines.find((line) => line.id === sourceLineId);
+    const sourceChapter = draft.chapters.find(
+      (chapter) => chapter.id === sourceLine?.chapterId,
+    );
+    if (!sourceLine || !sourceChapter) return;
+
+    const copiedStaging = {
+      leftAssetId: sourceLine.leftAssetId || sourceChapter.leftAssetId,
+      rightAssetId: sourceLine.rightAssetId || sourceChapter.rightAssetId,
+      backgroundId: sourceLine.backgroundId || sourceChapter.backgroundId,
+    };
+    const copiedCharacterIds = [
+      copiedStaging.leftAssetId,
+      copiedStaging.rightAssetId,
+    ].filter(Boolean);
+    const copiedBackgroundIds = [copiedStaging.backgroundId].filter(Boolean);
+
+    setDraft((project) => ({
+      ...project,
+      chapters: project.chapters.map((chapter) =>
+        chapter.id === selectedChapter.id
+          ? {
+              ...chapter,
+              characterAssetIds: unique([
+                ...chapter.characterAssetIds,
+                ...copiedCharacterIds,
+              ]),
+              backgroundAssetIds: unique([
+                ...chapter.backgroundAssetIds,
+                ...copiedBackgroundIds,
+              ]),
+            }
+          : chapter,
+      ),
+      lines: project.lines.map((line) =>
+        line.id === selectedLine.id ? { ...line, ...copiedStaging } : line,
+      ),
+    }));
+    setNotice(
+      `${sourceChapter.order}. ${sourceChapter.title || "이름 없는 챕터"} · 장면 ${sourceLine.order}의 이미지 배치를 가져왔어요. 현재 글상자 내용은 그대로예요.`,
+    );
   }
 
   function changeLineType(lineId: string, type: StoryLine["type"]) {
@@ -3207,7 +3490,9 @@ export function StoryStudio() {
                             <AssetPreview
                               assetId={effectiveId}
                               alt={assetName(effectiveId) || `${side} 캐릭터`}
-                              className={`editable-stage-character ${
+                              className={`editable-stage-character ${assetPlacementClass(
+                                effectiveId,
+                              )} ${
                                 shouldMirrorAsset(effectiveId, side)
                                   ? "mirrored"
                                   : ""
@@ -3409,6 +3694,13 @@ export function StoryStudio() {
                             }
                           />
                         </div>
+                        <SceneStagingCopy
+                          key={selectedLine.id}
+                          chapters={draft.chapters}
+                          lines={draft.lines}
+                          currentLineId={selectedLine.id}
+                          onCopy={copySceneStaging}
+                        />
                       </section>
 
                       <section className="scene-notes-card">

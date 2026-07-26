@@ -7,6 +7,24 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 const sourceRoot = path.resolve(projectRoot, "../pinky-ne-site");
 const sourceCommit = "cc9552b44b41d1be4e79244d35f0cfdb2e849610";
 const sourcePrefix = "games/ifstory/images/adventure/";
+const rabbitTurtleOriginalStems = new Set([
+  "adventure_dragonking_recovered_unified_720x900",
+  "adventure_dragonking_unified_720x900",
+  "adventure_dragonking_young_unified_720x900",
+  "adventure_physician_unified_720x900",
+  "adventure_rabbit_white_unified_720x900",
+  "adventure_turtle_child_unified_720x900",
+  "adventure_turtle_unified_720x900",
+  "adventure_rabbit_turtle_bg_flashback_rescue",
+  "adventure_rabbit_turtle_bg_grassland",
+  "adventure_rabbit_turtle_bg_palace",
+  "adventure_rabbit_turtle_bg_palace_confession",
+  "adventure_rabbit_turtle_bg_palace_trap",
+  "adventure_rabbit_turtle_bg_palace_welcome",
+  "adventure_rabbit_turtle_bg_river_winter",
+  "adventure_rabbit_turtle_bg_shore",
+  "adventure_rabbit_turtle_bg_shore_escape",
+]);
 
 const tree = execFileSync(
   "git",
@@ -172,8 +190,8 @@ function classifyFraming({ story, type, group, stem }) {
   return "전신";
 }
 
-function buildTags(story, group, pose, framing) {
-  const tags = [story, framing, group, pose];
+function buildTags(story, group, pose, framing, usage) {
+  const tags = [story, usage, framing, group, pose];
   for (const [keyword, aliases] of Object.entries(tagAliases)) {
     if (`${group} ${pose}`.includes(keyword)) tags.push(...aliases);
   }
@@ -218,6 +236,10 @@ const assets = paths.map((sourcePath) => {
       : type;
   const [group, pose] = classifyStem(stem, type);
   const framing = classifyFraming({ story, type, group, stem });
+  const usage =
+    story === "토끼와 자라" && !rabbitTurtleOriginalStems.has(stem)
+      ? "추가 연출"
+      : "원작 사용";
   const baseDisplayName = `${group}_${pose}`.replaceAll(" ", "");
   const seen = (duplicateNames.get(baseDisplayName) ?? 0) + 1;
   duplicateNames.set(baseDisplayName, seen);
@@ -238,7 +260,8 @@ const assets = paths.map((sourcePath) => {
     group,
     pose,
     framing,
-    tags: buildTags(story, group, pose, framing),
+    usage,
+    tags: buildTags(story, group, pose, framing, usage),
     src: `/story-assets/${id}.webp`,
     sourcePath,
     copyright: "놀퀴즈",
@@ -258,6 +281,7 @@ export type StoryAsset = {
   group: string;
   pose: string;
   framing?: "전신" | "상반신" | "여러 인물";
+  usage: "원작 사용" | "추가 연출";
   tags: string[];
   src: string;
   sourcePath: string;

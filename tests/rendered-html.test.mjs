@@ -45,8 +45,9 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
 });
 
 test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된다", async () => {
-  const [studio, storyData, storyAssets, workbook] = await Promise.all([
+  const [studio, globals, storyData, storyAssets, workbook] = await Promise.all([
     readFile(new URL("../app/StoryStudio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/story-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/story-assets.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/story-workbook.ts", import.meta.url), "utf8"),
@@ -78,7 +79,15 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /호위들을 도와 토끼를 묶어라/);
   assert.match(storyData, /원작의 선택지는 제거되어 있습니다/);
   assert.match(studio, /function shouldMirrorAsset/);
+  assert.match(studio, /function assetPlacementClass/);
   assert.match(studio, /CHARACTER_FACING/);
+  assert.match(studio, /function SceneStagingCopy/);
+  assert.match(studio, /function copySceneStaging/);
+  assert.match(studio, /다른 장면의 이미지 배치를 그대로 사용/);
+  assert.match(studio, /원작 사용/);
+  assert.match(studio, /추가 연출/);
+  assert.match(studio, /전신/);
+  assert.match(studio, /상반신/);
   assert.match(studio, /function AddSpeaker/);
   assert.match(studio, /\+ 화자 추가/);
   assert.match(studio, /화자 이름/);
@@ -137,6 +146,44 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(workbook, /\["화자 이름"\]/);
   assert.doesNotMatch(workbook, /\["사용",\s*"화자 이름"\]/);
   assert.doesNotMatch(studio, /saveProjectToGoogleSheet/);
+
+  const listenerRule =
+    globals.match(/\.stage-character\.listener\s*\{([^}]*)\}/)?.[1] ?? "";
+  assert.ok(listenerRule, "말하지 않는 캐릭터 표시 규칙이 없습니다.");
+  assert.doesNotMatch(
+    listenerRule,
+    /scale\(/,
+    "화자가 바뀔 때 캐릭터 크기가 달라지면 안 됩니다.",
+  );
+
+  const assetDeclaration = storyAssets.indexOf("export const STORY_ASSETS");
+  const assetJsonStart = storyAssets.indexOf("= [", assetDeclaration) + 2;
+  const assetJsonEnd = storyAssets.lastIndexOf("];");
+  const parsedAssets = JSON.parse(
+    storyAssets.slice(assetJsonStart, assetJsonEnd + 1),
+  );
+  const originalRabbitTurtleAssets = parsedAssets.filter(
+    (asset) =>
+      asset.story === "토끼와 자라" && asset.usage === "원작 사용",
+  );
+  assert.equal(
+    originalRabbitTurtleAssets.filter((asset) => asset.type === "character")
+      .length,
+    7,
+  );
+  assert.equal(
+    originalRabbitTurtleAssets.filter((asset) => asset.type === "background")
+      .length,
+    9,
+  );
+  assert.ok(
+    parsedAssets.some(
+      (asset) =>
+        asset.story === "토끼와 자라" &&
+        asset.usage === "추가 연출" &&
+        asset.framing === "상반신",
+    ),
+  );
 
   const catalogAssetIds = new Set(
     [...storyAssets.matchAll(/"id":\s*"([^"]+)"/g)].map((match) => match[1]),
