@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 async function render() {
@@ -44,9 +46,70 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
     html,
     /가짜 옹고집을 선택한 뒤, 관아와 가족에게 어떤 일이/,
   );
+  assert.match(html, /준비된 내용:\s*가족의 변화·두 옹고집의 관아 다툼/);
   assert.match(html, /예시 작품 먼저 플레이/);
   assert.doesNotMatch(html, /Google로 시작하기/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
+});
+
+test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하나를 제공한다", () => {
+  const projectRoot = fileURLToPath(new URL("../", import.meta.url));
+  const output = execFileSync(
+    process.execPath,
+    [
+      "--disable-warning=ExperimentalWarning",
+      "--experimental-strip-types",
+      "--input-type=module",
+      "-e",
+      `
+        const {
+          RABBIT_TURTLE_CONTINUATION_TEMPLATE,
+          RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
+          ONGGOJIB_CONTINUATION_TEMPLATE,
+        } = await import("./app/story-data.ts");
+        const projects = [
+          RABBIT_TURTLE_CONTINUATION_TEMPLATE,
+          RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
+          ONGGOJIB_CONTINUATION_TEMPLATE,
+        ];
+        console.log(JSON.stringify(projects.map((project) => ({
+          title: project.title,
+          chapterTitles: project.chapters
+            .slice()
+            .sort((a, b) => a.order - b.order)
+            .map((chapter) => chapter.title),
+          lineCount: project.lines.length,
+          blankCount: project.lines.filter((line) => !line.text.trim()).length,
+          duplicateIds: project.lines.filter(
+            (line, index, lines) =>
+              lines.findIndex((candidate) => candidate.id === line.id) !== index,
+          ).length,
+          narrationWithParentheses: project.lines.filter(
+            (line) =>
+              line.type === "narration" && /[()（）]/.test(line.text),
+          ).length,
+        }))));
+      `,
+    ],
+    { cwd: projectRoot, encoding: "utf8" },
+  );
+  const summaries = JSON.parse(output);
+
+  assert.deepEqual(
+    summaries.map((summary) => summary.lineCount),
+    [15, 26, 32],
+  );
+  assert.ok(summaries.every((summary) => summary.blankCount === 1));
+  assert.ok(summaries.every((summary) => summary.duplicateIds === 0));
+  assert.ok(
+    summaries.every((summary) => summary.narrationWithParentheses === 0),
+  );
+  assert.deepEqual(summaries[2].chapterTitles, [
+    "같은 얼굴, 다른 태도",
+    "두 옹고집의 첫 관아",
+    "아내가 선택한 사람",
+    "여기서부터 이어 쓰기",
+  ]);
 });
 
 test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된다", async () => {
@@ -82,6 +145,21 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(
     storyData,
     /아이들을 지켜 준 저 사람과 돌아가겠습니다/,
+  );
+  assert.match(storyData, /오늘 마당에 까치가……/);
+  assert.match(storyData, /그래서 어떻게 되었느냐/);
+  assert.match(
+    storyData,
+    /아이들이 놀랍니다\. 부인, 아이들을 데리고 뒤로 물러서시오/,
+  );
+  assert.match(
+    storyData,
+    /호위들이 토끼의 앞발을 묶었다/,
+  );
+  assert.match(storyData, /어린 자라/);
+  assert.match(
+    storyData,
+    /작은 목소리라도 내가 끝까지 듣겠다/,
   );
   assert.match(
     storyData,
@@ -148,10 +226,15 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /대사 · 인물이 말함/);
   assert.match(studio, /장면과 사건을 들려주는 글/);
   assert.match(studio, /narration-heading/);
+  assert.match(studio, /function DialogueText/);
+  assert.match(studio, /parenthetical-direction/);
+  assert.match(studio, /해설에는 괄호를 쓸 수 없어요/);
+  assert.match(studio, /속마음·표정·행동은 학생이 직접/);
   assert.match(globals, /\.dialogue-box\.narration/);
   assert.match(globals, /\.script-scene-card\.narration/);
   assert.match(globals, /\.scene-kind-badge\.narration/);
   assert.match(globals, /\.editable-stage-dialogue\.narration/);
+  assert.match(globals, /\.parenthetical-direction/);
   assert.match(studio, /놀퀴즈_스토리_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);
@@ -160,6 +243,14 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     /selectionTier:\s*"기본 추천"\s*\|\s*"추가 자료"/,
   );
   assert.match(workbook, /downloadStoryWorkbook/);
+  assert.match(
+    workbook,
+    /대사에서 속마음·표정·행동은 학생이 직접 괄호 안에 쓰세요/,
+  );
+  assert.match(
+    workbook,
+    /해설에는 괄호를 쓰지 말고 시간·장소·상황을 적으세요/,
+  );
   assert.match(workbook, /한 줄 이야기/);
   assert.match(workbook, /구성 방식/);
   assert.match(workbook, /이야기 소재/);

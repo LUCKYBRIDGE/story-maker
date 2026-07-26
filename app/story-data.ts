@@ -382,7 +382,7 @@ const ORIGINAL_PALACE_OPENING: TemplateScene[] = [
   }),
   originalScene({
     id: "original-palace-welcome-3",
-    text: "나는 어릴 때 큰비에 휩쓸려 짠물 가득한 바다로 떠내려왔다. 민물 생물인 나는 숨을 쉬지 못해 죽어가고 있었으나, 젊은 용왕님은 자신의 비늘로 만든 '바다의 숨결(용궁 패)'을 내 목에 걸어주어 바다에서 살 수 있게 해주셨다.",
+    text: "나는 어릴 때 큰비에 휩쓸려 낯선 바다로 떠내려왔다. 짠물이 목을 조여 등껍질 속에 웅크리고 있을 때, 젊은 용왕님이 호위들을 물리고 내 앞에 무릎을 낮추셨다. 전하께서는 차가운 내 앞발을 감싸 쥐고, 자신의 비늘로 만든 '바다의 숨결'이라는 용궁 패를 내 목에 걸어 주셨다.",
     leftAssetId: RT.character.youngDragonKing,
     rightAssetId: RT.character.childTurtle,
     backgroundId: RT.background.flashback,
@@ -391,11 +391,23 @@ const ORIGINAL_PALACE_OPENING: TemplateScene[] = [
     directionNote: "원작처럼 구출 회상 배경과 어린 인물을 사용합니다.",
   }),
   originalScene({
+    id: "original-palace-welcome-3-response",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "어린 자라",
+    text: "(떨리는 숨을 고르며) 저는 민물에서 왔습니다. 바다가 무섭습니다. 그래도 전하께서 잡아 주시니 조금 숨이 쉬어집니다.",
+    leftAssetId: RT.character.youngDragonKing,
+    rightAssetId: RT.character.childTurtle,
+    backgroundId: RT.background.flashback,
+    purposeNote: "구해진 어린 자라가 처음으로 용왕에게 마음을 엽니다.",
+    emotionNote: "어린 자라: 두려움에서 안도로",
+  }),
+  originalScene({
     id: "original-palace-welcome-4",
     type: "dialogue",
     speaker: "left",
     speakerName: "용왕",
-    text: "상처가 깊구나. 겁먹지 마라. 자라야, 너는 앞으로 내 앞에서 무서워하지 말고 본 그대로만 말해 다오. 거짓 없이 사실을 전하는 것, 그것이 내가 너를 믿는 이유다.",
+    text: "그럼 이곳에서는 서두르지 않아도 된다. 네가 본 것을 천천히, 있는 그대로 말해 다오. 잘 보이려고 꾸미지 않아도 좋다. 작은 목소리라도 내가 끝까지 듣겠다.",
     leftAssetId: RT.character.youngDragonKing,
     rightAssetId: RT.character.childTurtle,
     backgroundId: RT.background.flashback,
@@ -403,7 +415,10 @@ const ORIGINAL_PALACE_OPENING: TemplateScene[] = [
   }),
   originalScene({
     id: "original-palace-welcome-4-thought",
-    text: "그때부터 나는 용왕님 앞에서 본 것을 절대 숨기거나 꾸며내지 않았다. 용왕님은 내가 사실대로만 보고하기 때문에 나를 가장 신뢰하셨다.",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "자라",
+    text: "(그날 이후 용왕님은 내가 더듬거리면 기다려 주셨고, 작은 사실 하나를 말해도 고개를 끄덕여 주셨다. 그래서 나는 전하 앞에서는 숨거나 꾸미지 않아도 된다고 믿게 되었다.)",
     leftAssetId: RT.character.youngDragonKing,
     rightAssetId: RT.character.childTurtle,
     backgroundId: RT.background.flashback,
@@ -468,7 +483,10 @@ const ORIGINAL_PALACE_OPENING: TemplateScene[] = [
   }),
   originalScene({
     id: "original-palace-welcome-9",
-    text: "용왕님의 기침 소리가 커졌다. 내 목에는 나를 살려준 '바다의 숨결(용궁 패)'이 무겁게 걸려 있었다. 왕의 은혜에 보답하려면 평생 지켜온 솔직함을 버리고 무고한 토끼를 속여야 한다. 나는 대답 대신 패를 움켜쥐고 물문을 향해 몸을 돌렸다.",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "자라",
+    text: "(용왕님은 내 목숨을 구하고, 있는 그대로 말하라고 가르쳐 주셨다. 그런데 그 은혜를 갚으려면 죄 없는 토끼를 속여야 한다. 나는 무거워진 용궁 패를 움켜쥐고 물문을 향해 돌아섰다.)",
     leftAssetId: RT.character.dragonKing,
     rightAssetId: RT.character.turtle,
     backgroundId: RT.background.palace,
@@ -548,7 +566,10 @@ const ORIGINAL_OBEY_ROUTE: TemplateScene[] = [
   }),
   originalScene({
     id: "original-obey-5",
-    text: "토끼가 내 등껍질 위로 올라탔다. 그의 가벼운 무게가 등에 닿자, 내가 끝내 말하지 않은 사실이 더 무겁게 느껴졌다.",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "자라",
+    text: "(토끼가 내 등껍질 위로 올라탔다. 그의 가벼운 무게가 등에 닿자, 내가 끝내 말하지 않은 사실이 더 무겁게 느껴졌다.)",
     leftAssetId: RT.character.rabbit,
     rightAssetId: RT.character.turtle,
     backgroundId: RT.background.grassland,
@@ -614,6 +635,16 @@ const ORIGINAL_PALACE_TRAP: TemplateScene[] = [
     emotionNote: "용왕: 명령 · 자라: 갈등 · 토끼: 공포",
     directionNote: "다음 장면의 빈 토끼 대사로 이어집니다.",
   }),
+  originalScene({
+    id: "original-palace-trap-6",
+    text: "호위들이 토끼의 앞발을 묶었다. 토끼는 벗어나려 몸을 비틀었지만 밧줄은 더 단단히 조여 왔다. 자라는 굳은 채 토끼와 눈을 마주치지 못했다.",
+    leftAssetId: RT.character.rabbit,
+    rightAssetId: RT.character.turtle,
+    backgroundId: RT.background.trap,
+    purposeNote: "토끼가 실제로 결박된 순간에서 학생의 창작으로 넘깁니다.",
+    emotionNote: "토끼: 공포와 배신감 · 자라: 죄책감",
+    directionNote: "다음 빈 장면은 결박된 토끼의 첫 대응입니다.",
+  }),
 ];
 
 const ORIGINAL_CHARACTER_ASSET_IDS = [
@@ -647,14 +678,15 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
     structureMode: "three",
     material:
       "pinky-ne-site의 토끼와 자라 원작에서 용왕의 명령을 받은 자라가 육지에서 토끼를 만나는 부분",
-    theme: "",
+    theme: "은혜를 갚는 일과 정직을 지키는 일이 충돌할 때 무엇을 선택해야 할까?",
     mainCharacter: "자라와 토끼",
     mainGoal: "자라는 토끼에게 첫마디를 건네고 다음 일을 선택한다.",
     centralProblem:
       "용왕은 진짜 목적을 숨기라고 명령했지만, 자라는 평생 정직을 지키며 살아왔다.",
     stakes:
       "자라의 말에 따라 용왕과 토끼의 운명, 그리고 자라가 지켜 온 신뢰가 달라진다.",
-    endingChange: "",
+    endingChange:
+      "마지막에는 자라와 토끼 사이의 신뢰가 어떻게 달라졌는지 드러나게 한다.",
     opening:
       "병든 용왕은 자신을 살릴 토끼의 간을 구하기 위해 자라에게 토끼를 속여 데려오라고 명령한다.",
     middle: "",
@@ -673,8 +705,8 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
   },
   sheetUrl: "",
   sheetEditable: false,
-  speakerNames: ["토끼", "자라", "용왕", "의관"],
-  updatedAt: "pinky-ne-site 원작 반영",
+  speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
+  updatedAt: "pinky-ne-site 최신 원작 반영",
   chapters: [
     {
       id: "continuation-origin-palace",
@@ -687,7 +719,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "용왕의 병이 깊어진다.\n자라는 어린 시절의 은혜를 떠올린다.\n용왕은 토끼에게 진짜 목적을 숨기라고 명령한다.",
       nextChapterIdea: "자라가 육지에서 토끼를 만난다.",
-      chapterSpeakerNames: ["자라", "용왕", "의관"],
+      chapterSpeakerNames: ["자라", "어린 자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
       backgroundId: RT.background.palace,
@@ -769,14 +801,15 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
     structureMode: "four",
     material:
       "pinky-ne-site의 토끼와 자라 원작에서 ‘용궁 잔치로 초대한다’ 갈래를 고정한 뒤 토끼가 결박되는 부분",
-    theme: "",
+    theme: "목숨이 위태로운 순간, 지혜와 신뢰는 어떤 선택을 만들 수 있을까?",
     mainCharacter: "토끼",
     mainGoal: "토끼는 목숨을 지키고 용궁의 함정에서 벗어난다.",
     centralProblem:
       "토끼는 자라의 말을 믿고 용궁에 왔지만, 용왕과 의관은 토끼의 간이 필요하다고 믿는다.",
     stakes:
       "토끼가 방법을 찾지 못하면 목숨을 잃고, 자라는 정직과 은혜를 모두 잃을 수 있다.",
-    endingChange: "",
+    endingChange:
+      "토끼가 위기를 벗어나는 것뿐 아니라 자라와 용왕의 태도도 어떻게 달라지는지 보여 준다.",
     opening:
       "병든 용왕은 자라에게 토끼를 속여 데려오라고 명령하고, 자라는 용궁 잔치의 손님으로 초대한다.",
     middle:
@@ -797,8 +830,8 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
   },
   sheetUrl: "",
   sheetEditable: false,
-  speakerNames: ["토끼", "자라", "용왕", "의관"],
-  updatedAt: "pinky-ne-site 원작 반영",
+  speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
+  updatedAt: "pinky-ne-site 최신 원작 반영",
   chapters: [
     {
       id: "palace-origin-opening",
@@ -811,7 +844,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       keyEvents:
         "용왕의 병이 깊어진다.\n자라는 어린 시절의 은혜를 떠올린다.\n토끼의 간이 필요하다는 처방이 밝혀진다.",
       nextChapterIdea: "자라가 육지에서 토끼를 만난다.",
-      chapterSpeakerNames: ["자라", "용왕", "의관"],
+      chapterSpeakerNames: ["자라", "어린 자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
       backgroundId: RT.background.palace,
@@ -931,6 +964,7 @@ const ONGGOJIB_TEMPLATE_ASSETS = {
     magistrate: "onggojib.character.magistrate-command-pixel",
     posol: "onggojib.character.posol-pixel",
     youngestChild: "onggojib.character.youngest-child-cautious-pixel",
+    secondChild: "onggojib.character.second-child-hesitant-pixel",
     servant: "onggojib.character.servant-household-pixel",
   },
 } as const;
@@ -949,6 +983,7 @@ const ONGGOJIB_CHARACTER_ASSET_IDS = [
   OG.character.magistrate,
   OG.character.posol,
   OG.character.youngestChild,
+  OG.character.secondChild,
   OG.character.servant,
 ];
 
@@ -960,6 +995,223 @@ const ONGGOJIB_BACKGROUND_ASSET_IDS = [
   OG.background.springRoom,
   OG.background.winterCourtyard,
   OG.background.warmRoom,
+];
+
+const ORIGINAL_ONGGOJIB_HOME_CHANGE: TemplateScene[] = [
+  originalScene({
+    id: "onggojib-home-0",
+    text: "겨울 저녁, 옹고집네 안방에 밥상이 놓였다. 아이들은 옹고집의 눈치를 보며 말없이 밥을 먹었다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "가족이 진짜 옹고집 앞에서 어떤 모습이었는지 먼저 보여 줍니다.",
+    emotionNote: "아이들: 긴장 · 옹고집: 무심함",
+  }),
+  originalScene({
+    id: "onggojib-home-0a",
+    text: "막내가 밥을 뜨다 밥알 몇 톨을 상 위에 떨어뜨렸다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    emotionNote: "막내: 순간의 실수와 두려움",
+  }),
+  originalScene({
+    id: "onggojib-home-0b",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "분노한 옹고집",
+    text: "그 몇 톨도 네가 벌어 온 것이냐. 상 위에 떨어진 밥알까지 다 주워라.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "옹고집의 인색함과 아이들이 두려워하는 까닭을 직접 보여 줍니다.",
+    emotionNote: "진짜 옹고집: 꾸짖음 · 막내: 얼어붙음",
+  }),
+  originalScene({
+    id: "onggojib-home-0c",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "부인",
+    text: "서방님, 아이가 놀랐습니다. 제가 치우겠습니다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.warmRoom,
+    emotionNote: "부인: 아이를 보호하려는 마음",
+  }),
+  originalScene({
+    id: "onggojib-home-0d",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "분노한 옹고집",
+    text: "감싸니 저 모양이지. 내 집 밥을 먹으면 밥 귀한 줄부터 알아야 하오.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.warmRoom,
+    emotionNote: "진짜 옹고집: 완고함 · 부인: 답답함",
+  }),
+  originalScene({
+    id: "onggojib-home-1",
+    text: "다음 날, 옹고집은 장사길에 오른다며 집을 나섰다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "진짜 옹고집이 집을 비우며 사건이 시작됩니다.",
+    emotionNote: "부인: 익숙한 걱정 · 옹고집: 무심함",
+    directionNote: "pinky-ne-site 최신 원작의 귀가 전 흐름을 따릅니다.",
+  }),
+  originalScene({
+    id: "onggojib-home-2",
+    text: "며칠 뒤, 대문 밖에서 남편의 목소리가 들렸다. 부인이 문을 열자 옹고집과 똑같이 생긴 사내가 서 있었다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "가짜 옹고집이 집에 들어오는 순간입니다.",
+    emotionNote: "부인: 놀람과 의심 · 가짜 옹고집: 침착함",
+  }),
+  originalScene({
+    id: "onggojib-home-3",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "가짜 옹고집",
+    text: "밖이 춥소. 아이들은 안으로 들이시오. 부인도 오래 서 있지 마시오.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "진짜 옹고집과 다른 태도를 첫 대사로 보여 줍니다.",
+    emotionNote: "가짜 옹고집: 다정함 · 부인: 낯선 느낌",
+  }),
+  originalScene({
+    id: "onggojib-home-4",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "부인",
+    text: "서방님… 오늘은 어찌 그런 말씀을 하십니까?",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.wifeConcerned,
+    backgroundId: OG.background.winterCourtyard,
+    emotionNote: "부인: 반가움보다 먼저 드는 의문",
+  }),
+  originalScene({
+    id: "onggojib-home-5",
+    text: "따뜻한 방에 들어온 그가 작은 엿 꾸러미를 상 위에 놓았다. 아이들은 옹고집의 얼굴을 살피며 선뜻 손을 내밀지 못했다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "아이들이 아버지 앞에서 늘 눈치를 봤음을 행동으로 보여 줍니다.",
+    emotionNote: "아이들: 경계 · 가짜 옹고집: 기다림",
+  }),
+  originalScene({
+    id: "onggojib-home-6",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "가짜 옹고집",
+    text: "먹어도 된다. 서로 나누어 먹거라.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    emotionNote: "가짜 옹고집: 재촉하지 않는 다정함",
+  }),
+  originalScene({
+    id: "onggojib-home-7",
+    text: "막내가 조심스럽게 엿 하나를 집었다. 둘째도 따라 손을 내밀었다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.youngestChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "아이들이 조금씩 마음을 놓기 시작합니다.",
+    emotionNote: "막내와 둘째: 조심스러운 안도",
+  }),
+  originalScene({
+    id: "onggojib-home-8",
+    text: "다음 저녁, 둘째가 낮에 본 일을 말하려다 옹고집의 얼굴을 살폈다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.secondChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "아이들이 말을 꺼내기 어려워했던 집안 분위기를 보여 줍니다.",
+    emotionNote: "둘째: 망설임 · 가짜 옹고집: 기다림",
+  }),
+  originalScene({
+    id: "onggojib-home-9",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "둘째",
+    text: "오늘 마당에 까치가……",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.secondChild,
+    backgroundId: OG.background.warmRoom,
+    emotionNote: "둘째: 혼날까 봐 말을 흐림",
+  }),
+  originalScene({
+    id: "onggojib-home-10",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "가짜 옹고집",
+    text: "그래서 어떻게 되었느냐.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.secondChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "설명하지 않고, 아이의 말을 기다리는 태도로 변화를 보여 줍니다.",
+    emotionNote: "가짜 옹고집: 관심 · 둘째: 놀람",
+  }),
+  originalScene({
+    id: "onggojib-home-11",
+    text: "둘째는 낮에 본 까치 이야기를 끝까지 말했다. 막내도 옆에서 따라 웃었다. 며칠이 지나자 아이들은 그가 밥상에 앉아도 먼저 말을 꺼냈다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.secondChild,
+    backgroundId: OG.background.warmRoom,
+    purposeNote: "가족이 편안해졌음을 짧은 사건 하나로 보여 줍니다.",
+    emotionNote: "아이들: 안도 · 부인: 복잡한 마음",
+  }),
+  originalScene({
+    id: "onggojib-home-12",
+    text: "일주일 뒤, 대문이 거칠게 열리고 눈발을 뒤집어쓴 진짜 옹고집이 뛰어 들어왔다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "평온해진 집에 진짜 옹고집이 돌아오며 갈등이 폭발합니다.",
+    emotionNote: "진짜 옹고집: 격분 · 가족: 놀람",
+  }),
+  originalScene({
+    id: "onggojib-home-13",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "분노한 옹고집",
+    text: "어느 괘씸한 놈이 내 행세를 하며 내 집을 차지했느냐.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.winterCourtyard,
+    emotionNote: "진짜 옹고집: 분노 · 가짜 옹고집: 침착함",
+  }),
+  originalScene({
+    id: "onggojib-home-14",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "가짜 옹고집",
+    text: "아이들이 놀랍니다. 부인, 아이들을 데리고 뒤로 물러서시오.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "가짜 옹고집이 말보다 행동으로 가족을 보호합니다.",
+    emotionNote: "가짜 옹고집: 단호함 · 아이들: 두려움",
+  }),
+  originalScene({
+    id: "onggojib-home-15",
+    text: "분노한 옹고집이 한 걸음 다가오자 아이들이 뒤로 물러섰다. 또 다른 옹고집은 아이들 앞에 서서 그를 막았다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "훗날 막내가 누구 뒤로 숨는지 이해할 근거를 만듭니다.",
+    emotionNote: "아이들: 공포 · 가짜 옹고집: 보호 · 진짜 옹고집: 분노",
+  }),
+  originalScene({
+    id: "onggojib-home-16",
+    text: "고함이 대문 밖까지 번졌다. 이웃들이 관아에 알렸고, 포졸들은 두 사람과 가족을 관아로 데려갔다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.winterCourtyard,
+    purposeNote: "집안의 충돌을 관아 장면으로 자연스럽게 연결합니다.",
+    emotionNote: "가족: 불안 · 두 옹고집: 팽팽한 대립",
+    directionNote: "다음 챕터에서 관아 마당으로 전환합니다.",
+  }),
 ];
 
 const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [
@@ -1081,7 +1333,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
   id: "template-onggojib-wife-choice",
   title: "옹고집전: 아내의 선택 이후",
   description:
-    "원작의 첫 관아에서 아내가 가짜 옹고집을 선택한 뒤부터 이어 쓰는 이야기",
+    "가짜 옹고집이 가족의 마음을 얻은 과정을 읽고, 아내의 선택 뒤부터 이어 쓰는 이야기",
   continuation: {
     chapterId: "onggojib-continuation",
     lineId: "onggojib-continuation-line-1",
@@ -1089,11 +1341,12 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
   },
   planning: {
     premise:
-      "똑같이 생긴 두 옹고집 앞에서 아내는 아이들을 지켜 준 가짜 옹고집을 선택합니다. 이 선택 뒤에는 어떤 일이 벌어질까요?",
+      "똑같이 생긴 두 옹고집 앞에서 아내는 오래 함께 산 남편이 아니라 아이들이 안심하고 말을 꺼낼 수 있게 해 준 사람을 선택합니다. 이 선택 뒤에는 어떤 일이 벌어질까요?",
     structureMode: "four",
     material:
       "pinky-ne-site 옹고집전의 첫 관아 장면에서 ‘아이를 감싸 준 옹고집과 돌아간다’를 고른 갈래",
-    theme: "",
+    theme:
+      "한 사람을 그 사람답게 만드는 것은 얼굴과 이름일까, 다른 사람을 대하는 태도일까?",
     mainCharacter: "진짜 옹고집과 아내",
     mainGoal:
       "인물들은 아내가 내린 선택의 결과를 마주하고 앞으로 어떻게 살아갈지 정한다.",
@@ -1101,19 +1354,20 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       "아내는 가족을 지키기 위해 가짜 옹고집을 선택했지만, 진짜 옹고집은 이름과 집을 잃을 위기에 놓였습니다.",
     stakes:
       "이후의 행동에 따라 진짜 옹고집, 아내와 아이들, 가짜 옹고집의 관계와 삶이 달라집니다.",
-    endingChange: "",
+    endingChange:
+      "마지막에는 진짜 옹고집과 가족의 관계가 처음과 어떻게 달라졌는지 보여 준다.",
     opening:
-      "똑같이 생긴 두 옹고집이 첫 관아에 서지만 사또와 포졸은 두 사람을 구별하지 못한다.",
+      "옹고집이 집을 비운 사이 똑같이 생긴 사람이 찾아오고, 아이들은 자신들의 말을 기다려 주는 그 앞에서 조금씩 마음을 놓는다.",
     middle:
-      "진짜 옹고집은 화를 내고, 막내는 자신을 감싸 준 가짜 옹고집 뒤로 숨는다.",
+      "진짜 옹고집이 돌아와 화를 내자 아이들은 물러서고, 가짜 옹고집은 아이들 앞을 막아선다. 두 사람은 결국 관아로 간다.",
     crisis:
       "아내는 아이들을 지켜 준 가짜 옹고집과 돌아가겠다고 선택한다.",
     climax: "",
     ending: "",
     characterNotes:
-      "진짜 옹고집은 자신의 이름과 집을 빼앗길까 분노합니다.\n가짜 옹고집은 아이에게 소리치지 말라며 막아 섭니다.\n아내는 진짜 남편이 누구인지 알면서도 아이들의 안전을 생각합니다.\n사또는 두 사람을 구별하지 못해 아내에게 결정을 맡깁니다.",
+      "진짜 옹고집은 자신의 이름과 집을 빼앗길까 분노하지만, 아이들이 왜 자신을 두려워하는지는 아직 보지 못합니다.\n가짜 옹고집은 엿을 건네는 것보다 아이의 서툰 이야기를 끝까지 기다려 주는 태도로 가족의 마음을 얻습니다.\n아내는 진짜 남편이 누구인지 알면서도 아이들이 다시 눈치만 보며 살게 할 수 없다고 생각합니다.\n사또는 얼굴과 기억으로 두 사람을 구별하지 못해 아내에게 결정을 맡깁니다.",
     worldNotes:
-      "첫 관아 마당에서 이야기가 시작됩니다. 이후에는 눈길, 옹고집의 집, 다시 찾은 관아 등 원작 옹고집전 이미지를 자유롭게 골라 사용할 수 있습니다.",
+      "겨울의 옹고집 집에서 가족의 변화를 본 뒤 첫 관아 마당으로 이동합니다. 이후에는 눈길, 따뜻한 방, 다시 찾은 관아와 봄날 마당 등 원작 이미지를 자유롭게 사용할 수 있습니다.",
     mood: "혼란 · 분노 · 보호 · 선택의 무게",
     openQuestions:
       "진짜 옹고집은 아내의 선택을 듣고 무엇을 할까?\n사또는 어떤 판결을 내릴까?\n가짜 옹고집은 가족과 함께 집으로 돌아갈까?\n진짜 옹고집은 자신의 잘못을 깨닫게 될까?",
@@ -1129,12 +1383,38 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     "사또",
     "포졸",
     "막내",
+    "둘째",
   ],
-  updatedAt: "pinky-ne-site 원작 반영",
+  updatedAt: "pinky-ne-site 최신 원작 반영",
   chapters: [
     {
-      id: "onggojib-origin-court",
+      id: "onggojib-origin-home-change",
       order: 1,
+      title: "같은 얼굴, 다른 태도",
+      summary:
+        "진짜 옹고집 앞에서 말없이 지내던 아이들이, 똑같이 생겼지만 자신들의 말을 기다려 주는 사람 앞에서 조금씩 마음을 놓습니다.",
+      purpose:
+        "아내와 아이들이 가짜 옹고집을 믿게 된 이유를 설명하지 않고 행동으로 보여 주는 원작 부분",
+      mood: "낯섦 · 조심스러운 안도 · 다시 찾아온 긴장",
+      keyEvents:
+        "진짜 옹고집이 밥알을 흘린 막내를 몰아세운다.\n가짜 옹고집이 추운 밖에 선 가족을 먼저 걱정한다.\n아이들이 엿을 나누고 까치 이야기를 끝까지 한다.\n진짜 옹고집이 돌아오자 아이들이 물러선다.\n두 옹고집과 가족이 관아로 향한다.",
+      nextChapterIdea: "사또가 두 옹고집을 가려내려 한다.",
+      chapterSpeakerNames: [
+        "진짜 옹고집",
+        "가짜 옹고집",
+        "부인",
+        "둘째",
+        "막내",
+      ],
+      characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
+      backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
+      backgroundId: OG.background.winterCourtyard,
+      leftAssetId: OG.character.fakeGentle,
+      rightAssetId: OG.character.wifeConcerned,
+    },
+    {
+      id: "onggojib-origin-court",
+      order: 2,
       title: "두 옹고집의 첫 관아",
       summary:
         "똑같이 생긴 두 옹고집을 두고 사또와 가족이 누구를 믿을지 고민합니다.",
@@ -1150,6 +1430,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
         "사또",
         "포졸",
         "막내",
+        "둘째",
       ],
       characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
@@ -1159,7 +1440,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     },
     {
       id: "onggojib-origin-choice",
-      order: 2,
+      order: 3,
       title: "아내가 선택한 사람",
       summary:
         "아내는 아이들을 지켜 준 가짜 옹고집과 돌아가겠다고 말합니다.",
@@ -1176,7 +1457,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     },
     {
       id: "onggojib-continuation",
-      order: 3,
+      order: 4,
       title: "여기서부터 이어 쓰기",
       summary:
         "아내의 선택을 들은 뒤, 관아에서는 어떤 일이 벌어질까요?",
@@ -1192,6 +1473,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
         "사또",
         "포졸",
         "막내",
+        "둘째",
       ],
       characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
@@ -1201,6 +1483,10 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     },
   ],
   lines: [
+    ...templateLines(
+      "onggojib-origin-home-change",
+      ORIGINAL_ONGGOJIB_HOME_CHANGE,
+    ),
     ...templateLines("onggojib-origin-court", ORIGINAL_ONGGOJIB_FIRST_COURT),
     ...templateLines("onggojib-origin-choice", ORIGINAL_ONGGOJIB_WIFE_CHOICE),
     {

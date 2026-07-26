@@ -178,6 +178,28 @@ function normalizeSearch(value: string) {
     .replace(/[·_\-\s]/g, "");
 }
 
+function containsParentheses(value: string) {
+  return /[()（）]/.test(value);
+}
+
+function DialogueText({ text }: { text: string }) {
+  const parts = text.split(/(\([^()]*\)|（[^（）]*）)/g);
+
+  return (
+    <>
+      {parts.map((part, index) =>
+        /^\([^()]*\)$|^（[^（）]*）$/.test(part) ? (
+          <span className="parenthetical-direction" key={`${part}-${index}`}>
+            {part}
+          </span>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 function assetName(assetId: string) {
   return ASSET_BY_ID.get(assetId)?.displayName ?? "";
 }
@@ -1128,7 +1150,11 @@ function StoryPlayer({
               <strong className={`speaker-name ${line?.speaker ?? ""}`}>
                 {line?.speakerName || "화자 없음"}
               </strong>
-              <p>{line?.text || "이 챕터에는 아직 글이 없어요."}</p>
+              <p>
+                <DialogueText
+                  text={line?.text || "이 챕터에는 아직 글이 없어요."}
+                />
+              </p>
             </>
           )}
           <div className="player-controls">
@@ -1801,6 +1827,20 @@ export function StoryStudio() {
         (line) => line.type === "dialogue" && !line.speakerName.trim(),
       );
       if (unnamed) throw new Error("대사 장면의 화자 이름을 골라 주세요.");
+      const narrationWithParentheses = draft.lines.find(
+        (line) =>
+          line.type === "narration" && containsParentheses(line.text),
+      );
+      if (narrationWithParentheses) {
+        const chapter = draft.chapters.find(
+          (candidate) => candidate.id === narrationWithParentheses.chapterId,
+        );
+        throw new Error(
+          `${chapter?.title || "챕터"} · 장면 ${
+            narrationWithParentheses.order
+          }의 해설에는 괄호를 쓸 수 없어요. 속마음이나 행동은 대사 장면의 괄호 안에 써 주세요.`,
+        );
+      }
       backupDraft();
       setBusyStep("새 플레이 버전 만드는 중");
       const updated = cloneProject({
@@ -2169,8 +2209,8 @@ export function StoryStudio() {
                     생길까요?
                   </small>
                   <em>
-                    준비된 내용: 두 옹고집의 첫 관아 다툼·아내의 선택 ·
-                    시작할 곳: 선택 뒤 첫 장면
+                    준비된 내용: 가족의 변화·두 옹고집의 관아 다툼·아내의
+                    선택 · 시작할 곳: 선택 뒤 첫 장면
                   </em>
                 </span>
                 <b>이어서 쓰기</b>
@@ -3454,14 +3494,28 @@ export function StoryStudio() {
                               }
                               placeholder={
                                 line.type === "narration"
-                                  ? "이 장면의 해설을 써 보세요."
-                                  : "이 장면의 대사를 써 보세요."
+                                  ? "시간·장소·상황을 괄호 없이 들려주세요."
+                                  : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
                               }
                               onChange={(event) =>
                                 updateLine(line.id, { text: event.target.value })
                               }
                               aria-label={`장면 ${index + 1} 내용`}
                             />
+                            <small
+                              className={`scene-writing-help ${
+                                line.type === "narration" &&
+                                containsParentheses(line.text)
+                                  ? "warning"
+                                  : ""
+                              }`}
+                            >
+                              {line.type === "narration"
+                                ? containsParentheses(line.text)
+                                  ? "해설에는 괄호를 쓸 수 없어요. 이 내용을 대사 장면으로 옮겨 주세요."
+                                  : "해설은 괄호 없이 시간·장소·상황을 들려줘요."
+                                : "속마음·표정·행동은 학생이 직접 (괄호 안에) 써요."}
+                            </small>
                             <small className="scene-asset-summary">
                               왼쪽{" "}
                               {assetName(
@@ -3700,11 +3754,25 @@ export function StoryStudio() {
                           }
                           placeholder={
                             selectedLine.type === "narration"
-                              ? "이 장면의 해설을 써 보세요."
-                              : "이 글상자를 눌러 대사를 써 보세요."
+                              ? "시간·장소·상황을 괄호 없이 들려주세요."
+                              : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
                           }
                           aria-label="현재 장면 글상자"
                         />
+                        <small
+                          className={`stage-writing-help ${
+                            selectedLine.type === "narration" &&
+                            containsParentheses(selectedLine.text)
+                              ? "warning"
+                              : ""
+                          }`}
+                        >
+                          {selectedLine.type === "narration"
+                            ? containsParentheses(selectedLine.text)
+                              ? "해설에는 괄호를 쓸 수 없어요."
+                              : "해설은 괄호 없이 씁니다."
+                            : "속마음·표정·행동은 (괄호 안에) 직접 씁니다."}
+                        </small>
                       </label>
                     </section>
 

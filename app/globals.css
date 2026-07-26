@@ -2419,6 +2419,17 @@ img {
   line-height: 1.6;
 }
 
+.parenthetical-direction {
+  color: #e5d2ab;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.dialogue-box p > .parenthetical-direction:only-child {
+  display: block;
+  padding-inline: clamp(4px, 2vw, 24px);
+}
+
 .dialogue-box .narration-copy {
   margin-inline: auto;
   color: #49361f;
@@ -4090,6 +4101,18 @@ img {
   resize: vertical;
 }
 
+.scene-writing-help {
+  color: var(--ink-soft);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.scene-writing-help.warning {
+  color: #a43d2f;
+  font-weight: 900;
+}
+
 .script-scene-card.narration .scene-writing-fields > textarea {
   border-color: #dfc28e;
   background: #fffdf8;
@@ -4382,6 +4405,24 @@ img {
 
 .editable-stage-dialogue.narration textarea::placeholder {
   color: rgba(73, 54, 31, 0.58);
+}
+
+.stage-writing-help {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.editable-stage-dialogue.narration .stage-writing-help {
+  color: rgba(73, 54, 31, 0.62);
+  text-align: center;
+}
+
+.stage-writing-help.warning,
+.editable-stage-dialogue.narration .stage-writing-help.warning {
+  color: #a43d2f;
+  font-weight: 900;
 }
 
 .scene-focus-lower {
