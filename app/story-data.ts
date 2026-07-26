@@ -917,6 +917,323 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
   ],
 };
 
+const ONGGOJIB_TEMPLATE_ASSETS = {
+  background: {
+    court: "onggojib.background.magistrate-yard-pixel",
+    courtChoice: "onggojib.background.court-child-choice-cg-pixel",
+    snowRoad: "onggojib.background.snow-road-pixel",
+    snowVillage: "onggojib.background.snow-village-road-pixel",
+    winterCourtyard: "onggojib.background.winter-courtyard-pixel",
+    warmRoom: "onggojib.background.warm-room-pixel",
+    exiledMirror: "onggojib.background.exiled-mirror-cg-pixel",
+    reconciliation: "onggojib.background.reconciliation-blue-cg-pixel",
+  },
+  character: {
+    realAngry: "onggojib.character.real-angry-pixel",
+    realExiled: "onggojib.character.real-exiled-consistent-pixel",
+    realRemorse: "onggojib.character.real-remorse-consistent-pixel",
+    realResolve: "onggojib.character.real-resolve-consistent-pixel",
+    fakeGentle:
+      "onggojib.character.double-blue-gentle-consistent-pixel",
+    fakeFirm: "onggojib.character.double-blue-firm-consistent-pixel",
+    wifeResolved: "onggojib.character.wife-resolved-pixel",
+    wifeConcerned: "onggojib.character.wife-concerned-pixel",
+    magistrate: "onggojib.character.magistrate-command-pixel",
+    posol: "onggojib.character.posol-pixel",
+    youngestChild: "onggojib.character.youngest-child-cautious-pixel",
+    servant: "onggojib.character.servant-pixel",
+  },
+} as const;
+
+const OG = ONGGOJIB_TEMPLATE_ASSETS;
+
+const ONGGOJIB_CHARACTER_ASSET_IDS = [
+  OG.character.realAngry,
+  OG.character.realExiled,
+  OG.character.realRemorse,
+  OG.character.realResolve,
+  OG.character.fakeGentle,
+  OG.character.fakeFirm,
+  OG.character.wifeResolved,
+  OG.character.wifeConcerned,
+  OG.character.magistrate,
+  OG.character.posol,
+  OG.character.youngestChild,
+  OG.character.servant,
+];
+
+const ONGGOJIB_BACKGROUND_ASSET_IDS = [
+  OG.background.court,
+  OG.background.courtChoice,
+  OG.background.snowRoad,
+  OG.background.snowVillage,
+  OG.background.winterCourtyard,
+  OG.background.warmRoom,
+  OG.background.exiledMirror,
+  OG.background.reconciliation,
+];
+
+const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [
+  originalScene({
+    id: "onggojib-court-1",
+    text: "관아 마당에 두 옹고집이 나란히 섰다. 포졸들도 두 사람을 구별하지 못했다.",
+    leftAssetId: OG.character.magistrate,
+    rightAssetId: OG.character.posol,
+    backgroundId: OG.background.court,
+    purposeNote: "두 옹고집을 가려내기 위한 첫 관아 장면입니다.",
+    emotionNote: "사또: 신중함 · 포졸: 혼란",
+    directionNote:
+      "pinky-ne-site 원작의 관아 마당과 사또·포졸 배치를 따릅니다.",
+  }),
+  originalScene({
+    id: "onggojib-court-2",
+    text: "사또가 집안 살림과 오래된 일을 차례로 물었지만 두 사람의 대답은 똑같았다.",
+    leftAssetId: OG.character.magistrate,
+    rightAssetId: OG.character.posol,
+    backgroundId: OG.background.court,
+    purposeNote: "겉모습과 기억만으로는 두 사람을 가릴 수 없음을 보여 줍니다.",
+    emotionNote: "사또: 고민 · 관아 사람들: 혼란",
+  }),
+  originalScene({
+    id: "onggojib-court-3",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "분노한 옹고집",
+    text: "더 물을 것도 없습니다! 저놈을 당장 끌어내십시오. 내가 이 집 주인이오.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.court,
+    emotionNote: "진짜 옹고집: 분노 · 가짜 옹고집: 침착함",
+  }),
+  originalScene({
+    id: "onggojib-court-4",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "사또",
+    text: "관아 마당에서 소리부터 높이지 마라. 한 걸음 물러서라.",
+    leftAssetId: OG.character.magistrate,
+    rightAssetId: OG.character.wifeResolved,
+    backgroundId: OG.background.court,
+    emotionNote: "사또: 단호함 · 부인: 긴장",
+  }),
+  originalScene({
+    id: "onggojib-court-5",
+    text: "포졸들이 분노한 옹고집을 뒤로 물리자, 막내는 조용한 옹고집 뒤로 숨었다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.court,
+    purposeNote: "아이가 두 사람 앞에서 느끼는 감정의 차이를 보여 줍니다.",
+    emotionNote: "막내: 두려움 · 가짜 옹고집: 보호하려는 마음",
+  }),
+  originalScene({
+    id: "onggojib-court-6",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "분노한 옹고집",
+    text: "내 자식이 저놈에게 붙다니. 이리 오지 못하느냐.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.court,
+    emotionNote: "진짜 옹고집: 분노 · 막내: 두려움",
+  }),
+  originalScene({
+    id: "onggojib-court-7",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "조용한 옹고집",
+    text: "아이에게 소리치지 마시오. 화가 나거든 나에게 하시오.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.fakeGentle,
+    backgroundId: OG.background.court,
+    emotionNote: "가짜 옹고집: 단호한 보호 · 진짜 옹고집: 분노",
+  }),
+  originalScene({
+    id: "onggojib-court-8",
+    type: "dialogue",
+    speaker: "left",
+    speakerName: "사또",
+    text: "누가 진짜 옹고집인지 가릴 길이 없구나. 부인, 누구와 집으로 돌아가겠느냐.",
+    leftAssetId: OG.character.magistrate,
+    rightAssetId: OG.character.wifeResolved,
+    backgroundId: OG.background.court,
+    purposeNote: "사또가 부인에게 마지막 결정을 맡깁니다.",
+    emotionNote: "사또: 고민 · 부인: 갈등",
+  }),
+  originalScene({
+    id: "onggojib-court-9",
+    text: "부인은 소리친 남편과 막내 앞을 막아 선 사람을 번갈아 보았다.",
+    leftAssetId: OG.character.realAngry,
+    rightAssetId: OG.character.wifeResolved,
+    backgroundId: OG.background.court,
+    purposeNote: "부인이 선택하기 직전의 갈등을 보여 줍니다.",
+    emotionNote: "부인: 갈등 · 진짜 옹고집: 초조함",
+    directionNote: "다음 장면에서 원작의 가짜 옹고집 선택으로 이어집니다.",
+  }),
+];
+
+const ORIGINAL_ONGGOJIB_WIFE_CHOICE: TemplateScene[] = [
+  originalScene({
+    id: "onggojib-wife-choice-1",
+    type: "dialogue",
+    speaker: "right",
+    speakerName: "부인",
+    text: "아이들을 지켜 준 저 사람과 돌아가겠습니다.",
+    leftAssetId: OG.character.fakeGentle,
+    rightAssetId: OG.character.wifeResolved,
+    backgroundId: OG.background.court,
+    purposeNote:
+      "pinky-ne-site 원작에서 부인이 가짜 옹고집을 선택하는 고정 장면입니다.",
+    emotionNote: "부인: 결심 · 가짜 옹고집: 침착함",
+    directionNote: "이 선택의 결과부터 학생이 새롭게 이어 씁니다.",
+  }),
+];
+
+export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
+  id: "template-onggojib-wife-choice",
+  title: "옹고집전: 아내의 선택 이후",
+  description:
+    "원작의 첫 관아에서 아내가 가짜 옹고집을 선택한 뒤부터 이어 쓰는 이야기",
+  continuation: {
+    chapterId: "onggojib-continuation",
+    lineId: "onggojib-continuation-line-1",
+    label: "선택 뒤 첫 장면",
+  },
+  planning: {
+    premise:
+      "똑같이 생긴 두 옹고집 앞에서 아내는 아이들을 지켜 준 가짜 옹고집을 선택합니다. 이 선택 뒤에는 어떤 일이 벌어질까요?",
+    structureMode: "four",
+    material:
+      "pinky-ne-site 옹고집전의 첫 관아 장면에서 ‘아이를 감싸 준 옹고집과 돌아간다’를 고른 갈래",
+    theme: "",
+    mainCharacter: "진짜 옹고집과 아내",
+    mainGoal:
+      "인물들은 아내가 내린 선택의 결과를 마주하고 앞으로 어떻게 살아갈지 정한다.",
+    centralProblem:
+      "아내는 가족을 지키기 위해 가짜 옹고집을 선택했지만, 진짜 옹고집은 이름과 집을 잃을 위기에 놓였습니다.",
+    stakes:
+      "이후의 행동에 따라 진짜 옹고집, 아내와 아이들, 가짜 옹고집의 관계와 삶이 달라집니다.",
+    endingChange: "",
+    opening:
+      "똑같이 생긴 두 옹고집이 첫 관아에 서지만 사또와 포졸은 두 사람을 구별하지 못한다.",
+    middle:
+      "진짜 옹고집은 화를 내고, 막내는 자신을 감싸 준 가짜 옹고집 뒤로 숨는다.",
+    crisis:
+      "아내는 아이들을 지켜 준 가짜 옹고집과 돌아가겠다고 선택한다.",
+    climax: "",
+    ending: "",
+    characterNotes:
+      "진짜 옹고집은 자신의 이름과 집을 빼앗길까 분노합니다.\n가짜 옹고집은 아이에게 소리치지 말라며 막아 섭니다.\n아내는 진짜 남편이 누구인지 알면서도 아이들의 안전을 생각합니다.\n사또는 두 사람을 구별하지 못해 아내에게 결정을 맡깁니다.",
+    worldNotes:
+      "첫 관아 마당에서 이야기가 시작됩니다. 이후에는 눈길, 옹고집의 집, 다시 찾은 관아 등 원작 옹고집전 이미지를 자유롭게 골라 사용할 수 있습니다.",
+    mood: "혼란 · 분노 · 보호 · 선택의 무게",
+    openQuestions:
+      "진짜 옹고집은 아내의 선택을 듣고 무엇을 할까?\n사또는 어떤 판결을 내릴까?\n가짜 옹고집은 가족과 함께 집으로 돌아갈까?\n진짜 옹고집은 자신의 잘못을 깨닫게 될까?",
+    freeNotes:
+      "첫 선택은 원작의 ‘아이를 감싸 준 옹고집과 돌아간다’로 고정했습니다. 그 직후 관아에서 벌어지는 일부터 새롭게 만드세요.",
+  },
+  sheetUrl: "",
+  sheetEditable: false,
+  speakerNames: [
+    "진짜 옹고집",
+    "가짜 옹고집",
+    "부인",
+    "사또",
+    "포졸",
+    "막내",
+  ],
+  updatedAt: "pinky-ne-site 원작 반영",
+  chapters: [
+    {
+      id: "onggojib-origin-court",
+      order: 1,
+      title: "두 옹고집의 첫 관아",
+      summary:
+        "똑같이 생긴 두 옹고집을 두고 사또와 가족이 누구를 믿을지 고민합니다.",
+      purpose: "아내가 선택하게 된 까닭을 이해하는 원작 부분",
+      mood: "혼란 · 분노 · 두려움",
+      keyEvents:
+        "두 옹고집의 대답이 모두 같다.\n진짜 옹고집이 소리친다.\n막내가 가짜 옹고집 뒤로 숨는다.",
+      nextChapterIdea: "사또가 아내에게 함께 돌아갈 사람을 고르게 한다.",
+      chapterSpeakerNames: [
+        "진짜 옹고집",
+        "가짜 옹고집",
+        "부인",
+        "사또",
+        "포졸",
+        "막내",
+      ],
+      characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
+      backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
+      backgroundId: OG.background.court,
+      leftAssetId: OG.character.realAngry,
+      rightAssetId: OG.character.fakeGentle,
+    },
+    {
+      id: "onggojib-origin-choice",
+      order: 2,
+      title: "아내가 선택한 사람",
+      summary:
+        "아내는 아이들을 지켜 준 가짜 옹고집과 돌아가겠다고 말합니다.",
+      purpose: "학생이 이어 쓰기 전에 고정해 둔 원작의 선택",
+      mood: "결심 · 긴장 · 선택의 무게",
+      keyEvents: "아내가 가짜 옹고집을 선택한다.",
+      nextChapterIdea: "선택을 들은 사람들과 사또가 반응한다.",
+      chapterSpeakerNames: ["진짜 옹고집", "가짜 옹고집", "부인", "사또"],
+      characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
+      backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
+      backgroundId: OG.background.court,
+      leftAssetId: OG.character.fakeGentle,
+      rightAssetId: OG.character.wifeResolved,
+    },
+    {
+      id: "onggojib-continuation",
+      order: 3,
+      title: "여기서부터 이어 쓰기",
+      summary:
+        "아내의 선택을 들은 뒤, 관아에서는 어떤 일이 벌어질까요?",
+      purpose: "학생이 선택 직후의 첫 반응부터 자유롭게 이어 쓰는 부분",
+      mood: "",
+      keyEvents:
+        "아내의 선택을 들은 인물이 반응한다.\n사또가 판결하거나 새로운 사건이 시작된다.",
+      nextChapterIdea: "",
+      chapterSpeakerNames: [
+        "진짜 옹고집",
+        "가짜 옹고집",
+        "부인",
+        "사또",
+        "포졸",
+        "막내",
+      ],
+      characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
+      backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
+      backgroundId: OG.background.court,
+      leftAssetId: OG.character.realAngry,
+      rightAssetId: OG.character.wifeResolved,
+    },
+  ],
+  lines: [
+    ...templateLines("onggojib-origin-court", ORIGINAL_ONGGOJIB_FIRST_COURT),
+    ...templateLines("onggojib-origin-choice", ORIGINAL_ONGGOJIB_WIFE_CHOICE),
+    {
+      id: "onggojib-continuation-line-1",
+      chapterId: "onggojib-continuation",
+      order: 1,
+      type: "dialogue",
+      speaker: "left",
+      speakerName: "진짜 옹고집",
+      text: "",
+      leftAssetId: OG.character.realAngry,
+      rightAssetId: OG.character.wifeResolved,
+      backgroundId: OG.background.court,
+      purposeNote:
+        "아내의 선택을 들은 진짜 옹고집 또는 다른 인물의 첫 반응을 써 보세요.",
+      emotionNote: "",
+      directionNote:
+        "원작의 진짜 옹고집 왼쪽·부인 오른쪽·관아 마당 배치에서 시작합니다.",
+    },
+  ],
+};
+
 export function createBlankProject(): StoryProject {
   return {
     id: `story-${Date.now()}`,

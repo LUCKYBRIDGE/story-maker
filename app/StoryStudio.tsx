@@ -12,6 +12,7 @@ import {
   cloneProject,
   createBlankProject,
   DEFAULT_PROJECT,
+  ONGGOJIB_CONTINUATION_TEMPLATE,
   RABBIT_TURTLE_CONTINUATION_TEMPLATE,
   RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
   type Chapter,
@@ -1905,6 +1906,15 @@ export function StoryStudio() {
     );
   }
 
+  function startOnggojibContinuation() {
+    startContinuationTemplate(
+      ONGGOJIB_CONTINUATION_TEMPLATE,
+      "onggojib-continuation",
+      "onggojib-continuation-line-1",
+      "아내가 가짜 옹고집을 선택한 다음 장면을 열었어요. 선택 뒤 첫 반응부터 이어 써 보세요.",
+    );
+  }
+
   function requestBlankProject() {
     const hasContent =
       Boolean(draft.title.trim()) ||
@@ -2042,6 +2052,24 @@ export function StoryStudio() {
                   <em>
                     준비된 내용: 용왕의 명령·잔치 초대·용궁 결박 · 시작할 곳:
                     토끼의 첫 대응
+                  </em>
+                </span>
+                <b>이어서 쓰기</b>
+              </button>
+              <button
+                className="entry-template-card"
+                onClick={startOnggojibContinuation}
+              >
+                <span className="template-number">03</span>
+                <span className="template-copy">
+                  <strong>옹고집전 템플릿 1 · 아내의 선택 이후</strong>
+                  <small>
+                    가짜 옹고집을 선택한 뒤, 관아와 가족에게 어떤 일이
+                    생길까요?
+                  </small>
+                  <em>
+                    준비된 내용: 두 옹고집의 첫 관아 다툼·아내의 선택 ·
+                    시작할 곳: 선택 뒤 첫 장면
                   </em>
                 </span>
                 <b>이어서 쓰기</b>

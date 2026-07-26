@@ -39,6 +39,11 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
   assert.match(html, /자라는 토끼를 어떻게 용궁으로 데려갈까요/);
   assert.match(html, /토끼와 자라 템플릿 2 · 용궁에 묶인 토끼/);
   assert.match(html, /결박된 토끼는 어떻게 위기를 벗어날까요/);
+  assert.match(html, /옹고집전 템플릿 1 · 아내의 선택 이후/);
+  assert.match(
+    html,
+    /가짜 옹고집을 선택한 뒤, 관아와 가족에게 어떤 일이/,
+  );
   assert.match(html, /예시 작품 먼저 플레이/);
   assert.doesNotMatch(html, /Google로 시작하기/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
@@ -74,6 +79,15 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /palace-continuation-chapter-2/);
   assert.match(storyData, /자라가 토끼에게 건네는 첫 말을 직접 써 보세요/);
   assert.match(storyData, /결박된 토끼가 살아남기 위해 하는 첫 말을 직접 써 보세요/);
+  assert.match(
+    storyData,
+    /아이들을 지켜 준 저 사람과 돌아가겠습니다/,
+  );
+  assert.match(
+    storyData,
+    /아내의 선택을 들은 진짜 옹고집 또는 다른 인물의 첫 반응을 써 보세요/,
+  );
+  assert.match(storyData, /ONGGOJIB_CONTINUATION_TEMPLATE/);
   assert.match(storyData, /어두워진 용궁 대청에 조개등 불빛이 켜졌다/);
   assert.match(storyData, /용궁에서 작은 잔치가 열리오/);
   assert.match(storyData, /호위들을 도와 토끼를 묶어라/);
@@ -122,6 +136,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /function startRabbitTurtleContinuation2/);
   assert.match(studio, /시작할 곳:\s*자라의 첫 설득/);
   assert.match(studio, /시작할 곳:\s*토끼의 첫 대응/);
+  assert.match(studio, /시작할 곳:\s*선택 뒤 첫 장면/);
   assert.match(studio, /처음부터 읽고 고치기/);
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
@@ -191,7 +206,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   const templateAssetIds = new Set(
     [
       ...storyData.matchAll(
-        /"(rabbit-turtle\.(?:character|background)\.[^"]+)"/g,
+        /"((?:rabbit-turtle|onggojib)\.(?:character|background)\.[^"]+)"/g,
       ),
     ].map((match) => match[1]),
   );
