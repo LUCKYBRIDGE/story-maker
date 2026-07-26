@@ -30,6 +30,7 @@ type PlanningView = "story" | "chapters";
 type EditorMode = "chapter" | "scene";
 type ImageView = "text" | "small";
 type AssetView = "all" | "favorites" | "recent";
+type AssetLibraryScope = "recommended" | "all";
 type UpdateMode = "sheet" | "draft" | "excel";
 type CreatorAccess = "none" | "local";
 
@@ -57,6 +58,7 @@ const CHARACTER_FACING = new Map<string, "left" | "right">([
 const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
 const USAGE_FILTER_TAGS = ["원작 사용", "추가 연출"];
 const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
+const SELECTION_TIER_TAGS = ["기본 추천", "추가 자료"];
 const RABBIT_TURTLE_CHARACTER_ORDER = [
   "토끼",
   "자라",
@@ -64,6 +66,17 @@ const RABBIT_TURTLE_CHARACTER_ORDER = [
   "의관",
   "어린 자라",
   "젊은 용왕",
+];
+const ONGGOJIB_CHARACTER_ORDER = [
+  "진짜 옹고집",
+  "가짜 옹고집",
+  "옹고집의 아내",
+  "막내 아이",
+  "둘째 아이",
+  "사또",
+  "포졸",
+  "옹고집의 하인",
+  "일꾼",
 ];
 
 type StoryArcKey = "opening" | "middle" | "crisis" | "climax" | "ending";
@@ -184,13 +197,14 @@ function shouldMirrorAsset(assetId: string, side: "left" | "right") {
 
 function assetGroupLabel(asset: StoryAsset, type: StoryAsset["type"]) {
   return type === "character"
-    ? `${asset.usage} · ${asset.framing ?? "구도 미분류"}`
-    : asset.usage;
+    ? `${asset.selectionTier} · ${asset.framing ?? "구도 미분류"}`
+    : asset.selectionTier;
 }
 
 function assetGroupRank(asset: StoryAsset, type: StoryAsset["type"]) {
+  const selectionRank = asset.selectionTier === "기본 추천" ? 0 : 20;
   const usageRank = asset.usage === "원작 사용" ? 0 : 10;
-  if (type !== "character") return usageRank;
+  if (type !== "character") return selectionRank + usageRank;
   const framingRank =
     asset.framing === "전신"
       ? 0
@@ -199,7 +213,7 @@ function assetGroupRank(asset: StoryAsset, type: StoryAsset["type"]) {
         : asset.framing === "여러 인물"
           ? 2
           : 3;
-  return usageRank + framingRank;
+  return selectionRank + usageRank + framingRank;
 }
 
 function sortAssets(
@@ -223,6 +237,12 @@ function sortAssets(
         (a.pose === "기본" || a.pose === "전신" ? 0 : 1) -
         (b.pose === "기본" || b.pose === "전신" ? 0 : 1);
       if (poseDifference !== 0) return poseDifference;
+    }
+    if (type === "character" && a.story === "옹고집전") {
+      const characterDifference =
+        (ONGGOJIB_CHARACTER_ORDER.indexOf(a.group) + 1 || 99) -
+        (ONGGOJIB_CHARACTER_ORDER.indexOf(b.group) + 1 || 99);
+      if (characterDifference !== 0) return characterDifference;
     }
     const characterDifference = a.group.localeCompare(b.group, "ko");
     return characterDifference || a.pose.localeCompare(b.pose, "ko");
@@ -328,6 +348,8 @@ function AssetPickerButton({
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [view, setView] = useState<AssetView>("all");
+  const [libraryScope, setLibraryScope] =
+    useState<AssetLibraryScope>("recommended");
   const initializedFilters = useRef(false);
   const assets = type === "character" ? CHARACTER_ASSETS : BACKGROUND_ASSETS;
   const featuredTagGroups = useMemo(
@@ -364,7 +386,11 @@ function AssetPickerButton({
   const availableTags = useMemo(
     () =>
       Array.from(new Set(assets.flatMap((asset) => asset.tags)))
-        .filter((tag) => !featuredTags.includes(tag))
+        .filter(
+          (tag) =>
+            !featuredTags.includes(tag) &&
+            !SELECTION_TIER_TAGS.includes(tag),
+        )
         .sort((a, b) => a.localeCompare(b, "ko")),
     [assets, featuredTags],
   );
@@ -372,6 +398,12 @@ function AssetPickerButton({
     const query = normalizeSearch(search);
     const matchedAssets = assets
       .filter((asset) => {
+        if (
+          libraryScope === "recommended" &&
+          asset.selectionTier !== "기본 추천"
+        ) {
+          return false;
+        }
         if (view === "favorites" && !favoriteIds.includes(asset.id)) {
           return false;
         }
@@ -388,7 +420,19 @@ function AssetPickerButton({
           (a, b) => recentIds.indexOf(a.id) - recentIds.indexOf(b.id),
         )
       : sortAssets(matchedAssets, type);
-  }, [assets, favoriteIds, recentIds, search, tags, type, view]);
+  }, [
+    assets,
+    favoriteIds,
+    libraryScope,
+    recentIds,
+    search,
+    tags,
+    type,
+    view,
+  ]);
+  const recommendedAssetCount = assets.filter(
+    (asset) => asset.selectionTier === "기본 추천",
+  ).length;
   const filteredAssetGroups = groupAssets(
     filteredAssets,
     type,
@@ -405,6 +449,9 @@ function AssetPickerButton({
             const selectedAsset = value ? ASSET_BY_ID.get(value) : undefined;
             if (selectedAsset?.type === type) {
               setTags([selectedAsset.story]);
+              if (selectedAsset.selectionTier === "추가 자료") {
+                setLibraryScope("all");
+              }
             }
             initializedFilters.current = true;
           }
@@ -453,6 +500,35 @@ function AssetPickerButton({
               aria-label="이미지 검색"
               autoFocus
             />
+            <div className="asset-picker-curation">
+              <div>
+                <strong>글상자 장면에 잘 맞는 자료부터</strong>
+                <small>
+                  {type === "character"
+                    ? "한 명씩 분리되고 크기·화풍이 비교적 일정한 전신 이미지를 먼저 보여요."
+                    : "캐릭터가 미리 합성되지 않은 장소 배경을 먼저 보여요."}
+                </small>
+              </div>
+              <div
+                className="asset-picker-scope"
+                aria-label="추천 자료 표시 범위"
+              >
+                <button
+                  type="button"
+                  className={libraryScope === "recommended" ? "active" : ""}
+                  onClick={() => setLibraryScope("recommended")}
+                >
+                  기본 추천 {recommendedAssetCount}
+                </button>
+                <button
+                  type="button"
+                  className={libraryScope === "all" ? "active" : ""}
+                  onClick={() => setLibraryScope("all")}
+                >
+                  추가 자료까지 {assets.length}
+                </button>
+              </div>
+            </div>
             <div className="asset-picker-view" aria-label="이미지 보기">
               {[
                 ["all", "전체"],
@@ -576,12 +652,12 @@ function AssetPickerButton({
                           <span className="asset-picker-badges">
                             <b
                               className={
-                                asset.usage === "원작 사용"
-                                  ? "original"
+                                asset.selectionTier === "기본 추천"
+                                  ? "recommended"
                                   : "additional"
                               }
                             >
-                              {asset.usage}
+                              {asset.selectionTier}
                             </b>
                             {asset.framing && <b>{asset.framing}</b>}
                           </span>
@@ -607,6 +683,14 @@ function AssetPickerButton({
                   <button type="button" onClick={() => setTags([])}>
                     태그 모두 지우기
                   </button>
+                  {libraryScope === "recommended" && (
+                    <button
+                      type="button"
+                      onClick={() => setLibraryScope("all")}
+                    >
+                      추가 자료까지 보기
+                    </button>
+                  )}
                 </div>
               )}
             </div>

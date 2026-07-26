@@ -113,9 +113,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
-        "rabbit-turtle.character.rabbit-suspicious",
         "rabbit-turtle.character.turtle-unified-720x900",
-        "rabbit-turtle.character.turtle-tired",
       ],
       backgroundAssetIds: [
         "rabbit-turtle.background.rabbit-turtle-bg-grassland",
@@ -137,18 +135,17 @@ export const DEFAULT_PROJECT: StoryProject = {
       nextChapterIdea: "두 친구가 용궁에 도착한다.",
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
-        "rabbit-turtle.character.rabbit-suspicious",
-        "rabbit-turtle.character.rabbit-thinking",
-        "rabbit-turtle.character.rabbit-speaking-truth",
-        "rabbit-turtle.character.turtle-offer",
-        "rabbit-turtle.character.turtle-ashamed",
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
+        "rabbit-turtle.character.turtle-unified-720x900",
       ],
       backgroundAssetIds: [
         "rabbit-turtle.background.rabbit-turtle-bg-shore",
       ],
       backgroundId: "rabbit-turtle.background.rabbit-turtle-bg-shore",
-      leftAssetId: "rabbit-turtle.character.rabbit-suspicious",
-      rightAssetId: "rabbit-turtle.character.turtle-offer",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
+      rightAssetId:
+        "rabbit-turtle.character.turtle-unified-720x900",
     },
     {
       id: "chapter-3",
@@ -161,7 +158,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       nextChapterIdea: "",
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
-        "rabbit-turtle.character.rabbit-shocked",
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
         "rabbit-turtle.character.turtle-unified-720x900",
       ],
       backgroundAssetIds: [
@@ -169,7 +166,8 @@ export const DEFAULT_PROJECT: StoryProject = {
       ],
       backgroundId:
         "rabbit-turtle.background.rabbit-turtle-bg-palace-welcome",
-      leftAssetId: "rabbit-turtle.character.rabbit-shocked",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
       rightAssetId:
         "rabbit-turtle.character.turtle-unified-720x900",
     },
@@ -200,7 +198,8 @@ export const DEFAULT_PROJECT: StoryProject = {
       text: "토끼야, 오랜만이야. 이번에는 너를 속이러 온 게 아니야.",
       leftAssetId:
         "rabbit-turtle.character.rabbit-white-unified-720x900",
-      rightAssetId: "rabbit-turtle.character.turtle-tired",
+      rightAssetId:
+        "rabbit-turtle.character.turtle-unified-720x900",
       backgroundId: "",
       purposeNote: "자라가 다시 나타난 이유를 궁금하게 만듭니다.",
       emotionNote: "자라: 조심스러움 · 토끼: 경계",
@@ -214,7 +213,8 @@ export const DEFAULT_PROJECT: StoryProject = {
       speaker: "left",
       speakerName: "토끼",
       text: "그래? 그렇다면 무슨 일인지 먼저 들어 볼게.",
-      leftAssetId: "rabbit-turtle.character.rabbit-suspicious",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
       rightAssetId:
         "rabbit-turtle.character.turtle-unified-720x900",
       backgroundId: "",
@@ -230,8 +230,10 @@ export const DEFAULT_PROJECT: StoryProject = {
       speaker: "right",
       speakerName: "자라",
       text: "용궁에서 모두가 함께 만드는 큰 이야기 잔치를 연대.",
-      leftAssetId: "rabbit-turtle.character.rabbit-thinking",
-      rightAssetId: "rabbit-turtle.character.turtle-offer",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
+      rightAssetId:
+        "rabbit-turtle.character.turtle-unified-720x900",
       backgroundId: "",
       purposeNote: "용궁으로 갈 이유를 제시합니다.",
       emotionNote: "자라: 기대 · 토끼: 고민",
@@ -245,8 +247,10 @@ export const DEFAULT_PROJECT: StoryProject = {
       speaker: "left",
       speakerName: "토끼",
       text: "이번에는 내가 결말을 정해도 되는 거지?",
-      leftAssetId: "rabbit-turtle.character.rabbit-speaking-truth",
-      rightAssetId: "rabbit-turtle.character.turtle-ashamed",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
+      rightAssetId:
+        "rabbit-turtle.character.turtle-unified-720x900",
       backgroundId: "",
       purposeNote: "토끼가 자신의 조건을 분명하게 말합니다.",
       emotionNote: "토끼: 단호함 · 자라: 미안함",
@@ -275,7 +279,8 @@ export const DEFAULT_PROJECT: StoryProject = {
       speaker: "left",
       speakerName: "토끼",
       text: "와! 이제부터는 우리가 새로운 이야기를 만드는 거야.",
-      leftAssetId: "rabbit-turtle.character.rabbit-shocked",
+      leftAssetId:
+        "rabbit-turtle.character.rabbit-white-unified-720x900",
       rightAssetId:
         "rabbit-turtle.character.turtle-unified-720x900",
       backgroundId: "",
@@ -717,13 +722,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
         "자라가 토끼에게 첫마디를 건넨다.\n토끼가 자라의 말에 반응한다.",
       nextChapterIdea: "",
       chapterSpeakerNames: ["토끼", "자라"],
-      characterAssetIds: [
-        ...ORIGINAL_CHARACTER_ASSET_IDS,
-        "rabbit-turtle.character.rabbit-suspicious",
-        "rabbit-turtle.character.rabbit-thinking",
-        "rabbit-turtle.character.turtle-resolve",
-        "rabbit-turtle.character.turtle-offer",
-      ],
+      characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: [
         ...ORIGINAL_BACKGROUND_ASSET_IDS,
         "rabbit-turtle.background.rabbit-turtle-bg-shore",
@@ -867,15 +866,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
         "토끼가 살아남기 위한 첫 말을 한다.\n용왕이나 자라가 토끼의 말에 반응한다.",
       nextChapterIdea: "",
       chapterSpeakerNames: ["토끼", "자라", "용왕", "의관"],
-      characterAssetIds: [
-        ...ORIGINAL_CHARACTER_ASSET_IDS,
-        "rabbit-turtle.character.rabbit-shocked",
-        "rabbit-turtle.character.rabbit-thinking",
-        "rabbit-turtle.character.rabbit-speaking-truth",
-        "rabbit-turtle.character.turtle-ashamed",
-        "rabbit-turtle.character.turtle-resolve",
-        "rabbit-turtle.character.dragonking-command",
-      ],
+      characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: [
         ...ORIGINAL_BACKGROUND_ASSET_IDS,
         "rabbit-turtle.background.rabbit-turtle-bg-palace-confession",
@@ -920,13 +911,12 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
 const ONGGOJIB_TEMPLATE_ASSETS = {
   background: {
     court: "onggojib.background.magistrate-yard-pixel",
-    courtChoice: "onggojib.background.court-child-choice-cg-pixel",
     snowRoad: "onggojib.background.snow-road-pixel",
     snowVillage: "onggojib.background.snow-village-road-pixel",
+    springCourtyard: "onggojib.background.spring-courtyard-pixel",
+    springRoom: "onggojib.background.spring-room-pixel",
     winterCourtyard: "onggojib.background.winter-courtyard-pixel",
     warmRoom: "onggojib.background.warm-room-pixel",
-    exiledMirror: "onggojib.background.exiled-mirror-cg-pixel",
-    reconciliation: "onggojib.background.reconciliation-blue-cg-pixel",
   },
   character: {
     realAngry: "onggojib.character.real-angry-pixel",
@@ -941,7 +931,7 @@ const ONGGOJIB_TEMPLATE_ASSETS = {
     magistrate: "onggojib.character.magistrate-command-pixel",
     posol: "onggojib.character.posol-pixel",
     youngestChild: "onggojib.character.youngest-child-cautious-pixel",
-    servant: "onggojib.character.servant-pixel",
+    servant: "onggojib.character.servant-household-pixel",
   },
 } as const;
 
@@ -964,13 +954,12 @@ const ONGGOJIB_CHARACTER_ASSET_IDS = [
 
 const ONGGOJIB_BACKGROUND_ASSET_IDS = [
   OG.background.court,
-  OG.background.courtChoice,
   OG.background.snowRoad,
   OG.background.snowVillage,
+  OG.background.springCourtyard,
+  OG.background.springRoom,
   OG.background.winterCourtyard,
   OG.background.warmRoom,
-  OG.background.exiledMirror,
-  OG.background.reconciliation,
 ];
 
 const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [

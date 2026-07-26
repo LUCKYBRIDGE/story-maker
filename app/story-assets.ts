@@ -12,6 +12,7 @@ export type StoryAsset = {
   pose: string;
   framing?: "전신" | "상반신" | "여러 인물";
   usage: "원작 사용" | "추가 연출";
+  selectionTier: "기본 추천" | "추가 자료";
   tags: string[];
   src: string;
   sourcePath: string;
@@ -31,8 +32,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "용궁",
     "pose": "토끼의 진실",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "용궁",
       "토끼의 진실"
@@ -51,8 +54,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "물가",
     "pose": "토끼와 자라의 선택",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "물가",
       "토끼와 자라의 선택"
@@ -71,8 +76,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "들판",
     "pose": "자라의 유혹",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "들판",
       "자라의 유혹"
@@ -91,8 +98,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "들판",
     "pose": "이야기의 시작",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "들판",
       "이야기의 시작"
@@ -111,8 +120,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "바닷속",
     "pose": "구출 회상",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "바닷속",
       "구출 회상"
@@ -131,8 +142,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "들판",
     "pose": "낮",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "들판",
       "낮"
@@ -151,8 +164,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "들판",
     "pose": "밤",
     "usage": "추가 연출",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "추가 연출",
       "들판",
       "밤"
@@ -171,8 +186,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "용궁",
     "pose": "궁전",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "용궁",
       "궁전"
@@ -191,8 +208,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "용궁",
     "pose": "고백 장면",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "용궁",
       "고백 장면"
@@ -211,8 +230,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "용궁",
     "pose": "위기 장면",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "용궁",
       "위기 장면"
@@ -231,8 +252,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "용궁",
     "pose": "환영 연회장",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "용궁",
       "환영 연회장",
@@ -252,8 +275,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "강가",
     "pose": "겨울",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "강가",
       "겨울",
@@ -273,8 +298,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "물가",
     "pose": "기본",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "물가",
       "기본"
@@ -293,8 +320,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "물가",
     "pose": "대화 장면",
     "usage": "추가 연출",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "추가 연출",
       "물가",
       "대화 장면"
@@ -313,8 +342,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "물가",
     "pose": "도망 장면",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "물가",
       "도망 장면",
@@ -334,8 +365,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "물가",
     "pose": "약초 장면",
     "usage": "추가 연출",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "추가 연출",
       "물가",
       "약초 장면"
@@ -354,8 +387,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "깨진 청자",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "깨진 청자"
@@ -374,8 +409,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "아이를 업음",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "아이를 업음"
@@ -394,8 +431,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "멀어진 아이",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "멀어진 아이"
@@ -414,8 +453,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "열이 난 아이",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "열이 난 아이"
@@ -434,8 +475,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "옷을 개며 고백",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "옷을 개며 고백"
@@ -454,8 +497,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "관아",
     "pose": "아이의 선택",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "관아",
       "아이의 선택"
@@ -474,8 +519,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "쫓겨난 뒤 거울",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "쫓겨난 뒤 거울"
@@ -494,8 +541,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "대문",
     "pose": "낯선 사람",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "대문",
       "낯선 사람"
@@ -514,8 +563,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "다정한 아버지",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "다정한 아버지"
@@ -534,8 +585,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "관아",
     "pose": "마당",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "관아",
       "마당"
@@ -554,8 +607,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "대문",
     "pose": "문을 열어 줌",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "대문",
       "문을 열어 줌"
@@ -574,8 +629,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "푸른 옷의 화해",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "푸른 옷의 화해",
@@ -595,8 +652,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "빌린 옷의 화해",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "빌린 옷의 화해",
@@ -616,8 +675,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "등불 든 하인",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "등불 든 하인"
@@ -636,8 +697,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "물대야 든 하인",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "물대야 든 하인"
@@ -656,8 +719,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "눈길",
     "pose": "산길",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "눈길",
       "산길"
@@ -676,8 +741,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "눈길",
     "pose": "마을",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "눈길",
       "마을"
@@ -696,8 +763,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집의 집",
     "pose": "봄 마당",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "옹고집의 집",
       "봄 마당"
@@ -716,8 +785,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집의 집",
     "pose": "봄날 방",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "옹고집의 집",
       "봄날 방"
@@ -736,8 +807,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집의 집",
     "pose": "따뜻한 방",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "옹고집의 집",
       "따뜻한 방"
@@ -756,8 +829,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집의 집",
     "pose": "겨울 마당",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "옹고집의 집",
       "겨울 마당",
@@ -777,8 +852,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "group": "옹고집전 장면",
     "pose": "장작 패기",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "옹고집전 장면",
       "장작 패기"
@@ -798,8 +875,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "명령",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "용왕",
@@ -820,8 +899,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "엄한 명령",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "용왕",
@@ -842,8 +923,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "위독",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "용왕",
@@ -864,8 +947,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "매우 위독",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "용왕",
@@ -886,8 +971,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "병든 모습",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "용왕",
@@ -908,8 +995,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "젊은 용왕",
@@ -930,8 +1019,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "걱정",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "의관",
@@ -953,8 +1044,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "미안해서 도망",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -976,8 +1069,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "약초 꾸러미",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -998,8 +1093,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "놀람",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -1022,8 +1119,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "진실을 말함",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -1044,8 +1143,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "의심",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -1066,8 +1167,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "생각",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "토끼",
@@ -1088,8 +1191,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "부끄러움",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "자라",
@@ -1111,8 +1216,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "회상",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "어린 자라",
@@ -1133,8 +1240,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "약초 꾸러미",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "자라",
@@ -1155,8 +1264,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "제안",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "자라",
@@ -1177,8 +1288,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "결심",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "자라",
@@ -1200,8 +1313,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "지침",
     "framing": "상반신",
     "usage": "추가 연출",
+    "selectionTier": "추가 자료",
     "tags": [
       "토끼와 자라",
+      "추가 자료",
       "추가 연출",
       "상반신",
       "자라",
@@ -1223,8 +1338,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "회복",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "용왕",
@@ -1245,8 +1362,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "용왕",
@@ -1267,8 +1386,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "전신",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "젊은 용왕"
@@ -1288,8 +1409,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "의관",
@@ -1310,8 +1433,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "토끼",
@@ -1332,8 +1457,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "어린 자라",
@@ -1354,8 +1481,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "토끼와 자라",
+      "기본 추천",
       "원작 사용",
       "전신",
       "자라",
@@ -1376,8 +1505,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "아이",
@@ -1398,8 +1529,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "단호",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1420,8 +1553,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "단호",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1442,8 +1577,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "온화",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1464,8 +1601,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "온화",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1486,8 +1625,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "건넴",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1508,8 +1649,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "건넴",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1530,8 +1673,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "온화",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1552,8 +1697,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1574,8 +1721,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "정체가 드러남",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "가짜 옹고집",
@@ -1596,8 +1745,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "가짜 아이 이야기",
     "framing": "여러 인물",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "여러 인물",
       "옹고집전 여러 인물",
@@ -1618,8 +1769,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "가짜 하인과 일꾼에게 품삯",
     "framing": "여러 인물",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "여러 인물",
       "옹고집전 여러 인물",
@@ -1640,8 +1793,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "가짜 아내 등장",
     "framing": "여러 인물",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "여러 인물",
       "옹고집전 여러 인물",
@@ -1662,8 +1817,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "가짜 일꾼에게 보상",
     "framing": "여러 인물",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "여러 인물",
       "옹고집전 여러 인물",
@@ -1684,8 +1841,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "진짜 옹고집과 하인",
     "framing": "여러 인물",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "여러 인물",
       "옹고집전 여러 인물",
@@ -1706,8 +1865,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "명령",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "사또",
@@ -1728,8 +1889,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "사또",
@@ -1750,8 +1913,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "포졸",
@@ -1772,8 +1937,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "분노",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1795,8 +1962,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "빌린 옷",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1817,8 +1986,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "빌린 옷",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1839,8 +2010,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "이어지는 모습",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1861,8 +2034,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "쫓겨남",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1883,8 +2058,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "쫓겨남",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1905,8 +2082,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "쫓겨나 애원",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1927,8 +2106,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1949,8 +2130,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "후회",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1971,8 +2154,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "후회",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -1993,8 +2178,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "결심",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -2016,8 +2203,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "결심",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "진짜 옹고집",
@@ -2039,8 +2228,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "망설임",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "둘째 아이",
@@ -2061,8 +2252,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "둘째 아이",
@@ -2083,8 +2276,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "집안일",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "옹고집의 하인",
@@ -2105,8 +2300,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "다침",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "옹고집의 하인",
@@ -2127,8 +2324,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "옹고집의 하인",
@@ -2149,8 +2348,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "정체를 숨김",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "낯선 사람",
@@ -2171,8 +2372,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "걱정",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "옹고집의 아내",
@@ -2194,8 +2397,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "옹고집의 아내",
@@ -2216,8 +2421,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "결심",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "옹고집의 아내",
@@ -2239,8 +2446,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "부탁",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "일꾼",
@@ -2261,8 +2470,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "나무꾼",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "추가 자료",
     "tags": [
       "옹고집전",
+      "추가 자료",
       "원작 사용",
       "전신",
       "일꾼",
@@ -2283,8 +2494,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "나무꾼",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "일꾼",
@@ -2305,8 +2518,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "조심",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "막내 아이",
@@ -2327,8 +2542,10 @@ export const STORY_ASSETS: StoryAsset[] = [
     "pose": "기본",
     "framing": "전신",
     "usage": "원작 사용",
+    "selectionTier": "기본 추천",
     "tags": [
       "옹고집전",
+      "기본 추천",
       "원작 사용",
       "전신",
       "막내 아이",

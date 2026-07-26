@@ -25,6 +25,54 @@ const rabbitTurtleOriginalStems = new Set([
   "adventure_rabbit_turtle_bg_shore",
   "adventure_rabbit_turtle_bg_shore_escape",
 ]);
+const rabbitTurtleStageBackgroundStems = new Set([
+  "adventure_rabbit_turtle_bg_flashback_rescue",
+  "adventure_rabbit_turtle_bg_grassland",
+  "adventure_rabbit_turtle_bg_grassland_night",
+  "adventure_rabbit_turtle_bg_palace",
+  "adventure_rabbit_turtle_bg_palace_confession",
+  "adventure_rabbit_turtle_bg_palace_trap",
+  "adventure_rabbit_turtle_bg_palace_welcome",
+  "adventure_rabbit_turtle_bg_river_winter",
+  "adventure_rabbit_turtle_bg_shore",
+  "adventure_rabbit_turtle_bg_shore_discussion",
+  "adventure_rabbit_turtle_bg_shore_escape",
+  "adventure_rabbit_turtle_bg_shore_herb",
+]);
+const onggojibRecommendedCharacterStems = new Set([
+  "onggojib_double_blue_firm_consistent_pixel",
+  "onggojib_double_blue_gentle_consistent_pixel",
+  "onggojib_double_blue_offering_consistent_pixel",
+  "onggojib_magistrate_command_pixel",
+  "onggojib_posol_pixel",
+  "onggojib_real_angry_pixel",
+  "onggojib_real_borrowed_consistent_pixel",
+  "onggojib_real_consistent_pixel",
+  "onggojib_real_exiled_consistent_pixel",
+  "onggojib_real_exiled_pleading_v2_pixel",
+  "onggojib_real_remorse_consistent_pixel",
+  "onggojib_real_resolve_consistent_pixel",
+  "onggojib_second_child_hesitant_pixel",
+  "onggojib_second_child_pixel",
+  "onggojib_servant_household_pixel",
+  "onggojib_servant_injured_pixel",
+  "onggojib_wife_concerned_pixel",
+  "onggojib_wife_pixel",
+  "onggojib_wife_resolved_pixel",
+  "onggojib_worker_asking_v2_pixel",
+  "onggojib_worker_woodcutter_v2_pixel",
+  "onggojib_youngest_child_cautious_pixel",
+  "onggojib_youngest_child_pixel",
+]);
+const onggojibRecommendedBackgroundStems = new Set([
+  "onggojib_magistrate_yard_pixel",
+  "onggojib_snow_road_pixel",
+  "onggojib_snow_village_road_pixel",
+  "onggojib_spring_courtyard_pixel",
+  "onggojib_spring_room_pixel",
+  "onggojib_warm_room_pixel",
+  "onggojib_winter_courtyard_pixel",
+]);
 
 const tree = execFileSync(
   "git",
@@ -190,12 +238,33 @@ function classifyFraming({ story, type, group, stem }) {
   return "전신";
 }
 
-function buildTags(story, group, pose, framing, usage) {
-  const tags = [story, usage, framing, group, pose];
+function buildTags(story, group, pose, framing, usage, selectionTier) {
+  const tags = [story, selectionTier, usage, framing, group, pose];
   for (const [keyword, aliases] of Object.entries(tagAliases)) {
     if (`${group} ${pose}`.includes(keyword)) tags.push(...aliases);
   }
   return [...new Set(tags.filter(Boolean))];
+}
+
+function classifySelectionTier({ story, type, stem }) {
+  if (story === "토끼와 자라") {
+    if (type === "character") {
+      return stem.includes("_unified_720x900")
+        ? "기본 추천"
+        : "추가 자료";
+    }
+    return rabbitTurtleStageBackgroundStems.has(stem)
+      ? "기본 추천"
+      : "추가 자료";
+  }
+
+  return (
+    type === "character"
+      ? onggojibRecommendedCharacterStems
+      : onggojibRecommendedBackgroundStems
+  ).has(stem)
+    ? "기본 추천"
+    : "추가 자료";
 }
 
 function classifyStem(stem, type) {
@@ -240,6 +309,7 @@ const assets = paths.map((sourcePath) => {
     story === "토끼와 자라" && !rabbitTurtleOriginalStems.has(stem)
       ? "추가 연출"
       : "원작 사용";
+  const selectionTier = classifySelectionTier({ story, type, stem });
   const baseDisplayName = `${group}_${pose}`.replaceAll(" ", "");
   const seen = (duplicateNames.get(baseDisplayName) ?? 0) + 1;
   duplicateNames.set(baseDisplayName, seen);
@@ -261,7 +331,8 @@ const assets = paths.map((sourcePath) => {
     pose,
     framing,
     usage,
-    tags: buildTags(story, group, pose, framing, usage),
+    selectionTier,
+    tags: buildTags(story, group, pose, framing, usage, selectionTier),
     src: `/story-assets/${id}.webp`,
     sourcePath,
     copyright: "놀퀴즈",
@@ -282,6 +353,7 @@ export type StoryAsset = {
   pose: string;
   framing?: "전신" | "상반신" | "여러 인물";
   usage: "원작 사용" | "추가 연출";
+  selectionTier: "기본 추천" | "추가 자료";
   tags: string[];
   src: string;
   sourcePath: string;

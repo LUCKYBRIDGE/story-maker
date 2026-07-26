@@ -1319,7 +1319,8 @@ img {
   border-radius: 24px;
   background: var(--paper);
   box-shadow: 0 30px 90px rgba(3, 14, 12, 0.38);
-  grid-template-rows: auto auto auto auto auto auto auto minmax(0, 1fr);
+  grid-template-rows:
+    auto auto auto auto auto auto auto auto minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -1354,6 +1355,64 @@ img {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: white;
+}
+
+.asset-picker-curation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid #b9cec4;
+  border-radius: 14px;
+  background: rgba(214, 234, 223, 0.62);
+}
+
+.asset-picker-curation > div:first-child {
+  min-width: 0;
+}
+
+.asset-picker-curation strong,
+.asset-picker-curation small {
+  display: block;
+}
+
+.asset-picker-curation strong {
+  color: var(--mint-strong);
+  font-size: 12px;
+}
+
+.asset-picker-curation small {
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.asset-picker-scope {
+  display: grid;
+  flex: 0 0 auto;
+  padding: 3px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.72);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.asset-picker-scope button {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.asset-picker-scope button.active {
+  background: var(--mint-strong);
+  color: white;
 }
 
 .asset-picker-tags {
@@ -1564,7 +1623,7 @@ img {
   line-height: 1;
 }
 
-.asset-picker-badges b.original {
+.asset-picker-badges b.recommended {
   background: var(--mint);
   color: var(--mint-strong);
 }
@@ -5058,6 +5117,16 @@ img {
     max-height: 100dvh;
     padding: 13px;
     border-radius: 0;
+  }
+
+  .asset-picker-curation {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .asset-picker-scope {
+    width: 100%;
   }
 
   .asset-picker-grid {

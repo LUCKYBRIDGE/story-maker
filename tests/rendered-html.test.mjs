@@ -100,6 +100,9 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /다른 장면의 이미지 배치를 그대로 사용/);
   assert.match(studio, /원작 사용/);
   assert.match(studio, /추가 연출/);
+  assert.match(studio, /글상자 장면에 잘 맞는 자료부터/);
+  assert.match(studio, /기본 추천/);
+  assert.match(studio, /추가 자료까지/);
   assert.match(studio, /전신/);
   assert.match(studio, /상반신/);
   assert.match(studio, /function AddSpeaker/);
@@ -144,6 +147,10 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /놀퀴즈_스토리_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);
+  assert.match(
+    storyAssets,
+    /selectionTier:\s*"기본 추천"\s*\|\s*"추가 자료"/,
+  );
   assert.match(workbook, /downloadStoryWorkbook/);
   assert.match(workbook, /한 줄 이야기/);
   assert.match(workbook, /구성 방식/);
@@ -199,9 +206,58 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
         asset.framing === "상반신",
     ),
   );
+  const recommendedAssets = parsedAssets.filter(
+    (asset) => asset.selectionTier === "기본 추천",
+  );
+  assert.equal(recommendedAssets.length, 49);
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "토끼와 자라" && asset.type === "character",
+    ).length,
+    7,
+  );
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "토끼와 자라" && asset.type === "background",
+    ).length,
+    12,
+  );
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "옹고집전" && asset.type === "character",
+    ).length,
+    23,
+  );
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "옹고집전" && asset.type === "background",
+    ).length,
+    7,
+  );
+  assert.ok(
+    parsedAssets
+      .filter((asset) => asset.selectionTier === "기본 추천")
+      .every(
+        (asset) =>
+          asset.framing !== "상반신" &&
+          asset.framing !== "여러 인물" &&
+          !asset.sourcePath.includes("_cg_"),
+      ),
+  );
+  assert.doesNotMatch(
+    storyData,
+    /rabbit-turtle\.character\.rabbit-(?:suspicious|thinking|shocked)/,
+  );
+  assert.doesNotMatch(
+    storyData,
+    /onggojib\.background\.(?:court-child-choice|exiled-mirror|reconciliation)/,
+  );
 
   const catalogAssetIds = new Set(
     [...storyAssets.matchAll(/"id":\s*"([^"]+)"/g)].map((match) => match[1]),
+  );
+  const parsedAssetById = new Map(
+    parsedAssets.map((asset) => [asset.id, asset]),
   );
   const templateAssetIds = new Set(
     [
@@ -215,6 +271,11 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     assert.ok(
       catalogAssetIds.has(assetId),
       `템플릿 이미지가 자료 목록에 없습니다: ${assetId}`,
+    );
+    assert.equal(
+      parsedAssetById.get(assetId)?.selectionTier,
+      "기본 추천",
+      `기본 작품과 템플릿은 엄선한 이미지만 사용해야 합니다: ${assetId}`,
     );
   }
 
