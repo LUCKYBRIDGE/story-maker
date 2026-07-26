@@ -47,18 +47,54 @@ async function worker() {
       },
     );
     await writeFile(inputPath, stdout);
-    await run("magick", [
-      inputPath,
-      "-auto-orient",
-      "-strip",
-      "-resize",
-      asset.type === "character" ? "720x900>" : "1600x900>",
-      "-quality",
-      asset.type === "character" ? "86" : "82",
-      "-define",
-      "webp:method=6",
-      outputPath,
-    ]);
+    const isRabbitTurtleCharacter =
+      asset.type === "character" && asset.story === "토끼와 자라";
+    const isUnifiedFullBody =
+      isRabbitTurtleCharacter && asset.sourcePath.includes("_unified_720x900");
+
+    if (isRabbitTurtleCharacter && !isUnifiedFullBody) {
+      // 표정·동작 자료는 상반신 크기와 투명 여백이 서로 다르다.
+      // 실제 그림을 같은 500px 영역 안에 맞추고 시작 높이를 통일한 뒤
+      // 720×900 캔버스에 놓아, 편집·미리보기·플레이에서 갑작스러운
+      // 클로즈업과 인물마다 달라지는 머리 위치를 줄인다.
+      await run("magick", [
+        inputPath,
+        "-auto-orient",
+        "-strip",
+        "-trim",
+        "+repage",
+        "-resize",
+        "500x500",
+        "-gravity",
+        "north",
+        "-background",
+        "none",
+        "-extent",
+        "720x600",
+        "-gravity",
+        "south",
+        "-extent",
+        "720x900",
+        "-quality",
+        "86",
+        "-define",
+        "webp:method=6",
+        outputPath,
+      ]);
+    } else {
+      await run("magick", [
+        inputPath,
+        "-auto-orient",
+        "-strip",
+        "-resize",
+        asset.type === "character" ? "720x900>" : "1600x900>",
+        "-quality",
+        asset.type === "character" ? "86" : "82",
+        "-define",
+        "webp:method=6",
+        outputPath,
+      ]);
+    }
     await rm(inputPath, { force: true });
   }
 }
