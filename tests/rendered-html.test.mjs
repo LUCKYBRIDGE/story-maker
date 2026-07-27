@@ -188,7 +188,16 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     /깨진 믿음은 솔직한 말과 지키는 행동으로 다시 쌓을 수 있다/,
   );
   assert.match(studio, /한 챕터에는 한 가지 중요한 변화를 담고/);
-  assert.match(studio, /이 변화 때문에 다음으로/);
+  assert.match(studio, /function chapterArcLabel/);
+  assert.match(studio, /chapter-flow-stage/);
+  assert.match(studio, /다음 챕터 ·/);
+  assert.match(studio, /이번 챕터에서 달라지는 일/);
+  assert.match(studio, /그 결과 다음에 생기는 일/);
+  assert.match(studio, /대사를 이어 읽으며 써요/);
+  assert.match(studio, /인물과 배경까지 꾸며요/);
+  assert.match(studio, /장면 자세히 편집/);
+  assert.match(globals, /\.chapter-context-strip/);
+  assert.match(globals, /\.chapter-flow-card:not\(:last-of-type\)::after/);
   assert.doesNotMatch(
     studio,
     /놀퀴즈 스토리 플레이|creator-brand-name/,

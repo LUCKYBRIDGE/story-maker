@@ -170,6 +170,19 @@ const STORY_STRUCTURE_OPTIONS: Array<{
   },
 ];
 
+function chapterArcLabel(
+  chapterIndex: number,
+  chapterCount: number,
+  steps: Array<{ label: string }>,
+) {
+  if (steps.length === 0) return "이야기";
+  if (chapterCount <= 1) return steps[0].label;
+  const stepIndex = Math.round(
+    (chapterIndex * (steps.length - 1)) / (chapterCount - 1),
+  );
+  return steps[Math.min(stepIndex, steps.length - 1)].label;
+}
+
 function normalizeSearch(value: string) {
   return value
     .trim()
@@ -2834,7 +2847,7 @@ export function StoryStudio() {
                   </button>
                 </div>
                 <div className="chapter-flow-list">
-                  {sortedChapters.map((chapter) => {
+                  {sortedChapters.map((chapter, chapterIndex) => {
                     const filledItems = [
                       chapter.title,
                       chapter.summary,
@@ -2847,13 +2860,29 @@ export function StoryStudio() {
                     const sceneCount = draft.lines.filter(
                       (line) => line.chapterId === chapter.id,
                     ).length;
+                    const nextChapter = sortedChapters[chapterIndex + 1];
+                    const isContinuationChapter =
+                      continuationPoint?.chapterId === chapter.id;
+                    const arcLabel = isContinuationChapter
+                      ? "이어쓰기"
+                      : chapterArcLabel(
+                          chapterIndex,
+                          sortedChapters.length,
+                          selectedStructure.steps,
+                        );
                     return (
                       <article
                         className={`chapter-flow-card ${
                           chapter.id === selectedChapter?.id ? "active" : ""
-                        }`}
+                        } ${isContinuationChapter ? "continuation" : ""}`}
                         key={chapter.id}
                       >
+                        <div className="chapter-flow-stage">
+                          <span>{arcLabel}</span>
+                          {chapter.id === selectedChapter?.id && (
+                            <b>현재 보고 있어요</b>
+                          )}
+                        </div>
                         <header>
                           <span>{chapter.order}</span>
                           <div>
@@ -2871,7 +2900,13 @@ export function StoryStudio() {
                             "이 챕터에서 달라지는 일을 적어 보세요."}
                         </p>
                         <div className="chapter-flow-link">
-                          <span>이 변화 때문에 다음으로</span>
+                          <span>
+                            {nextChapter
+                              ? `다음 챕터 · ${nextChapter.order}. ${
+                                  nextChapter.title || "제목 없음"
+                                }`
+                              : "이야기를 더 이어 쓴다면"}
+                          </span>
                           <strong>
                             {chapter.nextChapterIdea || "아직 연결 메모가 없어요."}
                           </strong>
@@ -3126,7 +3161,7 @@ export function StoryStudio() {
               onClick={() => setMobileEditorToolsOpen((current) => !current)}
             >
               <span>
-                <strong>편집 보기</strong>
+                <strong>편집 방법</strong>
                 <small>
                   {editorMode === "chapter" ? "챕터 전체" : "현재 장면"} ·{" "}
                   {imageView === "text" ? "글만" : "작은 그림"}
@@ -3139,18 +3174,20 @@ export function StoryStudio() {
                 className={editorMode === "chapter" ? "active" : ""}
                 onClick={() => setEditorMode("chapter")}
               >
-                챕터 전체 편집
+                <strong>챕터 전체 편집</strong>
+                <small>대사를 이어 읽으며 써요</small>
               </button>
               <button
                 className={editorMode === "scene" ? "active" : ""}
                 onClick={() => setEditorMode("scene")}
                 disabled={!selectedLine}
               >
-                현재 장면 편집
+                <strong>현재 장면 편집</strong>
+                <small>인물과 배경까지 꾸며요</small>
               </button>
             </div>
             <div className="location-pill">
-              <span>현재 편집</span>
+              <span>지금 고치는 곳</span>
               <strong>{currentLocation}</strong>
             </div>
             <label className="view-setting">
@@ -3179,28 +3216,41 @@ export function StoryStudio() {
                     +
                   </button>
                 </div>
-                {sortedChapters.map((chapter) => (
-                  <button
-                    key={chapter.id}
-                    className={
-                      chapter.id === selectedChapter.id ? "active" : ""
-                    }
-                    onClick={() => selectChapter(chapter.id)}
-                  >
-                    <span>{chapter.order}</span>
-                    <div>
-                      <strong>{chapter.title || `챕터 ${chapter.order}`}</strong>
-                      <small>
-                        {
-                          draft.lines.filter(
-                            (line) => line.chapterId === chapter.id,
-                          ).length
-                        }
-                        개 장면
-                      </small>
-                    </div>
-                  </button>
-                ))}
+                {sortedChapters.map((chapter, chapterIndex) => {
+                  const arcLabel =
+                    continuationPoint?.chapterId === chapter.id
+                      ? "이어쓰기"
+                      : chapterArcLabel(
+                          chapterIndex,
+                          sortedChapters.length,
+                          selectedStructure.steps,
+                        );
+                  return (
+                    <button
+                      key={chapter.id}
+                      className={
+                        chapter.id === selectedChapter.id ? "active" : ""
+                      }
+                      onClick={() => selectChapter(chapter.id)}
+                    >
+                      <span>{chapter.order}</span>
+                      <div>
+                        <strong>
+                          {chapter.title || `챕터 ${chapter.order}`}
+                        </strong>
+                        <small>
+                          {arcLabel} ·{" "}
+                          {
+                            draft.lines.filter(
+                              (line) => line.chapterId === chapter.id,
+                            ).length
+                          }
+                          개 장면
+                        </small>
+                      </div>
+                    </button>
+                  );
+                })}
               </aside>
 
               <div className="mobile-chapter-picker">
@@ -3266,6 +3316,24 @@ export function StoryStudio() {
                     </button>
                   </div>
                 </header>
+
+                <section className="chapter-context-strip">
+                  <div>
+                    <span>이번 챕터에서 달라지는 일</span>
+                    <strong>
+                      {selectedChapter.summary ||
+                        "이 챕터에서 생길 가장 중요한 변화를 적어 보세요."}
+                    </strong>
+                  </div>
+                  <b aria-hidden="true">→</b>
+                  <div>
+                    <span>그 결과 다음에 생기는 일</span>
+                    <strong>
+                      {selectedChapter.nextChapterIdea ||
+                        "다음 사건으로 이어질 내용을 정해 보세요."}
+                    </strong>
+                  </div>
+                </section>
 
                 {chapterGuideOpen && (
                   <section className="chapter-guide-panel">
@@ -3571,7 +3639,7 @@ export function StoryStudio() {
                                 setEditorMode("scene");
                               }}
                             >
-                              현재 장면 편집
+                              장면 자세히 편집
                             </button>
                             <button
                               className="danger-link"
