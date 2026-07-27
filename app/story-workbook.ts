@@ -6,6 +6,7 @@ export type StorySheetSnapshot = {
   project: string;
   speakers: string;
   chapters: string;
+  chapterResources?: string;
   lines: string;
 };
 
@@ -44,21 +45,24 @@ function worksheetToCsv(worksheet: Worksheet | undefined) {
 export async function readStoryWorkbook(file: File): Promise<StorySheetSnapshot> {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(await file.arrayBuffer());
+  const projectSheet =
+    workbook.getWorksheet("이야기 구성") ?? workbook.getWorksheet("작품");
+  const chaptersSheet =
+    workbook.getWorksheet("챕터 흐름") ?? workbook.getWorksheet("챕터");
   const linesSheet =
     workbook.getWorksheet("장면") ?? workbook.getWorksheet("대사");
 
-  if (
-    !workbook.getWorksheet("작품") ||
-    !workbook.getWorksheet("챕터") ||
-    !linesSheet
-  ) {
-    throw new Error("Excel에 ‘작품’, ‘챕터’, ‘장면’ 탭이 모두 있어야 해요.");
+  if (!projectSheet || !chaptersSheet || !linesSheet) {
+    throw new Error(
+      "Excel에 ‘이야기 구성’, ‘챕터 흐름’, ‘장면’ 탭이 모두 있어야 해요. 이전 양식의 ‘작품’, ‘챕터’ 탭도 열 수 있어요.",
+    );
   }
 
   return {
-    project: worksheetToCsv(workbook.getWorksheet("작품")),
+    project: worksheetToCsv(projectSheet),
     speakers: worksheetToCsv(workbook.getWorksheet("화자")),
-    chapters: worksheetToCsv(workbook.getWorksheet("챕터")),
+    chapters: worksheetToCsv(chaptersSheet),
+    chapterResources: worksheetToCsv(workbook.getWorksheet("챕터 자료")),
     lines: worksheetToCsv(linesSheet),
   };
 }
@@ -66,13 +70,15 @@ export async function readStoryWorkbook(file: File): Promise<StorySheetSnapshot>
 function addSheet(
   workbook: ExcelJS.Workbook,
   name: string,
-  rows: Array<Array<string | number>>,
+  rows: Array<Array<string | number | null>>,
   widths: number[],
 ) {
   const sheet = workbook.addWorksheet(name, {
     views: [{ state: "frozen", ySplit: 1 }],
   });
-  rows.forEach((row) => sheet.addRow(row));
+  rows.forEach((row) =>
+    sheet.addRow(row.map((value) => (value === "" ? null : value))),
+  );
   sheet.columns = widths.map((width) => ({ width }));
   const header = sheet.getRow(1);
   header.font = { bold: true, color: { argb: "FFFFFFFF" } };
@@ -114,74 +120,132 @@ export async function downloadStoryWorkbook(
     "시작하기",
     [
       ["순서", "안내"],
-      [1, "웹 또는 이 Excel에서 이야기 제목, 화자, 챕터, 장면을 편집하세요."],
-      [2, "Excel을 고친 뒤 웹에서 ‘Excel 파일 열기’를 눌러 다시 불러오세요."],
-      [3, "웹에서 고친 내용은 ‘Excel로 저장’을 눌러 새 파일로 보관하세요."],
-      [4, "화자 이름과 캐릭터 이미지 이름은 서로 다른 값입니다."],
-      [5, "대사에서 속마음·표정·행동은 학생이 직접 괄호 안에 쓰세요."],
-      [6, "해설에는 괄호를 쓰지 말고 시간·장소·상황을 적으세요."],
-      [7, "학생 이름, 학교명, 연락처 같은 개인정보는 입력하지 마세요."],
-      [8, "기본 제공 이미지 © 놀퀴즈 · 이 스토리게임 작품 제작에 사용 가능"],
+      [1, "‘이야기 구성’에서 작품의 주제, 인물, 갈등과 전체 줄거리를 구상하세요."],
+      [2, "‘챕터 흐름’에서 각 챕터의 줄거리와 앞뒤 연결을 정하세요."],
+      [3, "‘챕터 자료’에서 그 챕터에 쓸 화자, 캐릭터, 배경을 정하세요."],
+      [4, "‘화자’와 ‘장면’에서 실제 플레이에 나올 이름, 대사와 해설을 쓰세요."],
+      [5, "Excel을 고친 뒤 웹에서 ‘Excel 파일 열기’를 눌러 다시 불러오세요."],
+      [6, "웹에서 고친 내용은 ‘Excel로 저장’을 눌러 새 파일로 보관하세요."],
+      [7, "화자 이름과 캐릭터 이미지 이름은 서로 다른 값입니다."],
+      [8, "대사에서 속마음·표정·행동은 학생이 직접 괄호 안에 쓰세요."],
+      [9, "해설에는 괄호를 쓰지 말고 시간·장소·상황을 적으세요."],
+      [10, "이미지는 ‘리소스’ 탭의 이미지 이름을 그대로 적으세요."],
+      [11, "학생 이름, 학교명, 연락처 같은 개인정보는 입력하지 마세요."],
+      [12, "기본 제공 이미지 © 놀퀴즈 · 이 스토리게임 작품 제작에 사용 가능"],
     ],
     [10, 78],
   );
 
-  addSheet(
+  const planningSheet = addSheet(
     workbook,
-    "작품",
+    "이야기 구성",
     [
+      ["항목", "내용", "작성 도움"],
+      ["이야기 제목", project.title, "플레이 화면에 보일 작품 이름"],
+      ["작품 소개", project.description, "이 이야기를 처음 보는 사람에게 소개하는 짧은 문장"],
+      ["한 줄 이야기", project.planning.premise, "주인공, 목표, 어려움이 드러나는 한 문장"],
       [
-        "이야기 제목",
-        "작품 소개",
-        "한 줄 이야기",
         "구성 방식",
-        "이야기 소재",
-        "이야기 주제",
-        "핵심 인물",
-        "주인공이 바라는 것",
-        "주요 갈등",
-        "실패하면 생기는 일",
-        "마지막에 달라지는 점",
-        "발단",
-        "전개",
-        "위기",
-        "절정",
-        "결말",
-        "인물 설정",
-        "배경·세계 설정",
-        "전체 분위기",
-        "아직 정하지 못한 것",
-        "자유 창작 메모",
-      ],
-      [
-        project.title,
-        project.description,
-        project.planning.premise,
         project.planning.structureMode === "five"
           ? "5단계"
           : project.planning.structureMode === "four"
             ? "4단계"
             : "3단계",
-        project.planning.material,
-        project.planning.theme,
-        project.planning.mainCharacter,
-        project.planning.mainGoal,
-        project.planning.centralProblem,
-        project.planning.stakes,
-        project.planning.endingChange,
-        project.planning.opening,
-        project.planning.middle,
-        project.planning.crisis,
-        project.planning.climax,
-        project.planning.ending,
-        project.planning.characterNotes,
-        project.planning.worldNotes,
-        project.planning.mood,
-        project.planning.openQuestions,
-        project.planning.freeNotes,
+        "5단계(발단-전개-위기-절정-결말), 4단계, 3단계 중 선택",
       ],
+      ["이야기 소재", project.planning.material, "이야기의 출발점이 되는 사건, 경험 또는 상상"],
+      ["이야기 주제", project.planning.theme, "이야기를 통해 전하고 싶은 생각"],
+      ["핵심 인물", project.planning.mainCharacter, "이야기의 중심이 되는 인물"],
+      ["주인공이 바라는 것", project.planning.mainGoal, "주인공이 이루려는 목표"],
+      ["주요 갈등", project.planning.centralProblem, "목표를 막는 사건, 관계 또는 두려움"],
+      ["실패하면 생기는 일", project.planning.stakes, "목표를 이루지 못했을 때 잃게 되는 것"],
+      ["마지막에 달라지는 점", project.planning.endingChange, "결말에서 달라지는 인물, 관계 또는 상황"],
+      ["발단", project.planning.opening, "인물과 상황을 소개하고 사건이 시작되는 부분"],
+      ["전개", project.planning.middle, "갈등이 커지고 인물이 행동하는 부분"],
+      ["위기", project.planning.crisis, "주인공이 가장 큰 어려움에 부딪히는 부분"],
+      ["절정", project.planning.climax, "가장 중요한 선택이나 대결이 일어나는 부분"],
+      ["결말", project.planning.ending, "사건이 마무리되고 변화가 드러나는 부분"],
+      ["인물 설정", project.planning.characterNotes, "인물의 성격, 목표, 관계와 변화"],
+      ["배경·세계 설정", project.planning.worldNotes, "시간, 장소와 이야기 속 규칙"],
+      ["전체 분위기", project.planning.mood, "이야기 전체의 느낌과 감정 흐름"],
+      ["아직 정하지 못한 것", project.planning.openQuestions, "나중에 결정할 질문이나 빈칸"],
+      ["자유 창작 메모", project.planning.freeNotes, "떠오른 대사, 장소와 연출 아이디어"],
     ],
-    [30, 46, 52, 18, 38, 28, 32, 48, 48, 48, 48, 52, 52, 52, 52, 52, 52, 52, 28, 52, 52],
+    [26, 76, 56],
+  );
+  planningSheet.getColumn(1).font = { bold: true, color: { argb: "FF183D36" } };
+  planningSheet.getColumn(3).font = { color: { argb: "FF60736E" } };
+  planningSheet.getCell("B5").dataValidation = {
+    type: "list",
+    allowBlank: false,
+    formulae: ['"5단계,4단계,3단계"'],
+  };
+
+  const assetName = (id: string) =>
+    assets.find((asset) => asset.id === id)?.displayName ?? "";
+
+  const chapters = project.chapters.slice().sort((a, b) => a.order - b.order);
+
+  const chapterFlowSheet = addSheet(
+    workbook,
+    "챕터 흐름",
+    [
+      [
+        "챕터 ID",
+        "순서",
+        "챕터 제목",
+        "한 줄 줄거리",
+        "챕터 역할",
+        "분위기",
+        "꼭 들어갈 사건",
+        "다음 챕터 아이디어",
+      ],
+      ...chapters.map((chapter) => [
+        chapter.id,
+        chapter.order,
+        chapter.title,
+        chapter.summary,
+        chapter.purpose,
+        chapter.mood,
+        chapter.keyEvents,
+        chapter.nextChapterIdea,
+      ]),
+    ],
+    [22, 9, 28, 48, 48, 28, 56, 48],
+  );
+  for (let row = 2; row <= Math.max(200, chapterFlowSheet.rowCount); row += 1) {
+    chapterFlowSheet.getCell(row, 2).dataValidation = {
+      type: "whole",
+      operator: "greaterThan",
+      allowBlank: false,
+      formulae: [0],
+    };
+  }
+
+  addSheet(
+    workbook,
+    "챕터 자료",
+    [
+      [
+        "챕터 ID",
+        "배경 이미지",
+        "왼쪽 기본 이미지",
+        "오른쪽 기본 이미지",
+        "이 챕터 화자",
+        "캐릭터 이미지 목록",
+        "장소·배경 목록",
+      ],
+      ...chapters.map((chapter) => [
+        chapter.id,
+        assetName(chapter.backgroundId),
+        assetName(chapter.leftAssetId),
+        assetName(chapter.rightAssetId),
+        chapter.chapterSpeakerNames.join(", "),
+        chapter.characterAssetIds.map(assetName).filter(Boolean).join(", "),
+        chapter.backgroundAssetIds.map(assetName).filter(Boolean).join(", "),
+      ]),
+    ],
+    [22, 36, 36, 36, 36, 68, 68],
   );
 
   addSheet(
@@ -194,53 +258,7 @@ export async function downloadStoryWorkbook(
     [28],
   );
 
-  const assetName = (id: string) =>
-    assets.find((asset) => asset.id === id)?.displayName ?? "";
-
-  addSheet(
-    workbook,
-    "챕터",
-    [
-      [
-        "챕터 ID",
-        "순서",
-        "챕터 제목",
-        "한 줄 줄거리",
-        "배경 이미지",
-        "왼쪽 기본 이미지",
-        "오른쪽 기본 이미지",
-        "챕터 역할",
-        "분위기",
-        "꼭 들어갈 사건",
-        "다음 챕터 아이디어",
-        "이 챕터 화자",
-        "캐릭터 이미지 목록",
-        "장소·배경 목록",
-      ],
-      ...project.chapters
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((chapter) => [
-          chapter.id,
-          chapter.order,
-          chapter.title,
-          chapter.summary,
-          assetName(chapter.backgroundId),
-          assetName(chapter.leftAssetId),
-          assetName(chapter.rightAssetId),
-          chapter.purpose,
-          chapter.mood,
-          chapter.keyEvents,
-          chapter.nextChapterIdea,
-          chapter.chapterSpeakerNames.join(", "),
-          chapter.characterAssetIds.map(assetName).filter(Boolean).join(", "),
-          chapter.backgroundAssetIds.map(assetName).filter(Boolean).join(", "),
-        ]),
-    ],
-    [22, 9, 28, 44, 34, 34, 34, 44, 28, 52, 44, 36, 64, 64],
-  );
-
-  addSheet(
+  const scenesSheet = addSheet(
     workbook,
     "장면",
     [
@@ -293,6 +311,18 @@ export async function downloadStoryWorkbook(
     ],
     [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48],
   );
+  for (let row = 2; row <= Math.max(500, scenesSheet.rowCount); row += 1) {
+    scenesSheet.getCell(row, 4).dataValidation = {
+      type: "list",
+      allowBlank: false,
+      formulae: ['"대사,해설"'],
+    };
+    scenesSheet.getCell(row, 5).dataValidation = {
+      type: "list",
+      allowBlank: false,
+      formulae: ['"왼쪽,오른쪽,해설"'],
+    };
+  }
 
   addSheet(
     workbook,

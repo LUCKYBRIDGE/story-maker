@@ -80,6 +80,18 @@ function parseCsv(csv: string) {
   );
 }
 
+function parseProjectCsv(csv: string) {
+  const rows = parseCsv(csv);
+  if (!rows.some((row) => "항목" in row && "내용" in row)) return rows;
+  return [
+    Object.fromEntries(
+      rows
+        .map((row) => [getValue(row, "항목"), getValue(row, "내용")])
+        .filter(([key]) => key),
+    ),
+  ];
+}
+
 function getValue(row: CsvRow, ...keys: string[]) {
   for (const key of keys) {
     if (row[key] !== undefined) return row[key].trim();
@@ -122,13 +134,35 @@ async function fetchSheetTab(
   return response.text();
 }
 
+async function fetchFirstAvailableTab(
+  sheetId: string,
+  tabNames: string[],
+  signal: AbortSignal,
+) {
+  for (const tabName of tabNames) {
+    try {
+      return await fetchSheetTab(sheetId, tabName, signal);
+    } catch (error) {
+      if (signal.aborted) throw error;
+    }
+  }
+  throw new Error(`‘${tabNames.join("’ 또는 ‘")}’ 탭을 읽지 못했어요.`);
+}
+
 export async function fetchSheetSnapshot(
   sheetId: string,
   signal: AbortSignal,
 ): Promise<StorySheetSnapshot> {
-  const [project, chapters] = await Promise.all(
-    ["작품", "챕터"].map((tab) => fetchSheetTab(sheetId, tab, signal)),
-  );
+  const [project, chapters] = await Promise.all([
+    fetchFirstAvailableTab(sheetId, ["이야기 구성", "작품"], signal),
+    fetchFirstAvailableTab(sheetId, ["챕터 흐름", "챕터"], signal),
+  ]);
+  let chapterResources = "";
+  try {
+    chapterResources = await fetchSheetTab(sheetId, "챕터 자료", signal);
+  } catch {
+    // 이전 형식은 챕터 탭 안에 이미지와 화자 자료가 함께 있습니다.
+  }
   let speakers = "";
   try {
     speakers = await fetchSheetTab(sheetId, "화자", signal);
@@ -141,28 +175,47 @@ export async function fetchSheetSnapshot(
   } catch {
     lines = await fetchSheetTab(sheetId, "대사", signal);
   }
-  return { project, speakers, chapters, lines };
+  return { project, speakers, chapters, chapterResources, lines };
 }
 
 export function buildProjectFromSheet(
   snapshot: StorySheetSnapshot,
   sheetUrl: string,
 ) {
-  const projectRows = parseCsv(snapshot.project);
+  const projectRows = parseProjectCsv(snapshot.project);
   const speakerRows = parseCsv(snapshot.speakers ?? "").filter(isEnabled);
   const chapterRows = parseCsv(snapshot.chapters).filter(isEnabled);
+  const chapterResourceRows = parseCsv(
+    snapshot.chapterResources ?? "",
+  ).filter(isEnabled);
   const lineRows = parseCsv(snapshot.lines).filter(isEnabled);
   const projectRow = projectRows[0] ?? {};
   const problems: string[] = [];
+  const chapterResourcesById = new Map(
+    chapterResourceRows.map((row) => [
+      getValue(row, "챕터 ID", "chapter_id", "chapter_key", "챕터"),
+      row,
+    ]),
+  );
 
   const chapters: Chapter[] = chapterRows
     .filter((row) =>
       getValue(row, "챕터 ID", "chapter_id", "chapter_key", "챕터"),
     )
-    .map((row, index) => {
+    .map((flowRow, index) => {
       const id =
-        getValue(row, "챕터 ID", "chapter_id", "chapter_key", "챕터") ||
+        getValue(
+          flowRow,
+          "챕터 ID",
+          "chapter_id",
+          "chapter_key",
+          "챕터",
+        ) ||
         `chapter-${index + 1}`;
+      const row = {
+        ...(chapterResourcesById.get(id) ?? {}),
+        ...flowRow,
+      };
       const backgroundText = getValue(
         row,
         "배경 이미지",
