@@ -52,7 +52,7 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 });
 
-test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하나를 제공한다", () => {
+test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름을 제공한다", () => {
   const projectRoot = fileURLToPath(new URL("../", import.meta.url));
   const output = execFileSync(
     process.execPath,
@@ -63,11 +63,13 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
       "-e",
       `
         const {
+          DEFAULT_PROJECT,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
           ONGGOJIB_CONTINUATION_TEMPLATE,
         } = await import("./app/story-data.ts");
         const projects = [
+          DEFAULT_PROJECT,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
           ONGGOJIB_CONTINUATION_TEMPLATE,
@@ -78,6 +80,15 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
             .slice()
             .sort((a, b) => a.order - b.order)
             .map((chapter) => chapter.title),
+          chapterSceneCounts: project.chapters
+            .slice()
+            .sort((a, b) => a.order - b.order)
+            .map(
+              (chapter) =>
+                project.lines.filter(
+                  (line) => line.chapterId === chapter.id,
+                ).length,
+            ),
           lineCount: project.lines.length,
           blankCount: project.lines.filter((line) => !line.text.trim()).length,
           duplicateIds: project.lines.filter(
@@ -99,9 +110,12 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
 
   assert.deepEqual(
     summaries.map((summary) => summary.lineCount),
-    [15, 26, 32],
+    [16, 15, 26, 32],
   );
-  assert.ok(summaries.every((summary) => summary.blankCount === 1));
+  assert.deepEqual(
+    summaries.map((summary) => summary.blankCount),
+    [0, 1, 1, 1],
+  );
   assert.ok(summaries.every((summary) => summary.duplicateIds === 0));
   assert.ok(
     summaries.every((summary) => summary.narrationWithParentheses === 0),
@@ -109,12 +123,25 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
   assert.ok(
     summaries.every((summary) => summary.internalSourceNameCount === 0),
   );
-  assert.deepEqual(summaries[2].chapterTitles, [
-    "같은 얼굴, 다른 태도",
+  assert.deepEqual(summaries[0].chapterTitles, [
+    "뜻밖의 재회",
+    "숨기지 않은 부탁",
+    "다시 믿기 어려운 까닭",
+    "믿음을 확인하는 약속",
+    "함께 쓴 첫 문장",
+  ]);
+  assert.deepEqual(summaries[3].chapterTitles, [
+    "말이 사라진 밥상",
+    "아이들이 말을 시작하다",
+    "두 옹고집이 마주치다",
     "두 옹고집의 첫 관아",
     "아내가 선택한 사람",
     "여기서부터 이어 쓰기",
   ]);
+  assert.deepEqual(summaries[0].chapterSceneCounts, [3, 3, 3, 4, 3]);
+  assert.deepEqual(summaries[1].chapterSceneCounts, [6, 6, 2, 1]);
+  assert.deepEqual(summaries[2].chapterSceneCounts, [6, 6, 7, 6, 1]);
+  assert.deepEqual(summaries[3].chapterSceneCounts, [5, 11, 5, 9, 1, 1]);
 });
 
 test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된다", async () => {
@@ -153,6 +180,15 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   );
   assert.match(storyData, /오늘 마당에 까치가……/);
   assert.match(storyData, /그래서 어떻게 되었느냐/);
+  assert.match(storyData, /title: "뜻밖의 재회"/);
+  assert.match(storyData, /title: "믿음을 확인하는 약속"/);
+  assert.match(storyData, /title: "함께 쓴 첫 문장"/);
+  assert.match(
+    storyData,
+    /깨진 믿음은 솔직한 말과 지키는 행동으로 다시 쌓을 수 있다/,
+  );
+  assert.match(studio, /한 챕터에는 한 가지 중요한 변화를 담고/);
+  assert.match(studio, /이 변화 때문에 다음으로/);
   assert.doesNotMatch(
     studio,
     /놀퀴즈 스토리 플레이|creator-brand-name/,
@@ -180,7 +216,14 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /어두워진 용궁 대청에 조개등 불빛이 켜졌다/);
   assert.match(storyData, /용궁에서 작은 잔치가 열리오/);
   assert.match(storyData, /호위들을 도와 토끼를 묶어라/);
-  assert.match(storyData, /원작의 선택지는 제거되어 있습니다/);
+  assert.match(
+    storyData,
+    /토끼의 반응 → 자라의 선택이나 시도 → 더 커진 문제/,
+  );
+  assert.match(
+    storyData,
+    /진짜 옹고집의 첫 반응 → 사또의 판결이나 새 조건/,
+  );
   assert.match(studio, /function shouldMirrorAsset/);
   assert.match(studio, /function assetPlacementClass/);
   assert.match(studio, /CHARACTER_FACING/);

@@ -2825,8 +2825,8 @@ export function StoryStudio() {
                     <span className="eyebrow">구성 한눈에 보기</span>
                     <h2>챕터가 어떻게 이어지는지 확인하세요</h2>
                     <p>
-                      각 챕터에서 한 가지 중요한 변화가 생기면 흐름을 이해하기
-                      쉬워요.
+                      한 챕터에는 한 가지 중요한 변화를 담고, 그 결과가 다음
+                      챕터의 원인이 되게 이어 보세요.
                     </p>
                   </div>
                   <button className="primary-button" onClick={addChapter}>
@@ -2866,9 +2866,12 @@ export function StoryStudio() {
                             </small>
                           </div>
                         </header>
-                        <p>{chapter.summary || "이 챕터에서 달라지는 일을 적어 보세요."}</p>
+                        <p>
+                          {chapter.summary ||
+                            "이 챕터에서 달라지는 일을 적어 보세요."}
+                        </p>
                         <div className="chapter-flow-link">
-                          <span>다음으로</span>
+                          <span>이 변화 때문에 다음으로</span>
                           <strong>
                             {chapter.nextChapterIdea || "아직 연결 메모가 없어요."}
                           </strong>
@@ -3020,11 +3023,13 @@ export function StoryStudio() {
                             keyEvents: event.target.value,
                           })
                         }
-                        placeholder={"자라가 찾아온다.\n토끼가 이야기를 듣기로 한다."}
+                        placeholder={
+                          "자라가 찾아온다.\n자라가 부탁한다.\n그 말을 들은 토끼가 결정을 내린다."
+                        }
                       />
                     </label>
                     <label className="field wide editor-only-field">
-                      <span>다음 챕터가 궁금해지게 만드는 연결</span>
+                      <span>이 챕터의 결과로 다음에 생기는 일</span>
                       <textarea
                         rows={2}
                         value={selectedChapter.nextChapterIdea}
@@ -3033,7 +3038,7 @@ export function StoryStudio() {
                             nextChapterIdea: event.target.value,
                           })
                         }
-                        placeholder="다음에 해결하거나 보여 줄 일"
+                        placeholder="이번 선택이나 사건 때문에 다음 챕터에서 생기는 일"
                       />
                     </label>
                     <details className="chapter-resource-details">
