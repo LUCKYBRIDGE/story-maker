@@ -400,6 +400,7 @@ function AssetPickerButton({
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [view, setView] = useState<AssetView>("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [libraryScope, setLibraryScope] =
     useState<AssetLibraryScope>("recommended");
   const initializedFilters = useRef(false);
@@ -490,6 +491,21 @@ function AssetPickerButton({
     type,
     view === "recent",
   );
+  const selectedAsset = value ? ASSET_BY_ID.get(value) : undefined;
+  const clearFindConditions = () => {
+    setSearch("");
+    setTags([]);
+    setView("all");
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const closeWithEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", closeWithEscape);
+    return () => window.removeEventListener("keydown", closeWithEscape);
+  }, [open]);
 
   return (
     <>
@@ -529,10 +545,12 @@ function AssetPickerButton({
             <header>
               <div>
                 <span className="eyebrow">
-                  {type === "character" ? "캐릭터 이미지" : "장소·배경"}
+                  {type === "character"
+                    ? "캐릭터 이미지 고르기"
+                    : "배경 이미지 고르기"}
                 </span>
                 <h2>{label}</h2>
-                <p>이미지는 이 창을 열었을 때만 보여요.</p>
+                <p>원하는 그림을 누르면 선택되고 이 창이 닫혀요.</p>
               </div>
               <button
                 type="button"
@@ -543,124 +561,149 @@ function AssetPickerButton({
                 ×
               </button>
             </header>
-            <input
-              className="asset-picker-search"
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="토끼, 놀람, 연회장처럼 검색"
-              aria-label="이미지 검색"
-              autoFocus
-            />
-            <div className="asset-picker-curation">
-              <div>
-                <strong>글상자 장면에 잘 맞는 자료부터</strong>
-                <small>
-                  {type === "character"
-                    ? "한 명씩 분리되고 크기·화풍이 비교적 일정한 전신 이미지를 먼저 보여요."
-                    : "캐릭터가 미리 합성되지 않은 장소 배경을 먼저 보여요."}
-                </small>
-              </div>
-              <div
-                className="asset-picker-scope"
-                aria-label="추천 자료 표시 범위"
+            <div className="asset-picker-findbar">
+              <input
+                className="asset-picker-search"
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder={
+                  type === "character"
+                    ? "인물 이름, 표정, 동작으로 찾기"
+                    : "장소, 시간, 분위기로 찾기"
+                }
+                aria-label="이미지 검색"
+                autoFocus
+              />
+              <button
+                type="button"
+                className={`asset-picker-filter-toggle ${
+                  filtersOpen || tags.length > 0 ? "active" : ""
+                }`}
+                aria-expanded={filtersOpen}
+                onClick={() => setFiltersOpen((current) => !current)}
               >
+                <span>{filtersOpen ? "태그 닫기" : "태그로 좁히기"}</span>
+                {tags.length > 0 && <b>{tags.length}</b>}
+              </button>
+            </div>
+            <div className="asset-picker-browsebar">
+              <div className="asset-picker-view" aria-label="이미지 보기">
+                {[
+                  ["all", "전체"],
+                  ["favorites", `즐겨찾기 ${favoriteIds.length}`],
+                  ["recent", "최근 사용"],
+                ].map(([mode, text]) => (
+                  <button
+                    type="button"
+                    key={mode}
+                    className={view === mode ? "active" : ""}
+                    aria-pressed={view === mode}
+                    onClick={() => setView(mode as AssetView)}
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
+              <div className="asset-picker-scope" aria-label="이미지 범위">
                 <button
                   type="button"
                   className={libraryScope === "recommended" ? "active" : ""}
+                  aria-pressed={libraryScope === "recommended"}
                   onClick={() => setLibraryScope("recommended")}
                 >
-                  기본 추천 {recommendedAssetCount}
+                  추천 이미지 {recommendedAssetCount}
                 </button>
                 <button
                   type="button"
                   className={libraryScope === "all" ? "active" : ""}
+                  aria-pressed={libraryScope === "all"}
                   onClick={() => setLibraryScope("all")}
                 >
-                  추가 자료까지 {assets.length}
+                  모든 이미지 {assets.length}
                 </button>
               </div>
             </div>
-            <div className="asset-picker-view" aria-label="이미지 보기">
-              {[
-                ["all", "전체"],
-                ["favorites", `즐겨찾기 ${favoriteIds.length}`],
-                ["recent", "최근 사용"],
-              ].map(([mode, text]) => (
-                <button
-                  type="button"
-                  key={mode}
-                  className={view === mode ? "active" : ""}
-                  onClick={() => setView(mode as AssetView)}
-                >
-                  {text}
-                </button>
-              ))}
-            </div>
-            <div className="asset-picker-featured-filters">
-              {featuredTagGroups.map((group) => (
-                <div
-                  className="asset-picker-filter-group"
-                  key={group.label}
-                  aria-label={`${group.label} 태그`}
-                >
-                  <strong>{group.label}</strong>
-                  <div>
-                    {group.tags.map((tag) => (
-                      <button
-                        type="button"
-                        key={tag}
-                        className={tags.includes(tag) ? "active" : ""}
-                        onClick={() =>
-                          setTags((current) => [
-                            ...current.filter(
-                              (value) => !group.tags.includes(value),
-                            ),
-                            ...(current.includes(tag) ? [] : [tag]),
-                          ])
-                        }
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
+            {filtersOpen && (
+              <section className="asset-picker-filter-panel">
+                <div className="asset-picker-tag-heading">
+                  <strong>태그로 이미지 좁히기</strong>
+                  <small>여러 태그를 고르면 모두 맞는 이미지만 남아요.</small>
                 </div>
-              ))}
-            </div>
-            <div className="asset-picker-tag-heading">
-              <strong>태그</strong>
-              <small>여러 개를 고르면 결과가 더 좁아져요.</small>
-            </div>
-            <div className="asset-picker-tags" aria-label="이미지 태그">
-              {availableTags.map((tag) => (
-                <button
-                  type="button"
-                  key={tag}
-                  className={tags.includes(tag) ? "active" : ""}
-                  onClick={() =>
-                    setTags((current) =>
-                      current.includes(tag)
-                        ? current.filter((value) => value !== tag)
-                        : [...current, tag],
-                    )
-                  }
-                >
-                  {tag}
-                </button>
-              ))}
-              {tags.length > 0 && (
-                <button
-                  type="button"
-                  className="clear-tags"
-                  onClick={() => setTags([])}
-                >
-                  태그 모두 지우기
+                <div className="asset-picker-featured-filters">
+                  {featuredTagGroups.map((group) => (
+                    <div
+                      className="asset-picker-filter-group"
+                      key={group.label}
+                      aria-label={`${group.label} 태그`}
+                    >
+                      <strong>{group.label}</strong>
+                      <div>
+                        {group.tags.map((tag) => (
+                          <button
+                            type="button"
+                            key={tag}
+                            className={tags.includes(tag) ? "active" : ""}
+                            aria-pressed={tags.includes(tag)}
+                            onClick={() =>
+                              setTags((current) => [
+                                ...current.filter(
+                                  (value) => !group.tags.includes(value),
+                                ),
+                                ...(current.includes(tag) ? [] : [tag]),
+                              ])
+                            }
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="asset-picker-tags" aria-label="이미지 태그">
+                  {availableTags.map((tag) => (
+                    <button
+                      type="button"
+                      key={tag}
+                      className={tags.includes(tag) ? "active" : ""}
+                      aria-pressed={tags.includes(tag)}
+                      onClick={() =>
+                        setTags((current) =>
+                          current.includes(tag)
+                            ? current.filter((value) => value !== tag)
+                            : [...current, tag],
+                        )
+                      }
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                  {tags.length > 0 && (
+                    <button
+                      type="button"
+                      className="clear-tags"
+                      onClick={() => setTags([])}
+                    >
+                      선택한 태그 지우기
+                    </button>
+                  )}
+                </div>
+              </section>
+            )}
+            <div className="asset-picker-result-summary">
+              <p>
+                <strong>{filteredAssets.length}개</strong>의 이미지를 찾았어요.
+                {selectedAsset?.type === type && (
+                  <span>현재 선택: {selectedAsset.displayName}</span>
+                )}
+              </p>
+              {(search || tags.length > 0 || view !== "all") && (
+                <button type="button" onClick={clearFindConditions}>
+                  검색·태그 초기화
                 </button>
               )}
             </div>
-            <p className="asset-picker-count">
-              선택한 조건에 맞는 이미지 {filteredAssets.length}개
-            </p>
             <div className="asset-picker-results">
               {filteredAssetGroups.map((group) => (
                 <section className="asset-picker-result-group" key={group.label}>
@@ -700,29 +743,23 @@ function AssetPickerButton({
                         >
                           <span className={`asset-picker-thumb ${asset.type}`}>
                             <img src={asset.src} alt="" loading="lazy" />
-                          </span>
-                          <span className="asset-picker-badges">
-                            <b
-                              className={
-                                asset.selectionTier === "기본 추천"
-                                  ? "recommended"
-                                  : "additional"
-                              }
-                            >
-                              {asset.selectionTier}
-                            </b>
-                            {asset.framing && <b>{asset.framing}</b>}
+                            {value === asset.id && (
+                              <b className="asset-picker-selected-mark">
+                                ✓ 현재 선택
+                              </b>
+                            )}
                           </span>
                           <strong>{asset.displayName}</strong>
                           <small>
-                            {asset.story} · {asset.label}
+                            {asset.label}
                           </small>
                           <span className="asset-tag-summary">
-                            {asset.tags.slice(0, 5).join(" · ")}
+                            {asset.story}
+                            {asset.framing ? ` · ${asset.framing}` : ""}
+                            {asset.selectionTier === "추가 자료"
+                              ? " · 추가 이미지"
+                              : ""}
                           </span>
-                          <em>
-                            {value === asset.id ? "선택됨" : "이 이미지 선택"}
-                          </em>
                         </button>
                       </article>
                     ))}
@@ -731,16 +768,17 @@ function AssetPickerButton({
               ))}
               {filteredAssets.length === 0 && (
                 <div className="asset-picker-empty">
-                  <strong>조건에 맞는 이미지가 없어요.</strong>
-                  <button type="button" onClick={() => setTags([])}>
-                    태그 모두 지우기
+                  <strong>찾은 이미지가 없어요.</strong>
+                  <small>검색어를 바꾸거나 선택한 태그를 지워 보세요.</small>
+                  <button type="button" onClick={clearFindConditions}>
+                    검색·태그 초기화
                   </button>
                   {libraryScope === "recommended" && (
                     <button
                       type="button"
                       onClick={() => setLibraryScope("all")}
                     >
-                      추가 자료까지 보기
+                      모든 이미지 보기
                     </button>
                   )}
                 </div>
@@ -807,7 +845,7 @@ function ImageField({
         <AssetPickerButton
           type={type}
           label={label}
-          buttonText="+ 자료 추가"
+          buttonText={value ? "다른 이미지 고르기" : "이미지 고르기"}
           value={value}
           favoriteIds={favoriteIds}
           recentIds={recentIds}
@@ -871,7 +909,9 @@ function ResourcePool({
         type={type}
         label={title}
         buttonText={
-          type === "character" ? "+ 캐릭터 이미지 추가" : "+ 장소·배경 추가"
+          type === "character"
+            ? "사용할 캐릭터 고르기"
+            : "사용할 배경 고르기"
         }
         favoriteIds={favoriteIds}
         recentIds={recentIds}
