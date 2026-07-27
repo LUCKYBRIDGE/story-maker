@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
   cloneProject,
@@ -382,6 +383,7 @@ function AssetPickerButton({
   label,
   buttonText,
   value,
+  currentLabel = "현재 선택",
   favoriteIds,
   recentIds,
   onSelect,
@@ -391,6 +393,7 @@ function AssetPickerButton({
   label: string;
   buttonText: string;
   value?: string;
+  currentLabel?: string;
   favoriteIds: string[];
   recentIds: string[];
   onSelect: (assetId: string) => void;
@@ -500,11 +503,16 @@ function AssetPickerButton({
 
   useEffect(() => {
     if (!open) return;
+    const previousOverflow = document.body.style.overflow;
     const closeWithEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", closeWithEscape);
-    return () => window.removeEventListener("keydown", closeWithEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeWithEscape);
+    };
   }, [open]);
 
   return (
@@ -528,14 +536,15 @@ function AssetPickerButton({
       >
         {buttonText}
       </button>
-      {open && (
-        <div
-          className="asset-picker-overlay"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setOpen(false);
-          }}
-        >
+      {open &&
+        createPortal(
+          <div
+            className="asset-picker-overlay"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setOpen(false);
+            }}
+          >
           <section
             className="asset-picker-dialog"
             role="dialog"
@@ -561,6 +570,18 @@ function AssetPickerButton({
                 ×
               </button>
             </header>
+            {selectedAsset?.type === type && (
+              <div className="asset-picker-current">
+                <span className={`asset-picker-current-thumb ${type}`}>
+                  <img src={selectedAsset.src} alt="" />
+                </span>
+                <span>
+                  <small>{currentLabel}</small>
+                  <strong>{selectedAsset.displayName}</strong>
+                  <b>{selectedAsset.label}</b>
+                </span>
+              </div>
+            )}
             <div className="asset-picker-findbar">
               <input
                 className="asset-picker-search"
@@ -694,9 +715,6 @@ function AssetPickerButton({
             <div className="asset-picker-result-summary">
               <p>
                 <strong>{filteredAssets.length}개</strong>의 이미지를 찾았어요.
-                {selectedAsset?.type === type && (
-                  <span>현재 선택: {selectedAsset.displayName}</span>
-                )}
               </p>
               {(search || tags.length > 0 || view !== "all") && (
                 <button type="button" onClick={clearFindConditions}>
@@ -785,8 +803,9 @@ function AssetPickerButton({
               )}
             </div>
           </section>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
@@ -795,6 +814,7 @@ function ImageField({
   label,
   type,
   value,
+  currentValue,
   allowedIds,
   allowDefault = false,
   favoriteIds,
@@ -806,6 +826,7 @@ function ImageField({
   label: string;
   type: StoryAsset["type"];
   value: string;
+  currentValue?: string;
   allowedIds: string[];
   allowDefault?: boolean;
   favoriteIds: string[];
@@ -846,7 +867,10 @@ function ImageField({
           type={type}
           label={label}
           buttonText={value ? "다른 이미지 고르기" : "이미지 고르기"}
-          value={value}
+          value={currentValue || value}
+          currentLabel={
+            currentValue ? "현재 장면에서 사용 중" : "현재 선택"
+          }
           favoriteIds={favoriteIds}
           recentIds={recentIds}
           onToggleFavorite={onToggleFavorite}
@@ -3790,7 +3814,11 @@ export function StoryStudio() {
                               ? "배경 변경"
                               : "+ 배경 추가"
                           }
-                          value={selectedLine.backgroundId}
+                          value={
+                            selectedLine.backgroundId ||
+                            selectedChapter.backgroundId
+                          }
+                          currentLabel="현재 장면에서 사용 중"
                           favoriteIds={favoriteAssets}
                           recentIds={recentAssets}
                           onToggleFavorite={toggleFavorite}
@@ -3842,7 +3870,8 @@ export function StoryStudio() {
                                     ? "+ 왼쪽 인물 추가"
                                     : "+ 오른쪽 인물 추가"
                               }
-                              value={lineId}
+                              value={effectiveId}
+                              currentLabel="현재 장면에서 사용 중"
                               favoriteIds={favoriteAssets}
                               recentIds={recentAssets}
                               onToggleFavorite={toggleFavorite}
@@ -3997,6 +4026,10 @@ export function StoryStudio() {
                             label="왼쪽 캐릭터"
                             type="character"
                             value={selectedLine.leftAssetId}
+                            currentValue={
+                              selectedLine.leftAssetId ||
+                              selectedChapter.leftAssetId
+                            }
                             allowDefault
                             allowedIds={selectedChapter.characterAssetIds}
                             favoriteIds={favoriteAssets}
@@ -4013,6 +4046,10 @@ export function StoryStudio() {
                             label="오른쪽 캐릭터"
                             type="character"
                             value={selectedLine.rightAssetId}
+                            currentValue={
+                              selectedLine.rightAssetId ||
+                              selectedChapter.rightAssetId
+                            }
                             allowDefault
                             allowedIds={selectedChapter.characterAssetIds}
                             favoriteIds={favoriteAssets}
@@ -4029,6 +4066,10 @@ export function StoryStudio() {
                             label="장면 배경"
                             type="background"
                             value={selectedLine.backgroundId}
+                            currentValue={
+                              selectedLine.backgroundId ||
+                              selectedChapter.backgroundId
+                            }
                             allowDefault
                             allowedIds={selectedChapter.backgroundAssetIds}
                             favoriteIds={favoriteAssets}

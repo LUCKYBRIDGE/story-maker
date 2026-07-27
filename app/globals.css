@@ -1306,8 +1306,7 @@ img {
   display: grid;
   padding: clamp(12px, 4vw, 48px);
   place-items: center;
-  background: rgba(12, 24, 21, 0.72);
-  backdrop-filter: blur(8px);
+  background: rgba(12, 24, 21, 0.96);
 }
 
 .asset-picker-dialog {
@@ -1328,6 +1327,75 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+}
+
+.asset-picker-current {
+  display: flex;
+  min-width: 0;
+  min-height: 58px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 7px 10px;
+  border: 1px solid #9bbdae;
+  border-radius: 13px;
+  background: rgba(214, 234, 223, 0.58);
+  gap: 10px;
+}
+
+.asset-picker-current-thumb {
+  display: grid;
+  width: 52px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px;
+  background:
+    linear-gradient(45deg, #ece9e1 25%, transparent 25%) 0 0 / 12px 12px,
+    linear-gradient(-45deg, #ece9e1 25%, transparent 25%) 0 6px / 12px 12px,
+    linear-gradient(45deg, transparent 75%, #ece9e1 75%) 6px -6px / 12px 12px,
+    linear-gradient(-45deg, transparent 75%, #ece9e1 75%) -6px 0 / 12px 12px,
+    #faf8f2;
+  overflow: hidden;
+}
+
+.asset-picker-current-thumb.background {
+  width: 78px;
+  background: #dde5df;
+}
+
+.asset-picker-current-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.asset-picker-current-thumb.background img {
+  object-fit: cover;
+}
+
+.asset-picker-current > span:last-child {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.asset-picker-current small {
+  color: var(--mint-strong);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.asset-picker-current strong {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.asset-picker-current b {
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .asset-picker-dialog h2 {
@@ -1690,6 +1758,7 @@ img {
 }
 
 .asset-picker-thumb.background {
+  aspect-ratio: 16 / 9;
   background: #dde5df;
 }
 

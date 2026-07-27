@@ -254,12 +254,18 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /검색·태그 초기화/);
   assert.match(studio, /다른 이미지 고르기/);
   assert.match(studio, /사용할 캐릭터 고르기/);
+  assert.match(studio, /createPortal/);
+  assert.match(studio, /document\.body/);
+  assert.match(studio, /현재 장면에서 사용 중/);
+  assert.match(studio, /currentValue/);
   assert.doesNotMatch(studio, /\+ 자료 추가/);
   assert.doesNotMatch(studio, /이미지는 이 창을 열었을 때만 보여요/);
   assert.match(studio, /asset-picker-grid/);
   assert.match(globals, /\.asset-picker-findbar/);
   assert.match(globals, /\.asset-picker-filter-toggle/);
   assert.match(globals, /\.asset-picker-result-summary/);
+  assert.match(globals, /\.asset-picker-current/);
+  assert.match(globals, /\.asset-picker-current-thumb\.background/);
   assert.match(studio, /스토리 구상/);
   assert.match(studio, /전체 이야기 구성/);
   assert.match(studio, /챕터 흐름 구성/);
