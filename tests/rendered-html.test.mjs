@@ -290,14 +290,27 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /장면과 사건을 들려주는 글/);
   assert.match(studio, /narration-heading/);
   assert.match(studio, /function DialogueText/);
+  assert.match(studio, /function DialogueInline/);
+  assert.match(studio, /className="dialogue-speaker"/);
   assert.match(studio, /parenthetical-direction/);
+  assert.doesNotMatch(
+    studio,
+    /speaker-name/,
+    "화자 이름을 대사와 떨어진 배지로 표시하면 안 됩니다.",
+  );
   assert.match(studio, /해설에는 괄호를 쓸 수 없어요/);
   assert.match(studio, /속마음·표정·행동은 학생이 직접/);
   assert.match(globals, /\.dialogue-box\.narration/);
   assert.match(globals, /\.script-scene-card\.narration/);
   assert.match(globals, /\.scene-kind-badge\.narration/);
   assert.match(globals, /\.editable-stage-dialogue\.narration/);
+  assert.match(globals, /\.dialogue-speaker/);
   assert.match(globals, /\.parenthetical-direction/);
+  assert.doesNotMatch(
+    globals,
+    /\.speaker-name/,
+    "화자 이름 배지 스타일이 다시 생기면 안 됩니다.",
+  );
   assert.match(studio, /놀퀴즈_스토리_템플릿\.xlsx/);
   assert.match(studio, /방금 전으로 복구/);
   assert.match(storyAssets, /tags:\s*string\[\]/);

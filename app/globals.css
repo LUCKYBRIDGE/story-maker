@@ -2365,27 +2365,6 @@ img {
   font-weight: 800;
 }
 
-.speaker-name {
-  display: inline-block;
-  min-width: 94px;
-  margin-top: 9px;
-  padding: 6px 11px;
-  border-radius: 9px 9px 9px 3px;
-  background: var(--gold);
-  color: #2d210d;
-  font-size: 14px;
-}
-
-.speaker-name.right {
-  float: right;
-  border-radius: 9px 9px 3px 9px;
-  text-align: right;
-}
-
-.speaker-name.narration {
-  background: var(--gold-soft);
-}
-
 .narration-heading {
   display: flex;
   align-items: center;
@@ -2411,7 +2390,6 @@ img {
 }
 
 .dialogue-box p {
-  clear: both;
   margin: 12px 0 16px;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
   font-size: clamp(17px, 2vw, 22px);
@@ -2419,15 +2397,22 @@ img {
   line-height: 1.6;
 }
 
+.dialogue-copy {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dialogue-speaker {
+  color: var(--gold-soft);
+  font: inherit;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
 .parenthetical-direction {
   color: #e5d2ab;
   font-style: italic;
-  font-weight: 600;
-}
-
-.dialogue-box p > .parenthetical-direction:only-child {
-  display: block;
-  padding-inline: clamp(4px, 2vw, 24px);
+  font-weight: 800;
 }
 
 .dialogue-box .narration-copy {
@@ -3006,10 +2991,6 @@ img {
     overflow-y: auto;
   }
 
-  .speaker-name {
-    margin-top: 7px;
-  }
-
   .player-controls .ghost-button,
   .player-controls .primary-button {
     min-height: 44px;
@@ -3041,15 +3022,8 @@ img {
     line-height: 1.35;
   }
 
-  .dialogue-meta,
-  .speaker-name {
+  .dialogue-meta {
     font-size: 10px;
-  }
-
-  .speaker-name {
-    min-width: auto;
-    margin-top: 4px;
-    padding: 4px 8px;
   }
 
   .player-controls .ghost-button,
@@ -4155,12 +4129,44 @@ img {
   font-size: 11px;
 }
 
-.scene-writing-fields > textarea {
+.script-writing-line {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  gap: 5px;
+}
+
+.script-writing-line:focus-within {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 3px rgba(53, 139, 112, 0.12);
+}
+
+.script-writing-line .dialogue-speaker {
+  padding-top: 1px;
+  color: var(--mint-strong);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.script-writing-line textarea {
+  min-width: 0;
   width: 100%;
   min-height: 68px;
-  padding: 9px 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   line-height: 1.6;
   resize: vertical;
+}
+
+.script-writing-line textarea:focus {
+  border: 0;
+  box-shadow: none;
 }
 
 .scene-writing-help {
@@ -4175,9 +4181,12 @@ img {
   font-weight: 900;
 }
 
-.script-scene-card.narration .scene-writing-fields > textarea {
+.script-scene-card.narration .script-writing-line {
   border-color: #dfc28e;
   background: #fffdf8;
+}
+
+.script-scene-card.narration .script-writing-line textarea {
   color: #503b24;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
 }
@@ -4437,7 +4446,22 @@ img {
   color: #8a7255;
 }
 
-.editable-stage-dialogue textarea {
+.editable-stage-writing-line {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.editable-stage-writing-line .dialogue-speaker {
+  padding-top: 5px;
+  color: var(--gold-soft);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.editable-stage-writing-line textarea {
+  min-width: 0;
   width: 100%;
   min-height: 60px;
   padding: 5px 0;
@@ -4450,22 +4474,28 @@ img {
   resize: none;
 }
 
-.editable-stage-dialogue textarea::placeholder {
+.editable-stage-writing-line textarea::placeholder {
   color: rgba(255, 255, 255, 0.64);
 }
 
-.editable-stage-dialogue textarea:focus {
+.editable-stage-writing-line textarea:focus {
   border: 0;
   box-shadow: none;
 }
 
-.editable-stage-dialogue.narration textarea {
+.editable-stage-writing-line.narration {
+  display: block;
+}
+
+.editable-stage-dialogue.narration .editable-stage-writing-line textarea {
   color: #49361f;
   font-family: "Iowan Old Style", "Noto Serif KR", serif;
   text-align: center;
 }
 
-.editable-stage-dialogue.narration textarea::placeholder {
+.editable-stage-dialogue.narration
+  .editable-stage-writing-line
+  textarea::placeholder {
   color: rgba(73, 54, 31, 0.58);
 }
 

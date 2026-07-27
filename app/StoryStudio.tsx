@@ -213,6 +213,23 @@ function DialogueText({ text }: { text: string }) {
   );
 }
 
+function DialogueInline({
+  speakerName,
+  text,
+}: {
+  speakerName: string;
+  text: string;
+}) {
+  return (
+    <>
+      <strong className="dialogue-speaker">
+        {speakerName || "화자 없음"}:
+      </strong>{" "}
+      <DialogueText text={text} />
+    </>
+  );
+}
+
 function assetName(assetId: string) {
   return ASSET_BY_ID.get(assetId)?.displayName ?? "";
 }
@@ -941,7 +958,9 @@ function SceneThumbnail({
       <span>
         {line.type === "narration"
           ? "해설"
-          : `${line.speakerName || "화자 없음"}의 대사`}
+          : `${line.speakerName || "화자 없음"}: ${
+              line.text || "빈 대사"
+            }`}
       </span>
     </div>
   );
@@ -1159,16 +1178,12 @@ function StoryPlayer({
               </p>
             </>
           ) : (
-            <>
-              <strong className={`speaker-name ${line?.speaker ?? ""}`}>
-                {line?.speakerName || "화자 없음"}
-              </strong>
-              <p>
-                <DialogueText
-                  text={line?.text || "이 챕터에는 아직 글이 없어요."}
-                />
-              </p>
-            </>
+            <p className="dialogue-copy">
+              <DialogueInline
+                speakerName={line?.speakerName || "화자 없음"}
+                text={line?.text || "이 챕터에는 아직 글이 없어요."}
+              />
+            </p>
           )}
           <div className="player-controls">
             <button
@@ -3556,24 +3571,35 @@ export function StoryStudio() {
                                 </>
                               )}
                             </div>
-                            <textarea
-                              rows={3}
-                              value={line.text}
-                              autoFocus={
-                                line.id === selectedLine?.id &&
-                                selectedChapterLines.length === 1 &&
-                                !line.text
-                              }
-                              placeholder={
-                                line.type === "narration"
-                                  ? "시간·장소·상황을 괄호 없이 들려주세요."
-                                  : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                              }
-                              onChange={(event) =>
-                                updateLine(line.id, { text: event.target.value })
-                              }
-                              aria-label={`장면 ${index + 1} 내용`}
-                            />
+                            <div
+                              className={`script-writing-line ${line.type}`}
+                            >
+                              {line.type === "dialogue" && (
+                                <strong className="dialogue-speaker">
+                                  {line.speakerName || "화자 없음"}:
+                                </strong>
+                              )}
+                              <textarea
+                                rows={3}
+                                value={line.text}
+                                autoFocus={
+                                  line.id === selectedLine?.id &&
+                                  selectedChapterLines.length === 1 &&
+                                  !line.text
+                                }
+                                placeholder={
+                                  line.type === "narration"
+                                    ? "시간·장소·상황을 괄호 없이 들려주세요."
+                                    : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
+                                }
+                                onChange={(event) =>
+                                  updateLine(line.id, {
+                                    text: event.target.value,
+                                  })
+                                }
+                                aria-label={`장면 ${index + 1} 내용`}
+                              />
+                            </div>
                             <small
                               className={`scene-writing-help ${
                                 line.type === "narration" &&
@@ -3800,37 +3826,36 @@ export function StoryStudio() {
                             : ""
                         }`}
                       >
-                        <span className="editable-stage-kind">
-                          <b>
-                            {selectedLine.type === "narration"
-                              ? "해설"
-                              : selectedLine.speakerName || "화자 없음"}
-                          </b>
-                          <small>
-                            {selectedLine.type === "narration"
-                              ? "장면과 사건을 들려주는 글"
-                              : `${
-                                  selectedLine.speaker === "right"
-                                    ? "오른쪽"
-                                    : "왼쪽"
-                                }에서 말하는 대사`}
-                          </small>
-                        </span>
-                        <textarea
-                          rows={3}
-                          value={selectedLine.text}
-                          onChange={(event) =>
-                            updateLine(selectedLine.id, {
-                              text: event.target.value,
-                            })
-                          }
-                          placeholder={
-                            selectedLine.type === "narration"
-                              ? "시간·장소·상황을 괄호 없이 들려주세요."
-                              : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                          }
-                          aria-label="현재 장면 글상자"
-                        />
+                        {selectedLine.type === "narration" && (
+                          <span className="editable-stage-kind">
+                            <b>해설</b>
+                            <small>장면과 사건을 들려주는 글</small>
+                          </span>
+                        )}
+                        <div
+                          className={`editable-stage-writing-line ${selectedLine.type}`}
+                        >
+                          {selectedLine.type === "dialogue" && (
+                            <b className="dialogue-speaker">
+                              {selectedLine.speakerName || "화자 없음"}:
+                            </b>
+                          )}
+                          <textarea
+                            rows={3}
+                            value={selectedLine.text}
+                            onChange={(event) =>
+                              updateLine(selectedLine.id, {
+                                text: event.target.value,
+                              })
+                            }
+                            placeholder={
+                              selectedLine.type === "narration"
+                                ? "시간·장소·상황을 괄호 없이 들려주세요."
+                                : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
+                            }
+                            aria-label="현재 장면 글상자"
+                          />
+                        </div>
                         <small
                           className={`stage-writing-help ${
                             selectedLine.type === "narration" &&
