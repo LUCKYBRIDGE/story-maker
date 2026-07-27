@@ -74,7 +74,7 @@ export type StoryProject = {
 export const DEFAULT_PROJECT: StoryProject = {
   id: "rabbit-turtle-remix",
   title: "토끼와 자라, 다시 만난 날",
-  description: "놀퀴즈 이미지로 시작하는 첫 번째 이야기",
+  description: "준비된 이미지로 시작하는 첫 번째 이야기",
   planning: {
     premise: "토끼와 자라가 서로 솔직하게 이야기하며 새로운 모험을 시작합니다.",
     structureMode: "five",
@@ -333,7 +333,7 @@ function originalScene({
   leftAssetId,
   rightAssetId,
   backgroundId,
-  purposeNote = "pinky-ne-site 원작의 장면을 이어갑니다.",
+  purposeNote = "준비된 앞 장면을 이어갑니다.",
   emotionNote = "",
   directionNote = "",
 }: Partial<TemplateScene> &
@@ -677,7 +677,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       "병든 용왕을 살리기 위해 토끼를 찾아온 자라는 정직과 명령 사이에서 흔들립니다. 토끼에게 어떤 첫마디를 건넬까요?",
     structureMode: "three",
     material:
-      "pinky-ne-site의 토끼와 자라 원작에서 용왕의 명령을 받은 자라가 육지에서 토끼를 만나는 부분",
+      "토끼와 자라 원작을 각색한 이야기에서, 용왕의 명령을 받은 자라가 육지에서 토끼를 만나는 부분",
     theme: "은혜를 갚는 일과 정직을 지키는 일이 충돌할 때 무엇을 선택해야 할까?",
     mainCharacter: "자라와 토끼",
     mainGoal: "자라는 토끼에게 첫마디를 건네고 다음 일을 선택한다.",
@@ -706,7 +706,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
-  updatedAt: "pinky-ne-site 최신 원작 반영",
+  updatedAt: "준비된 이어쓰기 템플릿",
   chapters: [
     {
       id: "continuation-origin-palace",
@@ -780,7 +780,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       backgroundId: RT.background.grassland,
       purposeNote: "자라가 토끼에게 건네는 첫 말을 직접 써 보세요.",
       emotionNote: "",
-      directionNote: "원작과 같은 좌우 인물·들판 배치에서 시작합니다.",
+      directionNote: "준비된 이야기와 같은 좌우 인물·들판 배치에서 시작합니다.",
     },
   ],
 };
@@ -800,7 +800,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       "용궁 잔치에 초대받았다고 믿은 토끼는 용궁에서 결박됩니다. 토끼는 어떻게 위기를 벗어날까요?",
     structureMode: "four",
     material:
-      "pinky-ne-site의 토끼와 자라 원작에서 ‘용궁 잔치로 초대한다’ 갈래를 고정한 뒤 토끼가 결박되는 부분",
+      "토끼와 자라 원작을 각색한 이야기에서, ‘용궁 잔치로 초대한다’는 흐름 뒤 토끼가 결박되는 부분",
     theme: "목숨이 위태로운 순간, 지혜와 신뢰는 어떤 선택을 만들 수 있을까?",
     mainCharacter: "토끼",
     mainGoal: "토끼는 목숨을 지키고 용궁의 함정에서 벗어난다.",
@@ -831,7 +831,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
-  updatedAt: "pinky-ne-site 최신 원작 반영",
+  updatedAt: "준비된 이어쓰기 템플릿",
   chapters: [
     {
       id: "palace-origin-opening",
@@ -1057,7 +1057,7 @@ const ORIGINAL_ONGGOJIB_HOME_CHANGE: TemplateScene[] = [
     backgroundId: OG.background.winterCourtyard,
     purposeNote: "진짜 옹고집이 집을 비우며 사건이 시작됩니다.",
     emotionNote: "부인: 익숙한 걱정 · 옹고집: 무심함",
-    directionNote: "pinky-ne-site 최신 원작의 귀가 전 흐름을 따릅니다.",
+    directionNote: "준비된 앞이야기의 귀가 전 흐름을 따릅니다.",
   }),
   originalScene({
     id: "onggojib-home-2",
@@ -1223,8 +1223,7 @@ const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [
     backgroundId: OG.background.court,
     purposeNote: "두 옹고집을 가려내기 위한 첫 관아 장면입니다.",
     emotionNote: "사또: 신중함 · 포졸: 혼란",
-    directionNote:
-      "pinky-ne-site 원작의 관아 마당과 사또·포졸 배치를 따릅니다.",
+    directionNote: "준비된 관아 장면의 사또·포졸 배치를 따릅니다.",
   }),
   originalScene({
     id: "onggojib-court-2",
@@ -1323,7 +1322,7 @@ const ORIGINAL_ONGGOJIB_WIFE_CHOICE: TemplateScene[] = [
     rightAssetId: OG.character.wifeResolved,
     backgroundId: OG.background.court,
     purposeNote:
-      "pinky-ne-site 원작에서 부인이 가짜 옹고집을 선택하는 고정 장면입니다.",
+      "부인이 가짜 옹고집을 선택하는 준비된 장면입니다.",
     emotionNote: "부인: 결심 · 가짜 옹고집: 침착함",
     directionNote: "이 선택의 결과부터 학생이 새롭게 이어 씁니다.",
   }),
@@ -1344,7 +1343,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       "똑같이 생긴 두 옹고집 앞에서 아내는 오래 함께 산 남편이 아니라 아이들이 안심하고 말을 꺼낼 수 있게 해 준 사람을 선택합니다. 이 선택 뒤에는 어떤 일이 벌어질까요?",
     structureMode: "four",
     material:
-      "pinky-ne-site 옹고집전의 첫 관아 장면에서 ‘아이를 감싸 준 옹고집과 돌아간다’를 고른 갈래",
+      "옹고집전 원작을 각색한 이야기에서, 아내가 아이를 감싸 준 옹고집과 돌아가기로 한 부분",
     theme:
       "한 사람을 그 사람답게 만드는 것은 얼굴과 이름일까, 다른 사람을 대하는 태도일까?",
     mainCharacter: "진짜 옹고집과 아내",
@@ -1385,7 +1384,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     "막내",
     "둘째",
   ],
-  updatedAt: "pinky-ne-site 최신 원작 반영",
+  updatedAt: "준비된 이어쓰기 템플릿",
   chapters: [
     {
       id: "onggojib-origin-home-change",
@@ -1545,7 +1544,27 @@ export function createBlankProject(): StoryProject {
 }
 
 export function cloneProject(project: StoryProject): StoryProject {
-  const cloned = JSON.parse(JSON.stringify(project)) as StoryProject;
+  const serialized = JSON.stringify(project)
+    .replaceAll(
+      "놀퀴즈 이미지로 시작하는 첫 번째 이야기",
+      "준비된 이미지로 시작하는 첫 번째 이야기",
+    )
+    .replaceAll(
+      "pinky-ne-site의 토끼와 자라 원작",
+      "토끼와 자라 원작을 각색한 이야기",
+    )
+    .replaceAll(
+      "pinky-ne-site 옹고집전",
+      "옹고집전 원작을 각색한 이야기",
+    )
+    .replaceAll(
+      "pinky-ne-site 최신 원작 반영",
+      "준비된 이어쓰기 템플릿",
+    )
+    .replaceAll("pinky-ne-site 최신 원작", "준비된 앞이야기")
+    .replaceAll("pinky-ne-site 원작", "준비된 이야기")
+    .replaceAll("pinky-ne-site", "준비된 이야기");
+  const cloned = JSON.parse(serialized) as StoryProject;
   cloned.planning = {
     premise: cloned.planning?.premise ?? "",
     structureMode: cloned.planning?.structureMode ?? "five",

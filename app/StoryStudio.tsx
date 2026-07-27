@@ -1081,7 +1081,7 @@ function StoryPlayer({
       >
         <header className="player-topbar">
           <div>
-            <span className="eyebrow">놀퀴즈 스토리 플레이</span>
+            <span className="eyebrow">스토리 플레이</span>
             <strong>{project.title}</strong>
           </div>
           <div className="player-top-actions">
@@ -2300,7 +2300,6 @@ export function StoryStudio() {
           <span className="brand-mark">놀퀴즈</span>
           <div>
             <strong>
-              <span className="creator-brand-name">놀퀴즈 </span>
               스토리 스튜디오
             </strong>
             <small>{currentLocation}</small>

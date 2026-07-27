@@ -3132,10 +3132,6 @@ img {
   font-size: 16px;
 }
 
-.creator-brand-name {
-  display: none;
-}
-
 .creator-brand small {
   max-width: min(52vw, 700px);
   margin-top: 3px;
@@ -5010,10 +5006,6 @@ img {
 
   .creator-brand .brand-mark {
     display: none;
-  }
-
-  .creator-brand-name {
-    display: inline;
   }
 
   .creator-brand strong {

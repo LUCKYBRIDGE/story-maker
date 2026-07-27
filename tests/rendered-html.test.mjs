@@ -88,6 +88,8 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
             (line) =>
               line.type === "narration" && /[()（）]/.test(line.text),
           ).length,
+          internalSourceNameCount:
+            JSON.stringify(project).match(/pinky-ne-site/g)?.length ?? 0,
         }))));
       `,
     ],
@@ -103,6 +105,9 @@ test("세 이어쓰기 템플릿은 완결된 앞부분과 빈 창작 장면 하
   assert.ok(summaries.every((summary) => summary.duplicateIds === 0));
   assert.ok(
     summaries.every((summary) => summary.narrationWithParentheses === 0),
+  );
+  assert.ok(
+    summaries.every((summary) => summary.internalSourceNameCount === 0),
   );
   assert.deepEqual(summaries[2].chapterTitles, [
     "같은 얼굴, 다른 태도",
@@ -148,6 +153,12 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   );
   assert.match(storyData, /오늘 마당에 까치가……/);
   assert.match(storyData, /그래서 어떻게 되었느냐/);
+  assert.doesNotMatch(
+    studio,
+    /놀퀴즈 스토리 플레이|creator-brand-name/,
+    "플레이와 편집 화면에서 브랜드명이 불필요하게 반복되면 안 됩니다.",
+  );
+  assert.match(studio, /기본 제공 이미지 © 놀퀴즈/);
   assert.match(
     storyData,
     /아이들이 놀랍니다\. 부인, 아이들을 데리고 뒤로 물러서시오/,

@@ -97,7 +97,7 @@ function safeFileName(title: string) {
     title
       .trim()
       .replace(/[\\/:*?"<>|]/g, "_")
-      .slice(0, 60) || "놀퀴즈_스토리"
+      .slice(0, 60) || "스토리게임"
   );
 }
 
