@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import ExcelJS from "exceljs";
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -33,9 +34,9 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
   const html = await response.text();
   assert.match(html, /<title>놀퀴즈 스토리 스튜디오<\/title>/i);
   assert.match(html, /놀퀴즈/);
-  assert.match(html, /웹에서 새 작품/);
-  assert.match(html, /Excel 파일 열기/);
-  assert.match(html, /Google 시트 불러오기/);
+  assert.match(html, /새 작품 만들기/);
+  assert.match(html, /Excel 작품 불러오기/);
+  assert.match(html, /Google 시트에서 불러오기/);
   assert.match(html, /이어쓰기 템플릿/);
   assert.match(html, /토끼와 자라 템플릿 1 · 땅에서 만난 뒤/);
   assert.match(html, /자라는 토끼를 어떻게 용궁으로 데려갈까요/);
@@ -50,6 +51,46 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
   assert.match(html, /예시 작품 먼저 플레이/);
   assert.doesNotMatch(html, /Google로 시작하기/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
+});
+
+test("공식 Excel 양식은 웹과 같은 이야기 순서와 네 구성 묶음을 제공한다", async () => {
+  const workbook = new ExcelJS.Workbook();
+  const file = await readFile(
+    new URL(
+      "../public/templates/놀퀴즈_스토리_템플릿.xlsx",
+      import.meta.url,
+    ),
+  );
+  await workbook.xlsx.load(file);
+
+  assert.deepEqual(
+    workbook.worksheets.map((sheet) => sheet.name),
+    [
+      "시작하기",
+      "이야기 구성",
+      "챕터 흐름",
+      "챕터 자료",
+      "화자",
+      "장면",
+      "리소스",
+    ],
+  );
+  const planning = workbook.getWorksheet("이야기 구성");
+  assert.ok(planning);
+  assert.deepEqual(
+    [2, 8, 15, 22].map((row) => planning.getCell(row, 1).value),
+    [
+      "1. 작품 기본",
+      "2. 이야기 핵심",
+      "3. 이야기 뼈대",
+      "4. 더 자세한 메모",
+    ],
+  );
+  assert.equal(planning.getCell("B16").value, "5단계");
+  assert.deepEqual(planning.getCell("B16").dataValidation.formulae, [
+    '"5단계,4단계,3단계"',
+  ]);
+  assert.equal(workbook.getWorksheet("리소스")?.rowCount, 109);
 });
 
 test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름을 제공한다", () => {
@@ -195,7 +236,13 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /그 결과 다음에 생기는 일/);
   assert.match(studio, /대사를 이어 읽으며 써요/);
   assert.match(studio, /인물과 배경까지 꾸며요/);
-  assert.match(studio, /장면 자세히 편집/);
+  assert.match(studio, /장면 꾸미기/);
+  assert.match(studio, /대본 전체/);
+  assert.match(studio, /파일·복구/);
+  assert.match(studio, /인물·배경·추가 메모/);
+  assert.match(studio, /scene-more-actions/);
+  assert.doesNotMatch(studio, /<strong>스토리 구상<\/strong>/);
+  assert.doesNotMatch(studio, /<strong>이야기 만들기<\/strong>/);
   assert.match(globals, /\.chapter-context-strip/);
   assert.match(globals, /\.chapter-flow-card:not\(:last-of-type\)::after/);
   assert.doesNotMatch(
@@ -266,9 +313,8 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(globals, /\.asset-picker-result-summary/);
   assert.match(globals, /\.asset-picker-current/);
   assert.match(globals, /\.asset-picker-current-thumb\.background/);
-  assert.match(studio, /스토리 구상/);
-  assert.match(studio, /전체 이야기 구성/);
-  assert.match(studio, /챕터 흐름 구성/);
+  assert.match(studio, /이야기 구성/);
+  assert.match(studio, /챕터 흐름/);
   assert.match(studio, /이야기 나침반/);
   assert.match(studio, /이야기 소재/);
   assert.match(studio, /실패하면 어떤 일이 생기나요/);
@@ -277,16 +323,16 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /처음 → 중간 → 끝/);
   assert.match(studio, /이야기 구성 방식/);
   assert.match(studio, /구성 점검/);
-  assert.match(studio, /아이디어 보관함/);
-  assert.match(studio, /구상 다듬기/);
-  assert.match(studio, /챕터 전체 편집/);
-  assert.match(studio, /현재 장면 편집/);
+  assert.match(studio, /인물·배경·추가 메모/);
+  assert.match(studio, /이 챕터 편집/);
+  assert.match(studio, /대본 전체/);
+  assert.match(studio, /장면 꾸미기/);
   assert.match(studio, /편집할 때만 보는/);
   assert.match(studio, /현재 편집/);
   assert.match(studio, /즐겨찾기/);
   assert.match(studio, /최근 사용/);
   assert.match(studio, /선택한 태그 지우기/);
-  assert.match(studio, /Excel 파일 열기/);
+  assert.match(studio, /Excel에서 불러오기/);
   assert.match(studio, /Excel로 저장/);
   assert.match(studio, /시트에서 불러오기/);
   assert.match(studio, /빈 작품 시작/);

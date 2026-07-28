@@ -2215,7 +2215,7 @@ export function StoryStudio() {
               onClick={startBlankProject}
             >
               <span aria-hidden="true">✦</span>
-              <strong>웹에서 새 작품</strong>
+              <strong>새 작품 만들기</strong>
               <small>완전히 빈 이야기부터 시작해요.</small>
             </button>
             <button
@@ -2224,8 +2224,8 @@ export function StoryStudio() {
               disabled={entryBusy}
             >
               <span aria-hidden="true">X</span>
-              <strong>Excel 파일 열기</strong>
-              <small>파일은 이 기기 안에서만 읽어요.</small>
+              <strong>Excel 작품 불러오기</strong>
+              <small>저장해 둔 작품을 이어서 편집해요.</small>
             </button>
             <button
               className="entry-source-button"
@@ -2233,12 +2233,12 @@ export function StoryStudio() {
                 setCreatorAccess("local");
                 setWorkspaceMode("create");
                 setProjectToolsOpen(true);
-                setNotice("작품 관리에서 공개 Google 시트 주소를 넣으세요.");
+                setNotice("파일·복구에서 공개 Google 시트 주소를 넣으세요.");
               }}
             >
               <span aria-hidden="true">G</span>
-              <strong>Google 시트 불러오기</strong>
-              <small>공개 또는 웹에 게시한 시트를 읽어요.</small>
+              <strong>Google 시트에서 불러오기</strong>
+              <small>공개한 작품을 불러와 이어서 편집해요.</small>
             </button>
           </div>
           <section
@@ -2379,7 +2379,7 @@ export function StoryStudio() {
                 ? selectedLine.type === "narration"
                   ? "해설 장면 편집"
                   : `${selectedLine.speakerName || "화자 없음"}의 대사 편집`
-                : "챕터 전체 편집"
+                : "대본 전체"
             }`
           : ""
       }`
@@ -2403,21 +2403,7 @@ export function StoryStudio() {
             className="quiet-button"
             onClick={() => setProjectToolsOpen((current) => !current)}
           >
-            작품 관리
-          </button>
-          <button
-            className="apply-button"
-            onClick={applyDraft}
-            disabled={!hasUnappliedChanges}
-          >
-            {hasUnappliedChanges ? "플레이에 적용" : "적용 완료"}
-          </button>
-          <button
-            className="play-button"
-            onClick={() => openPlay(0)}
-            disabled={active.lines.length === 0}
-          >
-            플레이
+            파일·복구
           </button>
         </div>
       </header>
@@ -2428,7 +2414,7 @@ export function StoryStudio() {
         onClick={() => setMobileProjectOpen((current) => !current)}
       >
         <span>
-          <strong>작품 정보</strong>
+          <strong>작품 제목·소개</strong>
           <small>
             {draft.title || "제목 없음"} · 챕터 {draft.chapters.length} · 장면{" "}
             {draft.lines.length}
@@ -2472,28 +2458,28 @@ export function StoryStudio() {
       </section>
 
       {projectToolsOpen && (
-        <section className="project-tools" aria-label="작품 관리">
+        <section className="project-tools" aria-label="파일과 복구">
           <div>
-            <span className="eyebrow">작품 관리</span>
-            <h2>가져오기·내보내기와 복구</h2>
+            <span className="eyebrow">파일·복구</span>
+            <h2>작품을 불러오거나 따로 보관하기</h2>
             <p>평소에는 닫아 두고 이야기 쓰기에 집중할 수 있어요.</p>
           </div>
           <div className="project-tool-actions">
             <button onClick={() => excelInputRef.current?.click()}>
-              Excel 파일 열기
+              Excel에서 불러오기
             </button>
             <button onClick={saveExcelFile}>Excel로 저장</button>
             <a
               href="/templates/놀퀴즈_스토리_템플릿.xlsx"
               download
             >
-              빈 Excel 템플릿
+              빈 양식 받기
             </a>
             {backupFound && (
               <button onClick={restoreBackup}>방금 전으로 복구</button>
             )}
             <button className="danger-link" onClick={requestBlankProject}>
-              빈 작품 시작
+              새 작품 시작
             </button>
           </div>
           <div className="google-tool-row">
@@ -2562,8 +2548,8 @@ export function StoryStudio() {
         >
           <span>1</span>
           <div>
-            <strong>스토리 구상</strong>
-            <small>창작 메모 · 플레이에는 보이지 않아요</small>
+            <strong>이야기 구성</strong>
+            <small>주제·인물·챕터 흐름을 정해요</small>
           </div>
         </button>
         <button
@@ -2572,8 +2558,8 @@ export function StoryStudio() {
         >
           <span>2</span>
           <div>
-            <strong>이야기 만들기</strong>
-            <small>대사·해설·이미지를 실제 장면으로 만들어요</small>
+            <strong>장면 쓰기</strong>
+            <small>대사·해설을 쓰고 이미지를 골라요</small>
           </div>
         </button>
         <button onClick={() => openPlay(0)} disabled={active.lines.length === 0}>
@@ -2609,7 +2595,7 @@ export function StoryStudio() {
             >
               <span>1</span>
               <div>
-                <strong>전체 이야기 구성</strong>
+                <strong>이야기 구성</strong>
                 <small>구성 방식·소재·인물·갈등</small>
               </div>
             </button>
@@ -2619,7 +2605,7 @@ export function StoryStudio() {
             >
               <span>2</span>
               <div>
-                <strong>챕터 흐름 구성</strong>
+                <strong>챕터 흐름</strong>
                 <small>사건을 나누고 장면 쓰기로 연결</small>
               </div>
             </button>
@@ -2644,6 +2630,20 @@ export function StoryStudio() {
                         }))
                       }
                       placeholder="이야기의 제목을 지어 보세요."
+                    />
+                  </label>
+                  <label className="field">
+                    <span>작품 소개</span>
+                    <textarea
+                      rows={2}
+                      value={draft.description}
+                      onChange={(event) =>
+                        setDraft((project) => ({
+                          ...project,
+                          description: event.target.value,
+                        }))
+                      }
+                      placeholder="처음 보는 사람에게 이 이야기를 짧게 소개해 보세요."
                     />
                   </label>
                   <label className="field">
@@ -2847,67 +2847,67 @@ export function StoryStudio() {
                 </div>
               </section>
 
-              <section className="planning-card story-details-card">
-                <div className="card-heading">
-                  <span>창작 메모 · 세부 설정</span>
-                  <strong>인물과 배경을 구체적으로 정하기</strong>
+              <details className="planning-card planning-more-card">
+                <summary>
+                  <span>
+                    <b>인물·배경·추가 메모</b>
+                    <small>필요할 때만 펼쳐서 자세히 써요.</small>
+                  </span>
+                  <strong>열기·접기</strong>
+                </summary>
+                <div className="planning-more-content">
+                  <div className="card-heading">
+                    <span>창작 메모 · 세부 설정</span>
+                    <strong>인물과 배경을 구체적으로 정하기</strong>
+                  </div>
+                  <div className="planning-two-columns">
+                    <label className="field">
+                      <span>인물 설정</span>
+                      <textarea
+                        rows={7}
+                        value={draft.planning.characterNotes}
+                        onChange={(event) =>
+                          updatePlanning({ characterNotes: event.target.value })
+                        }
+                        placeholder={"이름 / 이야기에서의 역할\n성격 / 바라는 것 / 다른 인물과의 관계\n이야기 끝에서 달라지는 점"}
+                      />
+                    </label>
+                    <label className="field">
+                      <span>배경·세계 설정</span>
+                      <textarea
+                        rows={7}
+                        value={draft.planning.worldNotes}
+                        onChange={(event) =>
+                          updatePlanning({ worldNotes: event.target.value })
+                        }
+                        placeholder={"언제, 어디에서 벌어지는 이야기인가요?\n이 세계에서 꼭 지켜야 하는 규칙이나 특별한 장소가 있나요?"}
+                      />
+                    </label>
+                    <label className="field editor-only-field">
+                      <span>아직 정하지 못한 것 · 한 줄에 하나씩</span>
+                      <textarea
+                        rows={5}
+                        value={draft.planning.openQuestions}
+                        onChange={(event) =>
+                          updatePlanning({ openQuestions: event.target.value })
+                        }
+                        placeholder={"결말은 밝게 끝낼까?\n새 인물을 등장시킬까?"}
+                      />
+                    </label>
+                    <label className="field editor-only-field">
+                      <span>자유 창작 메모</span>
+                      <textarea
+                        rows={5}
+                        value={draft.planning.freeNotes}
+                        onChange={(event) =>
+                          updatePlanning({ freeNotes: event.target.value })
+                        }
+                        placeholder="떠오른 대사, 연출, 장소처럼 잊고 싶지 않은 생각"
+                      />
+                    </label>
+                  </div>
                 </div>
-                <div className="planning-two-columns">
-                  <label className="field">
-                    <span>인물 설정</span>
-                    <textarea
-                      rows={7}
-                      value={draft.planning.characterNotes}
-                      onChange={(event) =>
-                        updatePlanning({ characterNotes: event.target.value })
-                      }
-                      placeholder={"이름 / 이야기에서의 역할\n성격 / 바라는 것 / 다른 인물과의 관계\n이야기 끝에서 달라지는 점"}
-                    />
-                  </label>
-                  <label className="field">
-                    <span>배경·세계 설정</span>
-                    <textarea
-                      rows={7}
-                      value={draft.planning.worldNotes}
-                      onChange={(event) =>
-                        updatePlanning({ worldNotes: event.target.value })
-                      }
-                      placeholder={"언제, 어디에서 벌어지는 이야기인가요?\n이 세계에서 꼭 지켜야 하는 규칙이나 특별한 장소가 있나요?"}
-                    />
-                  </label>
-                </div>
-              </section>
-
-              <section className="planning-card idea-parking-card">
-                <div className="card-heading">
-                  <span>아이디어 보관함</span>
-                  <strong>아직 결정하지 않아도 되는 생각</strong>
-                </div>
-                <div className="planning-two-columns">
-                  <label className="field editor-only-field">
-                    <span>아직 정하지 못한 것 · 한 줄에 하나씩</span>
-                    <textarea
-                      rows={5}
-                      value={draft.planning.openQuestions}
-                      onChange={(event) =>
-                        updatePlanning({ openQuestions: event.target.value })
-                      }
-                      placeholder={"결말은 밝게 끝낼까?\n새 인물을 등장시킬까?"}
-                    />
-                  </label>
-                  <label className="field editor-only-field">
-                    <span>자유 창작 메모</span>
-                    <textarea
-                      rows={5}
-                      value={draft.planning.freeNotes}
-                      onChange={(event) =>
-                        updatePlanning({ freeNotes: event.target.value })
-                      }
-                      placeholder="떠오른 대사, 연출, 장소처럼 잊고 싶지 않은 생각"
-                    />
-                  </label>
-                </div>
-              </section>
+              </details>
             </div>
           ) : (
             <div className="chapter-planning-workspace">
@@ -2992,10 +2992,10 @@ export function StoryStudio() {
                         </div>
                         <div className="chapter-flow-actions">
                           <button onClick={() => openChapterPlan(chapter.id)}>
-                            구상 다듬기
+                            이 챕터 편집
                           </button>
                           <button onClick={() => openChapterWriter(chapter.id)}>
-                            대사 쓰기
+                            장면 쓰기
                           </button>
                         </div>
                       </article>
@@ -3011,35 +3011,6 @@ export function StoryStudio() {
               </section>
 
               <div className="planning-grid chapter-planning-grid">
-                <aside className="chapter-rail planning-chapter-rail">
-                  <div className="chapter-rail-heading">
-                    <div>
-                      <span className="eyebrow">챕터 구상</span>
-                      <strong>챕터 목록</strong>
-                    </div>
-                    <button onClick={addChapter} aria-label="챕터 추가">
-                      +
-                    </button>
-                  </div>
-                  {sortedChapters.map((chapter) => (
-                    <button
-                      key={chapter.id}
-                      className={
-                        chapter.id === selectedChapter?.id ? "active" : ""
-                      }
-                      onClick={() => selectChapter(chapter.id)}
-                    >
-                      <span>{chapter.order}</span>
-                      <div>
-                        <strong>
-                          {chapter.title || `챕터 ${chapter.order}`}
-                        </strong>
-                        <small>{chapter.summary || "아직 구상 중"}</small>
-                      </div>
-                    </button>
-                  ))}
-                </aside>
-
                 {selectedChapter ? (
                   <section className="planning-card chapter-plan-card">
                     <div className="card-heading with-actions">
@@ -3242,7 +3213,7 @@ export function StoryStudio() {
               <span>
                 <strong>편집 방법</strong>
                 <small>
-                  {editorMode === "chapter" ? "챕터 전체" : "현재 장면"} ·{" "}
+                  {editorMode === "chapter" ? "대본 전체" : "장면 꾸미기"} ·{" "}
                   {imageView === "text" ? "글만" : "작은 그림"}
                 </small>
               </span>
@@ -3253,7 +3224,7 @@ export function StoryStudio() {
                 className={editorMode === "chapter" ? "active" : ""}
                 onClick={() => setEditorMode("chapter")}
               >
-                <strong>챕터 전체 편집</strong>
+                <strong>대본 전체</strong>
                 <small>대사를 이어 읽으며 써요</small>
               </button>
               <button
@@ -3261,7 +3232,7 @@ export function StoryStudio() {
                 onClick={() => setEditorMode("scene")}
                 disabled={!selectedLine}
               >
-                <strong>현재 장면 편집</strong>
+                <strong>장면 꾸미기</strong>
                 <small>인물과 배경까지 꾸며요</small>
               </button>
             </div>
@@ -3552,7 +3523,7 @@ export function StoryStudio() {
                   <div className="chapter-script-editor">
                     <div className="script-editor-heading">
                       <div>
-                        <strong>챕터 전체 대본</strong>
+                        <strong>대본 전체</strong>
                         <span>글상자를 눌러 바로 수정할 수 있어요.</span>
                       </div>
                       <span>
@@ -3704,39 +3675,42 @@ export function StoryStudio() {
                           )}
                           <div className="scene-card-actions">
                             <button
-                              onClick={() => moveLine(line.id, -1)}
-                              disabled={index === 0}
-                              aria-label={`장면 ${index + 1} 위로 이동`}
-                            >
-                              ↑
-                            </button>
-                            <button
-                              onClick={() => moveLine(line.id, 1)}
-                              disabled={
-                                index === selectedChapterLines.length - 1
-                              }
-                              aria-label={`장면 ${index + 1} 아래로 이동`}
-                            >
-                              ↓
-                            </button>
-                            <button onClick={() => duplicateLine(line.id)}>
-                              복제
-                            </button>
-                            <button
                               className="scene-focus-button"
                               onClick={() => {
                                 setSelectedLineId(line.id);
                                 setEditorMode("scene");
                               }}
                             >
-                              장면 자세히 편집
+                              장면 꾸미기
                             </button>
-                            <button
-                              className="danger-link"
-                              onClick={() => removeLine(line.id)}
-                            >
-                              삭제
-                            </button>
+                            <details className="scene-more-actions">
+                              <summary>더보기</summary>
+                              <div>
+                                <button
+                                  onClick={() => moveLine(line.id, -1)}
+                                  disabled={index === 0}
+                                >
+                                  위로
+                                </button>
+                                <button
+                                  onClick={() => moveLine(line.id, 1)}
+                                  disabled={
+                                    index === selectedChapterLines.length - 1
+                                  }
+                                >
+                                  아래로
+                                </button>
+                                <button onClick={() => duplicateLine(line.id)}>
+                                  복제
+                                </button>
+                                <button
+                                  className="danger-link"
+                                  onClick={() => removeLine(line.id)}
+                                >
+                                  삭제
+                                </button>
+                              </div>
+                            </details>
                           </div>
                         </article>
                       ))}
@@ -4147,7 +4121,7 @@ export function StoryStudio() {
 
                     <div className="scene-focus-actions">
                       <button onClick={() => setEditorMode("chapter")}>
-                        챕터 전체 편집으로
+                        대본 전체로
                       </button>
                       <button onClick={() => addLine("dialogue", true)}>
                         현재 장면 다음에 + 대사
