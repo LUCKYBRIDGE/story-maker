@@ -1,3 +1,5 @@
+import type { CreativeMemo } from "./creative-memos";
+
 export type Chapter = {
   id: string;
   order: number;
@@ -63,6 +65,7 @@ export type StoryProject = {
     label: string;
   };
   planning: StoryPlanning;
+  creativeMemos: CreativeMemo[];
   sheetUrl: string;
   sheetEditable: boolean;
   speakerNames: string[];
@@ -111,6 +114,7 @@ export const DEFAULT_PROJECT: StoryProject = {
     freeNotes:
       "각 챕터는 앞 챕터의 말이나 행동 때문에 다음 일이 생기도록 구성합니다. 처음에는 서로 떨어져 서고, 마지막에는 같은 방향을 바라보게 연출합니다.",
   },
+  creativeMemos: [],
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: ["토끼", "자라"],
@@ -928,6 +932,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
     freeNotes:
       "자라의 첫마디 뒤에는 ‘토끼의 반응 → 자라의 선택이나 시도 → 더 커진 문제 → 두 인물의 관계가 달라지는 결말’ 순서로 생각해 볼 수 있습니다. 이 순서는 자유롭게 바꿔도 됩니다.",
   },
+  creativeMemos: [],
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
@@ -1074,6 +1079,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
     freeNotes:
       "토끼의 첫말 뒤에는 ‘상대의 반응 → 첫 탈출 시도의 결과 → 가장 위험한 순간 → 지혜가 만든 변화’ 순서로 생각해 볼 수 있습니다. 탈출 외에 설득, 협력, 새 치료법 찾기도 가능합니다.",
   },
+  creativeMemos: [],
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: ["토끼", "자라", "어린 자라", "용왕", "의관"],
@@ -1646,6 +1652,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     freeNotes:
       "선택 직후에는 ‘진짜 옹고집의 첫 반응 → 사또의 판결이나 새 조건 → 선택의 결과를 겪는 사건 → 인물의 깨달음 또는 끝까지 변하지 않는 선택 → 가족 관계의 변화’ 순서로 생각해 볼 수 있습니다.",
   },
+  creativeMemos: [],
   sheetUrl: "",
   sheetEditable: false,
   speakerNames: [
@@ -1863,6 +1870,7 @@ export function createBlankProject(): StoryProject {
       openQuestions: "",
       freeNotes: "",
     },
+    creativeMemos: [],
     sheetUrl: "",
     sheetEditable: false,
     speakerNames: [],
@@ -1915,6 +1923,9 @@ export function cloneProject(project: StoryProject): StoryProject {
     openQuestions: cloned.planning?.openQuestions ?? "",
     freeNotes: cloned.planning?.freeNotes ?? "",
   };
+  cloned.creativeMemos = Array.isArray(cloned.creativeMemos)
+    ? cloned.creativeMemos
+    : [];
   const namesFromLines = cloned.lines
     .filter((line) => line.type === "dialogue")
     .map((line) => line.speakerName.trim())

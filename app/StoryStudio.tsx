@@ -25,6 +25,17 @@ import {
   extractSheetId,
   fetchSheetSnapshot,
 } from "./story-sheet";
+import {
+  CREATIVE_MEMO_TEMPLATES,
+  createCreativeMemo,
+  createCreativeMemoField,
+  creativeMemoDisplayTitle,
+  creativeMemoExcerpt,
+  creativeMemoKindLabel,
+  type CreativeMemo,
+  type CreativeMemoFieldSource,
+  type CreativeMemoKind,
+} from "./creative-memos";
 
 type WorkspaceMode = "plan" | "create";
 type PlanningView = "story" | "chapters";
@@ -34,6 +45,28 @@ type AssetView = "all" | "favorites" | "recent";
 type AssetLibraryScope = "recommended" | "all";
 type UpdateMode = "sheet" | "draft" | "excel";
 type CreatorAccess = "none" | "local";
+type MemoSection =
+  | "story"
+  | "structure"
+  | "details"
+  | "creative"
+  | "chapter"
+  | "scene";
+type CreativeMemoScope = Exclude<CreativeMemoKind, "free"> | "free";
+type MemoScope = "all" | "story" | CreativeMemoScope | "chapter" | "scene";
+type MemoWindowSize = "compact" | "large";
+type MemoSearchResult = {
+  id: string;
+  section: MemoSection;
+  scope?: Exclude<MemoScope, "all">;
+  label: string;
+  context: string;
+  content: string;
+  fieldId: string;
+  chapterId?: string;
+  lineId?: string;
+  memoId?: string;
+};
 
 const DRAFT_KEY = "storygame:draft:v1";
 const ACTIVE_KEY = "storygame:active:v1";
@@ -171,6 +204,186 @@ const STORY_STRUCTURE_OPTIONS: Array<{
   },
 ];
 
+function CreativeMemoEditor({
+  memo,
+  onClose,
+  onTitleChange,
+  onFieldChange,
+  onAddField,
+  onMoveField,
+  onDeleteField,
+  onDeleteMemo,
+}: {
+  memo: CreativeMemo;
+  onClose: () => void;
+  onTitleChange: (value: string) => void;
+  onFieldChange: (fieldId: string, value: string) => void;
+  onAddField: (label: string, source: CreativeMemoFieldSource) => void;
+  onMoveField: (fieldId: string, direction: -1 | 1) => void;
+  onDeleteField: (fieldId: string) => void;
+  onDeleteMemo: () => void;
+}) {
+  const [customLabel, setCustomLabel] = useState("");
+  const [addFieldOpen, setAddFieldOpen] = useState(false);
+  const template = CREATIVE_MEMO_TEMPLATES.find(
+    (candidate) => candidate.kind === memo.kind,
+  );
+  const usedLabels = new Set(memo.fields.map((field) => field.label));
+  const recommendedFields =
+    template?.recommendedFields.filter((label) => !usedLabels.has(label)) ?? [];
+
+  return (
+    <section
+      className="creative-memo-editor"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${creativeMemoKindLabel(memo.kind)} 창작 메모 편집`}
+    >
+      <header className="creative-memo-editor-heading">
+        <div>
+          <span>{creativeMemoKindLabel(memo.kind)}</span>
+          <h2>{creativeMemoDisplayTitle(memo)}</h2>
+          <p>모든 항목은 선택 사항이에요. 필요한 만큼만 써도 돼요.</p>
+        </div>
+        <button type="button" onClick={onClose}>
+          닫기
+        </button>
+      </header>
+
+      <div className="creative-memo-editor-body">
+        <label className="field creative-memo-title-field">
+          <span>메모 제목</span>
+          <input
+            value={memo.title}
+            onChange={(event) => onTitleChange(event.target.value)}
+            placeholder={
+              memo.kind === "free"
+                ? "예: 꼭 넣고 싶은 마지막 장면"
+                : "예: 토끼, 바닷가, 첫 번째 갈등"
+            }
+          />
+        </label>
+
+        <div className="creative-memo-fields">
+          {memo.fields.map((field, index) => (
+            <section className="creative-memo-field" key={field.id}>
+              <header>
+                <div>
+                  <strong>{field.label || "이름 없는 항목"}</strong>
+                  {field.source !== "default" && (
+                    <small>
+                      {field.source === "recommended" ? "추천 항목" : "직접 만든 항목"}
+                    </small>
+                  )}
+                </div>
+                {memo.kind !== "free" && (
+                  <div className="creative-memo-field-actions">
+                    <button
+                      type="button"
+                      disabled={index === 0}
+                      onClick={() => onMoveField(field.id, -1)}
+                    >
+                      ↑ 위로 이동
+                    </button>
+                    <button
+                      type="button"
+                      disabled={index === memo.fields.length - 1}
+                      onClick={() => onMoveField(field.id, 1)}
+                    >
+                      ↓ 아래로 이동
+                    </button>
+                    <button
+                      className="danger-text-button"
+                      type="button"
+                      onClick={() => onDeleteField(field.id)}
+                    >
+                      항목 삭제
+                    </button>
+                  </div>
+                )}
+              </header>
+              <textarea
+                id={`creative-memo-field-${memo.id}-${field.id}`}
+                rows={memo.kind === "free" ? 14 : 4}
+                value={field.value}
+                onChange={(event) => onFieldChange(field.id, event.target.value)}
+                placeholder={
+                  memo.kind === "free"
+                    ? "떠오른 대사, 사건, 조사한 내용, 친구와 의논한 생각을 자유롭게 써 보세요."
+                    : `${field.label}에 관해 떠오른 생각을 써 보세요.`
+                }
+              />
+            </section>
+          ))}
+        </div>
+
+        {memo.kind !== "free" && (
+          <section className="creative-memo-add-field">
+            <button
+              className="creative-memo-add-field-toggle"
+              type="button"
+              aria-expanded={addFieldOpen}
+              onClick={() => setAddFieldOpen((open) => !open)}
+            >
+              + 항목 추가
+            </button>
+            {addFieldOpen && <div>
+              {recommendedFields.length > 0 ? (
+                <div className="creative-memo-recommendations">
+                  <span>추천 항목에서 골라요</span>
+                  <div>
+                    {recommendedFields.map((label) => (
+                      <button
+                        type="button"
+                        key={label}
+                        onClick={() => onAddField(label, "recommended")}
+                      >
+                        + {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p>추천 항목을 모두 추가했어요.</p>
+              )}
+              <div className="creative-memo-custom-field">
+                <label htmlFor={`custom-field-${memo.id}`}>
+                  직접 항목 이름 붙이기
+                </label>
+                <div>
+                  <input
+                    id={`custom-field-${memo.id}`}
+                    value={customLabel}
+                    onChange={(event) => setCustomLabel(event.target.value)}
+                    placeholder="예: 이 인물만 아는 비밀"
+                  />
+                  <button
+                    type="button"
+                    disabled={!customLabel.trim()}
+                    onClick={() => {
+                      onAddField(customLabel.trim(), "custom");
+                      setCustomLabel("");
+                    }}
+                  >
+                    이 항목 추가
+                  </button>
+                </div>
+              </div>
+            </div>}
+          </section>
+        )}
+      </div>
+
+      <footer className="creative-memo-editor-footer">
+        <span>쓴 내용은 이 기기에 자동 저장돼요.</span>
+        <button className="danger-text-button" type="button" onClick={onDeleteMemo}>
+          이 메모 삭제
+        </button>
+      </footer>
+    </section>
+  );
+}
+
 function chapterArcLabel(
   chapterIndex: number,
   chapterCount: number,
@@ -190,6 +403,14 @@ function normalizeSearch(value: string) {
     .toLocaleLowerCase("ko")
     .replace(/\.png$/i, "")
     .replace(/[·_\-\s]/g, "");
+}
+
+function memoResultScope(result: MemoSearchResult): Exclude<MemoScope, "all"> {
+  if (result.scope) return result.scope;
+  if (result.section === "chapter" || result.section === "scene") {
+    return result.section;
+  }
+  return "story";
 }
 
 function containsParentheses(value: string) {
@@ -1301,9 +1522,28 @@ export function StoryStudio() {
   const [projectToolsOpen, setProjectToolsOpen] = useState(false);
   const [mobileProjectOpen, setMobileProjectOpen] = useState(false);
   const [mobileEditorToolsOpen, setMobileEditorToolsOpen] = useState(false);
-  const [chapterGuideOpen, setChapterGuideOpen] = useState(false);
+  const [memoPopupOpen, setMemoPopupOpen] = useState(false);
+  const [memoWindowSize, setMemoWindowSize] =
+    useState<MemoWindowSize>("compact");
+  const [memoSearch, setMemoSearch] = useState("");
+  const [memoScope, setMemoScope] = useState<MemoScope>("all");
+  const [creativeMemoCreatorStep, setCreativeMemoCreatorStep] = useState<
+    "choice" | "template" | null
+  >(null);
+  const [selectedCreativeMemoId, setSelectedCreativeMemoId] = useState<
+    string | null
+  >(null);
+  const [memoSectionsOpen, setMemoSectionsOpen] = useState<
+    Record<MemoSection, boolean>
+  >({
+    story: true,
+    structure: false,
+    details: false,
+    creative: true,
+    chapter: true,
+    scene: true,
+  });
   const [chapterResourcesOpen, setChapterResourcesOpen] = useState(false);
-  const [sceneNotesOpen, setSceneNotesOpen] = useState(false);
   const [sceneSettingsOpen, setSceneSettingsOpen] = useState(false);
   const [favoriteAssets, setFavoriteAssets] = useState<string[]>([]);
   const [recentAssets, setRecentAssets] = useState<string[]>([]);
@@ -1374,6 +1614,24 @@ export function StoryStudio() {
     localStorage.setItem(RECENTS_KEY, JSON.stringify(recentAssets));
   }, [recentAssets, hydrated]);
 
+  useEffect(() => {
+    if (!memoPopupOpen) return;
+    function closeMemoPopup(event: KeyboardEvent) {
+      if (event.key === "Escape") setMemoPopupOpen(false);
+    }
+    window.addEventListener("keydown", closeMemoPopup);
+    return () => window.removeEventListener("keydown", closeMemoPopup);
+  }, [memoPopupOpen]);
+
+  useEffect(() => {
+    if (!selectedCreativeMemoId) return;
+    function closeCreativeMemoEditor(event: KeyboardEvent) {
+      if (event.key === "Escape") setSelectedCreativeMemoId(null);
+    }
+    window.addEventListener("keydown", closeCreativeMemoEditor);
+    return () => window.removeEventListener("keydown", closeCreativeMemoEditor);
+  }, [selectedCreativeMemoId]);
+
   const selectedChapter =
     draft.chapters.find((chapter) => chapter.id === selectedChapterId) ??
     draft.chapters[0];
@@ -1394,6 +1652,12 @@ export function StoryStudio() {
   const sortedChapters = draft.chapters
     .slice()
     .sort((a, b) => a.order - b.order);
+  const orderedCreativeMemos = draft.creativeMemos
+    .slice()
+    .sort((a, b) => a.order - b.order);
+  const selectedCreativeMemo = orderedCreativeMemos.find(
+    (memo) => memo.id === selectedCreativeMemoId,
+  );
   const orderedDraftLines = sortedChapters.flatMap((chapter) =>
     draft.lines
       .filter((line) => line.chapterId === chapter.id)
@@ -1410,6 +1674,232 @@ export function StoryStudio() {
     STORY_STRUCTURE_OPTIONS.find(
       (option) => option.mode === draft.planning.structureMode,
     ) ?? STORY_STRUCTURE_OPTIONS[0];
+  const filledMemoCount = [
+    draft.planning.premise,
+    draft.planning.material,
+    draft.planning.theme,
+    draft.planning.mainCharacter,
+    draft.planning.mainGoal,
+    draft.planning.centralProblem,
+    draft.planning.stakes,
+    draft.planning.endingChange,
+    draft.planning.characterNotes,
+    draft.planning.worldNotes,
+    draft.planning.mood,
+    draft.planning.openQuestions,
+    draft.planning.freeNotes,
+    ...selectedStructure.steps.map((step) => draft.planning[step.key]),
+    ...draft.chapters.flatMap((chapter) => [
+      chapter.summary,
+      chapter.purpose,
+      chapter.mood,
+      chapter.keyEvents,
+      chapter.nextChapterIdea,
+    ]),
+    ...draft.lines.flatMap((line) => [
+      line.purposeNote,
+      line.emotionNote,
+      line.directionNote,
+    ]),
+    ...draft.creativeMemos.flatMap((memo) => [
+      memo.title,
+      ...memo.fields.map((field) => field.value),
+    ]),
+  ].filter((value) => value?.trim()).length;
+  const memoSearchResults: MemoSearchResult[] = [
+    {
+      id: "story-premise",
+      section: "story",
+      label: "한 줄 이야기",
+      context: "전체 이야기",
+      content: draft.planning.premise,
+      fieldId: "memo-field-story-premise",
+    },
+    {
+      id: "story-material",
+      section: "story",
+      label: "이야기 소재",
+      context: "전체 이야기",
+      content: draft.planning.material,
+      fieldId: "memo-field-story-material",
+    },
+    {
+      id: "story-theme",
+      section: "story",
+      label: "이야기 주제",
+      context: "전체 이야기",
+      content: draft.planning.theme,
+      fieldId: "memo-field-story-theme",
+    },
+    {
+      id: "story-main-character",
+      section: "story",
+      label: "핵심 인물",
+      context: "전체 이야기",
+      content: draft.planning.mainCharacter,
+      fieldId: "memo-field-story-main-character",
+    },
+    {
+      id: "story-main-goal",
+      section: "story",
+      label: "주인공이 바라는 것",
+      context: "전체 이야기",
+      content: draft.planning.mainGoal,
+      fieldId: "memo-field-story-main-goal",
+    },
+    {
+      id: "story-central-problem",
+      section: "story",
+      label: "주요 갈등",
+      context: "전체 이야기",
+      content: draft.planning.centralProblem,
+      fieldId: "memo-field-story-central-problem",
+    },
+    {
+      id: "story-stakes",
+      section: "story",
+      label: "실패하면 생기는 일",
+      context: "전체 이야기",
+      content: draft.planning.stakes,
+      fieldId: "memo-field-story-stakes",
+    },
+    {
+      id: "story-ending-change",
+      section: "story",
+      label: "마지막에 달라지는 점",
+      context: "전체 이야기",
+      content: draft.planning.endingChange,
+      fieldId: "memo-field-story-ending-change",
+    },
+    ...selectedStructure.steps.map(
+      (step): MemoSearchResult => ({
+        id: `structure-${step.key}`,
+        section: "structure",
+        label: step.label,
+        context: selectedStructure.title,
+        content: draft.planning[step.key],
+        fieldId: `memo-field-structure-${step.key}`,
+      }),
+    ),
+    {
+      id: "details-characters",
+      section: "details",
+      label: "인물 설정",
+      context: "인물·배경·추가 메모",
+      content: draft.planning.characterNotes,
+      fieldId: "memo-field-details-characters",
+    },
+    {
+      id: "details-world",
+      section: "details",
+      label: "배경·세계 설정",
+      context: "인물·배경·추가 메모",
+      content: draft.planning.worldNotes,
+      fieldId: "memo-field-details-world",
+    },
+    {
+      id: "details-mood",
+      section: "details",
+      label: "전체 분위기",
+      context: "인물·배경·추가 메모",
+      content: draft.planning.mood,
+      fieldId: "memo-field-details-mood",
+    },
+    {
+      id: "details-questions",
+      section: "details",
+      label: "아직 정하지 못한 것",
+      context: "인물·배경·추가 메모",
+      content: draft.planning.openQuestions,
+      fieldId: "memo-field-details-questions",
+    },
+    {
+      id: "details-free",
+      section: "details",
+      label: "자유 창작 메모",
+      context: "인물·배경·추가 메모",
+      content: draft.planning.freeNotes,
+      fieldId: "memo-field-details-free",
+    },
+    ...orderedCreativeMemos.flatMap((memo) => {
+      const fields =
+        memo.fields.length > 0
+          ? memo.fields
+          : [
+              {
+                id: "title",
+                label: "메모 제목",
+                value: memo.title,
+              },
+            ];
+      return fields.map(
+        (field): MemoSearchResult => ({
+          id: `creative-${memo.id}-${field.id}`,
+          section: "creative",
+          scope: memo.kind,
+          label: field.label || "이름 없는 항목",
+          context: `${creativeMemoKindLabel(memo.kind)} · ${creativeMemoDisplayTitle(memo)}`,
+          content: field.value,
+          fieldId: `creative-memo-field-${memo.id}-${field.id}`,
+          memoId: memo.id,
+        }),
+      );
+    }),
+    ...sortedChapters.flatMap((chapter) =>
+      [
+        ["summary", "이번 챕터에서 달라지는 일", chapter.summary],
+        ["purpose", "이 챕터의 역할", chapter.purpose],
+        ["mood", "분위기·감정 흐름", chapter.mood],
+        ["keyEvents", "꼭 들어갈 사건", chapter.keyEvents],
+        ["nextChapterIdea", "다음 챕터로 이어질 일", chapter.nextChapterIdea],
+      ].map(
+        ([field, label, content]): MemoSearchResult => ({
+          id: `chapter-${chapter.id}-${field}`,
+          section: "chapter",
+          label,
+          context: `${chapter.order}. ${chapter.title || "제목 없는 챕터"}`,
+          content,
+          fieldId: `memo-field-chapter-${chapter.id}-${field}`,
+          chapterId: chapter.id,
+        }),
+      ),
+    ),
+    ...orderedDraftLines.flatMap((line) => {
+      const chapter = draft.chapters.find(
+        (candidate) => candidate.id === line.chapterId,
+      );
+      const context = `${chapter?.order ?? ""}. ${
+        chapter?.title || "제목 없는 챕터"
+      } · 장면 ${line.order}`;
+      return [
+        ["purposeNote", "이 장면의 역할", line.purposeNote],
+        ["emotionNote", "인물의 감정", line.emotionNote],
+        ["directionNote", "연출 메모", line.directionNote],
+      ].map(
+        ([field, label, content]): MemoSearchResult => ({
+          id: `scene-${line.id}-${field}`,
+          section: "scene",
+          label,
+          context,
+          content,
+          fieldId: `memo-field-scene-${line.id}-${field}`,
+          chapterId: line.chapterId,
+          lineId: line.id,
+        }),
+      );
+    }),
+  ];
+  const normalizedMemoSearch = memoSearch.trim().toLocaleLowerCase("ko-KR");
+  const filteredMemoSearchResults = memoSearchResults.filter((result) => {
+    if (memoScope !== "all" && memoResultScope(result) !== memoScope) {
+      return false;
+    }
+    if (!normalizedMemoSearch) return false;
+    return [result.label, result.context, result.content]
+      .join(" ")
+      .toLocaleLowerCase("ko-KR")
+      .includes(normalizedMemoSearch);
+  });
   const storyChecklist = [
     { label: "이야기 제목", ready: Boolean(draft.title.trim()) },
     {
@@ -1447,6 +1937,139 @@ export function StoryStudio() {
       ...project,
       planning: { ...project.planning, ...changes },
     }));
+  }
+
+  function setMemoSectionOpen(section: MemoSection, open: boolean) {
+    setMemoSectionsOpen((current) =>
+      current[section] === open ? current : { ...current, [section]: open },
+    );
+  }
+
+  function closeAllMemoSections() {
+    setMemoSectionsOpen({
+      story: false,
+      structure: false,
+      details: false,
+      creative: false,
+      chapter: false,
+      scene: false,
+    });
+  }
+
+  function memoScopeAllowsSection(section: MemoSection) {
+    if (memoScope === "all") return true;
+    if (["story", "structure", "details"].includes(section)) {
+      return memoScope === "story";
+    }
+    if (section === "creative") {
+      return ["free", "character", "relationship", "place", "event"].includes(
+        memoScope,
+      );
+    }
+    return memoScope === section;
+  }
+
+  function openVisibleMemoSections() {
+    setMemoSectionsOpen((current) => ({
+      story: memoScopeAllowsSection("story") || current.story,
+      structure: memoScopeAllowsSection("structure") || current.structure,
+      details: memoScopeAllowsSection("details") || current.details,
+      creative: memoScopeAllowsSection("creative") || current.creative,
+      chapter: memoScopeAllowsSection("chapter") || current.chapter,
+      scene: memoScopeAllowsSection("scene") || current.scene,
+    }));
+  }
+
+  function openMemoSearchResult(result: MemoSearchResult) {
+    if (result.memoId) {
+      setSelectedCreativeMemoId(result.memoId);
+    } else if (result.lineId) {
+      const line = draft.lines.find((candidate) => candidate.id === result.lineId);
+      if (line) selectStoryLine(line);
+    } else if (result.chapterId) {
+      selectChapter(result.chapterId);
+    }
+    setMemoScope(memoResultScope(result));
+    setMemoSectionOpen(result.section, true);
+    setMemoSearch("");
+    window.setTimeout(() => {
+      document.getElementById(result.fieldId)?.focus();
+    }, 0);
+  }
+
+  function addCreativeMemo(kind: CreativeMemoKind) {
+    const memo = createCreativeMemo(kind, draft.creativeMemos.length + 1);
+    setDraft((project) => ({
+      ...project,
+      creativeMemos: [...project.creativeMemos, memo],
+    }));
+    setCreativeMemoCreatorStep(null);
+    setSelectedCreativeMemoId(memo.id);
+  }
+
+  function updateCreativeMemo(
+    memoId: string,
+    updater: (memo: CreativeMemo) => CreativeMemo,
+  ) {
+    setDraft((project) => ({
+      ...project,
+      creativeMemos: project.creativeMemos.map((memo) =>
+        memo.id === memoId
+          ? { ...updater(memo), updatedAt: new Date().toISOString() }
+          : memo,
+      ),
+    }));
+  }
+
+  function addCreativeMemoField(
+    memoId: string,
+    label: string,
+    source: CreativeMemoFieldSource,
+  ) {
+    updateCreativeMemo(memoId, (memo) => ({
+      ...memo,
+      fields: [
+        ...memo.fields,
+        createCreativeMemoField(label, source, memo.fields.length + 1),
+      ],
+    }));
+  }
+
+  function moveCreativeMemoField(
+    memoId: string,
+    fieldId: string,
+    direction: -1 | 1,
+  ) {
+    updateCreativeMemo(memoId, (memo) => {
+      const fields = memo.fields.slice().sort((a, b) => a.order - b.order);
+      const index = fields.findIndex((field) => field.id === fieldId);
+      const targetIndex = index + direction;
+      if (index < 0 || targetIndex < 0 || targetIndex >= fields.length) {
+        return memo;
+      }
+      [fields[index], fields[targetIndex]] = [fields[targetIndex], fields[index]];
+      return {
+        ...memo,
+        fields: fields.map((field, fieldIndex) => ({
+          ...field,
+          order: fieldIndex + 1,
+        })),
+      };
+    });
+  }
+
+  function deleteCreativeMemo(memoId: string) {
+    if (!window.confirm("이 창작 메모를 삭제할까요? 삭제하면 되돌릴 수 없어요.")) {
+      return;
+    }
+    setDraft((project) => ({
+      ...project,
+      creativeMemos: project.creativeMemos
+        .filter((memo) => memo.id !== memoId)
+        .map((memo, index) => ({ ...memo, order: index + 1 })),
+    }));
+    setSelectedCreativeMemoId(null);
+    setNotice("창작 메모를 삭제했어요.");
   }
 
   function openChapterPlan(chapterId: string) {
@@ -1629,7 +2252,7 @@ export function StoryStudio() {
     setPlanningView("chapters");
     setSelectedChapterId(id);
     setSelectedLineId("");
-    setChapterGuideOpen(true);
+    setMemoPopupOpen(true);
   }
 
   function removeChapter(chapterId: string) {
@@ -2114,9 +2737,8 @@ export function StoryStudio() {
     setMobileProjectOpen(false);
     setMobileEditorToolsOpen(false);
     setSceneSettingsOpen(false);
-    setChapterGuideOpen(false);
+    setMemoPopupOpen(false);
     setChapterResourcesOpen(false);
-    setSceneNotesOpen(false);
     setCreatorAccess("local");
     setNotice(message);
   }
@@ -2908,6 +3530,134 @@ export function StoryStudio() {
                   </div>
                 </div>
               </details>
+
+              <section className="planning-card creative-memo-library">
+                <div className="creative-memo-library-heading">
+                  <div>
+                    <span className="eyebrow">필요할 때 꺼내 보는 확장 자료</span>
+                    <h2>창작 메모</h2>
+                    <p>
+                      기본 이야기 구성은 그대로 두고, 더 자세히 생각하고 싶은
+                      인물·관계·장소·사건이나 자유로운 생각을 따로 남겨요.
+                    </p>
+                  </div>
+                  <button
+                    className="primary-button"
+                    type="button"
+                    onClick={() =>
+                      setCreativeMemoCreatorStep((current) =>
+                        current ? null : "choice",
+                      )
+                    }
+                  >
+                    + 창작 메모
+                  </button>
+                </div>
+
+                {creativeMemoCreatorStep === "choice" && (
+                  <section className="creative-memo-creator" aria-live="polite">
+                    <header>
+                      <div>
+                        <span>새 메모</span>
+                        <h3>어떤 메모를 만들까요?</h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCreativeMemoCreatorStep(null)}
+                      >
+                        취소
+                      </button>
+                    </header>
+                    <div className="creative-memo-start-options">
+                      <button type="button" onClick={() => addCreativeMemo("free")}>
+                        <strong>자유롭게 쓰기</strong>
+                        <span>빈 종이처럼 원하는 내용을 자유롭게 써요.</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCreativeMemoCreatorStep("template")}
+                      >
+                        <strong>도움 틀로 쓰기</strong>
+                        <span>인물, 관계, 장소, 사건 중 필요한 틀을 골라 써요.</span>
+                      </button>
+                    </div>
+                  </section>
+                )}
+
+                {creativeMemoCreatorStep === "template" && (
+                  <section className="creative-memo-creator" aria-live="polite">
+                    <header>
+                      <div>
+                        <span>도움 틀로 쓰기</span>
+                        <h3>무엇을 더 자세히 생각할까요?</h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCreativeMemoCreatorStep("choice")}
+                      >
+                        이전
+                      </button>
+                    </header>
+                    <div className="creative-memo-template-options">
+                      {CREATIVE_MEMO_TEMPLATES.map((template) => (
+                        <button
+                          type="button"
+                          key={template.kind}
+                          onClick={() => addCreativeMemo(template.kind)}
+                        >
+                          <strong>{template.title}</strong>
+                          <span>{template.description}</span>
+                          <small>처음에는 항목 {template.defaultFields.length}개</small>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {orderedCreativeMemos.length > 0 ? (
+                  <div className="creative-memo-list">
+                    {orderedCreativeMemos.map((memo) => {
+                      const writtenFieldCount = memo.fields.filter((field) =>
+                        field.value.trim(),
+                      ).length;
+                      return (
+                        <article className="creative-memo-card" key={memo.id}>
+                          <div>
+                            <span>{creativeMemoKindLabel(memo.kind)}</span>
+                            <strong>{creativeMemoDisplayTitle(memo)}</strong>
+                            <p>{creativeMemoExcerpt(memo)}</p>
+                          </div>
+                          <footer>
+                            <small>
+                              작성한 항목 {writtenFieldCount}개 · 전체 {memo.fields.length}개
+                            </small>
+                            <div>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedCreativeMemoId(memo.id)}
+                              >
+                                열기
+                              </button>
+                              <button
+                                className="danger-text-button"
+                                type="button"
+                                onClick={() => deleteCreativeMemo(memo.id)}
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          </footer>
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="creative-memo-empty">
+                    <strong>아직 추가한 창작 메모가 없어요.</strong>
+                    <p>필요한 순간에 자유 메모나 도움 틀을 하나씩 더해 보세요.</p>
+                  </div>
+                )}
+              </section>
             </div>
           ) : (
             <div className="chapter-planning-workspace">
@@ -3252,6 +4002,19 @@ export function StoryStudio() {
                 <option value="small">작은 그림 함께 보기</option>
               </select>
             </label>
+            <button
+              className={`memo-popup-toggle ${
+                memoPopupOpen ? "active" : ""
+              }`}
+              aria-haspopup="dialog"
+              aria-expanded={memoPopupOpen}
+              onClick={() => setMemoPopupOpen((current) => !current)}
+            >
+              <strong>창작 메모</strong>
+              <small>
+                {filledMemoCount}개 · {memoPopupOpen ? "닫기" : "찾아보기"}
+              </small>
+            </button>
           </header>
 
           {selectedChapter ? (
@@ -3346,12 +4109,6 @@ export function StoryStudio() {
                   <div>
                     <button
                       className="quiet-button"
-                      onClick={() => setChapterGuideOpen((current) => !current)}
-                    >
-                      구상 메모 {chapterGuideOpen ? "닫기" : "보기"}
-                    </button>
-                    <button
-                      className="quiet-button"
                       onClick={() =>
                         setChapterResourcesOpen((current) => !current)
                       }
@@ -3384,41 +4141,6 @@ export function StoryStudio() {
                     </strong>
                   </div>
                 </section>
-
-                {chapterGuideOpen && (
-                  <section className="chapter-guide-panel">
-                    <div className="story-direction-strip">
-                      <span>전체 이야기 나침반</span>
-                      <strong>
-                        핵심 인물:{" "}
-                        {draft.planning.mainCharacter || "아직 정하지 않음"} ·{" "}
-                        {draft.planning.mainGoal || "바라는 것 미정"} · 주요 갈등:{" "}
-                        {draft.planning.centralProblem || "아직 정하지 않음"} ·
-                        실패하면:{" "}
-                        {draft.planning.stakes || "아직 정하지 않음"}
-                      </strong>
-                    </div>
-                    <div>
-                      <span>이 챕터에서 달라지는 일</span>
-                      <strong>
-                        {selectedChapter.summary || "주요 내용을 적어 보세요."}
-                      </strong>
-                    </div>
-                    <div>
-                      <small>이 챕터의 역할</small>
-                      <p>{selectedChapter.purpose || "아직 메모가 없어요."}</p>
-                    </div>
-                    <div>
-                      <small>꼭 들어갈 사건</small>
-                      <p>{selectedChapter.keyEvents || "아직 메모가 없어요."}</p>
-                    </div>
-                    <button
-                      onClick={() => setWorkspaceMode("plan")}
-                    >
-                      구상 화면에서 수정
-                    </button>
-                  </section>
-                )}
 
                 {chapterResourcesOpen && (
                   <section className="chapter-resource-panel">
@@ -4066,57 +4788,6 @@ export function StoryStudio() {
                         />
                       </section>
 
-                      <section className="scene-notes-card">
-                        <button
-                          className="scene-notes-toggle"
-                          onClick={() => setSceneNotesOpen((current) => !current)}
-                        >
-                          <span>
-                            편집할 때만 보는 장면 메모 · 플레이에는 안 나와요
-                          </span>
-                          <strong>{sceneNotesOpen ? "닫기" : "열기"}</strong>
-                        </button>
-                        {sceneNotesOpen && (
-                          <div className="scene-notes-fields">
-                            <label className="field">
-                              <span>이 장면의 역할</span>
-                              <textarea
-                                rows={3}
-                                value={selectedLine.purposeNote}
-                                onChange={(event) =>
-                                  updateLine(selectedLine.id, {
-                                    purposeNote: event.target.value,
-                                  })
-                                }
-                              />
-                            </label>
-                            <label className="field">
-                              <span>인물의 감정</span>
-                              <textarea
-                                rows={3}
-                                value={selectedLine.emotionNote}
-                                onChange={(event) =>
-                                  updateLine(selectedLine.id, {
-                                    emotionNote: event.target.value,
-                                  })
-                                }
-                              />
-                            </label>
-                            <label className="field">
-                              <span>연출 메모</span>
-                              <textarea
-                                rows={3}
-                                value={selectedLine.directionNote}
-                                onChange={(event) =>
-                                  updateLine(selectedLine.id, {
-                                    directionNote: event.target.value,
-                                  })
-                                }
-                              />
-                            </label>
-                          </div>
-                        )}
-                      </section>
                     </div>
 
                     <div className="scene-focus-actions">
@@ -4152,6 +4823,576 @@ export function StoryStudio() {
                   </div>
                 )}
               </section>
+              {memoPopupOpen && (
+                <aside
+                  className={`memo-popup ${memoWindowSize}`}
+                  role="dialog"
+                  aria-modal="false"
+                  aria-label="창작 메모 찾기와 편집"
+                >
+                  <header className="memo-popup-heading">
+                    <div>
+                      <span className="eyebrow">플레이에는 보이지 않아요</span>
+                      <h2>창작 메모</h2>
+                      <p>{currentLocation}</p>
+                    </div>
+                    <div className="memo-popup-heading-actions">
+                      <button
+                        className="memo-popup-size"
+                        onClick={() =>
+                          setMemoWindowSize((current) =>
+                            current === "compact" ? "large" : "compact",
+                          )
+                        }
+                      >
+                        {memoWindowSize === "compact"
+                          ? "크게 보기"
+                          : "작게 보기"}
+                      </button>
+                      <button
+                        className="memo-popup-close"
+                        onClick={() => setMemoPopupOpen(false)}
+                        aria-label="창작 메모 닫기"
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </header>
+
+                  <div className="memo-finder">
+                    <div className="memo-search-box">
+                      <label htmlFor="memo-search-input">메모 찾기</label>
+                      <div>
+                        <input
+                          id="memo-search-input"
+                          type="search"
+                          value={memoSearch}
+                          onChange={(event) => setMemoSearch(event.target.value)}
+                          placeholder="예: 갈등, 토끼, 다음 챕터"
+                        />
+                        {memoSearch && (
+                          <button
+                            onClick={() => setMemoSearch("")}
+                            aria-label="메모 검색어 지우기"
+                          >
+                            지우기
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="memo-scope-filter" aria-label="메모 범위">
+                      {(
+                        [
+                          ["all", "전체"],
+                          ["story", "이야기 구성"],
+                          ["character", "인물"],
+                          ["relationship", "관계"],
+                          ["place", "장소·세계"],
+                          ["event", "사건·갈등"],
+                          ["free", "자유 메모"],
+                          ["chapter", "챕터"],
+                          ["scene", "장면"],
+                        ] as [MemoScope, string][]
+                      ).map(([scope, label]) => (
+                        <button
+                          key={scope}
+                          className={memoScope === scope ? "active" : ""}
+                          aria-pressed={memoScope === scope}
+                          onClick={() => setMemoScope(scope)}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <small className="memo-finder-hint">
+                      검색하면 작품의 모든 챕터와 장면에서 찾아요.
+                    </small>
+                  </div>
+
+                  {normalizedMemoSearch ? (
+                    <section className="memo-search-results" aria-live="polite">
+                      <header>
+                        <strong>
+                          검색 결과 {filteredMemoSearchResults.length}개
+                        </strong>
+                        <small>
+                          원하는 기록을 누르면 그 메모로 바로 이동해요.
+                        </small>
+                      </header>
+                      {filteredMemoSearchResults.length > 0 ? (
+                        <div className="memo-result-list">
+                          {filteredMemoSearchResults.map((result) => (
+                            <button
+                              key={result.id}
+                              onClick={() => openMemoSearchResult(result)}
+                            >
+                              <span>{result.context}</span>
+                              <strong>{result.label}</strong>
+                              <small>
+                                {result.content.trim() ||
+                                  "아직 작성하지 않은 메모예요."}
+                              </small>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="memo-search-empty">
+                          <strong>맞는 메모를 찾지 못했어요.</strong>
+                          <p>검색어를 줄이거나 다른 범위를 선택해 보세요.</p>
+                        </div>
+                      )}
+                    </section>
+                  ) : (
+                    <>
+                      <div className="memo-popup-guide">
+                        <span>
+                          원하는 묶음을 펼쳐 글과 비교하고 바로 수정하세요.
+                        </span>
+                        <div>
+                          <button onClick={openVisibleMemoSections}>
+                            모두 펼치기
+                          </button>
+                          <button onClick={closeAllMemoSections}>
+                            모두 접기
+                          </button>
+                        </div>
+                      </div>
+
+                  {memoScopeAllowsSection("story") && (
+                    <details
+                    className="memo-section"
+                    open={memoSectionsOpen.story}
+                    onToggle={(event) =>
+                      setMemoSectionOpen("story", event.currentTarget.open)
+                    }
+                  >
+                    <summary>
+                      <span>
+                        <b>전체 이야기</b>
+                        <small>소재·주제·인물·갈등</small>
+                      </span>
+                      <strong>{memoSectionsOpen.story ? "접기" : "펼치기"}</strong>
+                    </summary>
+                    <div className="memo-fields">
+                      <label className="field">
+                        <span>한 줄 이야기</span>
+                        <textarea
+                          id="memo-field-story-premise"
+                          rows={3}
+                          value={draft.planning.premise}
+                          onChange={(event) =>
+                            updatePlanning({ premise: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>이야기 소재</span>
+                        <textarea
+                          id="memo-field-story-material"
+                          rows={2}
+                          value={draft.planning.material}
+                          onChange={(event) =>
+                            updatePlanning({ material: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>이야기 주제</span>
+                        <textarea
+                          id="memo-field-story-theme"
+                          rows={2}
+                          value={draft.planning.theme}
+                          onChange={(event) =>
+                            updatePlanning({ theme: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>핵심 인물</span>
+                        <textarea
+                          id="memo-field-story-main-character"
+                          rows={2}
+                          value={draft.planning.mainCharacter}
+                          onChange={(event) =>
+                            updatePlanning({
+                              mainCharacter: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>주인공이 바라는 것</span>
+                        <textarea
+                          id="memo-field-story-main-goal"
+                          rows={3}
+                          value={draft.planning.mainGoal}
+                          onChange={(event) =>
+                            updatePlanning({ mainGoal: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>주요 갈등</span>
+                        <textarea
+                          id="memo-field-story-central-problem"
+                          rows={3}
+                          value={draft.planning.centralProblem}
+                          onChange={(event) =>
+                            updatePlanning({
+                              centralProblem: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>실패하면 생기는 일</span>
+                        <textarea
+                          id="memo-field-story-stakes"
+                          rows={3}
+                          value={draft.planning.stakes}
+                          onChange={(event) =>
+                            updatePlanning({ stakes: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>마지막에 달라지는 점</span>
+                        <textarea
+                          id="memo-field-story-ending-change"
+                          rows={3}
+                          value={draft.planning.endingChange}
+                          onChange={(event) =>
+                            updatePlanning({
+                              endingChange: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
+                    </details>
+                  )}
+
+                  {memoScopeAllowsSection("structure") && (
+                    <details
+                    className="memo-section"
+                    open={memoSectionsOpen.structure}
+                    onToggle={(event) =>
+                      setMemoSectionOpen("structure", event.currentTarget.open)
+                    }
+                  >
+                    <summary>
+                      <span>
+                        <b>이야기 뼈대</b>
+                        <small>{selectedStructure.title}</small>
+                      </span>
+                      <strong>
+                        {memoSectionsOpen.structure ? "접기" : "펼치기"}
+                      </strong>
+                    </summary>
+                    <div className="memo-fields">
+                      {selectedStructure.steps.map((step) => (
+                        <label className="field" key={step.key}>
+                          <span>{step.label}</span>
+                          <small>{step.guide}</small>
+                          <textarea
+                            id={`memo-field-structure-${step.key}`}
+                            rows={3}
+                            value={draft.planning[step.key]}
+                            onChange={(event) =>
+                              updatePlanning({
+                                [step.key]: event.target.value,
+                              } as Partial<StoryProject["planning"]>)
+                            }
+                          />
+                        </label>
+                      ))}
+                    </div>
+                    </details>
+                  )}
+
+                  {memoScopeAllowsSection("details") && (
+                    <details
+                    className="memo-section"
+                    open={memoSectionsOpen.details}
+                    onToggle={(event) =>
+                      setMemoSectionOpen("details", event.currentTarget.open)
+                    }
+                  >
+                    <summary>
+                      <span>
+                        <b>인물·배경·추가 메모</b>
+                        <small>세부 설정과 남겨 둘 생각</small>
+                      </span>
+                      <strong>
+                        {memoSectionsOpen.details ? "접기" : "펼치기"}
+                      </strong>
+                    </summary>
+                    <div className="memo-fields">
+                      <label className="field">
+                        <span>인물 설정</span>
+                        <textarea
+                          id="memo-field-details-characters"
+                          rows={5}
+                          value={draft.planning.characterNotes}
+                          onChange={(event) =>
+                            updatePlanning({
+                              characterNotes: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>배경·세계 설정</span>
+                        <textarea
+                          id="memo-field-details-world"
+                          rows={5}
+                          value={draft.planning.worldNotes}
+                          onChange={(event) =>
+                            updatePlanning({ worldNotes: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>전체 분위기</span>
+                        <textarea
+                          id="memo-field-details-mood"
+                          rows={3}
+                          value={draft.planning.mood}
+                          onChange={(event) =>
+                            updatePlanning({ mood: event.target.value })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>아직 정하지 못한 것</span>
+                        <textarea
+                          id="memo-field-details-questions"
+                          rows={4}
+                          value={draft.planning.openQuestions}
+                          onChange={(event) =>
+                            updatePlanning({
+                              openQuestions: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>자유 창작 메모</span>
+                        <textarea
+                          id="memo-field-details-free"
+                          rows={4}
+                          value={draft.planning.freeNotes}
+                          onChange={(event) =>
+                            updatePlanning({ freeNotes: event.target.value })
+                          }
+                        />
+                      </label>
+                    </div>
+                    </details>
+                  )}
+
+                  {memoScopeAllowsSection("creative") && (
+                    <details
+                      className="memo-section creative"
+                      open={memoSectionsOpen.creative}
+                      onToggle={(event) =>
+                        setMemoSectionOpen("creative", event.currentTarget.open)
+                      }
+                    >
+                      <summary>
+                        <span>
+                          <b>추가한 창작 메모</b>
+                          <small>자유 메모와 도움 틀 메모</small>
+                        </span>
+                        <strong>
+                          {memoSectionsOpen.creative ? "접기" : "펼치기"}
+                        </strong>
+                      </summary>
+                      <div className="memo-creative-list">
+                        {orderedCreativeMemos
+                          .filter(
+                            (memo) =>
+                              memoScope === "all" || memo.kind === memoScope,
+                          )
+                          .map((memo) => (
+                            <button
+                              type="button"
+                              key={memo.id}
+                              onClick={() => setSelectedCreativeMemoId(memo.id)}
+                            >
+                              <span>{creativeMemoKindLabel(memo.kind)}</span>
+                              <strong>{creativeMemoDisplayTitle(memo)}</strong>
+                              <small>{creativeMemoExcerpt(memo)}</small>
+                            </button>
+                          ))}
+                        {orderedCreativeMemos.filter(
+                          (memo) => memoScope === "all" || memo.kind === memoScope,
+                        ).length === 0 && (
+                          <p>이 범위에 만든 창작 메모가 아직 없어요.</p>
+                        )}
+                      </div>
+                    </details>
+                  )}
+
+                  {memoScopeAllowsSection("chapter") && (
+                    <details
+                    className="memo-section current"
+                    open={memoSectionsOpen.chapter}
+                    onToggle={(event) =>
+                      setMemoSectionOpen("chapter", event.currentTarget.open)
+                    }
+                  >
+                    <summary>
+                      <span>
+                        <b>현재 챕터</b>
+                        <small>
+                          {selectedChapter.order}.{" "}
+                          {selectedChapter.title || "제목 없음"}
+                        </small>
+                      </span>
+                      <strong>
+                        {memoSectionsOpen.chapter ? "접기" : "펼치기"}
+                      </strong>
+                    </summary>
+                    <div className="memo-fields">
+                      <label className="field">
+                        <span>이번 챕터에서 달라지는 일</span>
+                        <textarea
+                          id={`memo-field-chapter-${selectedChapter.id}-summary`}
+                          rows={3}
+                          value={selectedChapter.summary}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              summary: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>이 챕터의 역할</span>
+                        <textarea
+                          id={`memo-field-chapter-${selectedChapter.id}-purpose`}
+                          rows={3}
+                          value={selectedChapter.purpose}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              purpose: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>분위기·감정 흐름</span>
+                        <textarea
+                          id={`memo-field-chapter-${selectedChapter.id}-mood`}
+                          rows={3}
+                          value={selectedChapter.mood}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              mood: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>꼭 들어갈 사건</span>
+                        <textarea
+                          id={`memo-field-chapter-${selectedChapter.id}-keyEvents`}
+                          rows={4}
+                          value={selectedChapter.keyEvents}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              keyEvents: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        <span>다음 챕터로 이어질 일</span>
+                        <textarea
+                          id={`memo-field-chapter-${selectedChapter.id}-nextChapterIdea`}
+                          rows={3}
+                          value={selectedChapter.nextChapterIdea}
+                          onChange={(event) =>
+                            updateChapter(selectedChapter.id, {
+                              nextChapterIdea: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
+                    </details>
+                  )}
+
+                  {selectedLine && memoScopeAllowsSection("scene") && (
+                    <details
+                      className="memo-section current"
+                      open={memoSectionsOpen.scene}
+                      onToggle={(event) =>
+                        setMemoSectionOpen("scene", event.currentTarget.open)
+                      }
+                    >
+                      <summary>
+                        <span>
+                          <b>현재 장면</b>
+                          <small>
+                            장면 {selectedLineIndex + 1} ·{" "}
+                            {selectedLine.type === "narration"
+                              ? "해설"
+                              : selectedLine.speakerName || "화자 없음"}
+                          </small>
+                        </span>
+                        <strong>
+                          {memoSectionsOpen.scene ? "접기" : "펼치기"}
+                        </strong>
+                      </summary>
+                      <div className="memo-fields">
+                        <label className="field">
+                          <span>이 장면의 역할</span>
+                          <textarea
+                            id={`memo-field-scene-${selectedLine.id}-purposeNote`}
+                            rows={3}
+                            value={selectedLine.purposeNote}
+                            onChange={(event) =>
+                              updateLine(selectedLine.id, {
+                                purposeNote: event.target.value,
+                              })
+                            }
+                          />
+                        </label>
+                        <label className="field">
+                          <span>인물의 감정</span>
+                          <textarea
+                            id={`memo-field-scene-${selectedLine.id}-emotionNote`}
+                            rows={3}
+                            value={selectedLine.emotionNote}
+                            onChange={(event) =>
+                              updateLine(selectedLine.id, {
+                                emotionNote: event.target.value,
+                              })
+                            }
+                          />
+                        </label>
+                        <label className="field">
+                          <span>연출 메모</span>
+                          <textarea
+                            id={`memo-field-scene-${selectedLine.id}-directionNote`}
+                            rows={3}
+                            value={selectedLine.directionNote}
+                            onChange={(event) =>
+                              updateLine(selectedLine.id, {
+                                directionNote: event.target.value,
+                              })
+                            }
+                          />
+                        </label>
+                      </div>
+                    </details>
+                    )}
+                    </>
+                  )}
+                </aside>
+              )}
             </div>
           ) : (
             <section className="empty-creator-state no-chapter">
@@ -4219,6 +5460,51 @@ export function StoryStudio() {
           </section>
         </div>
       )}
+
+      {hydrated &&
+        selectedCreativeMemo &&
+        createPortal(
+          <div className="creative-memo-editor-overlay" role="presentation">
+            <CreativeMemoEditor
+              memo={selectedCreativeMemo}
+              onClose={() => setSelectedCreativeMemoId(null)}
+              onTitleChange={(value) =>
+                updateCreativeMemo(selectedCreativeMemo.id, (memo) => ({
+                  ...memo,
+                  title: value,
+                }))
+              }
+              onFieldChange={(fieldId, value) =>
+                updateCreativeMemo(selectedCreativeMemo.id, (memo) => ({
+                  ...memo,
+                  fields: memo.fields.map((field) =>
+                    field.id === fieldId ? { ...field, value } : field,
+                  ),
+                }))
+              }
+              onAddField={(label, source) =>
+                addCreativeMemoField(selectedCreativeMemo.id, label, source)
+              }
+              onMoveField={(fieldId, direction) =>
+                moveCreativeMemoField(
+                  selectedCreativeMemo.id,
+                  fieldId,
+                  direction,
+                )
+              }
+              onDeleteField={(fieldId) =>
+                updateCreativeMemo(selectedCreativeMemo.id, (memo) => ({
+                  ...memo,
+                  fields: memo.fields
+                    .filter((field) => field.id !== fieldId)
+                    .map((field, index) => ({ ...field, order: index + 1 })),
+                }))
+              }
+              onDeleteMemo={() => deleteCreativeMemo(selectedCreativeMemo.id)}
+            />
+          </div>,
+          document.body,
+        )}
 
       {busy && (
         <div className="update-overlay" role="dialog" aria-modal="true">

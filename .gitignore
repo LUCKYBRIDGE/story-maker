@@ -41,3 +41,8 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+.env
+.env.local
+node_modules
+dist
+coverage

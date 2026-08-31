@@ -72,6 +72,7 @@ test("공식 Excel 양식은 웹과 같은 이야기 순서와 네 구성 묶음
       "챕터 자료",
       "화자",
       "장면",
+      "창작 메모",
       "리소스",
     ],
   );
@@ -91,6 +92,52 @@ test("공식 Excel 양식은 웹과 같은 이야기 순서와 네 구성 묶음
     '"5단계,4단계,3단계"',
   ]);
   assert.equal(workbook.getWorksheet("리소스")?.rowCount, 109);
+  const creativeMemos = workbook.getWorksheet("창작 메모");
+  assert.ok(creativeMemos);
+  assert.deepEqual(
+    creativeMemos.getRow(1).values.slice(1),
+    [
+      "메모 ID",
+      "메모 종류",
+      "메모 제목",
+      "연결 챕터 ID",
+      "연결 장면 ID",
+      "항목 ID",
+      "항목 이름",
+      "내용",
+      "항목 종류",
+      "메모 순서",
+      "항목 순서",
+    ],
+  );
+});
+
+test("이전 저장본과 새 창작 메모 데이터는 빈 배열로 안전하게 호환된다", () => {
+  const projectRoot = fileURLToPath(new URL("../", import.meta.url));
+  const output = execFileSync(
+    process.execPath,
+    [
+      "--disable-warning=ExperimentalWarning",
+      "--experimental-strip-types",
+      "--input-type=module",
+      "-e",
+      `
+        const { cloneProject, createBlankProject, DEFAULT_PROJECT } = await import("./app/story-data.ts");
+        const legacy = structuredClone(DEFAULT_PROJECT);
+        delete legacy.creativeMemos;
+        console.log(JSON.stringify({
+          legacy: cloneProject(legacy).creativeMemos,
+          blank: createBlankProject().creativeMemos,
+          example: DEFAULT_PROJECT.creativeMemos,
+        }));
+      `,
+    ],
+    { cwd: projectRoot, encoding: "utf8" },
+  );
+  const result = JSON.parse(output);
+  assert.deepEqual(result.legacy, []);
+  assert.deepEqual(result.blank, []);
+  assert.deepEqual(result.example, []);
 });
 
 test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름을 제공한다", () => {
@@ -186,16 +233,19 @@ test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름
 });
 
 test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된다", async () => {
-  const [studio, globals, storyData, storyAssets, workbook] = await Promise.all([
+  const [studio, globals, storyData, storyAssets, workbook, sheet, creativeMemo] = await Promise.all([
     readFile(new URL("../app/StoryStudio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/story-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/story-assets.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/story-workbook.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/story-sheet.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/creative-memos.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(storyData, /speakerNames:\s*string\[\]/);
   assert.match(storyData, /planning:\s*StoryPlanning/);
+  assert.match(storyData, /creativeMemos:\s*CreativeMemo\[\]/);
   assert.match(storyData, /structureMode:\s*"five"\s*\|\s*"four"\s*\|\s*"three"/);
   assert.match(storyData, /material:\s*string/);
   assert.match(storyData, /mainCharacter:\s*string/);
@@ -241,6 +291,42 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /파일·복구/);
   assert.match(studio, /인물·배경·추가 메모/);
   assert.match(studio, /scene-more-actions/);
+  assert.match(studio, /창작 메모/);
+  assert.match(studio, /\+ 창작 메모/);
+  assert.match(studio, /어떤 메모를 만들까요/);
+  assert.match(studio, /자유롭게 쓰기/);
+  assert.match(studio, /도움 틀로 쓰기/);
+  assert.match(creativeMemo, /인물 알아보기/);
+  assert.match(creativeMemo, /인물 관계/);
+  assert.match(creativeMemo, /장소·세계/);
+  assert.match(creativeMemo, /사건·갈등/);
+  assert.match(studio, /\+ 항목 추가/);
+  assert.match(studio, /직접 항목 이름 붙이기/);
+  assert.match(studio, /위로 이동/);
+  assert.match(studio, /아래로 이동/);
+  assert.match(studio, /메모를 삭제할까요/);
+  assert.match(studio, /memoSectionsOpen/);
+  assert.match(studio, /closeAllMemoSections/);
+  assert.match(studio, /memo-popup/);
+  assert.match(studio, /메모 찾기/);
+  assert.match(studio, /filteredMemoSearchResults/);
+  assert.match(studio, /openMemoSearchResult/);
+  assert.match(studio, /sortedChapters\.flatMap/);
+  assert.match(studio, /orderedDraftLines\.flatMap/);
+  assert.match(studio, /크게 보기/);
+  assert.match(studio, /작게 보기/);
+  assert.match(studio, /원하는 묶음을 펼쳐 글과 비교하고 바로 수정하세요/);
+  assert.match(studio, /전체 이야기/);
+  assert.match(studio, /이야기 뼈대/);
+  assert.match(studio, /현재 챕터/);
+  assert.match(studio, /현재 장면/);
+  assert.match(globals, /\.memo-popup\.large/);
+  assert.match(globals, /\.memo-search-results/);
+  assert.match(globals, /\.memo-section\.current/);
+  assert.match(globals, /\.creative-memo-list/);
+  assert.match(globals, /\.creative-memo-editor/);
+  assert.doesNotMatch(studio, /memo-drawer/);
+  assert.doesNotMatch(studio, /chapter-guide-panel|scene-notes-card/);
   assert.doesNotMatch(studio, /<strong>스토리 구상<\/strong>/);
   assert.doesNotMatch(studio, /<strong>이야기 만들기<\/strong>/);
   assert.match(globals, /\.chapter-context-strip/);
@@ -379,6 +465,15 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     /selectionTier:\s*"기본 추천"\s*\|\s*"추가 자료"/,
   );
   assert.match(workbook, /downloadStoryWorkbook/);
+  assert.match(workbook, /"창작 메모"/);
+  assert.match(workbook, /"메모 ID"/);
+  assert.match(workbook, /"항목 이름"/);
+  assert.match(workbook, /"항목 종류"/);
+  assert.match(sheet, /creativeMemos/);
+  assert.match(sheet, /fetchSheetTab\(sheetId, "창작 메모"/);
+  assert.match(creativeMemo, /CreativeMemoKind/);
+  assert.match(creativeMemo, /과거의 중요한 일/);
+  assert.doesNotMatch(studio, /자유 규격|웹 지원 규격|셀 추가/);
   assert.match(
     workbook,
     /대사에서 속마음·표정·행동은 학생이 직접 괄호 안에 쓰세요/,

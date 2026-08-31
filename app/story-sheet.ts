@@ -6,6 +6,12 @@ import {
   type StoryProject,
 } from "./story-data";
 import type { StorySheetSnapshot } from "./story-workbook";
+import {
+  creativeMemoKindFromLabel,
+  creativeMemoSourceFromLabel,
+  normalizeCreativeMemos,
+  type CreativeMemo,
+} from "./creative-memos";
 
 type CsvRow = Record<string, string>;
 
@@ -175,7 +181,20 @@ export async function fetchSheetSnapshot(
   } catch {
     lines = await fetchSheetTab(sheetId, "대사", signal);
   }
-  return { project, speakers, chapters, chapterResources, lines };
+  let creativeMemos = "";
+  try {
+    creativeMemos = await fetchSheetTab(sheetId, "창작 메모", signal);
+  } catch {
+    // 이전 양식에는 창작 메모 탭이 없습니다.
+  }
+  return {
+    project,
+    speakers,
+    chapters,
+    chapterResources,
+    lines,
+    creativeMemos,
+  };
 }
 
 export function buildProjectFromSheet(
@@ -189,6 +208,9 @@ export function buildProjectFromSheet(
     snapshot.chapterResources ?? "",
   ).filter(isEnabled);
   const lineRows = parseCsv(snapshot.lines).filter(isEnabled);
+  const creativeMemoRows = parseCsv(snapshot.creativeMemos ?? "").filter(
+    isEnabled,
+  );
   const projectRow = projectRows[0] ?? {};
   const problems: string[] = [];
   const chapterResourcesById = new Map(
@@ -418,6 +440,47 @@ export function buildProjectFromSheet(
     ]),
   ).filter(Boolean);
 
+  const creativeMemoGroups = new Map<string, CreativeMemo>();
+  creativeMemoRows.forEach((row, index) => {
+    const memoId = getValue(row, "메모 ID", "memo_id") || `memo-${index + 1}`;
+    const memoOrder = Number(getValue(row, "메모 순서", "memo_order"));
+    const fieldOrder = Number(getValue(row, "항목 순서", "field_order"));
+    const existing = creativeMemoGroups.get(memoId);
+    const now = new Date().toISOString();
+    const memo =
+      existing ??
+      ({
+        id: memoId,
+        kind: creativeMemoKindFromLabel(
+          getValue(row, "메모 종류", "memo_kind"),
+        ),
+        title: getValue(row, "메모 제목", "memo_title"),
+        linkedChapterId:
+          getValue(row, "연결 챕터 ID", "linked_chapter_id") || undefined,
+        linkedLineId:
+          getValue(row, "연결 장면 ID", "linked_line_id") || undefined,
+        fields: [],
+        order: memoOrder || creativeMemoGroups.size + 1,
+        createdAt: now,
+        updatedAt: now,
+      } satisfies CreativeMemo);
+    memo.fields.push({
+      id:
+        getValue(row, "항목 ID", "field_id") ||
+        `${memoId}-field-${memo.fields.length + 1}`,
+      label: getValue(row, "항목 이름", "field_label"),
+      value: getValue(row, "내용", "value"),
+      source: creativeMemoSourceFromLabel(
+        getValue(row, "항목 종류", "field_source"),
+      ),
+      order: fieldOrder || memo.fields.length + 1,
+    });
+    creativeMemoGroups.set(memoId, memo);
+  });
+  const creativeMemos = normalizeCreativeMemos(
+    Array.from(creativeMemoGroups.values()),
+  );
+
   return cloneProject({
     id: extractSheetId(sheetUrl)
       ? `sheet-${extractSheetId(sheetUrl)}`
@@ -483,6 +546,7 @@ export function buildProjectFromSheet(
       ),
       freeNotes: getValue(projectRow, "자유 창작 메모", "free_notes"),
     },
+    creativeMemos,
     sheetUrl,
     sheetEditable: false,
     speakerNames,

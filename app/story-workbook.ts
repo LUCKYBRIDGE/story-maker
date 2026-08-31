@@ -1,6 +1,10 @@
 import ExcelJS, { type CellValue, type Worksheet } from "exceljs";
 import type { StoryAsset } from "./story-assets";
 import type { StoryProject } from "./story-data";
+import {
+  creativeMemoKindLabel,
+  creativeMemoSourceLabel,
+} from "./creative-memos";
 
 export type StorySheetSnapshot = {
   project: string;
@@ -8,6 +12,7 @@ export type StorySheetSnapshot = {
   chapters: string;
   chapterResources?: string;
   lines: string;
+  creativeMemos?: string;
 };
 
 function cellText(value: CellValue) {
@@ -64,6 +69,7 @@ export async function readStoryWorkbook(file: File): Promise<StorySheetSnapshot>
     chapters: worksheetToCsv(chaptersSheet),
     chapterResources: worksheetToCsv(workbook.getWorksheet("챕터 자료")),
     lines: worksheetToCsv(linesSheet),
+    creativeMemos: worksheetToCsv(workbook.getWorksheet("창작 메모")),
   };
 }
 
@@ -134,7 +140,7 @@ function safeFileName(title: string) {
   );
 }
 
-export async function downloadStoryWorkbook(
+export function createStoryWorkbook(
   project: StoryProject,
   assets: StoryAsset[],
 ) {
@@ -160,6 +166,7 @@ export async function downloadStoryWorkbook(
       [11, "이미지는 ‘리소스’ 탭의 이미지 이름을 그대로 적으세요."],
       [12, "학생 이름, 학교명, 연락처 같은 개인정보는 입력하지 마세요."],
       [13, "기본 제공 이미지 © 놀퀴즈 · 이 스토리게임 작품 제작에 사용 가능"],
+      [14, "‘창작 메모’에서는 메모 한 항목을 한 행에 적어요. 빈 항목도 그대로 다시 불러올 수 있어요."],
     ],
     [10, 78],
     { autoFilter: false },
@@ -360,6 +367,57 @@ export async function downloadStoryWorkbook(
 
   addSheet(
     workbook,
+    "창작 메모",
+    [
+      [
+        "메모 ID",
+        "메모 종류",
+        "메모 제목",
+        "연결 챕터 ID",
+        "연결 장면 ID",
+        "항목 ID",
+        "항목 이름",
+        "내용",
+        "항목 종류",
+        "메모 순서",
+        "항목 순서",
+      ],
+      ...project.creativeMemos
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .flatMap((memo) => {
+          const fields =
+            memo.fields.length > 0
+              ? memo.fields.slice().sort((a, b) => a.order - b.order)
+              : [
+                  {
+                    id: `${memo.id}-field-1`,
+                    label: memo.kind === "free" ? "내용" : "",
+                    value: "",
+                    source: "default" as const,
+                    order: 1,
+                  },
+                ];
+          return fields.map((field) => [
+            memo.id,
+            creativeMemoKindLabel(memo.kind),
+            memo.title,
+            memo.linkedChapterId ?? "",
+            memo.linkedLineId ?? "",
+            field.id,
+            field.label,
+            field.value,
+            creativeMemoSourceLabel(field.source),
+            memo.order,
+            field.order,
+          ]);
+        }),
+    ],
+    [24, 16, 34, 24, 24, 28, 28, 68, 16, 12, 12],
+  );
+
+  addSheet(
+    workbook,
     "리소스",
     [
       [
@@ -386,6 +444,14 @@ export async function downloadStoryWorkbook(
     [46, 34, 18, 12, 24, 30, 48, 18],
   );
 
+  return workbook;
+}
+
+export async function downloadStoryWorkbook(
+  project: StoryProject,
+  assets: StoryAsset[],
+) {
+  const workbook = createStoryWorkbook(project, assets);
   const data = await workbook.xlsx.writeBuffer();
   const blob = new Blob([data], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
