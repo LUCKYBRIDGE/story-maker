@@ -1,5 +1,5 @@
-import { StoryStudio } from "./StoryStudio";
+import { StoryStudioWithAssetTaxonomy } from "./StoryStudioWithAssetTaxonomy";
 
 export default function Home() {
-  return <StoryStudio />;
+  return <StoryStudioWithAssetTaxonomy />;
 }
