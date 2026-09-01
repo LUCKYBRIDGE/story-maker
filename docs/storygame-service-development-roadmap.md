@@ -2,7 +2,7 @@
 
 - 문서 성격: 현재 구현을 기준으로 한 제품·국어교육·UX·기술 통합 분석과 실행 로드맵
 - 기준일: 2026-08-23
-- 기준 프로젝트: `/Volumes/WAN2/apps/storygame`
+- 기준 프로젝트: `/Volumes/WAN2/apps/story-maker`
 - 현재 기준 문서: `docs/storygame-detailed-design.md`
 - 실행 계획: `docs/storygame-completion-execution-plan.md`
 - 독자: 제품 책임자, 개발자, UI 디자이너, 국어 교사, 콘텐츠 작가·편집자

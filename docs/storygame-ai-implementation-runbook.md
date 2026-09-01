@@ -37,7 +37,7 @@
 
 순서를 바꾸지 않는다.
 
-1. `/Volumes/WAN2/apps/storygame`이 존재하는지 확인한다. 없으면 즉시 중단한다.
+1. `/Volumes/WAN2/apps/story-maker`가 존재하는지 확인한다. 없으면 즉시 중단한다.
 2. 저장소 루트, 브랜치, 원격 저장소, `git status`를 확인한다.
 3. `AGENTS.md`를 처음부터 끝까지 읽는다.
 4. `docs/storygame-development-status.md`를 읽고 유일한 `READY` 작업을 찾는다.

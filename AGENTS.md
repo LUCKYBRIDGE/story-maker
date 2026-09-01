@@ -1,7 +1,7 @@
 # AGENTS.md — storygame 개발 운영 헌장
 
 > Project: `storygame`
-> Canonical Location: `/Volumes/WAN2/apps/storygame`
+> Canonical Location: `/Volumes/WAN2/apps/story-maker`
 > Product: 로그인 없이 기기 안에서 쓰고, Excel로 보관하며, 플레이로 고쳐 쓰는 학생용 스토리게임 창작 도구
 
 ## 1. 시작할 때 반드시 확인할 것

@@ -1,7 +1,7 @@
 # storygame 개발 상태표
 
 - 기준일: 2026-08-24
-- 기준 저장소: `/Volumes/WAN2/apps/storygame`
+- 기준 저장소: `/Volumes/WAN2/apps/story-maker`
 - 실행 절차: `docs/storygame-ai-implementation-runbook.md`
 - 작업 계약: `docs/tasks/storygame-atomic-task-cards.md`
 - 규칙: `READY`는 항상 정확히 하나이며 한 세션은 그 작업 하나만 수행한다.

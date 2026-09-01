@@ -18,7 +18,7 @@
 
 ## 기준 저장소
 
-`/Volumes/WAN2/apps/storygame`
+`/Volumes/WAN2/apps/story-maker`
 
 경로가 없으면 다른 위치에 만들거나 복사하지 말고 즉시 중단하여 마운트가 필요하다고
 보고한다.
