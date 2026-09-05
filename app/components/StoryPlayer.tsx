@@ -210,14 +210,14 @@ export function StoryPlayer({
               </p>
             </>
           ) : (
-            <p className="dialogue-copy">
+            <p className="dialogue-copy" aria-live="polite">
               <DialogueInline
                 speakerName={stage.speakerName}
                 text={line?.text || "이 장에는 아직 글이 없어요."}
               />
             </p>
           )}
-          <div className="player-controls" style={{ flexWrap: "wrap" }}>
+          <div className="player-controls">
             {!isExample && onEditCut && (
               <button type="button" className="ghost-button" disabled={!line}
                 onClick={() => line && onEditCut({ projectId: project.id, lineId: line.id })}>
