@@ -153,11 +153,11 @@ export function StoryPlayer({
         className="story-stage"
       >
         <header className="player-topbar">
-          <div>
+          <div className="player-title-block">
             <span className="eyebrow">스토리 플레이</span>
-            <strong>{project.title}</strong>
+            <strong className="player-story-title">{project.title}</strong>
           </div>
-          <div className="player-top-actions" style={{ flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div className="player-top-actions">
             <label className="chapter-jump">
               <span className="sr-only">장 골라 시작</span>
               <select
@@ -190,7 +190,6 @@ export function StoryPlayer({
           className={`dialogue-box ${
             line?.type === "narration" ? "narration" : ""
           }`}
-          aria-live="polite"
         >
           <div className="dialogue-meta">
             <span>
@@ -205,19 +204,19 @@ export function StoryPlayer({
               <div className="narration-heading">
                 <span>해설</span>
               </div>
-              <p className="narration-copy">
+              <p className="narration-copy" aria-live="polite">
                 {line.text || "이 장에는 아직 글이 없어요."}
               </p>
             </>
           ) : (
-            <p className="dialogue-copy">
+            <p className="dialogue-copy" aria-live="polite">
               <DialogueInline
                 speakerName={stage.speakerName}
                 text={line?.text || "이 장에는 아직 글이 없어요."}
               />
             </p>
           )}
-          <div className="player-controls" style={{ flexWrap: "wrap" }}>
+          <div className="player-controls">
             {!isExample && onEditCut && (
               <button type="button" className="ghost-button" disabled={!line}
                 onClick={() => line && onEditCut({ projectId: project.id, lineId: line.id })}>
