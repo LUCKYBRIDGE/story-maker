@@ -1,4 +1,10 @@
 import type { CreativeMemo } from "./creative-memos";
+import {
+  canonicalizeStoryStageKeys,
+  type StoryStageKey,
+} from "./story-stages";
+
+export type { StoryStageKey };
 
 export type Chapter = {
   id: string;
@@ -9,6 +15,7 @@ export type Chapter = {
   mood: string;
   keyEvents: string;
   nextChapterIdea: string;
+  storyStageKeys: StoryStageKey[];
   chapterSpeakerNames: string[];
   characterAssetIds: string[];
   backgroundAssetIds: string[];
@@ -112,7 +119,7 @@ export const DEFAULT_PROJECT: StoryProject = {
     openQuestions:
       "용궁에서 두 친구는 어떤 이야기를 만들까?\n용왕은 달라진 두 친구를 보고 무엇이라고 말할까?",
     freeNotes:
-      "각 챕터는 앞 챕터의 말이나 행동 때문에 다음 일이 생기도록 구성합니다. 처음에는 서로 떨어져 서고, 마지막에는 같은 방향을 바라보게 연출합니다.",
+      "각 장은 앞 장의 말이나 행동 때문에 다음 일이 생기도록 구성합니다. 처음에는 서로 떨어져 서고, 마지막에는 같은 방향을 바라보게 연출합니다.",
   },
   creativeMemos: [],
   sheetUrl: "",
@@ -131,6 +138,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       keyEvents:
         "자라가 초대장을 들고 토끼를 찾아온다.\n자라가 지난 일을 먼저 사과한다.\n토끼가 이야기를 끝까지 들어 보기로 한다.",
       nextChapterIdea: "자라가 찾아온 진짜 목적과 숨기고 싶었던 마음을 밝힌다.",
+      storyStageKeys: ["opening"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
@@ -156,6 +164,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       keyEvents:
         "자라가 함께 이야기를 완성해 달라고 부탁한다.\n토끼가 왜 자신을 찾아왔는지 묻는다.\n자라가 목적과 두려움을 숨김없이 말한다.",
       nextChapterIdea: "토끼가 지난 속임수를 떠올리며 이번 말도 믿을 수 있는지 묻는다.",
+      storyStageKeys: ["middle"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
@@ -181,6 +190,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       keyEvents:
         "토끼가 지난 속임수로 목숨을 잃을 뻔한 일을 말한다.\n자라는 서둘러 설득하지 않고 토끼의 대답을 기다린다.\n토끼는 말이 아니라 확인할 방법이 필요하다고 말한다.",
       nextChapterIdea: "토끼가 함께 가기 위해 꼭 지켜야 할 조건을 제시한다.",
+      storyStageKeys: ["crisis"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
@@ -207,6 +217,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       keyEvents:
         "토끼가 길·진실·귀환에 관한 세 가지 조건을 말한다.\n자라가 조건을 받아들이고 용궁 패를 먼저 건넨다.\n자라는 토끼가 고른 길을 따라간다.",
       nextChapterIdea: "두 친구가 지킨 첫 약속을 바탕으로 용궁에서 함께 이야기를 시작한다.",
+      storyStageKeys: ["climax"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
@@ -232,6 +243,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       keyEvents:
         "자라가 토끼의 선택을 끝까지 존중한다.\n두 친구가 용궁의 빈 이야기책 앞에 선다.\n첫 문장을 함께 정한다.",
       nextChapterIdea: "",
+      storyStageKeys: ["ending"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: [
         "rabbit-turtle.character.rabbit-white-unified-720x900",
@@ -396,7 +408,7 @@ export const DEFAULT_PROJECT: StoryProject = {
       backgroundId: "",
       purposeNote: "토끼가 단순한 거절 대신 문제를 해결할 기준을 찾아냅니다.",
       emotionNote: "토끼: 결심 · 자라: 긴장",
-      directionNote: "다음 챕터의 조건 제시로 바로 이어집니다.",
+      directionNote: "다음 장의 조건 제시로 바로 이어집니다.",
     },
     {
       id: "line-10",
@@ -558,7 +570,7 @@ function originalScene({
   leftAssetId,
   rightAssetId,
   backgroundId,
-  purposeNote = "준비된 앞 장면을 이어갑니다.",
+  purposeNote = "준비된 앞 컷을 이어갑니다.",
   emotionNote = "",
   directionNote = "",
 }: Partial<TemplateScene> &
@@ -592,7 +604,7 @@ const ORIGINAL_PALACE_OPENING: TemplateScene[] = [
     backgroundId: RT.background.palace,
     purposeNote: "병든 용왕과 자라의 관계를 보여 줍니다.",
     emotionNote: "용왕: 위독함 · 자라: 걱정",
-    directionNote: "원작의 어두운 용궁 대청 장면입니다.",
+    directionNote: "원작의 어두운 용궁 대청 배경입니다.",
   }),
   originalScene({
     id: "original-palace-welcome-2",
@@ -742,7 +754,7 @@ const ORIGINAL_LAND_MEETING: TemplateScene[] = [
     backgroundId: RT.background.grassland,
     purposeNote: "원작의 선택지는 보이지 않고, 학생이 첫마디부터 이어 씁니다.",
     emotionNote: "토끼: 궁금함 · 자라: 망설임",
-    directionNote: "다음 장면의 빈 자라 대사로 이어집니다.",
+    directionNote: "다음 컷의 빈 자라 대사로 이어집니다.",
   }),
 ];
 
@@ -815,7 +827,7 @@ const ORIGINAL_PALACE_TRAP: TemplateScene[] = [
     backgroundId: RT.background.trap,
     purposeNote: "초대가 함정이었다는 사실이 드러납니다.",
     emotionNote: "토끼: 충격 · 자라: 죄책감",
-    directionNote: "원작의 용궁 위기 장면 배경으로 전환합니다.",
+    directionNote: "원작의 용궁 위기 배경으로 전환합니다.",
   }),
   originalScene({
     id: "original-palace-trap-2",
@@ -861,7 +873,7 @@ const ORIGINAL_PALACE_TRAP: TemplateScene[] = [
     backgroundId: RT.background.trap,
     purposeNote: "용왕의 명령 뒤부터 학생이 토끼의 대응을 이어 씁니다.",
     emotionNote: "용왕: 명령 · 자라: 갈등 · 토끼: 공포",
-    directionNote: "다음 장면의 빈 토끼 대사로 이어집니다.",
+    directionNote: "다음 컷의 빈 토끼 대사로 이어집니다.",
   }),
   originalScene({
     id: "original-palace-trap-6",
@@ -871,7 +883,7 @@ const ORIGINAL_PALACE_TRAP: TemplateScene[] = [
     backgroundId: RT.background.trap,
     purposeNote: "토끼가 실제로 결박된 순간에서 학생의 창작으로 넘깁니다.",
     emotionNote: "토끼: 공포와 배신감 · 자라: 죄책감",
-    directionNote: "다음 빈 장면은 결박된 토끼의 첫 대응입니다.",
+    directionNote: "다음 빈 컷은 결박된 토끼의 첫 대응입니다.",
   }),
 ];
 
@@ -894,7 +906,7 @@ const ORIGINAL_BACKGROUND_ASSET_IDS = [
 export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
   id: "template-rabbit-turtle-land-meeting",
   title: "토끼와 자라: 땅에서 만난 뒤",
-  description: "원작의 용궁 장면을 읽고 자라의 첫 설득부터 이어 쓰는 이야기",
+  description: "원작의 용궁 이야기를 읽고 자라의 첫 설득부터 이어 쓰는 이야기",
   continuation: {
     chapterId: "continuation-chapter-2",
     lineId: "continuation-line-6",
@@ -925,7 +937,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
     characterNotes:
       "자라는 어린 시절 자신을 구해 준 용왕에게 은혜를 갚고 싶지만, 무고한 토끼를 속이는 일을 괴로워합니다.\n토끼는 겨울 언덕에서 처음 만난 자라를 조심스럽게 바라봅니다.",
     worldNotes:
-      "원작의 용궁 대청과 구출 회상, 황량한 육지 언덕을 차례로 지나갑니다. 준비된 장면도 자유롭게 고칠 수 있습니다.",
+      "원작의 용궁 대청과 구출 회상, 황량한 육지 언덕을 차례로 지나갑니다. 준비된 컷도 자유롭게 고칠 수 있습니다.",
     mood: "은혜 · 갈등 · 긴장",
     openQuestions:
       "자라는 진짜 목적을 말할까?\n토끼가 자라를 믿게 하려면 무엇이 필요할까?\n다른 치료법이나 새로운 해결책을 찾을 수 있을까?",
@@ -949,6 +961,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "용왕의 병이 깊어진다.\n자라는 어린 시절 바다에서 구조된 일을 떠올린다.\n젊은 용왕이 자라에게 있는 그대로 말해도 된다고 가르친다.",
       nextChapterIdea: "정직을 가르친 용왕이 자라에게 그 가르침과 어긋나는 부탁을 한다.",
+      storyStageKeys: ["opening"],
       chapterSpeakerNames: ["자라", "어린 자라", "용왕"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -967,6 +980,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "의관이 토끼의 간이 유일한 처방이라고 밝힌다.\n용왕이 목적을 숨기고 토끼를 데려오라고 명령한다.\n자라가 다른 방법은 없는지 묻지만 답을 찾지 못한다.",
       nextChapterIdea: "답을 정하지 못한 자라가 토끼 앞에서 첫마디를 골라야 한다.",
+      storyStageKeys: ["middle"],
       chapterSpeakerNames: ["자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -985,6 +999,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "자라가 용궁 패를 목에 걸고 육지로 나온다.\n토끼가 자라의 첫마디를 기다린다.",
       nextChapterIdea: "자라는 토끼에게 첫마디를 건넨다.",
+      storyStageKeys: ["crisis"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -1003,6 +1018,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
         "자라가 선택한 첫마디를 건넨다.\n토끼가 그 말의 내용과 태도에 반응한다.",
       nextChapterIdea:
         "토끼의 반응 때문에 자라가 다음 행동을 선택하거나 새로운 문제가 생긴다.",
+      storyStageKeys: ["climax", "ending"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: [
@@ -1072,7 +1088,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
     characterNotes:
       "토끼는 자라의 초대를 믿었지만 배신당했다고 느낍니다.\n자라는 어린 시절 자신을 구해 준 용왕의 은혜와 토끼의 생명 사이에서 흔들립니다.\n용왕은 자신의 죽음이 수중 세계의 붕괴로 이어질까 두려워합니다.",
     worldNotes:
-      "원작의 용궁 대청, 구출 회상, 육지 언덕, 용궁 위기 장면을 차례로 지나갑니다. 준비된 장면도 자유롭게 고칠 수 있습니다.",
+      "원작의 용궁 대청, 구출 회상, 육지 언덕, 용궁 위기 배경을 차례로 지나갑니다. 준비된 컷도 자유롭게 고칠 수 있습니다.",
     mood: "은혜 · 속임수 · 배신감 · 위기",
     openQuestions:
       "결박된 토끼는 가장 먼저 무슨 말을 할까?\n자라는 토끼를 도울까, 용왕의 명령을 따를까?\n용왕의 병을 고칠 다른 방법이 있을까?",
@@ -1096,6 +1112,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       keyEvents:
         "용왕의 병이 깊어진다.\n자라는 어린 시절 바다에서 구조된 일을 떠올린다.\n젊은 용왕이 자라에게 있는 그대로 말해도 된다고 가르친다.",
       nextChapterIdea: "정직을 가르친 용왕이 자라에게 거짓말이 필요한 임무를 맡긴다.",
+      storyStageKeys: ["opening"],
       chapterSpeakerNames: ["자라", "어린 자라", "용왕"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -1114,6 +1131,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       keyEvents:
         "의관이 토끼의 간이 유일한 처방이라고 밝힌다.\n용왕이 토끼를 속여 데려오라고 명령한다.\n자라는 반대하지만 용왕의 절박함 앞에서 떠난다.",
       nextChapterIdea: "자라는 토끼를 만나 목적을 숨긴 채 잔치에 초대한다.",
+      storyStageKeys: ["middle"],
       chapterSpeakerNames: ["자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -1132,6 +1150,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       keyEvents:
         "토끼와 자라가 만난다.\n자라는 용궁 잔치로 토끼를 초대한다.\n토끼가 자라의 등에 올라탄다.",
       nextChapterIdea: "토끼와 자라가 용궁에 도착한다.",
+      storyStageKeys: ["middle"],
       chapterSpeakerNames: ["토끼", "자라"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -1150,6 +1169,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
       keyEvents:
         "토끼와 자라가 용궁에 도착한다.\n의관이 토끼의 간이 필요하다고 밝힌다.\n용왕이 토끼를 묶으라고 명령한다.",
       nextChapterIdea: "결박된 토끼가 살아남기 위한 첫 말을 꺼낸다.",
+      storyStageKeys: ["crisis"],
       chapterSpeakerNames: ["토끼", "자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ORIGINAL_BACKGROUND_ASSET_IDS,
@@ -1169,6 +1189,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE_2: StoryProject = {
         "토끼가 살아남기 위한 첫 말을 한다.\n용왕이나 자라가 토끼의 말에 반응한다.",
       nextChapterIdea:
         "토끼의 첫 대응 때문에 용왕이나 자라가 반응하고, 탈출 계획 또는 새로운 해결책이 시작된다.",
+      storyStageKeys: ["climax", "ending"],
       chapterSpeakerNames: ["토끼", "자라", "용왕", "의관"],
       characterAssetIds: ORIGINAL_CHARACTER_ASSET_IDS,
       backgroundAssetIds: [
@@ -1480,9 +1501,9 @@ const ORIGINAL_ONGGOJIB_HOME_CHANGE: TemplateScene[] = [
     leftAssetId: OG.character.realAngry,
     rightAssetId: OG.character.fakeGentle,
     backgroundId: OG.background.winterCourtyard,
-    purposeNote: "집안의 충돌을 관아 장면으로 자연스럽게 연결합니다.",
+    purposeNote: "집안의 충돌을 관아 컷으로 자연스럽게 연결합니다.",
     emotionNote: "가족: 불안 · 두 옹고집: 팽팽한 대립",
-    directionNote: "다음 챕터에서 관아 마당으로 전환합니다.",
+    directionNote: "다음 장에서 관아 마당으로 전환합니다.",
   }),
 ];
 
@@ -1500,9 +1521,9 @@ const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [
     leftAssetId: OG.character.magistrate,
     rightAssetId: OG.character.posol,
     backgroundId: OG.background.court,
-    purposeNote: "두 옹고집을 가려내기 위한 첫 관아 장면입니다.",
+    purposeNote: "두 옹고집을 가려내기 위한 첫 관아 컷입니다.",
     emotionNote: "사또: 신중함 · 포졸: 혼란",
-    directionNote: "준비된 관아 장면의 사또·포졸 배치를 따릅니다.",
+    directionNote: "준비된 관아 컷의 사또·포졸 배치를 따릅니다.",
   }),
   originalScene({
     id: "onggojib-court-2",
@@ -1586,7 +1607,7 @@ const ORIGINAL_ONGGOJIB_FIRST_COURT: TemplateScene[] = [
     backgroundId: OG.background.court,
     purposeNote: "부인이 선택하기 직전의 갈등을 보여 줍니다.",
     emotionNote: "부인: 갈등 · 진짜 옹고집: 초조함",
-    directionNote: "다음 장면에서 원작의 가짜 옹고집 선택으로 이어집니다.",
+    directionNote: "다음 컷에서 원작의 가짜 옹고집 선택으로 이어집니다.",
   }),
 ];
 
@@ -1601,7 +1622,7 @@ const ORIGINAL_ONGGOJIB_WIFE_CHOICE: TemplateScene[] = [
     rightAssetId: OG.character.wifeResolved,
     backgroundId: OG.background.court,
     purposeNote:
-      "부인이 가짜 옹고집을 선택하는 준비된 장면입니다.",
+      "부인이 가짜 옹고집을 선택하는 준비된 컷입니다.",
     emotionNote: "부인: 결심 · 가짜 옹고집: 침착함",
     directionNote: "이 선택의 결과부터 학생이 새롭게 이어 씁니다.",
   }),
@@ -1615,7 +1636,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
   continuation: {
     chapterId: "onggojib-continuation",
     lineId: "onggojib-continuation-line-1",
-    label: "선택 뒤 첫 장면",
+    label: "선택 뒤 첫 컷",
   },
   planning: {
     premise:
@@ -1678,6 +1699,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "막내가 밥알 몇 톨을 흘린다.\n진짜 옹고집이 막내를 몰아세운다.\n부인이 막내를 감싸지만 집안은 다시 조용해진다.",
       nextChapterIdea: "진짜 옹고집이 집을 비운 사이, 똑같은 얼굴이지만 전혀 다른 태도의 사람이 찾아온다.",
+      storyStageKeys: ["opening"],
       chapterSpeakerNames: [
         "진짜 옹고집",
         "부인",
@@ -1701,6 +1723,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "가짜 옹고집이 가족을 먼저 안으로 들인다.\n아이들이 엿을 나누어 먹으며 경계를 푼다.\n가짜 옹고집이 둘째의 까치 이야기를 끝까지 듣는다.\n아이들이 먼저 말을 꺼내기 시작한다.",
       nextChapterIdea: "가족이 편안해진 순간 진짜 옹고집이 돌아와 두 사람의 차이가 정면으로 부딪친다.",
+      storyStageKeys: ["middle"],
       chapterSpeakerNames: [
         "가짜 옹고집",
         "부인",
@@ -1725,6 +1748,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "진짜 옹고집이 집에 돌아와 가짜를 발견한다.\n아이들이 진짜 옹고집에게서 물러선다.\n가짜 옹고집이 아이들 앞을 막아선다.\n이웃의 신고로 모두 관아에 간다.",
       nextChapterIdea: "사또는 얼굴과 기억이 같은 두 사람을 다른 기준으로 가려내야 한다.",
+      storyStageKeys: ["crisis"],
       chapterSpeakerNames: [
         "진짜 옹고집",
         "가짜 옹고집",
@@ -1749,6 +1773,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       keyEvents:
         "두 옹고집의 대답이 모두 같다.\n진짜 옹고집이 소리친다.\n막내가 가짜 옹고집 뒤로 숨는다.",
       nextChapterIdea: "사또가 아내에게 함께 돌아갈 사람을 고르게 한다.",
+      storyStageKeys: ["climax"],
       chapterSpeakerNames: [
         "진짜 옹고집",
         "가짜 옹고집",
@@ -1774,6 +1799,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
       mood: "결심 · 긴장 · 선택의 무게",
       keyEvents: "아내가 가짜 옹고집을 선택한다.",
       nextChapterIdea: "선택을 들은 사람들과 사또가 반응한다.",
+      storyStageKeys: ["climax"],
       chapterSpeakerNames: ["진짜 옹고집", "가짜 옹고집", "부인", "사또"],
       characterAssetIds: ONGGOJIB_CHARACTER_ASSET_IDS,
       backgroundAssetIds: ONGGOJIB_BACKGROUND_ASSET_IDS,
@@ -1793,6 +1819,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
         "아내의 선택을 들은 인물이 반응한다.\n사또가 판결하거나 새로운 사건이 시작된다.",
       nextChapterIdea:
         "첫 반응 때문에 사또의 판결이나 새로운 조건이 생기고, 인물들이 선택의 결과를 겪기 시작한다.",
+      storyStageKeys: ["ending"],
       chapterSpeakerNames: [
         "진짜 옹고집",
         "가짜 옹고집",
@@ -1954,6 +1981,7 @@ export function cloneProject(project: StoryProject): StoryProject {
       mood: chapter.mood ?? "",
       keyEvents: chapter.keyEvents ?? "",
       nextChapterIdea: chapter.nextChapterIdea ?? "",
+      storyStageKeys: canonicalizeStoryStageKeys(chapter.storyStageKeys),
       chapterSpeakerNames: Array.from(
         new Set([
           ...(chapter.chapterSpeakerNames ?? []),

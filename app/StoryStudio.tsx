@@ -1,13 +1,49 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- 작품 자료는 동적으로 고른 투명 WebP 이미지입니다. */
 
 import {
   useEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { ModalDialog } from "./components/ModalDialog";
+import {
+  StudioApplyDock,
+  StudioPrimaryNav,
+  StudioShell,
+  type StudioWorkspaceMode,
+} from "./components/StudioShell";
+import { StartScreen, type EntryLocalDraftStatus } from "./components/StartScreen";
+import { StoryEntryDialog } from "./components/StoryEntryDialog";
+import {
+  StoryPlanScreen,
+  STORY_STRUCTURE_OPTIONS,
+  chapterArcLabel,
+} from "./components/StoryPlanScreen";
+import {
+  canonicalizeStoryStageKeys,
+  formatStoryStageLabels,
+} from "./story-stages";
+import { ScriptScreen } from "./components/ScriptScreen";
+import { unique } from "./components/SceneThumbnail";
+import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
+import { SceneFocusEditor, ImageField } from "./components/SceneFocusEditor";
+import { StoryPlayer } from "./components/StoryPlayer";
+import {
+  ImportIssuesDialog,
+  ImportConfirmationDialog,
+} from "./components/ImportPreviewDialog";
+import {
+  MemoPopup,
+  memoResultScope,
+  type MemoSection,
+  type MemoScope,
+  type MemoWindowSize,
+  type MemoSearchResult,
+} from "./components/MemoPopup";
+import { AddSpeaker, ResourcePool, assetName } from "./components/ResourceWidgets";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
   cloneProject,
@@ -21,527 +57,124 @@ import {
   type StoryProject,
 } from "./story-data";
 import {
-  buildProjectFromSheet,
   extractSheetId,
   fetchSheetSnapshot,
+  importStoryProject,
 } from "./story-sheet";
 import {
-  CREATIVE_MEMO_TEMPLATES,
+  StoryImportError,
+  type StoryImportIssue,
+  type StoryImportSource,
+} from "./story-import";
+import {
   createCreativeMemo,
   createCreativeMemoField,
   creativeMemoDisplayTitle,
-  creativeMemoExcerpt,
   creativeMemoKindLabel,
   type CreativeMemo,
   type CreativeMemoFieldSource,
   type CreativeMemoKind,
 } from "./creative-memos";
+import {
+  creativeMemoChapterTargets,
+  creativeMemoLineTargets,
+  resolveCreativeMemoLink,
+  resolveCreativeMemoReturnLocation,
+  setCreativeMemoChapterLink,
+  setCreativeMemoLineLink,
+} from "./creative-memo-commands";
+import {
+  createLocalStoryProjectRepository,
+  createStoryProjectSaveQueue,
+  type StoryProjectRepository,
+  type StoryProjectSaveQueue,
+  type StoryProjectSaveResult,
+  type StoryProjectSaveStatus,
+} from "./story-project-repository";
+import {
+  createStoryProjectCheckpointRepository,
+  type StoryCheckpointReason,
+  type StoryProjectCheckpoint,
+  type StoryProjectCheckpointRepository,
+} from "./story-project-checkpoints";
+import {
+  createStoryLine,
+  deleteStoryLine,
+  duplicateStoryLine,
+  moveStoryLine,
+  moveStoryChapter,
+  type StoryLineCommandFailureCode,
+} from "./story-commands";
+import {
+  clampStoryEditorTextSelection,
+  newStoryEditorLineLocation,
+  resolveStoryEditorLocation,
+  resolvePlayedCutLocation,
+  type PlayedStoryCut,
+  transitionStoryEditorView,
+  type StoryEditorLocation,
+  type StoryEditorTextSelection,
+  type StoryEditorView,
+} from "./story-editor-location";
+import {
+  findStoryApplyIssues,
+  getStoryApplyIssueNavigation,
+  type StoryApplyIssue,
+} from "./story-apply-issues";
+import {
+  normalizeStoryRevisionResponses,
+  setStoryRevisionResponse,
+  storyRevisionResponseKey,
+  type StoryRevisionResponse,
+  type StoryRevisionResponses,
+} from "./story-revision-cycle";
+import {
+  createStoryPlaybackContext,
+  INITIAL_STORY_STUDIO_PLAYER_STATE,
+  storyStudioPlayerReducer,
+} from "./story-studio-player-state";
+import {
+  findFirstStoryLineIndexForChapter,
+  resolveActiveProjectForDraft,
+  selectStoryEditorSelection,
+  selectStoryPlayerPosition,
+} from "./story-studio-selectors";
+import {
+  loadStudioUiSession,
+  resolveStudioUiSession,
+  saveStudioUiSession,
+  type StudioUiSession,
+} from "./story-studio-ui-session";
 
-type WorkspaceMode = "plan" | "create";
+type WorkspaceMode = StudioWorkspaceMode;
 type PlanningView = "story" | "chapters";
 type EditorMode = "chapter" | "scene";
 type ImageView = "text" | "small";
-type AssetView = "all" | "favorites" | "recent";
-type AssetLibraryScope = "recommended" | "all";
 type UpdateMode = "sheet" | "draft" | "excel";
 type CreatorAccess = "none" | "local";
-type MemoSection =
-  | "story"
-  | "structure"
-  | "details"
-  | "creative"
-  | "chapter"
-  | "scene";
-type CreativeMemoScope = Exclude<CreativeMemoKind, "free"> | "free";
-type MemoScope = "all" | "story" | CreativeMemoScope | "chapter" | "scene";
-type MemoWindowSize = "compact" | "large";
-type MemoSearchResult = {
-  id: string;
-  section: MemoSection;
-  scope?: Exclude<MemoScope, "all">;
-  label: string;
-  context: string;
-  content: string;
-  fieldId: string;
-  chapterId?: string;
-  lineId?: string;
-  memoId?: string;
+type StoryEditorRestoreRequest = {
+  location: StoryEditorLocation;
+  scrollY?: number;
+  selection?: StoryEditorTextSelection;
+};
+type StudioReturnOrigin = {
+  focusButtonLabel?: string;
+  session: StudioUiSession;
+  fromHome: boolean;
+  scrollY: number;
+  selection?: StoryEditorTextSelection;
+};
+type MemoReturnOrigin = {
+  workspaceMode: WorkspaceMode;
+  planningView: PlanningView;
+  location: StoryEditorLocation;
+  scrollY?: number;
 };
 
-const DRAFT_KEY = "storygame:draft:v1";
-const ACTIVE_KEY = "storygame:active:v1";
 const BACKUP_KEY = "storygame:backup:v1";
 const FAVORITES_KEY = "storygame:asset-favorites:v1";
 const RECENTS_KEY = "storygame:asset-recents:v1";
-const ASSET_BY_ID = new Map(STORY_ASSETS.map((asset) => [asset.id, asset]));
-const CHARACTER_ASSETS = STORY_ASSETS.filter(
-  (asset) => asset.type === "character",
-);
-const BACKGROUND_ASSETS = STORY_ASSETS.filter(
-  (asset) => asset.type === "background",
-);
-const CHARACTER_FACING = new Map<string, "left" | "right">([
-  ["rabbit-turtle.character.turtle-unified-720x900", "left"],
-  ["rabbit-turtle.character.turtle-child-unified-720x900", "left"],
-  ["rabbit-turtle.character.rabbit-white-unified-720x900", "right"],
-  ["rabbit-turtle.character.dragonking-unified-720x900", "left"],
-  ["rabbit-turtle.character.dragonking-young-unified-720x900", "left"],
-  ["rabbit-turtle.character.dragonking-recovered-unified-720x900", "left"],
-  ["rabbit-turtle.character.physician-unified-720x900", "right"],
-]);
-const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
-const USAGE_FILTER_TAGS = ["원작 사용", "추가 연출"];
-const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
-const SELECTION_TIER_TAGS = ["기본 추천", "추가 자료"];
-const RABBIT_TURTLE_CHARACTER_ORDER = [
-  "토끼",
-  "자라",
-  "용왕",
-  "의관",
-  "어린 자라",
-  "젊은 용왕",
-];
-const ONGGOJIB_CHARACTER_ORDER = [
-  "진짜 옹고집",
-  "가짜 옹고집",
-  "옹고집의 아내",
-  "막내 아이",
-  "둘째 아이",
-  "사또",
-  "포졸",
-  "옹고집의 하인",
-  "일꾼",
-];
-
-type StoryArcKey = "opening" | "middle" | "crisis" | "climax" | "ending";
-
-const STORY_STRUCTURE_OPTIONS: Array<{
-  mode: StoryProject["planning"]["structureMode"];
-  title: string;
-  shortTitle: string;
-  steps: Array<{ label: string; guide: string; key: StoryArcKey }>;
-}> = [
-  {
-    mode: "five",
-    title: "발단 → 전개 → 위기 → 절정 → 결말",
-    shortTitle: "5단계",
-    steps: [
-      {
-        label: "발단",
-        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
-        key: "opening",
-      },
-      {
-        label: "전개",
-        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
-        key: "middle",
-      },
-      {
-        label: "위기",
-        guide: "가장 큰 어려움이 닥치고, 어떤 선택 앞에 서나요?",
-        key: "crisis",
-      },
-      {
-        label: "절정",
-        guide: "갈등을 풀기 위해 주인공이 하는 가장 중요한 행동은?",
-        key: "climax",
-      },
-      {
-        label: "결말",
-        guide: "행동의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
-        key: "ending",
-      },
-    ],
-  },
-  {
-    mode: "four",
-    title: "발단 → 전개 → 위기 → 결말",
-    shortTitle: "4단계",
-    steps: [
-      {
-        label: "발단",
-        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
-        key: "opening",
-      },
-      {
-        label: "전개",
-        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
-        key: "middle",
-      },
-      {
-        label: "위기",
-        guide: "가장 큰 어려움이 닥치고, 주인공은 무엇을 선택하나요?",
-        key: "crisis",
-      },
-      {
-        label: "결말",
-        guide: "선택의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
-        key: "ending",
-      },
-    ],
-  },
-  {
-    mode: "three",
-    title: "처음 → 중간 → 끝",
-    shortTitle: "3단계",
-    steps: [
-      {
-        label: "처음",
-        guide: "누가 어디에 있고, 어떤 일이 시작되나요?",
-        key: "opening",
-      },
-      {
-        label: "중간",
-        guide: "어떤 문제가 생기고, 인물은 무엇을 하나요?",
-        key: "middle",
-      },
-      {
-        label: "끝",
-        guide: "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
-        key: "ending",
-      },
-    ],
-  },
-];
-
-function CreativeMemoEditor({
-  memo,
-  onClose,
-  onTitleChange,
-  onFieldChange,
-  onAddField,
-  onMoveField,
-  onDeleteField,
-  onDeleteMemo,
-}: {
-  memo: CreativeMemo;
-  onClose: () => void;
-  onTitleChange: (value: string) => void;
-  onFieldChange: (fieldId: string, value: string) => void;
-  onAddField: (label: string, source: CreativeMemoFieldSource) => void;
-  onMoveField: (fieldId: string, direction: -1 | 1) => void;
-  onDeleteField: (fieldId: string) => void;
-  onDeleteMemo: () => void;
-}) {
-  const [customLabel, setCustomLabel] = useState("");
-  const [addFieldOpen, setAddFieldOpen] = useState(false);
-  const template = CREATIVE_MEMO_TEMPLATES.find(
-    (candidate) => candidate.kind === memo.kind,
-  );
-  const usedLabels = new Set(memo.fields.map((field) => field.label));
-  const recommendedFields =
-    template?.recommendedFields.filter((label) => !usedLabels.has(label)) ?? [];
-
-  return (
-    <section
-      className="creative-memo-editor"
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${creativeMemoKindLabel(memo.kind)} 창작 메모 편집`}
-    >
-      <header className="creative-memo-editor-heading">
-        <div>
-          <span>{creativeMemoKindLabel(memo.kind)}</span>
-          <h2>{creativeMemoDisplayTitle(memo)}</h2>
-          <p>모든 항목은 선택 사항이에요. 필요한 만큼만 써도 돼요.</p>
-        </div>
-        <button type="button" onClick={onClose}>
-          닫기
-        </button>
-      </header>
-
-      <div className="creative-memo-editor-body">
-        <label className="field creative-memo-title-field">
-          <span>메모 제목</span>
-          <input
-            value={memo.title}
-            onChange={(event) => onTitleChange(event.target.value)}
-            placeholder={
-              memo.kind === "free"
-                ? "예: 꼭 넣고 싶은 마지막 장면"
-                : "예: 토끼, 바닷가, 첫 번째 갈등"
-            }
-          />
-        </label>
-
-        <div className="creative-memo-fields">
-          {memo.fields.map((field, index) => (
-            <section className="creative-memo-field" key={field.id}>
-              <header>
-                <div>
-                  <strong>{field.label || "이름 없는 항목"}</strong>
-                  {field.source !== "default" && (
-                    <small>
-                      {field.source === "recommended" ? "추천 항목" : "직접 만든 항목"}
-                    </small>
-                  )}
-                </div>
-                {memo.kind !== "free" && (
-                  <div className="creative-memo-field-actions">
-                    <button
-                      type="button"
-                      disabled={index === 0}
-                      onClick={() => onMoveField(field.id, -1)}
-                    >
-                      ↑ 위로 이동
-                    </button>
-                    <button
-                      type="button"
-                      disabled={index === memo.fields.length - 1}
-                      onClick={() => onMoveField(field.id, 1)}
-                    >
-                      ↓ 아래로 이동
-                    </button>
-                    <button
-                      className="danger-text-button"
-                      type="button"
-                      onClick={() => onDeleteField(field.id)}
-                    >
-                      항목 삭제
-                    </button>
-                  </div>
-                )}
-              </header>
-              <textarea
-                id={`creative-memo-field-${memo.id}-${field.id}`}
-                rows={memo.kind === "free" ? 14 : 4}
-                value={field.value}
-                onChange={(event) => onFieldChange(field.id, event.target.value)}
-                placeholder={
-                  memo.kind === "free"
-                    ? "떠오른 대사, 사건, 조사한 내용, 친구와 의논한 생각을 자유롭게 써 보세요."
-                    : `${field.label}에 관해 떠오른 생각을 써 보세요.`
-                }
-              />
-            </section>
-          ))}
-        </div>
-
-        {memo.kind !== "free" && (
-          <section className="creative-memo-add-field">
-            <button
-              className="creative-memo-add-field-toggle"
-              type="button"
-              aria-expanded={addFieldOpen}
-              onClick={() => setAddFieldOpen((open) => !open)}
-            >
-              + 항목 추가
-            </button>
-            {addFieldOpen && <div>
-              {recommendedFields.length > 0 ? (
-                <div className="creative-memo-recommendations">
-                  <span>추천 항목에서 골라요</span>
-                  <div>
-                    {recommendedFields.map((label) => (
-                      <button
-                        type="button"
-                        key={label}
-                        onClick={() => onAddField(label, "recommended")}
-                      >
-                        + {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p>추천 항목을 모두 추가했어요.</p>
-              )}
-              <div className="creative-memo-custom-field">
-                <label htmlFor={`custom-field-${memo.id}`}>
-                  직접 항목 이름 붙이기
-                </label>
-                <div>
-                  <input
-                    id={`custom-field-${memo.id}`}
-                    value={customLabel}
-                    onChange={(event) => setCustomLabel(event.target.value)}
-                    placeholder="예: 이 인물만 아는 비밀"
-                  />
-                  <button
-                    type="button"
-                    disabled={!customLabel.trim()}
-                    onClick={() => {
-                      onAddField(customLabel.trim(), "custom");
-                      setCustomLabel("");
-                    }}
-                  >
-                    이 항목 추가
-                  </button>
-                </div>
-              </div>
-            </div>}
-          </section>
-        )}
-      </div>
-
-      <footer className="creative-memo-editor-footer">
-        <span>쓴 내용은 이 기기에 자동 저장돼요.</span>
-        <button className="danger-text-button" type="button" onClick={onDeleteMemo}>
-          이 메모 삭제
-        </button>
-      </footer>
-    </section>
-  );
-}
-
-function chapterArcLabel(
-  chapterIndex: number,
-  chapterCount: number,
-  steps: Array<{ label: string }>,
-) {
-  if (steps.length === 0) return "이야기";
-  if (chapterCount <= 1) return steps[0].label;
-  const stepIndex = Math.round(
-    (chapterIndex * (steps.length - 1)) / (chapterCount - 1),
-  );
-  return steps[Math.min(stepIndex, steps.length - 1)].label;
-}
-
-function normalizeSearch(value: string) {
-  return value
-    .trim()
-    .toLocaleLowerCase("ko")
-    .replace(/\.png$/i, "")
-    .replace(/[·_\-\s]/g, "");
-}
-
-function memoResultScope(result: MemoSearchResult): Exclude<MemoScope, "all"> {
-  if (result.scope) return result.scope;
-  if (result.section === "chapter" || result.section === "scene") {
-    return result.section;
-  }
-  return "story";
-}
-
-function containsParentheses(value: string) {
-  return /[()（）]/.test(value);
-}
-
-function DialogueText({ text }: { text: string }) {
-  const parts = text.split(/(\([^()]*\)|（[^（）]*）)/g);
-
-  return (
-    <>
-      {parts.map((part, index) =>
-        /^\([^()]*\)$|^（[^（）]*）$/.test(part) ? (
-          <span className="parenthetical-direction" key={`${part}-${index}`}>
-            {part}
-          </span>
-        ) : (
-          part
-        ),
-      )}
-    </>
-  );
-}
-
-function DialogueInline({
-  speakerName,
-  text,
-}: {
-  speakerName: string;
-  text: string;
-}) {
-  return (
-    <>
-      <strong className="dialogue-speaker">
-        {speakerName || "화자 없음"}:
-      </strong>{" "}
-      <DialogueText text={text} />
-    </>
-  );
-}
-
-function assetName(assetId: string) {
-  return ASSET_BY_ID.get(assetId)?.displayName ?? "";
-}
-
-function assetPlacementClass(assetId: string) {
-  const framing = ASSET_BY_ID.get(assetId)?.framing;
-  if (framing === "상반신") return "framing-upper";
-  if (framing === "여러 인물") return "framing-group";
-  return framing === "전신" ? "framing-full" : "";
-}
-
-function shouldMirrorAsset(assetId: string, side: "left" | "right") {
-  const currentFacing = CHARACTER_FACING.get(assetId);
-  const inwardFacing = side === "left" ? "right" : "left";
-  return Boolean(currentFacing && currentFacing !== inwardFacing);
-}
-
-function assetGroupLabel(asset: StoryAsset, type: StoryAsset["type"]) {
-  return type === "character"
-    ? `${asset.selectionTier} · ${asset.framing ?? "구도 미분류"}`
-    : asset.selectionTier;
-}
-
-function assetGroupRank(asset: StoryAsset, type: StoryAsset["type"]) {
-  const selectionRank = asset.selectionTier === "기본 추천" ? 0 : 20;
-  const usageRank = asset.usage === "원작 사용" ? 0 : 10;
-  if (type !== "character") return selectionRank + usageRank;
-  const framingRank =
-    asset.framing === "전신"
-      ? 0
-      : asset.framing === "상반신"
-        ? 1
-        : asset.framing === "여러 인물"
-          ? 2
-          : 3;
-  return selectionRank + usageRank + framingRank;
-}
-
-function sortAssets(
-  assets: StoryAsset[],
-  type: StoryAsset["type"],
-): StoryAsset[] {
-  return assets.slice().sort((a, b) => {
-    const groupDifference =
-      assetGroupRank(a, type) - assetGroupRank(b, type);
-    if (groupDifference !== 0) return groupDifference;
-    const storyDifference =
-      (a.story === "토끼와 자라" ? 0 : 1) -
-      (b.story === "토끼와 자라" ? 0 : 1);
-    if (storyDifference !== 0) return storyDifference;
-    if (type === "character" && a.story === "토끼와 자라") {
-      const characterDifference =
-        (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(a.group) + 1 || 99) -
-        (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(b.group) + 1 || 99);
-      if (characterDifference !== 0) return characterDifference;
-      const poseDifference =
-        (a.pose === "기본" || a.pose === "전신" ? 0 : 1) -
-        (b.pose === "기본" || b.pose === "전신" ? 0 : 1);
-      if (poseDifference !== 0) return poseDifference;
-    }
-    if (type === "character" && a.story === "옹고집전") {
-      const characterDifference =
-        (ONGGOJIB_CHARACTER_ORDER.indexOf(a.group) + 1 || 99) -
-        (ONGGOJIB_CHARACTER_ORDER.indexOf(b.group) + 1 || 99);
-      if (characterDifference !== 0) return characterDifference;
-    }
-    const characterDifference = a.group.localeCompare(b.group, "ko");
-    return characterDifference || a.pose.localeCompare(b.pose, "ko");
-  });
-}
-
-function groupAssets(
-  assets: StoryAsset[],
-  type: StoryAsset["type"],
-  preserveOrder = false,
-): Array<{ label: string; assets: StoryAsset[] }> {
-  const groups = new Map<string, StoryAsset[]>();
-  for (const asset of preserveOrder ? assets : sortAssets(assets, type)) {
-    const label = assetGroupLabel(asset, type);
-    groups.set(label, [...(groups.get(label) ?? []), asset]);
-  }
-  return Array.from(groups, ([label, groupedAssets]) => ({
-    label,
-    assets: groupedAssets,
-  }));
-}
-
-function unique(values: string[]) {
-  return Array.from(new Set(values.filter(Boolean)));
-}
+const REVISION_RESPONSES_KEY = "storygame:revision-responses:v1";
 
 function projectContent(project: StoryProject) {
   return JSON.stringify({ ...project, updatedAt: "" });
@@ -572,929 +205,9 @@ function findContinuationPoint(
     ? {
         chapterId: continuationChapter.id,
         lineId: continuationLine.id,
-        label: continuationChapter.summary || "이어서 쓸 첫 장면",
+        label: continuationChapter.summary || "이어서 쓸 첫 컷",
       }
     : null;
-}
-
-function AssetPreview({
-  assetId,
-  className,
-  alt,
-}: {
-  assetId: string;
-  className?: string;
-  alt: string;
-}) {
-  const asset = ASSET_BY_ID.get(assetId);
-  if (!asset) return null;
-  return (
-    <img
-      className={className}
-      src={asset.src}
-      alt={alt}
-      loading="lazy"
-      draggable={false}
-    />
-  );
-}
-
-function AssetPickerButton({
-  type,
-  label,
-  buttonText,
-  value,
-  currentLabel = "현재 선택",
-  favoriteIds,
-  recentIds,
-  onSelect,
-  onToggleFavorite,
-}: {
-  type: StoryAsset["type"];
-  label: string;
-  buttonText: string;
-  value?: string;
-  currentLabel?: string;
-  favoriteIds: string[];
-  recentIds: string[];
-  onSelect: (assetId: string) => void;
-  onToggleFavorite: (assetId: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [view, setView] = useState<AssetView>("all");
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [libraryScope, setLibraryScope] =
-    useState<AssetLibraryScope>("recommended");
-  const initializedFilters = useRef(false);
-  const assets = type === "character" ? CHARACTER_ASSETS : BACKGROUND_ASSETS;
-  const featuredTagGroups = useMemo(
-    () => [
-      {
-        label: "작품",
-        tags: STORY_FILTER_TAGS.filter((tag) =>
-          assets.some((asset) => asset.tags.includes(tag)),
-        ),
-      },
-      {
-        label: "자료",
-        tags: USAGE_FILTER_TAGS.filter((tag) =>
-          assets.some((asset) => asset.tags.includes(tag)),
-        ),
-      },
-      ...(type === "character"
-        ? [
-            {
-              label: "구도",
-              tags: FRAMING_FILTER_TAGS.filter((tag) =>
-                assets.some((asset) => asset.tags.includes(tag)),
-              ),
-            },
-          ]
-        : []),
-    ],
-    [assets, type],
-  );
-  const featuredTags = useMemo(
-    () => featuredTagGroups.flatMap((group) => group.tags),
-    [featuredTagGroups],
-  );
-  const availableTags = useMemo(
-    () =>
-      Array.from(new Set(assets.flatMap((asset) => asset.tags)))
-        .filter(
-          (tag) =>
-            !featuredTags.includes(tag) &&
-            !SELECTION_TIER_TAGS.includes(tag),
-        )
-        .sort((a, b) => a.localeCompare(b, "ko")),
-    [assets, featuredTags],
-  );
-  const filteredAssets = useMemo(() => {
-    const query = normalizeSearch(search);
-    const matchedAssets = assets
-      .filter((asset) => {
-        if (
-          libraryScope === "recommended" &&
-          asset.selectionTier !== "기본 추천"
-        ) {
-          return false;
-        }
-        if (view === "favorites" && !favoriteIds.includes(asset.id)) {
-          return false;
-        }
-        if (view === "recent" && !recentIds.includes(asset.id)) return false;
-        const matchesSearch =
-          !query ||
-          [asset.displayName, asset.label, asset.story, ...asset.tags].some(
-            (candidate) => normalizeSearch(candidate).includes(query),
-          );
-        return matchesSearch && tags.every((tag) => asset.tags.includes(tag));
-      });
-    return view === "recent"
-      ? matchedAssets.sort(
-          (a, b) => recentIds.indexOf(a.id) - recentIds.indexOf(b.id),
-        )
-      : sortAssets(matchedAssets, type);
-  }, [
-    assets,
-    favoriteIds,
-    libraryScope,
-    recentIds,
-    search,
-    tags,
-    type,
-    view,
-  ]);
-  const recommendedAssetCount = assets.filter(
-    (asset) => asset.selectionTier === "기본 추천",
-  ).length;
-  const filteredAssetGroups = groupAssets(
-    filteredAssets,
-    type,
-    view === "recent",
-  );
-  const selectedAsset = value ? ASSET_BY_ID.get(value) : undefined;
-  const clearFindConditions = () => {
-    setSearch("");
-    setTags([]);
-    setView("all");
-  };
-
-  useEffect(() => {
-    if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    const closeWithEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeWithEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeWithEscape);
-    };
-  }, [open]);
-
-  return (
-    <>
-      <button
-        type="button"
-        className="asset-open-button"
-        onClick={() => {
-          if (!initializedFilters.current) {
-            const selectedAsset = value ? ASSET_BY_ID.get(value) : undefined;
-            if (selectedAsset?.type === type) {
-              setTags([selectedAsset.story]);
-              if (selectedAsset.selectionTier === "추가 자료") {
-                setLibraryScope("all");
-              }
-            }
-            initializedFilters.current = true;
-          }
-          setOpen(true);
-        }}
-      >
-        {buttonText}
-      </button>
-      {open &&
-        createPortal(
-          <div
-            className="asset-picker-overlay"
-            role="presentation"
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget) setOpen(false);
-            }}
-          >
-          <section
-            className="asset-picker-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${label} 이미지 선택`}
-          >
-            <header>
-              <div>
-                <span className="eyebrow">
-                  {type === "character"
-                    ? "캐릭터 이미지 고르기"
-                    : "배경 이미지 고르기"}
-                </span>
-                <h2>{label}</h2>
-                <p>원하는 그림을 누르면 선택되고 이 창이 닫혀요.</p>
-              </div>
-              <button
-                type="button"
-                className="asset-picker-close"
-                onClick={() => setOpen(false)}
-                aria-label="이미지 선택 닫기"
-              >
-                ×
-              </button>
-            </header>
-            {selectedAsset?.type === type && (
-              <div className="asset-picker-current">
-                <span className={`asset-picker-current-thumb ${type}`}>
-                  <img src={selectedAsset.src} alt="" />
-                </span>
-                <span>
-                  <small>{currentLabel}</small>
-                  <strong>{selectedAsset.displayName}</strong>
-                  <b>{selectedAsset.label}</b>
-                </span>
-              </div>
-            )}
-            <div className="asset-picker-findbar">
-              <input
-                className="asset-picker-search"
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={
-                  type === "character"
-                    ? "인물 이름, 표정, 동작으로 찾기"
-                    : "장소, 시간, 분위기로 찾기"
-                }
-                aria-label="이미지 검색"
-                autoFocus
-              />
-              <button
-                type="button"
-                className={`asset-picker-filter-toggle ${
-                  filtersOpen || tags.length > 0 ? "active" : ""
-                }`}
-                aria-expanded={filtersOpen}
-                onClick={() => setFiltersOpen((current) => !current)}
-              >
-                <span>{filtersOpen ? "태그 닫기" : "태그로 좁히기"}</span>
-                {tags.length > 0 && <b>{tags.length}</b>}
-              </button>
-            </div>
-            <div className="asset-picker-browsebar">
-              <div className="asset-picker-view" aria-label="이미지 보기">
-                {[
-                  ["all", "전체"],
-                  ["favorites", `즐겨찾기 ${favoriteIds.length}`],
-                  ["recent", "최근 사용"],
-                ].map(([mode, text]) => (
-                  <button
-                    type="button"
-                    key={mode}
-                    className={view === mode ? "active" : ""}
-                    aria-pressed={view === mode}
-                    onClick={() => setView(mode as AssetView)}
-                  >
-                    {text}
-                  </button>
-                ))}
-              </div>
-              <div className="asset-picker-scope" aria-label="이미지 범위">
-                <button
-                  type="button"
-                  className={libraryScope === "recommended" ? "active" : ""}
-                  aria-pressed={libraryScope === "recommended"}
-                  onClick={() => setLibraryScope("recommended")}
-                >
-                  추천 이미지 {recommendedAssetCount}
-                </button>
-                <button
-                  type="button"
-                  className={libraryScope === "all" ? "active" : ""}
-                  aria-pressed={libraryScope === "all"}
-                  onClick={() => setLibraryScope("all")}
-                >
-                  모든 이미지 {assets.length}
-                </button>
-              </div>
-            </div>
-            {filtersOpen && (
-              <section className="asset-picker-filter-panel">
-                <div className="asset-picker-tag-heading">
-                  <strong>태그로 이미지 좁히기</strong>
-                  <small>여러 태그를 고르면 모두 맞는 이미지만 남아요.</small>
-                </div>
-                <div className="asset-picker-featured-filters">
-                  {featuredTagGroups.map((group) => (
-                    <div
-                      className="asset-picker-filter-group"
-                      key={group.label}
-                      aria-label={`${group.label} 태그`}
-                    >
-                      <strong>{group.label}</strong>
-                      <div>
-                        {group.tags.map((tag) => (
-                          <button
-                            type="button"
-                            key={tag}
-                            className={tags.includes(tag) ? "active" : ""}
-                            aria-pressed={tags.includes(tag)}
-                            onClick={() =>
-                              setTags((current) => [
-                                ...current.filter(
-                                  (value) => !group.tags.includes(value),
-                                ),
-                                ...(current.includes(tag) ? [] : [tag]),
-                              ])
-                            }
-                          >
-                            {tag}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="asset-picker-tags" aria-label="이미지 태그">
-                  {availableTags.map((tag) => (
-                    <button
-                      type="button"
-                      key={tag}
-                      className={tags.includes(tag) ? "active" : ""}
-                      aria-pressed={tags.includes(tag)}
-                      onClick={() =>
-                        setTags((current) =>
-                          current.includes(tag)
-                            ? current.filter((value) => value !== tag)
-                            : [...current, tag],
-                        )
-                      }
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                  {tags.length > 0 && (
-                    <button
-                      type="button"
-                      className="clear-tags"
-                      onClick={() => setTags([])}
-                    >
-                      선택한 태그 지우기
-                    </button>
-                  )}
-                </div>
-              </section>
-            )}
-            <div className="asset-picker-result-summary">
-              <p>
-                <strong>{filteredAssets.length}개</strong>의 이미지를 찾았어요.
-              </p>
-              {(search || tags.length > 0 || view !== "all") && (
-                <button type="button" onClick={clearFindConditions}>
-                  검색·태그 초기화
-                </button>
-              )}
-            </div>
-            <div className="asset-picker-results">
-              {filteredAssetGroups.map((group) => (
-                <section className="asset-picker-result-group" key={group.label}>
-                  <header>
-                    <strong>{group.label}</strong>
-                    <span>{group.assets.length}개</span>
-                  </header>
-                  <div className="asset-picker-grid">
-                    {group.assets.map((asset) => (
-                      <article
-                        className={`asset-picker-card ${
-                          value === asset.id ? "selected" : ""
-                        }`}
-                        key={asset.id}
-                      >
-                        <button
-                          type="button"
-                          className={`asset-picker-favorite ${
-                            favoriteIds.includes(asset.id) ? "active" : ""
-                          }`}
-                          onClick={() => onToggleFavorite(asset.id)}
-                          aria-label={
-                            favoriteIds.includes(asset.id)
-                              ? `${asset.displayName} 즐겨찾기 해제`
-                              : `${asset.displayName} 즐겨찾기`
-                          }
-                        >
-                          {favoriteIds.includes(asset.id) ? "★" : "☆"}
-                        </button>
-                        <button
-                          type="button"
-                          className="asset-picker-option"
-                          onClick={() => {
-                            onSelect(asset.id);
-                            setOpen(false);
-                          }}
-                        >
-                          <span className={`asset-picker-thumb ${asset.type}`}>
-                            <img src={asset.src} alt="" loading="lazy" />
-                            {value === asset.id && (
-                              <b className="asset-picker-selected-mark">
-                                ✓ 현재 선택
-                              </b>
-                            )}
-                          </span>
-                          <strong>{asset.displayName}</strong>
-                          <small>
-                            {asset.label}
-                          </small>
-                          <span className="asset-tag-summary">
-                            {asset.story}
-                            {asset.framing ? ` · ${asset.framing}` : ""}
-                            {asset.selectionTier === "추가 자료"
-                              ? " · 추가 이미지"
-                              : ""}
-                          </span>
-                        </button>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              ))}
-              {filteredAssets.length === 0 && (
-                <div className="asset-picker-empty">
-                  <strong>찾은 이미지가 없어요.</strong>
-                  <small>검색어를 바꾸거나 선택한 태그를 지워 보세요.</small>
-                  <button type="button" onClick={clearFindConditions}>
-                    검색·태그 초기화
-                  </button>
-                  {libraryScope === "recommended" && (
-                    <button
-                      type="button"
-                      onClick={() => setLibraryScope("all")}
-                    >
-                      모든 이미지 보기
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </section>
-          </div>,
-          document.body,
-        )}
-    </>
-  );
-}
-
-function ImageField({
-  label,
-  type,
-  value,
-  currentValue,
-  allowedIds,
-  allowDefault = false,
-  favoriteIds,
-  recentIds,
-  onChange,
-  onUse,
-  onToggleFavorite,
-}: {
-  label: string;
-  type: StoryAsset["type"];
-  value: string;
-  currentValue?: string;
-  allowedIds: string[];
-  allowDefault?: boolean;
-  favoriteIds: string[];
-  recentIds: string[];
-  onChange: (assetId: string) => void;
-  onUse: (assetId: string) => void;
-  onToggleFavorite: (assetId: string) => void;
-}) {
-  const allowedAssets = allowedIds
-    .map((id) => ASSET_BY_ID.get(id))
-    .filter(
-      (asset): asset is StoryAsset => Boolean(asset && asset.type === type),
-    );
-  const allowedAssetGroups = groupAssets(allowedAssets, type);
-  return (
-    <label className="field image-field">
-      <span>{label}</span>
-      <div className="image-field-row">
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          aria-label={`${label} 선택`}
-        >
-          <option value="">
-            {allowDefault ? "챕터 기본 이미지" : "선택 안 함"}
-          </option>
-          {allowedAssetGroups.map((group) => (
-            <optgroup label={group.label} key={group.label}>
-              {group.assets.map((asset) => (
-                <option value={asset.id} key={asset.id}>
-                  {asset.displayName}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        <AssetPickerButton
-          type={type}
-          label={label}
-          buttonText={value ? "다른 이미지 고르기" : "이미지 고르기"}
-          value={currentValue || value}
-          currentLabel={
-            currentValue ? "현재 장면에서 사용 중" : "현재 선택"
-          }
-          favoriteIds={favoriteIds}
-          recentIds={recentIds}
-          onToggleFavorite={onToggleFavorite}
-          onSelect={(assetId) => {
-            onUse(assetId);
-            onChange(assetId);
-          }}
-        />
-      </div>
-      <small>
-        드롭다운에는 이 챕터에서 고른 자료만 표시됩니다.
-      </small>
-    </label>
-  );
-}
-
-function ResourcePool({
-  title,
-  type,
-  ids,
-  favoriteIds,
-  recentIds,
-  onAdd,
-  onRemove,
-  onToggleFavorite,
-}: {
-  title: string;
-  type: StoryAsset["type"];
-  ids: string[];
-  favoriteIds: string[];
-  recentIds: string[];
-  onAdd: (assetId: string) => void;
-  onRemove: (assetId: string) => void;
-  onToggleFavorite: (assetId: string) => void;
-}) {
-  return (
-    <section className="resource-pool">
-      <div className="resource-pool-heading">
-        <strong>{title}</strong>
-        <span>{ids.length}개</span>
-      </div>
-      <div className="resource-chip-list">
-        {ids.map((id) => (
-          <span className="resource-chip" key={id}>
-            {assetName(id)}
-            <button
-              type="button"
-              onClick={() => onRemove(id)}
-              aria-label={`${assetName(id)} 챕터 자료에서 빼기`}
-            >
-              ×
-            </button>
-          </span>
-        ))}
-        {ids.length === 0 && (
-          <span className="empty-resource-copy">아직 고른 자료가 없어요.</span>
-        )}
-      </div>
-      <AssetPickerButton
-        type={type}
-        label={title}
-        buttonText={
-          type === "character"
-            ? "사용할 캐릭터 고르기"
-            : "사용할 배경 고르기"
-        }
-        favoriteIds={favoriteIds}
-        recentIds={recentIds}
-        onSelect={onAdd}
-        onToggleFavorite={onToggleFavorite}
-      />
-    </section>
-  );
-}
-
-function AddSpeaker({
-  onAdd,
-}: {
-  onAdd: (name: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const submit = () => {
-    const next = name.trim();
-    if (!next) return;
-    onAdd(next);
-    setName("");
-    setOpen(false);
-  };
-  return (
-    <div className="add-speaker">
-      <button type="button" onClick={() => setOpen((current) => !current)}>
-        {open ? "닫기" : "+ 화자 추가"}
-      </button>
-      {open && (
-        <div>
-          <input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="새 화자 이름"
-            aria-label="새 화자 이름"
-            autoFocus
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                submit();
-              }
-            }}
-          />
-          <button type="button" onClick={submit} disabled={!name.trim()}>
-            추가
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SceneThumbnail({
-  chapter,
-  line,
-}: {
-  chapter: Chapter;
-  line: StoryLine;
-}) {
-  const backgroundId = line.backgroundId || chapter.backgroundId;
-  const leftId = line.leftAssetId || chapter.leftAssetId;
-  const rightId = line.rightAssetId || chapter.rightAssetId;
-  const background = ASSET_BY_ID.get(backgroundId)?.src;
-  return (
-    <div
-      className={`scene-thumbnail ${line.type}`}
-      style={background ? { backgroundImage: `url("${background}")` } : undefined}
-    >
-      <AssetPreview
-        assetId={leftId}
-        alt=""
-        className={`scene-thumb-character left ${assetPlacementClass(leftId)} ${
-          shouldMirrorAsset(leftId, "left") ? "mirrored" : ""
-        }`}
-      />
-      <AssetPreview
-        assetId={rightId}
-        alt=""
-        className={`scene-thumb-character right ${assetPlacementClass(rightId)} ${
-          shouldMirrorAsset(rightId, "right") ? "mirrored" : ""
-        }`}
-      />
-      <span>
-        {line.type === "narration"
-          ? "해설"
-          : `${line.speakerName || "화자 없음"}: ${
-              line.text || "빈 대사"
-            }`}
-      </span>
-    </div>
-  );
-}
-
-function SceneStagingCopy({
-  chapters,
-  lines,
-  currentLineId,
-  onCopy,
-}: {
-  chapters: Chapter[];
-  lines: StoryLine[];
-  currentLineId: string;
-  onCopy: (sourceLineId: string) => void;
-}) {
-  const [sourceLineId, setSourceLineId] = useState("");
-  const sourceLine = lines.find((line) => line.id === sourceLineId);
-  const sourceChapter = chapters.find(
-    (chapter) => chapter.id === sourceLine?.chapterId,
-  );
-  const availableChapters = chapters
-    .slice()
-    .sort((a, b) => a.order - b.order)
-    .map((chapter) => ({
-      chapter,
-      lines: lines
-        .filter(
-          (line) =>
-            line.chapterId === chapter.id && line.id !== currentLineId,
-        )
-        .sort((a, b) => a.order - b.order),
-    }))
-    .filter((group) => group.lines.length > 0);
-
-  return (
-    <section className="scene-staging-copy">
-      <div>
-        <span>장면 배치 가져오기</span>
-        <strong>다른 장면의 이미지 배치를 그대로 사용</strong>
-        <small>
-          대사와 해설은 바꾸지 않고, 배경과 왼쪽·오른쪽 캐릭터만 가져와요.
-        </small>
-      </div>
-      <div className="scene-staging-copy-controls">
-        <select
-          value={sourceLineId}
-          onChange={(event) => setSourceLineId(event.target.value)}
-          aria-label="배치를 가져올 장면"
-        >
-          <option value="">장면을 선택하세요</option>
-          {availableChapters.map(({ chapter, lines: chapterLines }) => (
-            <optgroup
-              label={`${chapter.order}. ${chapter.title || "이름 없는 챕터"}`}
-              key={chapter.id}
-            >
-              {chapterLines.map((line) => (
-                <option value={line.id} key={line.id}>
-                  장면 {line.order} · {line.speakerName || "해설"} ·{" "}
-                  {line.text.trim().slice(0, 24) || "빈 글상자"}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        <button
-          type="button"
-          disabled={!sourceLineId}
-          onClick={() => {
-            onCopy(sourceLineId);
-            setSourceLineId("");
-          }}
-        >
-          이 배치 가져오기
-        </button>
-      </div>
-      {sourceLine && sourceChapter && (
-        <div className="scene-staging-copy-preview">
-          <SceneThumbnail chapter={sourceChapter} line={sourceLine} />
-          <span>
-            <strong>
-              {sourceChapter.order}. {sourceChapter.title || "이름 없는 챕터"} ·
-              장면 {sourceLine.order}
-            </strong>
-            <small>
-              왼쪽{" "}
-              {assetName(
-                sourceLine.leftAssetId || sourceChapter.leftAssetId,
-              ) || "없음"}
-              {" · "}오른쪽{" "}
-              {assetName(
-                sourceLine.rightAssetId || sourceChapter.rightAssetId,
-              ) || "없음"}
-              {" · "}배경{" "}
-              {assetName(
-                sourceLine.backgroundId || sourceChapter.backgroundId,
-              ) || "없음"}
-            </small>
-          </span>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function StoryPlayer({
-  project,
-  startIndex,
-  onIndexChange,
-  onBack,
-}: {
-  project: StoryProject;
-  startIndex: number;
-  onIndexChange: (index: number) => void;
-  onBack: () => void;
-}) {
-  const lines = project.chapters
-    .slice()
-    .sort((a, b) => a.order - b.order)
-    .flatMap((chapter) =>
-      project.lines
-        .filter((line) => line.chapterId === chapter.id)
-        .sort((a, b) => a.order - b.order),
-    );
-  const line = lines[startIndex] ?? lines[0];
-  const chapter = project.chapters.find(
-    (candidate) => candidate.id === line?.chapterId,
-  );
-  const backgroundId = line?.backgroundId || chapter?.backgroundId || "";
-  const leftId = line?.leftAssetId || chapter?.leftAssetId || "";
-  const rightId = line?.rightAssetId || chapter?.rightAssetId || "";
-  const background = ASSET_BY_ID.get(backgroundId)?.src;
-
-  const playChapter = (chapterId: string) => {
-    const index = lines.findIndex((candidate) => candidate.chapterId === chapterId);
-    onIndexChange(index >= 0 ? index : 0);
-  };
-
-  return (
-    <main className="player-shell">
-      <div
-        className="story-stage"
-        style={
-          background
-            ? {
-                backgroundImage: `linear-gradient(180deg, rgba(8, 17, 28, 0.05), rgba(8, 17, 28, 0.48)), url("${background}")`,
-              }
-            : undefined
-        }
-      >
-        <header className="player-topbar">
-          <div>
-            <span className="eyebrow">스토리 플레이</span>
-            <strong>{project.title}</strong>
-          </div>
-          <div className="player-top-actions">
-            <label className="chapter-jump">
-              <span className="sr-only">챕터 골라 시작</span>
-              <select
-                value={chapter?.id ?? ""}
-                onChange={(event) => playChapter(event.target.value)}
-              >
-                {project.chapters
-                  .slice()
-                  .sort((a, b) => a.order - b.order)
-                  .map((item) => (
-                    <option value={item.id} key={item.id}>
-                      {item.order}. {item.title}
-                    </option>
-                  ))}
-              </select>
-            </label>
-            <button className="ghost-button light" onClick={onBack}>
-              편집으로
-            </button>
-          </div>
-        </header>
-        <section className="character-layer" aria-label="이야기 장면">
-          <AssetPreview
-            assetId={leftId}
-            alt={assetName(leftId) || "왼쪽 캐릭터"}
-            className={`stage-character left ${assetPlacementClass(leftId)} ${
-              line?.speaker === "right" ? "listener" : ""
-            } ${shouldMirrorAsset(leftId, "left") ? "mirrored" : ""}`}
-          />
-          <AssetPreview
-            assetId={rightId}
-            alt={assetName(rightId) || "오른쪽 캐릭터"}
-            className={`stage-character right ${assetPlacementClass(rightId)} ${
-              line?.speaker === "left" ? "listener" : ""
-            } ${shouldMirrorAsset(rightId, "right") ? "mirrored" : ""}`}
-          />
-        </section>
-        <section
-          className={`dialogue-box ${
-            line?.type === "narration" ? "narration" : ""
-          }`}
-          aria-live="polite"
-        >
-          <div className="dialogue-meta">
-            <span>
-              {chapter?.order}. {chapter?.title}
-            </span>
-            <span>
-              {lines.length > 0 ? startIndex + 1 : 0} / {lines.length}
-            </span>
-          </div>
-          {line?.type === "narration" ? (
-            <>
-              <div className="narration-heading">
-                <span>해설</span>
-              </div>
-              <p className="narration-copy">
-                {line.text || "이 챕터에는 아직 글이 없어요."}
-              </p>
-            </>
-          ) : (
-            <p className="dialogue-copy">
-              <DialogueInline
-                speakerName={line?.speakerName || "화자 없음"}
-                text={line?.text || "이 챕터에는 아직 글이 없어요."}
-              />
-            </p>
-          )}
-          <div className="player-controls">
-            <button
-              className="ghost-button"
-              disabled={startIndex === 0}
-              onClick={() => onIndexChange(Math.max(0, startIndex - 1))}
-            >
-              이전
-            </button>
-            <button
-              className="primary-button"
-              disabled={startIndex >= lines.length - 1}
-              onClick={() =>
-                onIndexChange(Math.min(lines.length - 1, startIndex + 1))
-              }
-            >
-              다음 장면
-            </button>
-          </div>
-        </section>
-      </div>
-      <footer className="copyright-bar">
-        기본 제공 이미지 © 놀퀴즈 · 토끼와 자라·옹고집전 이미지 사용
-      </footer>
-    </main>
-  );
 }
 
 export function StoryStudio() {
@@ -1505,7 +218,11 @@ export function StoryStudio() {
     cloneProject(DEFAULT_PROJECT),
   );
   const [creatorAccess, setCreatorAccess] = useState<CreatorAccess>("none");
-  const [view, setView] = useState<"studio" | "play">("studio");
+  const [playerUi, dispatchPlayerUi] = useReducer(
+    storyStudioPlayerReducer,
+    INITIAL_STORY_STUDIO_PLAYER_STATE,
+  );
+  const { view, playIndex } = playerUi;
   const [workspaceMode, setWorkspaceMode] =
     useState<WorkspaceMode>("create");
   const [planningView, setPlanningView] =
@@ -1518,7 +235,6 @@ export function StoryStudio() {
   const [selectedLineId, setSelectedLineId] = useState(
     DEFAULT_PROJECT.lines[0].id,
   );
-  const [playIndex, setPlayIndex] = useState(0);
   const [projectToolsOpen, setProjectToolsOpen] = useState(false);
   const [mobileProjectOpen, setMobileProjectOpen] = useState(false);
   const [mobileEditorToolsOpen, setMobileEditorToolsOpen] = useState(false);
@@ -1554,24 +270,177 @@ export function StoryStudio() {
   const [busyStep, setBusyStep] = useState("");
   const [blankConfirmOpen, setBlankConfirmOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [localDraftFound, setLocalDraftFound] = useState(false);
+  const [localDraftStatus, setLocalDraftStatus] = useState<EntryLocalDraftStatus>("checking");
+  const [entryChoiceLabel, setEntryChoiceLabel] = useState("");
+  const entryChoiceRef = useRef<(() => void) | null>(null);
   const [backupFound, setBackupFound] = useState(false);
   const [entryBusy, setEntryBusy] = useState(false);
   const [entryNotice, setEntryNotice] = useState("");
+  const [saveStatus, setSaveStatus] =
+    useState<StoryProjectSaveStatus>("idle");
+  const [checkpoints, setCheckpoints] = useState<StoryProjectCheckpoint[]>([]);
+  const [undoDelete, setUndoDelete] = useState<{
+    project: StoryProject;
+    description: string;
+    location: StoryEditorLocation;
+  } | null>(null);
+  const [editorRestoreRequest, setEditorRestoreRequest] =
+    useState<StoryEditorRestoreRequest | null>(null);
+  const [applyIssuesVisible, setApplyIssuesVisible] = useState(false);
+  const [highlightedApplyIssueId, setHighlightedApplyIssueId] = useState("");
+  const [applyIssueFocusRequest, setApplyIssueFocusRequest] =
+    useState<StoryApplyIssue | null>(null);
+  const [importIssues, setImportIssues] = useState<{
+    open: boolean;
+    issues: StoryImportIssue[];
+    source?: StoryImportSource;
+  }>({ open: false, issues: [], source: "excel" });
+  const [importConfirmation, setImportConfirmation] = useState<{
+    open: boolean;
+    project: StoryProject | null;
+    fileName?: string;
+  }>({ open: false, project: null, fileName: "" });
+  const [revisionResponses, setRevisionResponses] =
+    useState<StoryRevisionResponses>({});
   const updateController = useRef<AbortController | null>(null);
   const excelInputRef = useRef<HTMLInputElement | null>(null);
+  const projectRepositoryRef = useRef<StoryProjectRepository | null>(null);
+  const checkpointRepositoryRef =
+    useRef<StoryProjectCheckpointRepository | null>(null);
+  const saveQueueRef = useRef<StoryProjectSaveQueue | null>(null);
+  const chapterViewportRef = useRef<{
+    chapterId: string;
+    lineId: string;
+    scrollY: number;
+    selection?: StoryEditorTextSelection;
+  } | null>(null);
+  const sceneCardRefs = useRef(new Map<string, HTMLElement>());
+  const lineBodyRefs = useRef(new Map<string, HTMLTextAreaElement>());
+  const speakerNameRefs = useRef(new Map<string, HTMLSelectElement>());
+  const titleInputRef = useRef<HTMLInputElement | null>(null);
+  const applyIssueHighlightTimerRef = useRef<number | null>(null);
+  const memoReturnOriginRef = useRef<MemoReturnOrigin | null>(null);
+  const playerReturnLocationRef = useRef<StudioReturnOrigin | null>(null);
+  const homeReturnOriginRef = useRef<StudioReturnOrigin | null>(null);
+  const mountedRef = useRef(false);
+
+  function projectRepository() {
+    if (!projectRepositoryRef.current) {
+      projectRepositoryRef.current = createLocalStoryProjectRepository({
+        storage: {
+          getItem: (key) => window.localStorage.getItem(key),
+          setItem: (key, value) => window.localStorage.setItem(key, value),
+        },
+      });
+    }
+    return projectRepositoryRef.current;
+  }
+
+  function saveActiveProject(project: StoryProject): StoryProjectSaveResult {
+    return projectRepository().saveActive(project);
+  }
+
+  function checkpointRepository() {
+    if (!checkpointRepositoryRef.current) {
+      checkpointRepositoryRef.current = createStoryProjectCheckpointRepository({
+        storage: {
+          getItem: (key) => window.localStorage.getItem(key),
+          setItem: (key, value) => window.localStorage.setItem(key, value),
+        },
+      });
+    }
+    return checkpointRepositoryRef.current;
+  }
+
+  useEffect(() => {
+    mountedRef.current = true;
+    const flushPendingSave = () => saveQueueRef.current?.flush();
+    window.addEventListener("pagehide", flushPendingSave);
+    return () => {
+      mountedRef.current = false;
+      window.removeEventListener("pagehide", flushPendingSave);
+      flushPendingSave();
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (applyIssueHighlightTimerRef.current !== null) {
+        window.clearTimeout(applyIssueHighlightTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       try {
-        const savedDraft = localStorage.getItem(DRAFT_KEY);
-        const savedActive = localStorage.getItem(ACTIVE_KEY);
-        if (savedDraft) {
-          setDraft(cloneProject(JSON.parse(savedDraft) as StoryProject));
-          setLocalDraftFound(true);
+        const repository = projectRepository();
+        const savedCheckpoints = checkpointRepository().list();
+        const savedDraft = repository.loadDraft();
+        const savedActive = repository.loadActive();
+        if (savedCheckpoints.ok) {
+          setCheckpoints(savedCheckpoints.checkpoints);
+        } else {
+          setNotice(savedCheckpoints.message);
         }
-        if (savedActive) {
-          setActive(cloneProject(JSON.parse(savedActive) as StoryProject));
+        const savedDraftProject = savedDraft.ok && savedDraft.project
+          ? cloneProject(savedDraft.project)
+          : null;
+        const savedActiveProject = savedActive.ok && savedActive.project
+          ? cloneProject(savedActive.project)
+          : null;
+        if (savedDraftProject) {
+          setDraft(savedDraftProject);
+          setLocalDraftStatus("available");
+          const session = resolveStudioUiSession(
+            savedDraftProject, loadStudioUiSession(() => window.localStorage),
+          );
+          setWorkspaceMode(session.workspaceMode);
+          setPlanningView(session.planningView);
+          setSelectedChapterId(session.location.chapterId);
+          setSelectedLineId(session.location.lineId);
+          setEditorMode(session.location.view);
+          if (
+            savedDraft.ok &&
+            savedDraft.project &&
+            savedDraft.migrationError
+          ) {
+            setNotice(savedDraft.migrationError);
+          }
+        } else if (!savedDraft.ok) {
+          setNotice(savedDraft.message);
+          setEntryNotice(savedDraft.message);
+          setLocalDraftStatus("failed");
+        } else {
+          setLocalDraftStatus("missing");
+        }
+        if (savedDraftProject) {
+          const activeResolution = resolveActiveProjectForDraft({
+            draft: savedDraftProject,
+            active: savedActiveProject,
+          });
+          setActive(activeResolution.project);
+          if (activeResolution.usedFallback) {
+            const activeSave = repository.saveActive(activeResolution.project);
+            if (savedActiveProject || !activeSave.ok) {
+              setNotice(
+                activeSave.ok
+                  ? "다른 작품의 플레이 버전은 열지 않았어요. 이 작품을 적용한 뒤 플레이하세요."
+                  : activeSave.message,
+              );
+            }
+          }
+        } else if (savedActiveProject) {
+          setActive(savedActiveProject);
+          if (
+            savedActive.ok &&
+            savedActive.project &&
+            savedActive.migrationError
+          ) {
+            setNotice(savedActive.migrationError);
+          }
+        } else if (!savedActive.ok) {
+          setNotice(savedActive.message);
         }
         setBackupFound(Boolean(localStorage.getItem(BACKUP_KEY)));
         setFavoriteAssets(
@@ -1580,8 +449,15 @@ export function StoryStudio() {
         setRecentAssets(
           JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]") as string[],
         );
+        setRevisionResponses(
+          normalizeStoryRevisionResponses(
+            JSON.parse(localStorage.getItem(REVISION_RESPONSES_KEY) ?? "{}"),
+          ),
+        );
       } catch {
         setNotice("이 기기의 이전 저장을 읽지 못해 예시 이야기로 시작했어요.");
+        setEntryNotice("이 기기의 저장을 읽지 못했어요. 원본은 자동으로 덮어쓰지 않았어요.");
+        setLocalDraftStatus("failed");
       } finally {
         setHydrated(true);
       }
@@ -1590,38 +466,91 @@ export function StoryStudio() {
   }, []);
 
   useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-    } catch {
-      window.setTimeout(
-        () =>
-          setNotice(
-            "기기 저장 공간이 부족해요. Excel로 저장해 작품을 보관해 주세요.",
-          ),
-        0,
-      );
+    if (!hydrated || creatorAccess !== "local") return;
+    if (!saveQueueRef.current) {
+      saveQueueRef.current = createStoryProjectSaveQueue({
+        repository: projectRepository(),
+        onStatusChange: (status) => {
+          if (!mountedRef.current) return;
+          setSaveStatus(status);
+          if (status === "failed") {
+            setNotice(
+              "기기에 저장하지 못했어요. Excel로 저장해 작품을 보관해 주세요.",
+            );
+          }
+        },
+      });
     }
-  }, [draft, hydrated]);
+    saveQueueRef.current.schedule(draft);
+  }, [draft, hydrated, creatorAccess]);
+
+  useEffect(() => {
+    if (!hydrated || creatorAccess !== "local" || view !== "studio") return;
+    saveStudioUiSession(() => window.localStorage, resolveStudioUiSession(draft, {
+      version: 1, projectId: draft.id, workspaceMode, planningView,
+      location: { chapterId: selectedChapterId, lineId: selectedLineId, view: editorMode, focusTarget: "none" },
+    }));
+  }, [draft, hydrated, creatorAccess, view, workspaceMode, planningView, selectedChapterId, selectedLineId, editorMode]);
 
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteAssets));
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteAssets));
+    } catch { /* Optional preferences must not block opening a story. */ }
   }, [favoriteAssets, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(RECENTS_KEY, JSON.stringify(recentAssets));
+    try {
+      localStorage.setItem(RECENTS_KEY, JSON.stringify(recentAssets));
+    } catch { /* Optional preferences must not block opening a story. */ }
   }, [recentAssets, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(
+        REVISION_RESPONSES_KEY,
+        JSON.stringify(revisionResponses),
+      );
+    } catch {}
+  }, [hydrated, revisionResponses]);
 
   useEffect(() => {
     if (!memoPopupOpen) return;
     function closeMemoPopup(event: KeyboardEvent) {
-      if (event.key === "Escape") setMemoPopupOpen(false);
+      if (event.key === "Escape") {
+        setMemoPopupOpen(false);
+        setMemoSearch("");
+        const origin = memoReturnOriginRef.current;
+        memoReturnOriginRef.current = null;
+        if (!origin) return;
+        const resolved = resolveCreativeMemoReturnLocation({
+          chapters: draft.chapters,
+          lines: draft.lines,
+          location: origin.location,
+        });
+        setWorkspaceMode(origin.workspaceMode);
+        setPlanningView(origin.planningView);
+        setSelectedChapterId(resolved.location.chapterId);
+        setSelectedLineId(resolved.location.lineId);
+        setEditorMode(resolved.location.view);
+        if (origin.workspaceMode === "create") {
+          setEditorRestoreRequest({
+            location: resolved.location,
+            scrollY: resolved.usedFallback ? undefined : origin.scrollY,
+          });
+        }
+        setNotice(
+          resolved.usedFallback
+            ? "기록하던 컷이 바뀌어 가장 가까운 곳으로 돌아왔어요."
+            : "메모를 닫고 기록하던 컷으로 돌아왔어요.",
+        );
+      }
     }
     window.addEventListener("keydown", closeMemoPopup);
     return () => window.removeEventListener("keydown", closeMemoPopup);
-  }, [memoPopupOpen]);
+  }, [draft.chapters, draft.lines, memoPopupOpen]);
 
   useEffect(() => {
     if (!selectedCreativeMemoId) return;
@@ -1632,40 +561,97 @@ export function StoryStudio() {
     return () => window.removeEventListener("keydown", closeCreativeMemoEditor);
   }, [selectedCreativeMemoId]);
 
-  const selectedChapter =
-    draft.chapters.find((chapter) => chapter.id === selectedChapterId) ??
-    draft.chapters[0];
-  const selectedChapterLines = draft.lines
-    .filter((line) => line.chapterId === selectedChapter?.id)
-    .sort((a, b) => a.order - b.order);
-  const selectedLine =
-    selectedChapterLines.find((line) => line.id === selectedLineId) ??
-    selectedChapterLines[0];
-  const selectedLineIndex = selectedLine
-    ? selectedChapterLines.findIndex((line) => line.id === selectedLine.id)
-    : -1;
+  const {
+    orderedDraftLines,
+    selectedChapter,
+    selectedChapterLines,
+    selectedLine,
+    selectedLineIndex,
+    selectedStoryLineIndex,
+    sortedChapters,
+  } = selectStoryEditorSelection({
+    project: draft,
+    selectedChapterId,
+    selectedLineId,
+  });
+  useEffect(() => {
+    if (!editorRestoreRequest) return;
+    const request = editorRestoreRequest;
+    const frame = window.requestAnimationFrame(() => {
+      const lineBody = lineBodyRefs.current.get(request.location.lineId);
+      const sceneCard = sceneCardRefs.current.get(request.location.lineId);
+      const target = lineBody ?? sceneCard;
+      if (request.scrollY !== undefined) {
+        window.scrollTo({ top: request.scrollY, behavior: "auto" });
+      } else {
+        target?.scrollIntoView({ block: "center", behavior: "auto" });
+      }
+      if (request.location.focusTarget === "line-body" && lineBody) {
+        lineBody.focus({ preventScroll: true });
+        const selection = clampStoryEditorTextSelection(
+          request.selection,
+          lineBody.value.length,
+        );
+        if (selection) {
+          lineBody.setSelectionRange(selection.start, selection.end);
+        }
+      }
+      setEditorRestoreRequest(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [editorRestoreRequest]);
+  useEffect(() => {
+    if (!applyIssueFocusRequest) return;
+    const issue = applyIssueFocusRequest;
+    let secondFrame: number | null = null;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        const target =
+          issue.field === "title"
+            ? titleInputRef.current
+            : issue.lineId
+              ? speakerNameRefs.current.get(issue.lineId)
+              : undefined;
+        target?.scrollIntoView({ block: "center", behavior: "auto" });
+        target?.focus({ preventScroll: true });
+        setApplyIssueFocusRequest(null);
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [applyIssueFocusRequest, editorMode, planningView, selectedLineId, workspaceMode]);
+  const applyIssues = useMemo(() => findStoryApplyIssues(draft), [draft]);
+  const highlightedApplyIssue = applyIssues.find(
+    (issue) => issue.id === highlightedApplyIssueId,
+  );
   const hasUnappliedChanges = useMemo(
     () => projectContent(draft) !== projectContent(active),
     [active, draft],
   );
 
-  const sortedChapters = draft.chapters
-    .slice()
-    .sort((a, b) => a.order - b.order);
   const orderedCreativeMemos = draft.creativeMemos
     .slice()
     .sort((a, b) => a.order - b.order);
   const selectedCreativeMemo = orderedCreativeMemos.find(
     (memo) => memo.id === selectedCreativeMemoId,
   );
-  const orderedDraftLines = sortedChapters.flatMap((chapter) =>
-    draft.lines
-      .filter((line) => line.chapterId === chapter.id)
-      .sort((a, b) => a.order - b.order),
-  );
-  const selectedStoryLineIndex = selectedLine
-    ? orderedDraftLines.findIndex((line) => line.id === selectedLine.id)
-    : -1;
+  const creativeMemoLinkChapters = creativeMemoChapterTargets(draft.chapters);
+  const selectedCreativeMemoLineTargets = selectedCreativeMemo
+    ? creativeMemoLineTargets({
+        chapters: draft.chapters,
+        lines: draft.lines,
+        chapterId: selectedCreativeMemo.linkedChapterId ?? "",
+      })
+    : [];
+  const selectedCreativeMemoLinkResolution = selectedCreativeMemo
+    ? resolveCreativeMemoLink({
+        memo: selectedCreativeMemo,
+        chapters: draft.chapters,
+        lines: draft.lines,
+      })
+    : null;
   const continuationPoint = findContinuationPoint(draft);
   const isAtContinuationPoint =
     continuationPoint?.chapterId === selectedChapter?.id &&
@@ -1847,17 +833,17 @@ export function StoryStudio() {
     }),
     ...sortedChapters.flatMap((chapter) =>
       [
-        ["summary", "이번 챕터에서 달라지는 일", chapter.summary],
-        ["purpose", "이 챕터의 역할", chapter.purpose],
+        ["summary", "이번 장에서 달라지는 일", chapter.summary],
+        ["purpose", "이 장의 역할", chapter.purpose],
         ["mood", "분위기·감정 흐름", chapter.mood],
         ["keyEvents", "꼭 들어갈 사건", chapter.keyEvents],
-        ["nextChapterIdea", "다음 챕터로 이어질 일", chapter.nextChapterIdea],
+        ["nextChapterIdea", "다음 장으로 이어질 일", chapter.nextChapterIdea],
       ].map(
         ([field, label, content]): MemoSearchResult => ({
           id: `chapter-${chapter.id}-${field}`,
           section: "chapter",
           label,
-          context: `${chapter.order}. ${chapter.title || "제목 없는 챕터"}`,
+          context: `${chapter.order}. ${chapter.title || "제목 없는 장"}`,
           content,
           fieldId: `memo-field-chapter-${chapter.id}-${field}`,
           chapterId: chapter.id,
@@ -1869,10 +855,10 @@ export function StoryStudio() {
         (candidate) => candidate.id === line.chapterId,
       );
       const context = `${chapter?.order ?? ""}. ${
-        chapter?.title || "제목 없는 챕터"
-      } · 장면 ${line.order}`;
+        chapter?.title || "제목 없는 장"
+      } · 컷 ${line.order}`;
       return [
-        ["purposeNote", "이 장면의 역할", line.purposeNote],
+        ["purposeNote", "이 컷의 역할", line.purposeNote],
         ["emotionNote", "인물의 감정", line.emotionNote],
         ["directionNote", "연출 메모", line.directionNote],
       ].map(
@@ -1926,7 +912,7 @@ export function StoryStudio() {
         (step) => draft.planning[step.key].trim(),
       ),
     },
-    { label: "챕터", ready: draft.chapters.length > 0 },
+    { label: "장", ready: draft.chapters.length > 0 },
   ];
   const readyStoryItems = storyChecklist.filter((item) => item.ready).length;
 
@@ -1985,7 +971,15 @@ export function StoryStudio() {
       setSelectedCreativeMemoId(result.memoId);
     } else if (result.lineId) {
       const line = draft.lines.find((candidate) => candidate.id === result.lineId);
-      if (line) selectStoryLine(line);
+      if (line) {
+        setWorkspaceMode("create");
+        requestStoryEditorRestore({
+          chapterId: line.chapterId,
+          lineId: line.id,
+          view: "scene",
+          focusTarget: "none",
+        });
+      }
     } else if (result.chapterId) {
       selectChapter(result.chapterId);
     }
@@ -2059,9 +1053,10 @@ export function StoryStudio() {
   }
 
   function deleteCreativeMemo(memoId: string) {
-    if (!window.confirm("이 창작 메모를 삭제할까요? 삭제하면 되돌릴 수 없어요.")) {
+    if (!window.confirm("이 창작 메모를 삭제할까요? 삭제한 직후에는 되돌릴 수 있어요.")) {
       return;
     }
+    if (!prepareDeleteUndo("창작 메모")) return;
     setDraft((project) => ({
       ...project,
       creativeMemos: project.creativeMemos
@@ -2069,7 +1064,18 @@ export function StoryStudio() {
         .map((memo, index) => ({ ...memo, order: index + 1 })),
     }));
     setSelectedCreativeMemoId(null);
-    setNotice("창작 메모를 삭제했어요.");
+    setNotice("창작 메모를 삭제했어요. 바로 되돌릴 수 있어요.");
+  }
+
+  function deleteCreativeMemoField(memoId: string, fieldId: string) {
+    if (!prepareDeleteUndo("창작 메모 항목")) return;
+    updateCreativeMemo(memoId, (memo) => ({
+      ...memo,
+      fields: memo.fields
+        .filter((field) => field.id !== fieldId)
+        .map((field, index) => ({ ...field, order: index + 1 })),
+    }));
+    setNotice("창작 메모 항목을 삭제했어요. 바로 되돌릴 수 있어요.");
   }
 
   function openChapterPlan(chapterId: string) {
@@ -2142,7 +1148,7 @@ export function StoryStudio() {
       ),
     }));
     setNotice(
-      `${sourceChapter.order}. ${sourceChapter.title || "이름 없는 챕터"} · 장면 ${sourceLine.order}의 이미지 배치를 가져왔어요. 현재 글상자 내용은 그대로예요.`,
+      `${sourceChapter.order}. ${sourceChapter.title || "이름 없는 장"} · 컷 ${sourceLine.order}의 이미지 배치를 가져왔어요. 현재 글상자 내용은 그대로예요.`,
     );
   }
 
@@ -2195,9 +1201,188 @@ export function StoryStudio() {
     setSelectedLineId(line.id);
   }
 
+  function requestStoryEditorRestore(
+    location: StoryEditorLocation,
+    {
+      chapters = draft.chapters,
+      lines = draft.lines,
+      scrollY,
+      selection,
+    }: {
+      chapters?: Chapter[];
+      lines?: StoryLine[];
+      scrollY?: number;
+      selection?: StoryEditorTextSelection;
+    } = {},
+  ) {
+    const resolved = resolveStoryEditorLocation({
+      chapters,
+      lines,
+      location,
+    }).location;
+    setSelectedChapterId(resolved.chapterId);
+    setSelectedLineId(resolved.lineId);
+    setEditorMode(resolved.view);
+    setEditorRestoreRequest({ location: resolved, scrollY, selection });
+  }
+
+  function currentStoryEditorLocation(): StoryEditorLocation {
+    return {
+      chapterId: selectedChapter?.id ?? selectedChapterId,
+      lineId: selectedLine?.id ?? selectedLineId,
+      view: editorMode,
+      focusTarget: "none",
+    };
+  }
+
+  function currentLineBodySelection(lineId: string) {
+    const lineBody = lineBodyRefs.current.get(lineId);
+    return lineBody
+      ? { start: lineBody.selectionStart, end: lineBody.selectionEnd }
+      : undefined;
+  }
+
+  function openMemoPopup() {
+    if (!memoPopupOpen) {
+      memoReturnOriginRef.current = {
+        workspaceMode,
+        planningView,
+        location: currentStoryEditorLocation(),
+        scrollY:
+          workspaceMode === "create" && editorMode === "chapter"
+            ? window.scrollY
+            : undefined,
+      };
+    }
+    setMemoPopupOpen(true);
+  }
+
+  function returnFromMemoPopup() {
+    setMemoPopupOpen(false);
+    setMemoSearch("");
+    const origin = memoReturnOriginRef.current;
+    memoReturnOriginRef.current = null;
+    if (!origin) return;
+
+    const resolved = resolveCreativeMemoReturnLocation({
+      chapters: draft.chapters,
+      lines: draft.lines,
+      location: origin.location,
+    });
+    setWorkspaceMode(origin.workspaceMode);
+    setPlanningView(origin.planningView);
+    if (origin.workspaceMode === "create") {
+      requestStoryEditorRestore(resolved.location, {
+        scrollY: resolved.usedFallback ? undefined : origin.scrollY,
+      });
+    } else {
+      setSelectedChapterId(resolved.location.chapterId);
+      setSelectedLineId(resolved.location.lineId);
+      setEditorMode(resolved.location.view);
+    }
+    setNotice(
+      resolved.usedFallback
+        ? "기록하던 컷이 바뀌어 가장 가까운 곳으로 돌아왔어요."
+        : "메모를 닫고 기록하던 컷으로 돌아왔어요.",
+    );
+  }
+
+  function switchStoryEditorView(view: StoryEditorView) {
+    if (view === editorMode) return;
+    const current = currentStoryEditorLocation();
+    if (editorMode === "chapter") {
+      chapterViewportRef.current = {
+        chapterId: current.chapterId,
+        lineId: current.lineId,
+        scrollY: window.scrollY,
+        selection: currentLineBodySelection(current.lineId),
+      };
+    }
+    const rememberedViewport = chapterViewportRef.current;
+    const scrollY =
+      view === "chapter" &&
+      rememberedViewport?.chapterId === current.chapterId &&
+      rememberedViewport.lineId === current.lineId
+        ? rememberedViewport.scrollY
+        : undefined;
+    const selection =
+      currentLineBodySelection(current.lineId) ??
+      (view === "chapter" &&
+      rememberedViewport?.chapterId === current.chapterId &&
+      rememberedViewport.lineId === current.lineId
+        ? rememberedViewport.selection
+        : undefined);
+    requestStoryEditorRestore(
+      transitionStoryEditorView({ location: current, view }),
+      { scrollY, selection },
+    );
+  }
+
+  function openStoryEditorScene(line: StoryLine) {
+    const selection = currentLineBodySelection(line.id);
+    chapterViewportRef.current = {
+      chapterId: line.chapterId,
+      lineId: line.id,
+      scrollY: window.scrollY,
+      selection,
+    };
+    requestStoryEditorRestore(
+      {
+        chapterId: line.chapterId,
+        lineId: line.id,
+        view: "scene",
+        focusTarget: "line-body",
+      },
+      { selection },
+    );
+  }
+
+  function highlightApplyIssue(issueId: string) {
+    if (applyIssueHighlightTimerRef.current !== null) {
+      window.clearTimeout(applyIssueHighlightTimerRef.current);
+    }
+    setHighlightedApplyIssueId(issueId);
+    applyIssueHighlightTimerRef.current = window.setTimeout(() => {
+      setHighlightedApplyIssueId("");
+      applyIssueHighlightTimerRef.current = null;
+    }, 2400);
+  }
+
+  function moveToApplyIssue(issue: StoryApplyIssue) {
+    const navigation = getStoryApplyIssueNavigation(issue);
+    highlightApplyIssue(issue.id);
+    setApplyIssuesVisible(true);
+    if (navigation.workspace === "plan") {
+      setWorkspaceMode("plan");
+      setPlanningView("story");
+      setMobileProjectOpen(true);
+    } else {
+      setWorkspaceMode("create");
+      if (navigation.lineId && navigation.chapterId) {
+        requestStoryEditorRestore({
+          chapterId: navigation.chapterId,
+          lineId: navigation.lineId,
+          view: navigation.view ?? "scene",
+          focusTarget: navigation.focus === "line-body" ? "line-body" : "none",
+        });
+      } else {
+        if (navigation.chapterId) {
+          setSelectedChapterId(navigation.chapterId);
+          setSelectedLineId("");
+        }
+        setEditorMode(navigation.view ?? "chapter");
+      }
+    }
+    if (navigation.focus === "speaker") setSceneSettingsOpen(true);
+    if (navigation.focus === "title" || navigation.focus === "speaker") {
+      setApplyIssueFocusRequest(issue);
+    }
+    setNotice("고칠 곳으로 이동했어요. 안내를 읽고 학생 작품을 직접 고쳐 보세요.");
+  }
+
   function moveThroughStory(direction: -1 | 1) {
     const nextLine = orderedDraftLines[selectedStoryLineIndex + direction];
-    if (nextLine) selectStoryLine(nextLine);
+    if (nextLine) openStoryEditorScene(nextLine);
   }
 
   function editStoryFromBeginning() {
@@ -2208,7 +1393,7 @@ export function StoryStudio() {
     selectStoryLine(firstLine);
     setSceneSettingsOpen(false);
     setNotice(
-      "첫 장면부터 차례로 읽고 고칠 수 있어요. ‘다음 장면’을 누르면 챕터를 넘어 계속 이어집니다.",
+      "첫 컷부터 차례로 읽고 고칠 수 있어요. ‘다음 컷’을 누르면 장을 넘어 계속 이어집니다.",
     );
   }
 
@@ -2223,7 +1408,7 @@ export function StoryStudio() {
     selectStoryLine(continuationLine);
     setSceneSettingsOpen(false);
     setNotice(
-      `${continuationPoint.label} 장면으로 돌아왔어요. 여기서부터 이야기를 이어 써 보세요.`,
+      `${continuationPoint.label} 컷으로 돌아왔어요. 여기서부터 이야기를 이어 써 보세요.`,
     );
   }
 
@@ -2238,6 +1423,7 @@ export function StoryStudio() {
       mood: "",
       keyEvents: "",
       nextChapterIdea: "",
+      storyStageKeys: [],
       chapterSpeakerNames: [],
       characterAssetIds: [],
       backgroundAssetIds: [],
@@ -2262,12 +1448,13 @@ export function StoryStudio() {
     if (
       !window.confirm(
         sceneCount > 0
-          ? `이 챕터와 장면 ${sceneCount}개를 함께 삭제할까요?`
-          : "이 챕터를 삭제할까요?",
+          ? `이 장과 컷 ${sceneCount}개를 함께 삭제할까요?`
+          : "이 장을 삭제할까요?",
       )
     ) {
       return;
     }
+    if (!prepareDeleteUndo(sceneCount > 0 ? "장과 컷" : "장")) return;
     const remaining = sortedChapters.filter((chapter) => chapter.id !== chapterId);
     setDraft((project) => ({
       ...project,
@@ -2275,35 +1462,50 @@ export function StoryStudio() {
       lines: project.lines.filter((line) => line.chapterId !== chapterId),
     }));
     selectChapter(remaining[0]?.id ?? "");
-    setNotice("챕터를 삭제했어요. 현재 플레이는 아직 그대로예요.");
+    setNotice("장을 삭제했어요. 현재 플레이는 아직 그대로이고 바로 되돌릴 수 있어요.");
+  }
+
+  function reportStoryLineCommandFailure(code: StoryLineCommandFailureCode) {
+    setNotice(
+      code === "duplicate-id"
+        ? "새 컷 ID가 이미 있어요. 다시 시도해 주세요."
+        : code === "cannot-move"
+          ? "더 이상 이 방향으로 컷을 옮길 수 없어요."
+          : "바꾸려는 컷을 찾지 못했어요.",
+    );
   }
 
   function addLine(type: StoryLine["type"], openScene = false) {
     if (!selectedChapter) return;
-    const id = `line-${Date.now()}`;
     const firstSpeaker =
       selectedChapter.chapterSpeakerNames[0] ??
       draft.speakerNames[0] ??
       "주인공";
-    const insertOrder =
-      openScene && selectedLine?.chapterId === selectedChapter.id
-        ? selectedLine.order + 1
-        : selectedChapterLines.length + 1;
-    const line: StoryLine = {
-      id,
+    const command = createStoryLine({
+      lines: draft.lines,
       chapterId: selectedChapter.id,
-      order: insertOrder,
-      type,
-      speaker: type === "narration" ? "narration" : "left",
-      speakerName: type === "narration" ? "해설" : firstSpeaker,
-      text: "",
-      leftAssetId: "",
-      rightAssetId: "",
-      backgroundId: "",
-      purposeNote: "",
-      emotionNote: "",
-      directionNote: "",
-    };
+      createId: () => `line-${Date.now()}`,
+      insertAfterLineId:
+        openScene && selectedLine?.chapterId === selectedChapter.id
+          ? selectedLine.id
+          : undefined,
+      line: {
+        type,
+        speaker: type === "narration" ? "narration" : "left",
+        speakerName: type === "narration" ? "해설" : firstSpeaker,
+        text: "",
+        leftAssetId: "",
+        rightAssetId: "",
+        backgroundId: "",
+        purposeNote: "",
+        emotionNote: "",
+        directionNote: "",
+      },
+    });
+    if (!command.ok) {
+      reportStoryLineCommandFailure(command.code);
+      return;
+    }
     setDraft((project) => ({
       ...project,
       speakerNames:
@@ -2321,82 +1523,82 @@ export function StoryStudio() {
             }
           : chapter,
       ),
-      lines: [
-        ...project.lines.map((existing) =>
-          existing.chapterId === selectedChapter.id &&
-          existing.order >= insertOrder
-            ? { ...existing, order: existing.order + 1 }
-            : existing,
-        ),
-        line,
-      ],
+      lines: command.lines,
     }));
-    setSelectedLineId(id);
-    if (openScene) setEditorMode("scene");
+    requestStoryEditorRestore(
+      newStoryEditorLineLocation({
+        chapterId: selectedChapter.id,
+        lineId: command.selectedLineId ?? "",
+        view: openScene ? "scene" : "chapter",
+      }),
+      { lines: command.lines },
+    );
   }
 
   function removeLine(lineId: string) {
-    if (!window.confirm("이 장면을 삭제할까요?")) return;
-    const nextLines = selectedChapterLines.filter((line) => line.id !== lineId);
+    if (!window.confirm("이 컷을 삭제할까요?")) return;
+    const command = deleteStoryLine({ lines: draft.lines, lineId });
+    if (!command.ok) {
+      reportStoryLineCommandFailure(command.code);
+      return;
+    }
+    if (
+      !prepareDeleteUndo("컷", {
+        chapterId: selectedChapter?.id ?? selectedChapterId,
+        lineId,
+        view: editorMode,
+        focusTarget: "line-body",
+      })
+    ) return;
     setDraft((project) => ({
       ...project,
-      lines: project.lines
-        .filter((line) => line.id !== lineId)
-        .map((line) => {
-          if (line.chapterId !== selectedChapter?.id) return line;
-          const index = nextLines.findIndex((candidate) => candidate.id === line.id);
-          return { ...line, order: index + 1 };
-        }),
+      lines: command.lines,
     }));
-    setSelectedLineId(nextLines[0]?.id ?? "");
+    requestStoryEditorRestore({
+      ...currentStoryEditorLocation(),
+      lineId: command.selectedLineId ?? "",
+      focusTarget: command.selectedLineId ? "line-body" : "none",
+    }, { lines: command.lines });
+    setNotice("컷을 삭제했어요. 바로 되돌릴 수 있어요.");
   }
 
   function moveLine(lineId: string, direction: -1 | 1) {
-    setDraft((project) => {
-      const ordered = project.lines
-        .filter((line) => line.chapterId === selectedChapter?.id)
-        .sort((a, b) => a.order - b.order);
-      const index = ordered.findIndex((line) => line.id === lineId);
-      const target = index + direction;
-      if (index < 0 || target < 0 || target >= ordered.length) return project;
-      [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
-      const orderMap = new Map(
-        ordered.map((line, lineIndex) => [line.id, lineIndex + 1]),
-      );
-      return {
-        ...project,
-        lines: project.lines.map((line) =>
-          orderMap.has(line.id)
-            ? { ...line, order: orderMap.get(line.id)! }
-            : line,
-        ),
-      };
-    });
+    const command = moveStoryLine({ lines: draft.lines, lineId, direction });
+    if (!command.ok) {
+      reportStoryLineCommandFailure(command.code);
+      return;
+    }
+    setDraft((project) => ({ ...project, lines: command.lines }));
+    requestStoryEditorRestore(
+      {
+        ...currentStoryEditorLocation(),
+        lineId: command.selectedLineId ?? "",
+        focusTarget: "line-body",
+      },
+      { lines: command.lines },
+    );
   }
 
   function duplicateLine(lineId: string) {
-    const source = draft.lines.find((line) => line.id === lineId);
-    if (!source) return;
-    const id = `line-${Date.now()}`;
-    setDraft((project) => {
-      const chapterLines = project.lines
-        .filter((line) => line.chapterId === source.chapterId)
-        .sort((a, b) => a.order - b.order);
-      const next: StoryLine[] = [];
-      chapterLines.forEach((line) => {
-        next.push(line);
-        if (line.id === lineId) next.push({ ...line, id });
-      });
-      return {
-        ...project,
-        lines: [
-          ...project.lines.filter((line) => line.chapterId !== source.chapterId),
-          ...next.map((line, index) => ({ ...line, order: index + 1 })),
-        ],
-      };
+    const command = duplicateStoryLine({
+      lines: draft.lines,
+      lineId,
+      createId: () => `line-${Date.now()}`,
     });
-    setSelectedLineId(id);
-    setNotice("장면을 복제했어요.");
+    if (!command.ok) {
+      reportStoryLineCommandFailure(command.code);
+      return;
+    }
+    setDraft((project) => ({ ...project, lines: command.lines }));
+    requestStoryEditorRestore(
+      newStoryEditorLineLocation({
+        chapterId: selectedChapter?.id ?? selectedChapterId,
+        lineId: command.selectedLineId ?? "",
+        view: editorMode,
+      }),
+      { lines: command.lines },
+    );
+    setNotice("컷을 복제했어요.");
   }
 
   function addSpeaker(name: string, assignToSelectedScene = true) {
@@ -2421,7 +1623,7 @@ export function StoryStudio() {
           : line,
       ),
     }));
-    setNotice(`화자 ‘${name}’을(를) 이 챕터에 추가했어요.`);
+    setNotice(`화자 ‘${name}’을(를) 이 장에 추가했어요.`);
   }
 
   function addAssetToChapter(assetId: string, type: StoryAsset["type"]) {
@@ -2461,7 +1663,7 @@ export function StoryStudio() {
         : selectedChapter.backgroundId === assetId;
     if (usedInLines || usedAsDefault) {
       setNotice(
-        `‘${assetName(assetId)}’은(는) 현재 장면에서 사용 중이라 먼저 다른 이미지로 바꿔야 해요.`,
+        `‘${assetName(assetId)}’은(는) 현재 컷에서 사용 중이라 먼저 다른 이미지로 바꿔야 해요.`,
       );
       return;
     }
@@ -2489,29 +1691,97 @@ export function StoryStudio() {
     );
   }
 
-  function backupDraft() {
-    localStorage.setItem(BACKUP_KEY, JSON.stringify(draft));
+  function backupDraft(
+    reason: Exclude<StoryCheckpointReason, "before-restore">,
+  ) {
+    const checkpoint = checkpointRepository().create(reason, draft);
+    if (!checkpoint.ok) {
+      setNotice(checkpoint.message);
+      if (creatorAccess === "none") setEntryNotice(checkpoint.message);
+      return false;
+    }
+    setCheckpoints(checkpoint.checkpoints);
     setBackupFound(true);
+    return true;
+  }
+
+  function prepareDeleteUndo(
+    description: string,
+    location: StoryEditorLocation = currentStoryEditorLocation(),
+  ) {
+    if (!backupDraft("before-delete")) return false;
+    setUndoDelete({ project: cloneProject(draft), description, location });
+    return true;
+  }
+
+  function applyRestoredDraft(project: StoryProject) {
+    setDraft(cloneProject(project));
+    setSelectedChapterId(project.chapters[0]?.id ?? "");
+    setSelectedLineId(project.lines[0]?.id ?? "");
   }
 
   function restoreBackup() {
+    const latestCheckpoint = checkpoints[0];
+    if (latestCheckpoint) {
+      if (
+        !window.confirm(
+          "최근 저장본으로 돌아갈까요? 지금 편집본은 새 복구 기록으로 남아요.",
+        )
+      ) {
+        return;
+      }
+      const restored = checkpointRepository().restore(latestCheckpoint.id, draft);
+      if (!restored.ok) {
+        setNotice(restored.message);
+        return;
+      }
+      applyRestoredDraft(restored.project);
+      setCheckpoints(restored.checkpoints);
+      setUndoDelete(null);
+      setNotice("최근 저장본으로 복구했어요. 방금 편집한 내용도 복구 기록에 남아 있어요.");
+      return;
+    }
     try {
       const saved = localStorage.getItem(BACKUP_KEY);
       if (!saved) {
         setNotice("복구할 직전 편집본이 없어요.");
         return;
       }
-      const restored = cloneProject(JSON.parse(saved) as StoryProject);
-      setDraft(restored);
-      setSelectedChapterId(restored.chapters[0]?.id ?? "");
-      setSelectedLineId(restored.lines[0]?.id ?? "");
-      setNotice("방금 전 편집본으로 복구했어요.");
+      if (!backupDraft("before-reset")) return;
+      applyRestoredDraft(JSON.parse(saved) as StoryProject);
+      setUndoDelete(null);
+      setNotice("이전 직전 편집본으로 복구했어요. 방금 편집한 내용도 복구 기록에 남아 있어요.");
     } catch {
       setNotice("직전 편집본을 읽지 못했어요. 저장한 Excel을 열어 주세요.");
     }
   }
 
+  function undoLastDeletion() {
+    if (!undoDelete) return;
+    if (!backupDraft("before-reset")) return;
+    const restoredProject = cloneProject(undoDelete.project);
+    const restoredLocation = resolveStoryEditorLocation({
+      chapters: restoredProject.chapters,
+      lines: restoredProject.lines,
+      location: undoDelete.location,
+    });
+    applyRestoredDraft(restoredProject);
+    requestStoryEditorRestore(restoredLocation.location, {
+      chapters: restoredProject.chapters,
+      lines: restoredProject.lines,
+    });
+    setUndoDelete(null);
+    setNotice(`${undoDelete.description} 삭제를 되돌렸어요.`);
+  }
+
   async function applyDraft() {
+    if (applyIssues.length > 0) {
+      setApplyIssuesVisible(true);
+      setNotice(
+        `플레이에 적용하기 전에 고칠 곳이 ${applyIssues.length}개 있어요. 아래 안내를 눌러 이동해 보세요.`,
+      );
+      return;
+    }
     const controller = new AbortController();
     updateController.current = controller;
     setBusy("draft");
@@ -2524,39 +1794,7 @@ export function StoryStudio() {
           reject(new DOMException("Aborted", "AbortError"));
         });
       });
-      if (!draft.title.trim()) throw new Error("이야기 제목을 써 주세요.");
-      if (draft.chapters.length === 0) {
-        throw new Error("챕터를 하나 만들어 주세요.");
-      }
-      if (draft.lines.length === 0) throw new Error("장면을 하나 만들어 주세요.");
-      const empty = draft.lines.find((line) => !line.text.trim());
-      if (empty) {
-        const chapter = draft.chapters.find(
-          (candidate) => candidate.id === empty.chapterId,
-        );
-        throw new Error(
-          `${chapter?.title || "챕터"} · 장면 ${empty.order}의 글상자가 비어 있어요.`,
-        );
-      }
-      const unnamed = draft.lines.find(
-        (line) => line.type === "dialogue" && !line.speakerName.trim(),
-      );
-      if (unnamed) throw new Error("대사 장면의 화자 이름을 골라 주세요.");
-      const narrationWithParentheses = draft.lines.find(
-        (line) =>
-          line.type === "narration" && containsParentheses(line.text),
-      );
-      if (narrationWithParentheses) {
-        const chapter = draft.chapters.find(
-          (candidate) => candidate.id === narrationWithParentheses.chapterId,
-        );
-        throw new Error(
-          `${chapter?.title || "챕터"} · 장면 ${
-            narrationWithParentheses.order
-          }의 해설에는 괄호를 쓸 수 없어요. 속마음이나 행동은 대사 장면의 괄호 안에 써 주세요.`,
-        );
-      }
-      backupDraft();
+      if (!backupDraft("before-play-apply")) return;
       setBusyStep("새 플레이 버전 만드는 중");
       const updated = cloneProject({
         ...draft,
@@ -2566,9 +1804,12 @@ export function StoryStudio() {
         }).format(new Date()),
       });
       setActive(updated);
-      localStorage.setItem(ACTIVE_KEY, JSON.stringify(updated));
+      const activeSave = saveActiveProject(updated);
+      setApplyIssuesVisible(false);
       setNotice(
-        `플레이 적용 완료 · 챕터 ${updated.chapters.length}개 · 장면 ${updated.lines.length}개`,
+        activeSave.ok
+          ? `플레이 적용 완료 · 장 ${updated.chapters.length}개 · 컷 ${updated.lines.length}개`
+          : activeSave.message,
       );
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
@@ -2587,10 +1828,38 @@ export function StoryStudio() {
     }
   }
 
-  async function updateFromSheet() {
-    const sheetId = extractSheetId(draft.sheetUrl);
+  function confirmImport() {
+    const imported = importConfirmation.project;
+    if (!imported) return;
+    if (!backupDraft("before-import")) return;
+    const activeResolution = resolveActiveProjectForDraft({ draft: imported, active });
+    const activeSave = activeResolution.usedFallback
+      ? projectRepository().saveActive(activeResolution.project)
+      : null;
+    setActive(activeResolution.project);
+    setDraft(imported);
+    setLocalDraftStatus("available");
+    setSelectedChapterId(imported.chapters[0]?.id ?? "");
+    setSelectedLineId(imported.lines[0]?.id ?? "");
+    setCreatorAccess("local");
+    setWorkspaceMode("create");
+    setEntryNotice("");
+    setNotice(
+      activeSave && !activeSave.ok
+        ? activeSave.message
+        : importConfirmation.fileName
+        ? `‘${importConfirmation.fileName}’을 편집본으로 열었어요.`
+        : "작품을 편집본으로 열었어요.",
+    );
+    setImportConfirmation({ open: false, project: null });
+  }
+
+  async function updateFromSheet(sourceUrl = draft.sheetUrl) {
+    if (busy) return;
+    const sheetId = extractSheetId(sourceUrl);
     if (!sheetId) {
       setNotice("Google 시트의 공유 주소를 확인해 주세요.");
+      if (creatorAccess === "none") setEntryNotice("Google 시트의 공유 주소를 확인해 주세요.");
       return;
     }
     const controller = new AbortController();
@@ -2599,20 +1868,41 @@ export function StoryStudio() {
     try {
       setBusyStep("공개 Google 시트를 읽는 중");
       const snapshot = await fetchSheetSnapshot(sheetId, controller.signal);
-      setBusyStep("챕터·장면·이미지 연결 확인 중");
-      const imported = buildProjectFromSheet(snapshot, draft.sheetUrl);
-      backupDraft();
-      setDraft(imported);
-      setSelectedChapterId(imported.chapters[0]?.id ?? "");
-      setSelectedLineId(imported.lines[0]?.id ?? "");
-      setNotice("시트 내용을 편집본으로 가져왔어요. 확인 후 플레이에 적용하세요.");
+      setBusyStep("장·컷·이미지 연결 확인 중");
+      const result = importStoryProject(snapshot, sourceUrl);
+      if (!result.ok) {
+        setImportIssues({ open: true, issues: result.issues, source: "sheet" });
+        return;
+      }
+      setImportConfirmation({
+        open: true,
+        project: result.project,
+        fileName: "Google 시트",
+      });
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
+      if (error instanceof StoryImportError) {
+        setImportIssues({ open: true, issues: error.issues, source: "sheet" });
+      } else if (error instanceof DOMException && error.name === "AbortError") {
         setNotice("시트 불러오기를 중지했어요.");
       } else {
-        setNotice(
-          error instanceof Error ? error.message : "시트를 읽지 못했어요.",
-        );
+        const msg =
+          error instanceof Error ? error.message : "시트를 읽지 못했어요.";
+        setImportIssues({
+          open: true,
+          issues: [
+            {
+              severity: "error",
+              source: "sheet",
+              sheet: "연결 오류",
+              row: 1,
+              column: "공개 권한",
+              value: sourceUrl,
+              message: msg,
+              fix: "Google 시트의 공유 권한이 ‘링크가 있는 모든 사용자 — 뷰어’인지 확인하거나, Excel 파일(.xlsx)로 다운로드해 불러오세요.",
+            },
+          ],
+          source: "sheet",
+        });
       }
     } finally {
       updateController.current = null;
@@ -2622,7 +1912,7 @@ export function StoryStudio() {
   }
 
   async function openExcelFile(file?: File) {
-    if (!file) return;
+    if (!file || busy || !hydrated) return;
     if (!file.name.toLowerCase().endsWith(".xlsx")) {
       const message = "`.xlsx` 형식의 Excel 파일을 골라 주세요.";
       if (creatorAccess === "none") setEntryNotice(message);
@@ -2646,22 +1936,41 @@ export function StoryStudio() {
       if (controller.signal.aborted) {
         throw new DOMException("Aborted", "AbortError");
       }
-      const imported = buildProjectFromSheet(snapshot, "");
-      backupDraft();
-      setDraft(imported);
-      setSelectedChapterId(imported.chapters[0]?.id ?? "");
-      setSelectedLineId(imported.lines[0]?.id ?? "");
-      setCreatorAccess("local");
-      setWorkspaceMode("create");
-      setEntryNotice("");
-      setNotice(`‘${file.name}’을 편집본으로 열었어요.`);
+      const result = importStoryProject(snapshot, "");
+      if (!result.ok) {
+        setImportIssues({ open: true, issues: result.issues, source: "excel" });
+        return;
+      }
+      setImportConfirmation({
+        open: true,
+        project: result.project,
+        fileName: file.name,
+      });
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Excel 파일을 읽지 못했어요.";
-      if (creatorAccess === "none") setEntryNotice(message);
-      else setNotice(message);
+      if (error instanceof StoryImportError) {
+        setImportIssues({ open: true, issues: error.issues, source: "excel" });
+      } else {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Excel 파일을 읽지 못했어요.";
+        setImportIssues({
+          open: true,
+          issues: [
+            {
+              severity: "error",
+              source: "excel",
+              sheet: "파일 오류",
+              row: 1,
+              column: "파일 형식",
+              value: file.name,
+              message,
+              fix: "정상적인 .xlsx 파일인지 확인하고, 손상되지 않은 양식 파일을 다시 선택해 주세요.",
+            },
+          ],
+          source: "excel",
+        });
+      }
     } finally {
       updateController.current = null;
       setBusy(null);
@@ -2696,8 +2005,12 @@ export function StoryStudio() {
 
   function startBlankProject() {
     const blank = createBlankProject();
-    backupDraft();
+    const blankActive = cloneProject(blank);
+    if (!backupDraft("before-reset")) return;
     setDraft(blank);
+    setLocalDraftStatus("available");
+    setActive(blankActive);
+    const activeSave = saveActiveProject(blankActive);
     setSelectedChapterId("");
     setSelectedLineId("");
     setWorkspaceMode("plan");
@@ -2708,7 +2021,11 @@ export function StoryStudio() {
     setSceneSettingsOpen(false);
     setCreatorAccess("local");
     setBlankConfirmOpen(false);
-    setNotice("빈 작품을 열었어요. 구상부터 시작하거나 바로 챕터를 만드세요.");
+    setNotice(
+      activeSave.ok
+        ? "빈 작품을 열었어요. 구상부터 시작하거나 바로 장을 만드세요."
+        : activeSave.message,
+    );
   }
 
   function startContinuationTemplate(
@@ -2726,10 +2043,11 @@ export function StoryStudio() {
       ),
       lines: playableLines,
     });
-    backupDraft();
+    if (!backupDraft("before-template")) return;
     setDraft(template);
+    setLocalDraftStatus("available");
     setActive(playableStart);
-    localStorage.setItem(ACTIVE_KEY, JSON.stringify(playableStart));
+    const activeSave = saveActiveProject(playableStart);
     setSelectedChapterId(continuationChapterId);
     setSelectedLineId(continuationLineId);
     setWorkspaceMode("create");
@@ -2740,7 +2058,7 @@ export function StoryStudio() {
     setMemoPopupOpen(false);
     setChapterResourcesOpen(false);
     setCreatorAccess("local");
-    setNotice(message);
+    setNotice(activeSave.ok ? message : activeSave.message);
   }
 
   function startRabbitTurtleContinuation1() {
@@ -2748,7 +2066,7 @@ export function StoryStudio() {
       RABBIT_TURTLE_CONTINUATION_TEMPLATE,
       "continuation-chapter-2",
       "continuation-line-6",
-      "토끼와 자라가 만난 다음 장면을 열었어요. 자라의 첫 말부터 이어 써 보세요.",
+      "토끼와 자라가 만난 다음 컷을 열었어요. 자라의 첫 말부터 이어 써 보세요.",
     );
   }
 
@@ -2757,7 +2075,7 @@ export function StoryStudio() {
       RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
       "palace-continuation-chapter-2",
       "palace-continuation-line-7",
-      "용궁에 묶인 토끼의 다음 장면을 열었어요. 토끼의 첫 말부터 이어 써 보세요.",
+      "용궁에 묶인 토끼의 다음 컷을 열었어요. 토끼의 첫 말부터 이어 써 보세요.",
     );
   }
 
@@ -2766,7 +2084,7 @@ export function StoryStudio() {
       ONGGOJIB_CONTINUATION_TEMPLATE,
       "onggojib-continuation",
       "onggojib-continuation-line-1",
-      "아내가 가짜 옹고집을 선택한 다음 장면을 열었어요. 선택 뒤 첫 반응부터 이어 써 보세요.",
+      "아내가 가짜 옹고집을 선택한 다음 컷을 열었어요. 선택 뒤 첫 반응부터 이어 써 보세요.",
     );
   }
 
@@ -2779,256 +2097,269 @@ export function StoryStudio() {
     else startBlankProject();
   }
 
-  function openPlay(index = 0) {
-    setPlayIndex(Math.max(0, index));
-    setView("play");
+  function requestEntryChoice(label: string, action: () => void) {
+    if (!hydrated || busy) return;
+    if (localDraftStatus === "available" || localDraftStatus === "failed") {
+      entryChoiceRef.current = action;
+      setEntryChoiceLabel(label);
+    } else {
+      action();
+    }
+  }
+
+  function cancelEntryChoice() {
+    entryChoiceRef.current = null;
+    setEntryChoiceLabel("");
+  }
+
+  function chooseRevisionResponse(
+    project: StoryProject,
+    promptId: string,
+    response: StoryRevisionResponse,
+  ) {
+    const key = storyRevisionResponseKey({
+      projectId: project.id,
+      structureMode: project.planning.structureMode,
+      promptId,
+    });
+    setRevisionResponses((current) =>
+      setStoryRevisionResponse({ responses: current, key, response }),
+    );
+  }
+
+  function captureStudioReturnOrigin(): StudioReturnOrigin {
+    const location = currentStoryEditorLocation();
+    const input = lineBodyRefs.current.get(location.lineId);
+    return {
+      session: resolveStudioUiSession(draft, {
+        version: 1, projectId: draft.id, workspaceMode, planningView, location,
+      }),
+      fromHome: creatorAccess === "none", scrollY: window.scrollY,
+      focusButtonLabel: document.activeElement instanceof HTMLButtonElement
+        ? document.activeElement.textContent?.trim() : undefined,
+      selection: input ? { start: input.selectionStart, end: input.selectionEnd } : undefined,
+    };
+  }
+
+  function restoreStudioSession(origin: StudioReturnOrigin | null) {
+    const session = resolveStudioUiSession(draft,
+      origin?.session ?? loadStudioUiSession(() => window.localStorage));
+    const samePosition = origin?.session.projectId === draft.id &&
+      origin.session.location.chapterId === session.location.chapterId &&
+      origin.session.location.lineId === session.location.lineId;
+    setWorkspaceMode(session.workspaceMode);
+    setPlanningView(session.planningView);
+    requestStoryEditorRestore({
+      ...session.location,
+      focusTarget: session.workspaceMode === "create" && session.location.lineId ? "line-body" : "none",
+    }, {
+      scrollY: samePosition ? origin.scrollY : undefined,
+      selection: samePosition ? origin.selection : undefined,
+    });
+  }
+
+  function returnHome() {
+    if (busy) return;
+    const origin = captureStudioReturnOrigin();
+    homeReturnOriginRef.current = origin;
+    saveStudioUiSession(() => window.localStorage, origin.session);
+    saveQueueRef.current?.schedule(draft);
+    const saved = saveQueueRef.current?.flush();
+    setLocalDraftStatus("available");
+    setEntryNotice(saved && !saved.ok
+      ? "기기에 저장하지 못했어요. 이 창에서는 이어할 수 있지만, 닫기 전에 Excel로 보관해 주세요."
+      : "만들던 이야기는 그대로 있어요. 이어만들기로 돌아갈 수 있어요.");
+    setProjectToolsOpen(false);
+    setMemoPopupOpen(false);
+    setSelectedCreativeMemoId(null);
+    setCreatorAccess("none");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  function resumeStudio() {
+    if (localDraftStatus !== "available" || busy) return;
+    setCreatorAccess("local");
+    restoreStudioSession(homeReturnOriginRef.current);
+    homeReturnOriginRef.current = null;
+    setNotice("만들던 이야기와 작업 위치를 이어서 엽니다.");
+  }
+
+  function openPlay(index = 0, kind: "student" | "example" = "student") {
+    playerReturnLocationRef.current = captureStudioReturnOrigin();
+    const project = kind === "example" ? DEFAULT_PROJECT
+      : resolveActiveProjectForDraft({ draft, active }).project;
+    dispatchPlayerUi({ type: "open", index,
+      context: createStoryPlaybackContext(kind, project) });
+  }
+
+  function restorePlayerOriginFocus(origin: StudioReturnOrigin) {
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: origin.scrollY, behavior: "auto" });
+      const button = Array.from(document.querySelectorAll<HTMLButtonElement>("button"))
+        .find((candidate) => candidate.textContent?.trim() === origin.focusButtonLabel);
+      button?.focus({ preventScroll: true });
+    });
+  }
+
+  function returnFromPlayer() {
+    dispatchPlayerUi({ type: "close" });
+    const origin = playerReturnLocationRef.current;
+    playerReturnLocationRef.current = null;
+    if (!origin) return;
+    if (origin.fromHome) {
+      restorePlayerOriginFocus(origin);
+      return;
+    }
+    if (origin.session.projectId !== draft.id ||
+      (origin.session.location.lineId && !resolvePlayedCutLocation(draft, {
+        projectId: origin.session.projectId, lineId: origin.session.location.lineId,
+      }))) {
+      showSafePlayerReturn("플레이 전 작업 위치가 바뀌었어요. 이야기 구성에서 고칠 장을 다시 골라 주세요.");
+      return;
+    }
+    restoreStudioSession(origin);
+    if (origin.session.workspaceMode === "plan") restorePlayerOriginFocus(origin);
+    setNotice("플레이하기 전 작업하던 곳으로 돌아왔어요.");
+  }
+
+  function showSafePlayerReturn(message: string) {
+    setWorkspaceMode("plan");
+    setPlanningView("chapters");
+    setNotice(message);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      document.querySelector<HTMLElement>(".creator-primary-nav button")?.focus();
+    });
+  }
+
+  function editPlayedCut(cut: PlayedStoryCut) {
+    const context = playerUi.context;
+    if (!context || context.kind !== "student") return;
+    const playing = selectStoryPlayerPosition(context.project, playIndex);
+    const location = context.project.id === cut.projectId && playing.line?.id === cut.lineId
+      ? resolvePlayedCutLocation(draft, cut) : null;
+    dispatchPlayerUi({ type: "close" });
+    playerReturnLocationRef.current = null;
+    if (!location) {
+      showSafePlayerReturn(draft.id !== cut.projectId
+        ? "다른 작품의 컷이라 열지 않았어요. 이야기 구성에서 고칠 장을 골라 주세요."
+        : "재생한 컷이 편집본에 없어요. 이야기 구성에서 고칠 장을 다시 골라 주세요.");
+      return;
+    }
+    setWorkspaceMode("create");
+    requestStoryEditorRestore(location);
+    setNotice("방금 재생한 컷을 열었어요. 고친 글은 플레이에 적용하면 보여요.");
   }
 
   function playSelectedChapter() {
     if (!selectedChapter) return;
-    const lines = active.chapters
-      .slice()
-      .sort((a, b) => a.order - b.order)
-      .flatMap((chapter) =>
-        active.lines
-          .filter((line) => line.chapterId === chapter.id)
-          .sort((a, b) => a.order - b.order),
-      );
-    const index = lines.findIndex(
-      (line) => line.chapterId === selectedChapter.id,
-    );
-    openPlay(index >= 0 ? index : 0);
+    const { lines } = selectStoryPlayerPosition(
+      resolveActiveProjectForDraft({ draft, active }).project, 0);
+    const index = findFirstStoryLineIndexForChapter({
+      lines,
+      chapterId: selectedChapter.id,
+    });
+    if (index < 0) {
+      setNotice("이 장은 아직 플레이에 적용한 컷이 없어요. 컷을 쓰고 적용해 주세요.");
+      return;
+    }
+    openPlay(index);
   }
 
-  if (view === "play") {
+  if (view === "play" && playerUi.context) {
+    const context = playerUi.context;
     return (
       <StoryPlayer
-        project={active}
+        project={context.project}
         startIndex={playIndex}
-        onIndexChange={setPlayIndex}
-        onBack={() => setView("studio")}
+        isExample={context.kind === "example"}
+        onEditCut={context.kind === "student" ? editPlayedCut : undefined}
+        onIndexChange={(index) =>
+          dispatchPlayerUi({ type: "change-index", index })
+        }
+        onBack={returnFromPlayer}
+        revisionResponses={revisionResponses}
+        onRevisionResponse={(promptId, response) =>
+          context.kind === "student" && chooseRevisionResponse(context.project, promptId, response)
+        }
       />
     );
   }
 
   if (creatorAccess === "none") {
     return (
-      <main className="entry-shell">
-        <section className="entry-card" aria-labelledby="entry-title">
-          <div className="entry-brand">
-            <span className="brand-mark large">놀퀴즈</span>
-            <span>NOLQUIZ STORY STUDIO</span>
-          </div>
-          <div className="entry-copy">
-            <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
-            <h1 id="entry-title">
-              생각을 글로 쓰고,
-              <br />
-              장면으로 완성하세요
-            </h1>
-            <p>
-              회원가입 없이 이 기기에서 구상하고, 챕터를 쓰고, 실제 게임
-              장면처럼 연출할 수 있어요.
-            </p>
-          </div>
-          <div className="entry-source-grid" aria-label="작품 시작 방법">
-            <button
-              className="entry-source-button primary-source"
-              onClick={startBlankProject}
-            >
-              <span aria-hidden="true">✦</span>
-              <strong>새 작품 만들기</strong>
-              <small>완전히 빈 이야기부터 시작해요.</small>
-            </button>
-            <button
-              className="entry-source-button"
-              onClick={() => excelInputRef.current?.click()}
-              disabled={entryBusy}
-            >
-              <span aria-hidden="true">X</span>
-              <strong>Excel 작품 불러오기</strong>
-              <small>저장해 둔 작품을 이어서 편집해요.</small>
-            </button>
-            <button
-              className="entry-source-button"
-              onClick={() => {
-                setCreatorAccess("local");
-                setWorkspaceMode("create");
-                setProjectToolsOpen(true);
-                setNotice("파일·복구에서 공개 Google 시트 주소를 넣으세요.");
-              }}
-            >
-              <span aria-hidden="true">G</span>
-              <strong>Google 시트에서 불러오기</strong>
-              <small>공개한 작품을 불러와 이어서 편집해요.</small>
-            </button>
-          </div>
-          <section
-            className="entry-template-panel"
-            aria-labelledby="continuation-template-title"
-          >
-            <div className="entry-template-heading">
-              <div>
-                <span className="eyebrow">이어쓰기 템플릿</span>
-                <h2 id="continuation-template-title">
-                  이야기의 중간부터 시작해도 돼요
-                </h2>
-              </div>
-              <small>준비된 앞부분을 읽고, 빈 장면부터 직접 이어 씁니다.</small>
-            </div>
-            <div className="entry-template-list">
-              <button
-                className="entry-template-card"
-                onClick={startRabbitTurtleContinuation1}
-              >
-                <span className="template-number">01</span>
-                <span className="template-copy">
-                  <strong>토끼와 자라 템플릿 1 · 땅에서 만난 뒤</strong>
-                  <small>
-                    자라는 토끼를 어떻게 용궁으로 데려갈까요?
-                  </small>
-                  <em>
-                    준비된 내용: 용왕의 명령과 두 인물의 만남 · 시작할 곳:
-                    자라의 첫 설득
-                  </em>
-                </span>
-                <b>이어서 쓰기</b>
-              </button>
-              <button
-                className="entry-template-card"
-                onClick={startRabbitTurtleContinuation2}
-              >
-                <span className="template-number">02</span>
-                <span className="template-copy">
-                  <strong>토끼와 자라 템플릿 2 · 용궁에 묶인 토끼</strong>
-                  <small>
-                    결박된 토끼는 어떻게 위기를 벗어날까요?
-                  </small>
-                  <em>
-                    준비된 내용: 용왕의 명령·잔치 초대·용궁 결박 · 시작할 곳:
-                    토끼의 첫 대응
-                  </em>
-                </span>
-                <b>이어서 쓰기</b>
-              </button>
-              <button
-                className="entry-template-card"
-                onClick={startOnggojibContinuation}
-              >
-                <span className="template-number">03</span>
-                <span className="template-copy">
-                  <strong>옹고집전 템플릿 1 · 아내의 선택 이후</strong>
-                  <small>
-                    가짜 옹고집을 선택한 뒤, 관아와 가족에게 어떤 일이
-                    생길까요?
-                  </small>
-                  <em>
-                    준비된 내용: 가족의 변화·두 옹고집의 관아 다툼·아내의
-                    선택 · 시작할 곳: 선택 뒤 첫 장면
-                  </em>
-                </span>
-                <b>이어서 쓰기</b>
-              </button>
-            </div>
-          </section>
-          <input
-            ref={excelInputRef}
-            hidden
-            type="file"
-            accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            onChange={(event) => openExcelFile(event.target.files?.[0])}
-          />
-          <div className="entry-actions">
-            {hydrated && localDraftFound && (
-              <button
-                className="entry-recovery-button"
-                onClick={() => {
-                  setCreatorAccess("local");
-                  setNotice("이 기기의 저장된 작업을 이어서 엽니다.");
-                }}
-              >
-                이 기기의 저장된 작업 이어하기
-              </button>
-            )}
-            <button
-              className="entry-preview-button"
-              onClick={() => {
-                setActive(cloneProject(DEFAULT_PROJECT));
-                openPlay(0);
-              }}
-            >
-              예시 작품 먼저 플레이
-            </button>
-          </div>
-          {entryNotice && (
-            <p className="entry-error" role="alert">
-              {entryNotice}
-            </p>
-          )}
-          <p className="entry-footnote">
-            웹 편집은 이 기기에 자동 저장됩니다. 중요한 작품은 `Excel로
-            저장`해 따로 보관하세요.
-          </p>
-        </section>
-        <footer className="entry-copyright">
-          기본 제공 이미지 © 놀퀴즈 · 학생 스토리게임 제작에 자유롭게 사용
-        </footer>
-        {busy && (
-          <div className="update-overlay" role="dialog" aria-modal="true">
-            <div className="update-card">
-              <span className="update-spinner" aria-hidden="true" />
-              <h2>{busyStep}</h2>
-              <button
-                className="stop-button"
-                onClick={() => updateController.current?.abort()}
-              >
-                업데이트 강제 중지
-              </button>
-            </div>
-          </div>
-        )}
-      </main>
+      <>
+        <StartScreen
+          entryBusy={entryBusy}
+          localDraftStatus={localDraftStatus}
+          entryNotice={entryNotice}
+          busy={Boolean(busy)}
+          busyStep={busyStep}
+          onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
+          onOpenExcelFile={openExcelFile}
+          onOpenGoogleSheet={updateFromSheet}
+          onStartRabbitTurtleContinuation1={() => requestEntryChoice("토끼와 자라 · 땅에서 만난 뒤", startRabbitTurtleContinuation1)}
+          onStartRabbitTurtleContinuation2={() => requestEntryChoice("토끼와 자라 · 용궁에 묶인 토끼", startRabbitTurtleContinuation2)}
+          onStartOnggojibContinuation={() => requestEntryChoice("옹고집전 · 아내의 선택 이후", startOnggojibContinuation)}
+          onResumeSavedDraft={resumeStudio}
+          onPlayExample={() => openPlay(0, "example")}
+          onAbortUpdate={() => updateController.current?.abort()}
+        />
+        <StoryEntryDialog
+          open={Boolean(entryChoiceLabel)}
+          choiceLabel={entryChoiceLabel}
+          localDraftStatus={localDraftStatus}
+          onCancel={cancelEntryChoice}
+          onConfirm={() => {
+            const action = entryChoiceRef.current;
+            cancelEntryChoice();
+            action?.();
+          }}
+        />
+        <ImportIssuesDialog
+          open={importIssues.open}
+          issues={importIssues.issues}
+          source={importIssues.source}
+          onClose={() => setImportIssues({ open: false, issues: [] })}
+        />
+        <ImportConfirmationDialog
+          open={importConfirmation.open}
+          project={importConfirmation.project}
+          fileName={importConfirmation.fileName}
+          onConfirm={confirmImport}
+          onCancel={() => setImportConfirmation({ open: false, project: null })}
+        />
+      </>
     );
   }
 
   const currentLocation = selectedChapter
-    ? `챕터 ${selectedChapter.order} 〈${
+    ? `${selectedChapter.order}장 〈${
         selectedChapter.title || "제목 없음"
       }〉${
         selectedLine
-          ? ` › 장면 ${selectedLineIndex + 1}/${selectedChapterLines.length} › ${
+          ? ` › ${selectedLineIndex + 1}컷/${selectedChapterLines.length} › ${
               editorMode === "scene"
                 ? selectedLine.type === "narration"
-                  ? "해설 장면 편집"
+                  ? "해설 컷 편집"
                   : `${selectedLine.speakerName || "화자 없음"}의 대사 편집`
-                : "대본 전체"
+                : "이 장 대본"
             }`
           : ""
       }`
-    : "아직 챕터가 없어요";
+    : "아직 장이 없어요";
 
   return (
-    <main className="creator-shell">
-      <header className="creator-header">
-        <div className="creator-brand">
-          <span className="brand-mark">놀퀴즈</span>
-          <div>
-            <strong>
-              스토리 스튜디오
-            </strong>
-            <small>{currentLocation}</small>
-          </div>
-        </div>
-        <div className="creator-header-actions">
-          <span className="save-state">기기에 저장됨</span>
-          <button
-            className="quiet-button"
-            onClick={() => setProjectToolsOpen((current) => !current)}
-          >
-            파일·복구
-          </button>
-        </div>
-      </header>
+    <StudioShell
+      currentLocation={currentLocation}
+      saveStatus={saveStatus}
+      busy={Boolean(busy)}
+      projectToolsOpen={projectToolsOpen}
+      onReturnHome={returnHome}
+      onToggleProjectTools={() =>
+        setProjectToolsOpen((current) => !current)
+      }
+    >
 
       <button
         className="mobile-panel-toggle project-info-toggle"
@@ -3038,7 +2369,7 @@ export function StoryStudio() {
         <span>
           <strong>작품 제목·소개</strong>
           <small>
-            {draft.title || "제목 없음"} · 챕터 {draft.chapters.length} · 장면{" "}
+            {draft.title || "제목 없음"} · 장 {draft.chapters.length} · 컷{" "}
             {draft.lines.length}
           </small>
         </span>
@@ -3053,6 +2384,12 @@ export function StoryStudio() {
         <label>
           <span>이야기 제목</span>
           <input
+            ref={titleInputRef}
+            className={
+              highlightedApplyIssueId === "missing-title"
+                ? "issue-target-highlight"
+                : undefined
+            }
             value={draft.title}
             onChange={(event) =>
               setDraft((project) => ({ ...project, title: event.target.value }))
@@ -3074,13 +2411,17 @@ export function StoryStudio() {
           />
         </label>
         <div className="project-counts">
-          <span>챕터 {draft.chapters.length}</span>
-          <span>장면 {draft.lines.length}</span>
+          <span>장 {draft.chapters.length}</span>
+          <span>컷 {draft.lines.length}</span>
         </div>
       </section>
 
       {projectToolsOpen && (
-        <section className="project-tools" aria-label="파일과 복구">
+        <section
+          id="studio-project-tools"
+          className="project-tools"
+          aria-label="파일과 복구"
+        >
           <div>
             <span className="eyebrow">파일·복구</span>
             <h2>작품을 불러오거나 따로 보관하기</h2>
@@ -3097,7 +2438,7 @@ export function StoryStudio() {
             >
               빈 양식 받기
             </a>
-            {backupFound && (
+            {(checkpoints.length > 0 || backupFound) && (
               <button onClick={restoreBackup}>방금 전으로 복구</button>
             )}
             <button className="danger-link" onClick={requestBlankProject}>
@@ -3118,8 +2459,12 @@ export function StoryStudio() {
               placeholder="공개 Google 시트 주소"
               aria-label="공개 Google 시트 주소"
             />
-            <button onClick={updateFromSheet}>시트에서 불러오기</button>
+            <button onClick={() => updateFromSheet()}>시트에서 불러오기</button>
           </div>
+          <p>
+            복구 기록은 이 기기에서만 남아요. 브라우저 데이터를 지우거나 기기를
+            바꾸면 되찾을 수 없으니 중요한 작품은 Excel로 따로 보관해 주세요.
+          </p>
           <input
             ref={excelInputRef}
             hidden
@@ -3134,7 +2479,52 @@ export function StoryStudio() {
         {notice}
       </p>
 
-      {continuationPoint && (
+      {applyIssuesVisible && applyIssues.length > 0 && (
+        <section
+          className="story-apply-issues"
+          role="alert"
+          aria-label="플레이 적용 전 고칠 곳"
+        >
+          <div className="story-apply-issues-heading">
+            <div>
+              <span>플레이에 적용하기 전</span>
+              <strong>고칠 곳 {applyIssues.length}개</strong>
+            </div>
+            <small>문제를 누르면 직접 고칠 입력칸으로 이동해요.</small>
+          </div>
+          <ol>
+            {applyIssues.map((issue) => (
+              <li key={issue.id}>
+                <button
+                  type="button"
+                  className={
+                    highlightedApplyIssueId === issue.id ? "active" : ""
+                  }
+                  onClick={() => moveToApplyIssue(issue)}
+                >
+                  <span>
+                    {highlightedApplyIssueId === issue.id
+                      ? "지금 고치는 문제"
+                      : "고칠 곳으로 이동"}
+                  </span>
+                  <strong>{issue.message}</strong>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {undoDelete && (
+        <section className="creator-undo" role="status">
+          <span>{undoDelete.description}을(를) 방금 삭제했어요.</span>
+          <button type="button" onClick={undoLastDeletion}>
+            방금 삭제 되돌리기
+          </button>
+        </section>
+      )}
+
+      {continuationPoint && workspaceMode === "create" && (
         <section
           className="continuation-edit-bar"
           aria-label="이어쓰기 편집 안내"
@@ -3145,7 +2535,7 @@ export function StoryStudio() {
               앞이야기도 고치고, 이어 쓸 곳으로 돌아올 수 있어요.
             </strong>
             <small>
-              준비된 장면도 내 이야기의 일부예요. 처음부터 차례로 읽으며
+              준비된 컷도 내 이야기의 일부예요. 처음부터 차례로 읽으며
               대사와 해설을 바꿔 보세요.
             </small>
           </div>
@@ -3163,791 +2553,57 @@ export function StoryStudio() {
         </section>
       )}
 
-      <nav className="creator-primary-nav" aria-label="창작 과정">
-        <button
-          className={workspaceMode === "plan" ? "active" : ""}
-          onClick={() => setWorkspaceMode("plan")}
-        >
-          <span>1</span>
-          <div>
-            <strong>이야기 구성</strong>
-            <small>주제·인물·챕터 흐름을 정해요</small>
-          </div>
-        </button>
-        <button
-          className={workspaceMode === "create" ? "active" : ""}
-          onClick={() => setWorkspaceMode("create")}
-        >
-          <span>2</span>
-          <div>
-            <strong>장면 쓰기</strong>
-            <small>대사·해설을 쓰고 이미지를 골라요</small>
-          </div>
-        </button>
-        <button onClick={() => openPlay(0)} disabled={active.lines.length === 0}>
-          <span>3</span>
-          <div>
-            <strong>플레이</strong>
-            <small>마지막으로 적용한 버전을 확인해요</small>
-          </div>
-        </button>
-      </nav>
+      <StudioPrimaryNav
+        workspaceMode={workspaceMode}
+        canPlay={active.lines.length > 0}
+        onWorkspaceModeChange={setWorkspaceMode}
+        onPlay={() => openPlay(0)}
+      />
 
       {workspaceMode === "plan" ? (
-        <section className="planning-workspace">
-          <header className="workspace-heading">
-            <div>
-              <span className="eyebrow">편집할 때만 보는 창작 메모</span>
-              <h1>이야기의 방향부터 챕터 흐름까지</h1>
-              <p>
-                구상 내용은 자동 저장되지만 플레이 화면에는 나타나지 않아요.
-              </p>
-            </div>
-            <button
-              className="primary-button"
-              onClick={() => setWorkspaceMode("create")}
-            >
-              바로 이야기 쓰기
-            </button>
-          </header>
-          <nav className="planning-view-switch" aria-label="구상 화면 선택">
-            <button
-              className={planningView === "story" ? "active" : ""}
-              onClick={() => setPlanningView("story")}
-            >
-              <span>1</span>
-              <div>
-                <strong>이야기 구성</strong>
-                <small>구성 방식·소재·인물·갈등</small>
-              </div>
-            </button>
-            <button
-              className={planningView === "chapters" ? "active" : ""}
-              onClick={() => setPlanningView("chapters")}
-            >
-              <span>2</span>
-              <div>
-                <strong>챕터 흐름</strong>
-                <small>사건을 나누고 장면 쓰기로 연결</small>
-              </div>
-            </button>
-          </nav>
-
-          {planningView === "story" ? (
-            <div className="story-planning-layout">
-              <section className="planning-card story-basics-card">
-                <div className="card-heading">
-                  <span>창작 메모 · 기본 설정</span>
-                  <strong>이야기의 이름과 중심 생각</strong>
-                </div>
-                <div className="story-basics-grid">
-                  <label className="field">
-                    <span>이야기 제목</span>
-                    <input
-                      value={draft.title}
-                      onChange={(event) =>
-                        setDraft((project) => ({
-                          ...project,
-                          title: event.target.value,
-                        }))
-                      }
-                      placeholder="이야기의 제목을 지어 보세요."
-                    />
-                  </label>
-                  <label className="field">
-                    <span>작품 소개</span>
-                    <textarea
-                      rows={2}
-                      value={draft.description}
-                      onChange={(event) =>
-                        setDraft((project) => ({
-                          ...project,
-                          description: event.target.value,
-                        }))
-                      }
-                      placeholder="처음 보는 사람에게 이 이야기를 짧게 소개해 보세요."
-                    />
-                  </label>
-                  <label className="field">
-                    <span>이야기 소재</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.material}
-                      onChange={(event) =>
-                        updatePlanning({ material: event.target.value })
-                      }
-                      placeholder="이야기의 출발점이 되는 사건, 경험, 상상"
-                    />
-                  </label>
-                  <label className="field">
-                    <span>이야기 주제</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.theme}
-                      onChange={(event) =>
-                        updatePlanning({ theme: event.target.value })
-                      }
-                      placeholder="이야기에서 중요하게 다룰 생각"
-                    />
-                  </label>
-                  <label className="field">
-                    <span>전체 분위기</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.mood}
-                      onChange={(event) =>
-                        updatePlanning({ mood: event.target.value })
-                      }
-                      placeholder="모험, 긴장, 재미처럼 써 보세요."
-                    />
-                  </label>
-                </div>
-              </section>
-
-              <section className="planning-card story-compass-card">
-                <div className="card-heading">
-                  <span>이야기 나침반</span>
-                  <strong>이야기의 핵심 다섯 가지</strong>
-                </div>
-                <p className="planning-help">
-                  정답을 쓰는 칸이 아니에요. 생각이 바뀌면 언제든 다시 고칠 수
-                  있어요.
-                </p>
-                <div className="story-compass-grid">
-                  <label className="field compass-field">
-                    <span>핵심 인물은 누구인가요?</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.mainCharacter}
-                      onChange={(event) =>
-                        updatePlanning({ mainCharacter: event.target.value })
-                      }
-                      placeholder="예: 다시 만난 토끼와 자라"
-                    />
-                  </label>
-                  <label className="field compass-field">
-                    <span>무엇을 바라고 있나요?</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.mainGoal}
-                      onChange={(event) =>
-                        updatePlanning({ mainGoal: event.target.value })
-                      }
-                      placeholder="주인공이 꼭 이루고 싶은 것"
-                    />
-                  </label>
-                  <label className="field compass-field">
-                    <span>주요 갈등은 무엇인가요?</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.centralProblem}
-                      onChange={(event) =>
-                        updatePlanning({ centralProblem: event.target.value })
-                      }
-                      placeholder="사건, 오해, 두려움, 상대 인물"
-                    />
-                  </label>
-                  <label className="field compass-field">
-                    <span>실패하면 어떤 일이 생기나요?</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.stakes}
-                      onChange={(event) =>
-                        updatePlanning({ stakes: event.target.value })
-                      }
-                      placeholder="포기하거나 실패했을 때 잃게 되는 것"
-                    />
-                  </label>
-                  <label className="field compass-field">
-                    <span>마지막에 무엇이 달라지나요?</span>
-                    <textarea
-                      rows={2}
-                      value={draft.planning.endingChange}
-                      onChange={(event) =>
-                        updatePlanning({ endingChange: event.target.value })
-                      }
-                      placeholder="인물의 마음, 관계 또는 상황의 변화"
-                    />
-                  </label>
-                </div>
-                <label className="field wide premise-field">
-                  <span>한 줄로 이어 보기</span>
-                  <textarea
-                    rows={2}
-                    value={draft.planning.premise}
-                    onChange={(event) =>
-                      updatePlanning({ premise: event.target.value })
-                    }
-                    placeholder="누가, 무엇을 바라지만, 어떤 문제를 만나, 어떻게 달라지는 이야기"
-                  />
-                </label>
-              </section>
-
-              <aside className="planning-card story-check-card">
-                <div className="card-heading">
-                  <span>구성 점검</span>
-                  <strong>
-                    {readyStoryItems}/{storyChecklist.length} 준비
-                  </strong>
-                </div>
-                <progress
-                  value={readyStoryItems}
-                  max={storyChecklist.length}
-                  aria-label="전체 이야기 구성 진행"
-                />
-                <ul>
-                  {storyChecklist.map((item) => (
-                    <li className={item.ready ? "ready" : ""} key={item.label}>
-                      <span>{item.ready ? "✓" : "○"}</span>
-                      {item.label}
-                    </li>
-                  ))}
-                </ul>
-                <p>
-                  모두 채우지 않아도 이야기를 쓸 수 있어요. 막혔을 때 돌아와
-                  확인하는 안내판입니다.
-                </p>
-                <button
-                  className="primary-button"
-                  onClick={() => setPlanningView("chapters")}
-                >
-                  챕터로 나누기
-                </button>
-              </aside>
-
-              <section className="planning-card story-arc-card">
-                <div className="card-heading">
-                  <span>이야기 뼈대</span>
-                  <strong>{selectedStructure.title}</strong>
-                </div>
-                <p className="planning-help">
-                  이야기의 길이와 난이도에 맞는 구성을 고르세요. 바꾸더라도
-                  이미 쓴 내용은 지워지지 않아요.
-                </p>
-                <div
-                  className="structure-mode-picker"
-                  role="group"
-                  aria-label="이야기 구성 방식"
-                >
-                  {STORY_STRUCTURE_OPTIONS.map((option) => (
-                    <button
-                      className={
-                        option.mode === selectedStructure.mode ? "active" : ""
-                      }
-                      key={option.mode}
-                      onClick={() =>
-                        updatePlanning({ structureMode: option.mode })
-                      }
-                      type="button"
-                    >
-                      <b>{option.shortTitle}</b>
-                      <span>{option.title}</span>
-                    </button>
-                  ))}
-                </div>
-                <div
-                  className={`story-arc-grid guided-arc-grid mode-${selectedStructure.mode}`}
-                >
-                  {selectedStructure.steps.map((step, index) => (
-                    <label className="field arc-step" key={step.key}>
-                      <span>
-                        <b>{index + 1}</b>
-                        {step.label}
-                      </span>
-                      <small>{step.guide}</small>
-                      <textarea
-                        rows={5}
-                        value={draft.planning[step.key]}
-                        onChange={(event) =>
-                          updatePlanning({
-                            [step.key]: event.target.value,
-                          } as Partial<StoryProject["planning"]>)
-                        }
-                      />
-                    </label>
-                  ))}
-                </div>
-              </section>
-
-              <details className="planning-card planning-more-card">
-                <summary>
-                  <span>
-                    <b>인물·배경·추가 메모</b>
-                    <small>필요할 때만 펼쳐서 자세히 써요.</small>
-                  </span>
-                  <strong>열기·접기</strong>
-                </summary>
-                <div className="planning-more-content">
-                  <div className="card-heading">
-                    <span>창작 메모 · 세부 설정</span>
-                    <strong>인물과 배경을 구체적으로 정하기</strong>
-                  </div>
-                  <div className="planning-two-columns">
-                    <label className="field">
-                      <span>인물 설정</span>
-                      <textarea
-                        rows={7}
-                        value={draft.planning.characterNotes}
-                        onChange={(event) =>
-                          updatePlanning({ characterNotes: event.target.value })
-                        }
-                        placeholder={"이름 / 이야기에서의 역할\n성격 / 바라는 것 / 다른 인물과의 관계\n이야기 끝에서 달라지는 점"}
-                      />
-                    </label>
-                    <label className="field">
-                      <span>배경·세계 설정</span>
-                      <textarea
-                        rows={7}
-                        value={draft.planning.worldNotes}
-                        onChange={(event) =>
-                          updatePlanning({ worldNotes: event.target.value })
-                        }
-                        placeholder={"언제, 어디에서 벌어지는 이야기인가요?\n이 세계에서 꼭 지켜야 하는 규칙이나 특별한 장소가 있나요?"}
-                      />
-                    </label>
-                    <label className="field editor-only-field">
-                      <span>아직 정하지 못한 것 · 한 줄에 하나씩</span>
-                      <textarea
-                        rows={5}
-                        value={draft.planning.openQuestions}
-                        onChange={(event) =>
-                          updatePlanning({ openQuestions: event.target.value })
-                        }
-                        placeholder={"결말은 밝게 끝낼까?\n새 인물을 등장시킬까?"}
-                      />
-                    </label>
-                    <label className="field editor-only-field">
-                      <span>자유 창작 메모</span>
-                      <textarea
-                        rows={5}
-                        value={draft.planning.freeNotes}
-                        onChange={(event) =>
-                          updatePlanning({ freeNotes: event.target.value })
-                        }
-                        placeholder="떠오른 대사, 연출, 장소처럼 잊고 싶지 않은 생각"
-                      />
-                    </label>
-                  </div>
-                </div>
-              </details>
-
-              <section className="planning-card creative-memo-library">
-                <div className="creative-memo-library-heading">
-                  <div>
-                    <span className="eyebrow">필요할 때 꺼내 보는 확장 자료</span>
-                    <h2>창작 메모</h2>
-                    <p>
-                      기본 이야기 구성은 그대로 두고, 더 자세히 생각하고 싶은
-                      인물·관계·장소·사건이나 자유로운 생각을 따로 남겨요.
-                    </p>
-                  </div>
-                  <button
-                    className="primary-button"
-                    type="button"
-                    onClick={() =>
-                      setCreativeMemoCreatorStep((current) =>
-                        current ? null : "choice",
-                      )
-                    }
-                  >
-                    + 창작 메모
-                  </button>
-                </div>
-
-                {creativeMemoCreatorStep === "choice" && (
-                  <section className="creative-memo-creator" aria-live="polite">
-                    <header>
-                      <div>
-                        <span>새 메모</span>
-                        <h3>어떤 메모를 만들까요?</h3>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setCreativeMemoCreatorStep(null)}
-                      >
-                        취소
-                      </button>
-                    </header>
-                    <div className="creative-memo-start-options">
-                      <button type="button" onClick={() => addCreativeMemo("free")}>
-                        <strong>자유롭게 쓰기</strong>
-                        <span>빈 종이처럼 원하는 내용을 자유롭게 써요.</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setCreativeMemoCreatorStep("template")}
-                      >
-                        <strong>도움 틀로 쓰기</strong>
-                        <span>인물, 관계, 장소, 사건 중 필요한 틀을 골라 써요.</span>
-                      </button>
-                    </div>
-                  </section>
-                )}
-
-                {creativeMemoCreatorStep === "template" && (
-                  <section className="creative-memo-creator" aria-live="polite">
-                    <header>
-                      <div>
-                        <span>도움 틀로 쓰기</span>
-                        <h3>무엇을 더 자세히 생각할까요?</h3>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setCreativeMemoCreatorStep("choice")}
-                      >
-                        이전
-                      </button>
-                    </header>
-                    <div className="creative-memo-template-options">
-                      {CREATIVE_MEMO_TEMPLATES.map((template) => (
-                        <button
-                          type="button"
-                          key={template.kind}
-                          onClick={() => addCreativeMemo(template.kind)}
-                        >
-                          <strong>{template.title}</strong>
-                          <span>{template.description}</span>
-                          <small>처음에는 항목 {template.defaultFields.length}개</small>
-                        </button>
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {orderedCreativeMemos.length > 0 ? (
-                  <div className="creative-memo-list">
-                    {orderedCreativeMemos.map((memo) => {
-                      const writtenFieldCount = memo.fields.filter((field) =>
-                        field.value.trim(),
-                      ).length;
-                      return (
-                        <article className="creative-memo-card" key={memo.id}>
-                          <div>
-                            <span>{creativeMemoKindLabel(memo.kind)}</span>
-                            <strong>{creativeMemoDisplayTitle(memo)}</strong>
-                            <p>{creativeMemoExcerpt(memo)}</p>
-                          </div>
-                          <footer>
-                            <small>
-                              작성한 항목 {writtenFieldCount}개 · 전체 {memo.fields.length}개
-                            </small>
-                            <div>
-                              <button
-                                type="button"
-                                onClick={() => setSelectedCreativeMemoId(memo.id)}
-                              >
-                                열기
-                              </button>
-                              <button
-                                className="danger-text-button"
-                                type="button"
-                                onClick={() => deleteCreativeMemo(memo.id)}
-                              >
-                                삭제
-                              </button>
-                            </div>
-                          </footer>
-                        </article>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="creative-memo-empty">
-                    <strong>아직 추가한 창작 메모가 없어요.</strong>
-                    <p>필요한 순간에 자유 메모나 도움 틀을 하나씩 더해 보세요.</p>
-                  </div>
-                )}
-              </section>
-            </div>
-          ) : (
-            <div className="chapter-planning-workspace">
-              <section className="chapter-flow-board">
-                <div className="chapter-flow-heading">
-                  <div>
-                    <span className="eyebrow">구성 한눈에 보기</span>
-                    <h2>챕터가 어떻게 이어지는지 확인하세요</h2>
-                    <p>
-                      한 챕터에는 한 가지 중요한 변화를 담고, 그 결과가 다음
-                      챕터의 원인이 되게 이어 보세요.
-                    </p>
-                  </div>
-                  <button className="primary-button" onClick={addChapter}>
-                    + 챕터 추가
-                  </button>
-                </div>
-                <div className="chapter-flow-list">
-                  {sortedChapters.map((chapter, chapterIndex) => {
-                    const filledItems = [
-                      chapter.title,
-                      chapter.summary,
-                      chapter.purpose,
-                      chapter.keyEvents,
-                    ].filter((value) => value.trim()).length;
-                    const eventCount = chapter.keyEvents
-                      .split("\n")
-                      .filter((value) => value.trim()).length;
-                    const sceneCount = draft.lines.filter(
-                      (line) => line.chapterId === chapter.id,
-                    ).length;
-                    const nextChapter = sortedChapters[chapterIndex + 1];
-                    const isContinuationChapter =
-                      continuationPoint?.chapterId === chapter.id;
-                    const arcLabel = isContinuationChapter
-                      ? "이어쓰기"
-                      : chapterArcLabel(
-                          chapterIndex,
-                          sortedChapters.length,
-                          selectedStructure.steps,
-                        );
-                    return (
-                      <article
-                        className={`chapter-flow-card ${
-                          chapter.id === selectedChapter?.id ? "active" : ""
-                        } ${isContinuationChapter ? "continuation" : ""}`}
-                        key={chapter.id}
-                      >
-                        <div className="chapter-flow-stage">
-                          <span>{arcLabel}</span>
-                          {chapter.id === selectedChapter?.id && (
-                            <b>현재 보고 있어요</b>
-                          )}
-                        </div>
-                        <header>
-                          <span>{chapter.order}</span>
-                          <div>
-                            <strong>
-                              {chapter.title || `챕터 ${chapter.order}`}
-                            </strong>
-                            <small>
-                              구상 {filledItems}/4 · 사건 {eventCount} · 장면{" "}
-                              {sceneCount}
-                            </small>
-                          </div>
-                        </header>
-                        <p>
-                          {chapter.summary ||
-                            "이 챕터에서 달라지는 일을 적어 보세요."}
-                        </p>
-                        <div className="chapter-flow-link">
-                          <span>
-                            {nextChapter
-                              ? `다음 챕터 · ${nextChapter.order}. ${
-                                  nextChapter.title || "제목 없음"
-                                }`
-                              : "이야기를 더 이어 쓴다면"}
-                          </span>
-                          <strong>
-                            {chapter.nextChapterIdea || "아직 연결 메모가 없어요."}
-                          </strong>
-                        </div>
-                        <div className="chapter-flow-actions">
-                          <button onClick={() => openChapterPlan(chapter.id)}>
-                            이 챕터 편집
-                          </button>
-                          <button onClick={() => openChapterWriter(chapter.id)}>
-                            장면 쓰기
-                          </button>
-                        </div>
-                      </article>
-                    );
-                  })}
-                  {sortedChapters.length === 0 && (
-                    <button className="chapter-flow-empty" onClick={addChapter}>
-                      <strong>첫 챕터 만들기</strong>
-                      <span>이야기의 시작에서 일어날 일을 정해 보세요.</span>
-                    </button>
-                  )}
-                </div>
-              </section>
-
-              <div className="planning-grid chapter-planning-grid">
-                {selectedChapter ? (
-                  <section className="planning-card chapter-plan-card">
-                    <div className="card-heading with-actions">
-                      <div>
-                        <span>챕터 {selectedChapter.order}</span>
-                        <strong>한 챕터의 변화 만들기</strong>
-                      </div>
-                      <button
-                        className="danger-link"
-                        onClick={() => removeChapter(selectedChapter.id)}
-                      >
-                        챕터 삭제
-                      </button>
-                    </div>
-                    <div className="chapter-plan-status">
-                      <span>
-                        구상{" "}
-                        {
-                          [
-                            selectedChapter.title,
-                            selectedChapter.summary,
-                            selectedChapter.purpose,
-                            selectedChapter.keyEvents,
-                          ].filter((value) => value.trim()).length
-                        }
-                        /4
-                      </span>
-                      <span>
-                        장면 {selectedChapterLines.length}개
-                      </span>
-                      <span>
-                        화자 {selectedChapter.chapterSpeakerNames.length}명
-                      </span>
-                    </div>
-                    <label className="field wide">
-                      <span>챕터 제목 · 플레이에도 표시</span>
-                      <input
-                        value={selectedChapter.title}
-                        onChange={(event) =>
-                          updateChapter(selectedChapter.id, {
-                            title: event.target.value,
-                          })
-                        }
-                        placeholder={`챕터 ${selectedChapter.order} 제목`}
-                      />
-                    </label>
-                    <label className="field wide editor-only-field">
-                      <span>이 챕터에서 가장 중요하게 달라지는 일</span>
-                      <textarea
-                        rows={3}
-                        value={selectedChapter.summary}
-                        onChange={(event) =>
-                          updateChapter(selectedChapter.id, {
-                            summary: event.target.value,
-                          })
-                        }
-                        placeholder="이 챕터를 한 문장으로 요약해 보세요."
-                      />
-                    </label>
-                    <div className="planning-two-columns">
-                      <label className="field editor-only-field">
-                        <span>전체 이야기에서 맡은 역할</span>
-                        <textarea
-                          rows={3}
-                          value={selectedChapter.purpose}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              purpose: event.target.value,
-                            })
-                          }
-                          placeholder="인물 소개, 문제 시작, 중요한 선택, 마무리"
-                        />
-                      </label>
-                      <label className="field editor-only-field">
-                        <span>인물의 감정은 어떻게 바뀌나요?</span>
-                        <textarea
-                          rows={3}
-                          value={selectedChapter.mood}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              mood: event.target.value,
-                            })
-                          }
-                          placeholder="예: 경계 → 궁금함 → 결심"
-                        />
-                      </label>
-                    </div>
-                    <label className="field wide editor-only-field">
-                      <span>꼭 일어날 사건 · 한 줄에 하나씩</span>
-                      <textarea
-                        rows={4}
-                        value={selectedChapter.keyEvents}
-                        onChange={(event) =>
-                          updateChapter(selectedChapter.id, {
-                            keyEvents: event.target.value,
-                          })
-                        }
-                        placeholder={
-                          "자라가 찾아온다.\n자라가 부탁한다.\n그 말을 들은 토끼가 결정을 내린다."
-                        }
-                      />
-                    </label>
-                    <label className="field wide editor-only-field">
-                      <span>이 챕터의 결과로 다음에 생기는 일</span>
-                      <textarea
-                        rows={2}
-                        value={selectedChapter.nextChapterIdea}
-                        onChange={(event) =>
-                          updateChapter(selectedChapter.id, {
-                            nextChapterIdea: event.target.value,
-                          })
-                        }
-                        placeholder="이번 선택이나 사건 때문에 다음 챕터에서 생기는 일"
-                      />
-                    </label>
-                    <details className="chapter-resource-details">
-                      <summary>이 챕터에서 사용할 화자·이미지 정하기</summary>
-                      <p>
-                        장면 편집의 드롭다운에는 여기에서 고른 자료만 표시돼요.
-                      </p>
-                      <section className="resource-pool">
-                        <div className="resource-pool-heading">
-                          <strong>화자 이름</strong>
-                          <span>
-                            {selectedChapter.chapterSpeakerNames.length}개
-                          </span>
-                        </div>
-                        <div className="resource-chip-list">
-                          {selectedChapter.chapterSpeakerNames.map((name) => (
-                            <span className="resource-chip" key={name}>
-                              {name}
-                            </span>
-                          ))}
-                          {selectedChapter.chapterSpeakerNames.length === 0 && (
-                            <span className="empty-resource-copy">
-                              아직 고른 화자가 없어요.
-                            </span>
-                          )}
-                        </div>
-                        <AddSpeaker
-                          onAdd={(name) => addSpeaker(name, false)}
-                        />
-                      </section>
-                      <ResourcePool
-                        title="캐릭터 이미지"
-                        type="character"
-                        ids={selectedChapter.characterAssetIds}
-                        favoriteIds={favoriteAssets}
-                        recentIds={recentAssets}
-                        onToggleFavorite={toggleFavorite}
-                        onAdd={(id) => addAssetToChapter(id, "character")}
-                        onRemove={(id) => removeAsset(id, "character")}
-                      />
-                      <ResourcePool
-                        title="장소·배경"
-                        type="background"
-                        ids={selectedChapter.backgroundAssetIds}
-                        favoriteIds={favoriteAssets}
-                        recentIds={recentAssets}
-                        onToggleFavorite={toggleFavorite}
-                        onAdd={(id) => addAssetToChapter(id, "background")}
-                        onRemove={(id) => removeAsset(id, "background")}
-                      />
-                    </details>
-                    <button
-                      className="primary-button full-button"
-                      onClick={() => openChapterWriter(selectedChapter.id)}
-                    >
-                      이 챕터의 대사·해설 쓰기
-                    </button>
-                  </section>
-                ) : (
-                  <section className="empty-creator-state">
-                    <span>1</span>
-                    <h2>첫 챕터를 구상해 보세요</h2>
-                    <p>
-                      챕터를 만든 뒤 주요 변화와 사건을 정할 수 있어요.
-                    </p>
-                    <button className="primary-button" onClick={addChapter}>
-                      + 첫 챕터 만들기
-                    </button>
-                  </section>
-                )}
-              </div>
-            </div>
-          )}
-        </section>
+        <StoryPlanScreen
+          draft={draft}
+          planningView={planningView}
+          onPlanningViewChange={setPlanningView}
+          readyStoryItems={readyStoryItems}
+          storyChecklist={storyChecklist}
+          selectedStructure={selectedStructure}
+          onUpdatePlanning={updatePlanning}
+          onTitleChange={(title) =>
+            setDraft((project) => ({ ...project, title }))
+          }
+          onDescriptionChange={(description) =>
+            setDraft((project) => ({ ...project, description }))
+          }
+          creativeMemoCreatorStep={creativeMemoCreatorStep}
+          setCreativeMemoCreatorStep={setCreativeMemoCreatorStep}
+          orderedCreativeMemos={orderedCreativeMemos}
+          onAddCreativeMemo={addCreativeMemo}
+          onOpenCreativeMemo={(id) => setSelectedCreativeMemoId(id)}
+          onDeleteCreativeMemo={deleteCreativeMemo}
+          sortedChapters={sortedChapters}
+          selectedChapter={selectedChapter ?? null}
+          selectedChapterLines={selectedChapterLines}
+          continuationPoint={continuationPoint}
+          onAddChapter={addChapter}
+          onRemoveChapter={removeChapter}
+          onMoveChapter={(chapterId, direction) => {
+            setDraft(project => {
+              const result = moveStoryChapter({ chapters: project.chapters, chapterId, direction });
+              return result.ok ? { ...project, chapters: result.chapters } : project;
+            });
+          }}
+          onUpdateChapter={updateChapter}
+          onOpenChapterPlan={openChapterPlan}
+          onOpenChapterWriter={openChapterWriter}
+          onSwitchToCreate={() => setWorkspaceMode("create")}
+          favoriteAssets={favoriteAssets}
+          recentAssets={recentAssets}
+          onToggleFavorite={toggleFavorite}
+          onAddAssetToChapter={(id, type) => addAssetToChapter(id, type)}
+          onRemoveAssetFromChapter={(id, type) => removeAsset(id, type)}
+          onAddSpeaker={addSpeaker}
+        />
       ) : (
         <section className="making-workspace">
           <header
@@ -3963,7 +2619,7 @@ export function StoryStudio() {
               <span>
                 <strong>편집 방법</strong>
                 <small>
-                  {editorMode === "chapter" ? "대본 전체" : "장면 꾸미기"} ·{" "}
+                  {editorMode === "chapter" ? "이 장 대본" : "컷 꾸미기"} ·{" "}
                   {imageView === "text" ? "글만" : "작은 그림"}
                 </small>
               </span>
@@ -3972,17 +2628,17 @@ export function StoryStudio() {
             <div className="editor-mode-switch" aria-label="편집 화면 선택">
               <button
                 className={editorMode === "chapter" ? "active" : ""}
-                onClick={() => setEditorMode("chapter")}
+                onClick={() => switchStoryEditorView("chapter")}
               >
-                <strong>대본 전체</strong>
-                <small>대사를 이어 읽으며 써요</small>
+                <strong>이 장 대본</strong>
+                <small>컷을 이어 읽으며 써요</small>
               </button>
               <button
                 className={editorMode === "scene" ? "active" : ""}
-                onClick={() => setEditorMode("scene")}
+                onClick={() => switchStoryEditorView("scene")}
                 disabled={!selectedLine}
               >
-                <strong>장면 꾸미기</strong>
+                <strong>컷 꾸미기</strong>
                 <small>인물과 배경까지 꾸며요</small>
               </button>
             </div>
@@ -4008,7 +2664,9 @@ export function StoryStudio() {
               }`}
               aria-haspopup="dialog"
               aria-expanded={memoPopupOpen}
-              onClick={() => setMemoPopupOpen((current) => !current)}
+              onClick={() =>
+                memoPopupOpen ? returnFromMemoPopup() : openMemoPopup()
+              }
             >
               <strong>창작 메모</strong>
               <small>
@@ -4023,20 +2681,25 @@ export function StoryStudio() {
                 <div className="chapter-rail-heading">
                   <div>
                     <span className="eyebrow">이야기 순서</span>
-                    <strong>챕터</strong>
+                    <strong>장(場)</strong>
                   </div>
-                  <button onClick={addChapter} aria-label="챕터 추가">
+                  <button onClick={addChapter} aria-label="장 추가">
                     +
                   </button>
                 </div>
                 {sortedChapters.map((chapter, chapterIndex) => {
+                  const chapterKeys = canonicalizeStoryStageKeys(chapter.storyStageKeys);
                   const arcLabel =
                     continuationPoint?.chapterId === chapter.id
                       ? "이어쓰기"
-                      : chapterArcLabel(
-                          chapterIndex,
-                          sortedChapters.length,
-                          selectedStructure.steps,
+                      : formatStoryStageLabels(
+                          chapterKeys,
+                          selectedStructure.mode,
+                          chapterArcLabel(
+                            chapterIndex,
+                            sortedChapters.length,
+                            selectedStructure.steps,
+                          ),
                         );
                   return (
                     <button
@@ -4049,7 +2712,7 @@ export function StoryStudio() {
                       <span>{chapter.order}</span>
                       <div>
                         <strong>
-                          {chapter.title || `챕터 ${chapter.order}`}
+                          {chapter.title || `${chapter.order}장`}
                         </strong>
                         <small>
                           {arcLabel} ·{" "}
@@ -4058,7 +2721,7 @@ export function StoryStudio() {
                               (line) => line.chapterId === chapter.id,
                             ).length
                           }
-                          개 장면
+                          개 컷
                         </small>
                       </div>
                     </button>
@@ -4068,30 +2731,30 @@ export function StoryStudio() {
 
               <div className="mobile-chapter-picker">
                 <label>
-                  <span>챕터 선택</span>
+                  <span>장 선택</span>
                   <select
                     value={selectedChapter.id}
                     onChange={(event) => selectChapter(event.target.value)}
                   >
                     {sortedChapters.map((chapter) => (
                       <option value={chapter.id} key={chapter.id}>
-                        {chapter.order}. {chapter.title || "제목 없음"}
+                        {chapter.order}장. {chapter.title || "제목 없음"}
                       </option>
                     ))}
                   </select>
                 </label>
-                <button onClick={addChapter}>+ 챕터</button>
+                <button onClick={addChapter}>+ 장</button>
               </div>
 
               <section className="editor-main">
                 <header className="chapter-editor-heading">
                   <div>
                     <span className="eyebrow">
-                      챕터 {selectedChapter.order}
+                      {selectedChapter.order}장
                     </span>
-                    <h1>{selectedChapter.title || "제목 없는 챕터"}</h1>
+                    <h1>{selectedChapter.title || "제목 없는 장"}</h1>
                     <p>
-                      장면 {selectedChapterLines.length}개 · 대사{" "}
+                      컷 {selectedChapterLines.length}개 · 대사{" "}
                       {
                         selectedChapterLines.filter(
                           (line) => line.type === "dialogue",
@@ -4113,23 +2776,28 @@ export function StoryStudio() {
                         setChapterResourcesOpen((current) => !current)
                       }
                     >
-                      챕터 자료 {chapterResourcesOpen ? "닫기" : "설정"}
+                      장의 자료 {chapterResourcesOpen ? "닫기" : "설정"}
                     </button>
                     <button
                       className="ghost-button"
                       onClick={playSelectedChapter}
+                      disabled={
+                        !active.lines.some(
+                          (line) => line.chapterId === selectedChapter.id,
+                        )
+                      }
                     >
-                      이 챕터부터 보기
+                      이 장부터 보기
                     </button>
                   </div>
                 </header>
 
                 <section className="chapter-context-strip">
                   <div>
-                    <span>이번 챕터에서 달라지는 일</span>
+                    <span>이번 장에서 달라지는 일</span>
                     <strong>
                       {selectedChapter.summary ||
-                        "이 챕터에서 생길 가장 중요한 변화를 적어 보세요."}
+                        "이 장에서 생길 가장 중요한 변화를 적어 보세요."}
                     </strong>
                   </div>
                   <b aria-hidden="true">→</b>
@@ -4146,8 +2814,8 @@ export function StoryStudio() {
                   <section className="chapter-resource-panel">
                     <div className="panel-title">
                       <div>
-                        <span className="eyebrow">챕터 자료</span>
-                        <h2>이 챕터에서 사용할 것만 고르기</h2>
+                        <span className="eyebrow">장의 자료</span>
+                        <h2>이 장에서 사용할 것만 고르기</h2>
                       </div>
                       <button
                         className="quiet-button"
@@ -4199,7 +2867,7 @@ export function StoryStudio() {
                     />
                     <div className="chapter-default-grid">
                       <ImageField
-                        label="챕터 기본 배경"
+                        label="장의 기본 배경"
                         type="background"
                         value={selectedChapter.backgroundId}
                         allowedIds={selectedChapter.backgroundAssetIds}
@@ -4242,1164 +2910,126 @@ export function StoryStudio() {
                 )}
 
                 {editorMode === "chapter" ? (
-                  <div className="chapter-script-editor">
-                    <div className="script-editor-heading">
-                      <div>
-                        <strong>대본 전체</strong>
-                        <span>글상자를 눌러 바로 수정할 수 있어요.</span>
-                      </div>
-                      <span>
-                        {selectedLine
-                          ? `장면 ${selectedLineIndex + 1} 편집 중`
-                          : "장면 없음"}
-                      </span>
-                    </div>
-                    <div className="script-scene-list">
-                      {selectedChapterLines.map((line, index) => (
-                        <article
-                          className={`script-scene-card ${line.type} ${
-                            line.id === selectedLine?.id ? "active" : ""
-                          }`}
-                          key={line.id}
-                          onFocus={() => setSelectedLineId(line.id)}
-                          onClick={() => setSelectedLineId(line.id)}
-                        >
-                          <div className="scene-order">
-                            <strong>{index + 1}</strong>
-                            <span>
-                              {line.id === selectedLine?.id ? "편집 중" : "장면"}
-                            </span>
-                          </div>
-                          <div className="scene-writing-fields">
-                            <div className="scene-inline-controls">
-                              <span
-                                className={`scene-kind-badge ${line.type}`}
-                              >
-                                {line.type === "narration"
-                                  ? "해설 · 이야기 설명"
-                                  : "대사 · 인물이 말함"}
-                              </span>
-                              <select
-                                value={line.type}
-                                aria-label={`장면 ${index + 1} 종류`}
-                                onChange={(event) =>
-                                  changeLineType(
-                                    line.id,
-                                    event.target.value as StoryLine["type"],
-                                  )
-                                }
-                              >
-                                <option value="dialogue">대사</option>
-                                <option value="narration">해설</option>
-                              </select>
-                              {line.type === "dialogue" && (
-                                <>
-                                  <select
-                                    value={line.speaker}
-                                    aria-label={`장면 ${index + 1} 화자 위치`}
-                                    onChange={(event) =>
-                                      updateLine(line.id, {
-                                        speaker: event.target
-                                          .value as StoryLine["speaker"],
-                                      })
-                                    }
-                                  >
-                                    <option value="left">왼쪽</option>
-                                    <option value="right">오른쪽</option>
-                                  </select>
-                                  <select
-                                    value={line.speakerName}
-                                    aria-label={`장면 ${index + 1} 화자 이름`}
-                                    onChange={(event) =>
-                                      updateLine(line.id, {
-                                        speakerName: event.target.value,
-                                      })
-                                    }
-                                  >
-                                    {unique([
-                                      line.speakerName,
-                                      ...selectedChapter.chapterSpeakerNames,
-                                    ]).map((name) => (
-                                      <option value={name} key={name}>
-                                        {name}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </>
-                              )}
-                            </div>
-                            <div
-                              className={`script-writing-line ${line.type}`}
-                            >
-                              {line.type === "dialogue" && (
-                                <strong className="dialogue-speaker">
-                                  {line.speakerName || "화자 없음"}:
-                                </strong>
-                              )}
-                              <textarea
-                                rows={3}
-                                value={line.text}
-                                autoFocus={
-                                  line.id === selectedLine?.id &&
-                                  selectedChapterLines.length === 1 &&
-                                  !line.text
-                                }
-                                placeholder={
-                                  line.type === "narration"
-                                    ? "시간·장소·상황을 괄호 없이 들려주세요."
-                                    : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                                }
-                                onChange={(event) =>
-                                  updateLine(line.id, {
-                                    text: event.target.value,
-                                  })
-                                }
-                                aria-label={`장면 ${index + 1} 내용`}
-                              />
-                            </div>
-                            <small
-                              className={`scene-writing-help ${
-                                line.type === "narration" &&
-                                containsParentheses(line.text)
-                                  ? "warning"
-                                  : ""
-                              }`}
-                            >
-                              {line.type === "narration"
-                                ? containsParentheses(line.text)
-                                  ? "해설에는 괄호를 쓸 수 없어요. 이 내용을 대사 장면으로 옮겨 주세요."
-                                  : "해설은 괄호 없이 시간·장소·상황을 들려줘요."
-                                : "속마음·표정·행동은 학생이 직접 (괄호 안에) 써요."}
-                            </small>
-                            <small className="scene-asset-summary">
-                              왼쪽{" "}
-                              {assetName(
-                                line.leftAssetId ||
-                                  selectedChapter.leftAssetId,
-                              ) || "없음"}
-                              {" · "}오른쪽{" "}
-                              {assetName(
-                                line.rightAssetId ||
-                                  selectedChapter.rightAssetId,
-                              ) || "없음"}
-                              {" · "}배경{" "}
-                              {assetName(
-                                line.backgroundId ||
-                                  selectedChapter.backgroundId,
-                              ) || "없음"}
-                            </small>
-                          </div>
-                          {imageView === "small" && (
-                            <SceneThumbnail
-                              chapter={selectedChapter}
-                              line={line}
-                            />
-                          )}
-                          <div className="scene-card-actions">
-                            <button
-                              className="scene-focus-button"
-                              onClick={() => {
-                                setSelectedLineId(line.id);
-                                setEditorMode("scene");
-                              }}
-                            >
-                              장면 꾸미기
-                            </button>
-                            <details className="scene-more-actions">
-                              <summary>더보기</summary>
-                              <div>
-                                <button
-                                  onClick={() => moveLine(line.id, -1)}
-                                  disabled={index === 0}
-                                >
-                                  위로
-                                </button>
-                                <button
-                                  onClick={() => moveLine(line.id, 1)}
-                                  disabled={
-                                    index === selectedChapterLines.length - 1
-                                  }
-                                >
-                                  아래로
-                                </button>
-                                <button onClick={() => duplicateLine(line.id)}>
-                                  복제
-                                </button>
-                                <button
-                                  className="danger-link"
-                                  onClick={() => removeLine(line.id)}
-                                >
-                                  삭제
-                                </button>
-                              </div>
-                            </details>
-                          </div>
-                        </article>
-                      ))}
-                      {selectedChapterLines.length === 0 && (
-                        <div className="empty-script">
-                          <strong>아직 장면이 없어요.</strong>
-                          <p>
-                            대사나 해설을 추가하면 빈 글상자에 바로 쓸 수
-                            있어요.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="add-scene-row">
-                      <button onClick={() => addLine("dialogue")}>
-                        + 대사 장면
-                      </button>
-                      <button onClick={() => addLine("narration")}>
-                        + 해설 장면
-                      </button>
-                    </div>
-                  </div>
+                  <ScriptScreen
+                    draft={draft}
+                    selectedChapter={selectedChapter}
+                    selectedChapterLines={selectedChapterLines}
+                    selectedLine={selectedLine}
+                    selectedLineIndex={selectedLineIndex}
+                    imageView={imageView}
+                    highlightedApplyIssue={highlightedApplyIssue}
+                    revisionResponses={revisionResponses}
+                    onChooseRevisionResponse={(promptId, response) =>
+                      chooseRevisionResponse(draft, promptId, response)
+                    }
+                    onSelectLine={(lineId) => setSelectedLineId(lineId)}
+                    onChangeLineType={(lineId, type) =>
+                      changeLineType(lineId, type)
+                    }
+                    onUpdateLine={(lineId, patch) =>
+                      updateLine(lineId, patch)
+                    }
+                    onOpenStoryEditorScene={(line) =>
+                      openStoryEditorScene(line)
+                    }
+                    onMoveLine={(lineId, delta) =>
+                      moveLine(lineId, delta)
+                    }
+                    onDuplicateLine={(lineId) =>
+                      duplicateLine(lineId)
+                    }
+                    onRemoveLine={(lineId) =>
+                      removeLine(lineId)
+                    }
+                    onAddLine={(type) => addLine(type)}
+                    sceneCardRefs={sceneCardRefs}
+                    speakerNameRefs={speakerNameRefs}
+                    lineBodyRefs={lineBodyRefs}
+                  />
                 ) : selectedLine ? (
-                  <div className="scene-focus-editor">
-                    <div className="scene-focus-nav">
-                      <button
-                        disabled={selectedStoryLineIndex <= 0}
-                        onClick={() => moveThroughStory(-1)}
-                      >
-                        ← 이전 장면
-                      </button>
-                      <strong>
-                        전체 장면 {selectedStoryLineIndex + 1}/
-                        {orderedDraftLines.length}
-                        <small>
-                          챕터 {selectedChapter.order} · 이 챕터{" "}
-                          {selectedLineIndex + 1}/{selectedChapterLines.length}
-                        </small>
-                      </strong>
-                      <button
-                        disabled={
-                          selectedStoryLineIndex >= orderedDraftLines.length - 1
-                        }
-                        onClick={() => moveThroughStory(1)}
-                      >
-                        다음 장면 →
-                      </button>
-                    </div>
-
-                    <section
-                      className="editable-stage"
-                      style={
-                        ASSET_BY_ID.get(
-                          selectedLine.backgroundId ||
-                            selectedChapter.backgroundId,
-                        )?.src
-                          ? {
-                              backgroundImage: `linear-gradient(180deg, rgba(9,20,29,.04), rgba(9,20,29,.5)), url("${
-                                ASSET_BY_ID.get(
-                                  selectedLine.backgroundId ||
-                                    selectedChapter.backgroundId,
-                                )?.src
-                              }")`,
-                            }
-                          : undefined
-                      }
-                    >
-                      <div className="stage-background-action">
-                        <AssetPickerButton
-                          type="background"
-                          label="장면 배경"
-                          buttonText={
-                            selectedLine.backgroundId ||
-                            selectedChapter.backgroundId
-                              ? "배경 변경"
-                              : "+ 배경 추가"
-                          }
-                          value={
-                            selectedLine.backgroundId ||
-                            selectedChapter.backgroundId
-                          }
-                          currentLabel="현재 장면에서 사용 중"
-                          favoriteIds={favoriteAssets}
-                          recentIds={recentAssets}
-                          onToggleFavorite={toggleFavorite}
-                          onSelect={(id) => {
-                            addAssetToChapter(id, "background");
-                            updateLine(selectedLine.id, { backgroundId: id });
-                          }}
-                        />
-                      </div>
-                      {(["left", "right"] as const).map((side) => {
-                        const lineId =
-                          side === "left"
-                            ? selectedLine.leftAssetId
-                            : selectedLine.rightAssetId;
-                        const defaultId =
-                          side === "left"
-                            ? selectedChapter.leftAssetId
-                            : selectedChapter.rightAssetId;
-                        const effectiveId = lineId || defaultId;
-                        return (
-                          <div
-                            className={`editable-character-slot ${side}`}
-                            key={side}
-                          >
-                            <AssetPreview
-                              assetId={effectiveId}
-                              alt={assetName(effectiveId) || `${side} 캐릭터`}
-                              className={`editable-stage-character ${assetPlacementClass(
-                                effectiveId,
-                              )} ${
-                                shouldMirrorAsset(effectiveId, side)
-                                  ? "mirrored"
-                                  : ""
-                              }`}
-                            />
-                            <AssetPickerButton
-                              type="character"
-                              label={
-                                side === "left"
-                                  ? "왼쪽 캐릭터"
-                                  : "오른쪽 캐릭터"
-                              }
-                              buttonText={
-                                effectiveId
-                                  ? side === "left"
-                                    ? "왼쪽 이미지 변경"
-                                    : "오른쪽 이미지 변경"
-                                  : side === "left"
-                                    ? "+ 왼쪽 인물 추가"
-                                    : "+ 오른쪽 인물 추가"
-                              }
-                              value={effectiveId}
-                              currentLabel="현재 장면에서 사용 중"
-                              favoriteIds={favoriteAssets}
-                              recentIds={recentAssets}
-                              onToggleFavorite={toggleFavorite}
-                              onSelect={(id) => {
-                                addAssetToChapter(id, "character");
-                                updateLine(
-                                  selectedLine.id,
-                                  side === "left"
-                                    ? { leftAssetId: id }
-                                    : { rightAssetId: id },
-                                );
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                      <label
-                        className={`editable-stage-dialogue ${
-                          selectedLine.type === "narration"
-                            ? "narration"
-                            : ""
-                        }`}
-                      >
-                        {selectedLine.type === "narration" && (
-                          <span className="editable-stage-kind">
-                            <b>해설</b>
-                            <small>장면과 사건을 들려주는 글</small>
-                          </span>
-                        )}
-                        <div
-                          className={`editable-stage-writing-line ${selectedLine.type}`}
-                        >
-                          {selectedLine.type === "dialogue" && (
-                            <b className="dialogue-speaker">
-                              {selectedLine.speakerName || "화자 없음"}:
-                            </b>
-                          )}
-                          <textarea
-                            rows={3}
-                            value={selectedLine.text}
-                            onChange={(event) =>
-                              updateLine(selectedLine.id, {
-                                text: event.target.value,
-                              })
-                            }
-                            placeholder={
-                              selectedLine.type === "narration"
-                                ? "시간·장소·상황을 괄호 없이 들려주세요."
-                                : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                            }
-                            aria-label="현재 장면 글상자"
-                          />
-                        </div>
-                        <small
-                          className={`stage-writing-help ${
-                            selectedLine.type === "narration" &&
-                            containsParentheses(selectedLine.text)
-                              ? "warning"
-                              : ""
-                          }`}
-                        >
-                          {selectedLine.type === "narration"
-                            ? containsParentheses(selectedLine.text)
-                              ? "해설에는 괄호를 쓸 수 없어요."
-                              : "해설은 괄호 없이 씁니다."
-                            : "속마음·표정·행동은 (괄호 안에) 직접 씁니다."}
-                        </small>
-                      </label>
-                    </section>
-
-                    <button
-                      className="mobile-panel-toggle scene-settings-toggle"
-                      aria-expanded={sceneSettingsOpen}
-                      onClick={() => setSceneSettingsOpen((current) => !current)}
-                    >
-                      <span>
-                        <strong>화자·이미지·장면 설정</strong>
-                        <small>종류, 화자 위치, 캐릭터와 배경</small>
-                      </span>
-                      <b>{sceneSettingsOpen ? "접기" : "펼치기"}</b>
-                    </button>
-
-                    <div
-                      className={`scene-focus-lower ${
-                        sceneSettingsOpen ? "mobile-open" : ""
-                      }`}
-                    >
-                      <section className="scene-setting-card">
-                        <div className="card-heading">
-                          <span>플레이에 표시</span>
-                          <strong>대사·해설과 장면 설정</strong>
-                        </div>
-                        <div className="scene-setting-grid">
-                          <label className="field">
-                            <span>종류</span>
-                            <select
-                              value={selectedLine.type}
-                              onChange={(event) =>
-                                changeLineType(
-                                  selectedLine.id,
-                                  event.target.value as StoryLine["type"],
-                                )
-                              }
-                            >
-                              <option value="dialogue">대사</option>
-                              <option value="narration">해설</option>
-                            </select>
-                          </label>
-                          {selectedLine.type === "dialogue" && (
-                            <>
-                              <label className="field">
-                                <span>화자 위치</span>
-                                <select
-                                  value={selectedLine.speaker}
-                                  onChange={(event) =>
-                                    updateLine(selectedLine.id, {
-                                      speaker: event.target
-                                        .value as StoryLine["speaker"],
-                                    })
-                                  }
-                                >
-                                  <option value="left">왼쪽</option>
-                                  <option value="right">오른쪽</option>
-                                </select>
-                              </label>
-                              <label className="field">
-                                <span>화자 이름</span>
-                                <select
-                                  value={selectedLine.speakerName}
-                                  onChange={(event) =>
-                                    updateLine(selectedLine.id, {
-                                      speakerName: event.target.value,
-                                    })
-                                  }
-                                >
-                                  {unique([
-                                    selectedLine.speakerName,
-                                    ...selectedChapter.chapterSpeakerNames,
-                                  ]).map((name) => (
-                                    <option value={name} key={name}>
-                                      {name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </label>
-                              <AddSpeaker onAdd={addSpeaker} />
-                            </>
-                          )}
-                        </div>
-                        <div className="scene-image-dropdowns">
-                          <ImageField
-                            label="왼쪽 캐릭터"
-                            type="character"
-                            value={selectedLine.leftAssetId}
-                            currentValue={
-                              selectedLine.leftAssetId ||
-                              selectedChapter.leftAssetId
-                            }
-                            allowDefault
-                            allowedIds={selectedChapter.characterAssetIds}
-                            favoriteIds={favoriteAssets}
-                            recentIds={recentAssets}
-                            onToggleFavorite={toggleFavorite}
-                            onUse={(id) =>
-                              addAssetToChapter(id, "character")
-                            }
-                            onChange={(leftAssetId) =>
-                              updateLine(selectedLine.id, { leftAssetId })
-                            }
-                          />
-                          <ImageField
-                            label="오른쪽 캐릭터"
-                            type="character"
-                            value={selectedLine.rightAssetId}
-                            currentValue={
-                              selectedLine.rightAssetId ||
-                              selectedChapter.rightAssetId
-                            }
-                            allowDefault
-                            allowedIds={selectedChapter.characterAssetIds}
-                            favoriteIds={favoriteAssets}
-                            recentIds={recentAssets}
-                            onToggleFavorite={toggleFavorite}
-                            onUse={(id) =>
-                              addAssetToChapter(id, "character")
-                            }
-                            onChange={(rightAssetId) =>
-                              updateLine(selectedLine.id, { rightAssetId })
-                            }
-                          />
-                          <ImageField
-                            label="장면 배경"
-                            type="background"
-                            value={selectedLine.backgroundId}
-                            currentValue={
-                              selectedLine.backgroundId ||
-                              selectedChapter.backgroundId
-                            }
-                            allowDefault
-                            allowedIds={selectedChapter.backgroundAssetIds}
-                            favoriteIds={favoriteAssets}
-                            recentIds={recentAssets}
-                            onToggleFavorite={toggleFavorite}
-                            onUse={(id) =>
-                              addAssetToChapter(id, "background")
-                            }
-                            onChange={(backgroundId) =>
-                              updateLine(selectedLine.id, { backgroundId })
-                            }
-                          />
-                        </div>
-                        <SceneStagingCopy
-                          key={selectedLine.id}
-                          chapters={draft.chapters}
-                          lines={draft.lines}
-                          currentLineId={selectedLine.id}
-                          onCopy={copySceneStaging}
-                        />
-                      </section>
-
-                    </div>
-
-                    <div className="scene-focus-actions">
-                      <button onClick={() => setEditorMode("chapter")}>
-                        대본 전체로
-                      </button>
-                      <button onClick={() => addLine("dialogue", true)}>
-                        현재 장면 다음에 + 대사
-                      </button>
-                      <button onClick={() => addLine("narration", true)}>
-                        + 해설
-                      </button>
-                    </div>
-                  </div>
+                  <SceneFocusEditor
+                    draft={draft}
+                    selectedChapter={selectedChapter}
+                    selectedChapterLines={selectedChapterLines}
+                    selectedLine={selectedLine}
+                    selectedLineIndex={selectedLineIndex}
+                    selectedStoryLineIndex={selectedStoryLineIndex}
+                    orderedDraftLines={orderedDraftLines}
+                    sceneSettingsOpen={sceneSettingsOpen}
+                    onSetSceneSettingsOpen={setSceneSettingsOpen}
+                    highlightedApplyIssue={highlightedApplyIssue}
+                    favoriteAssets={favoriteAssets}
+                    recentAssets={recentAssets}
+                    onToggleFavorite={toggleFavorite}
+                    onAddAssetToChapter={addAssetToChapter}
+                    onMoveThroughStory={moveThroughStory}
+                    onChangeLineType={changeLineType}
+                    onUpdateLine={updateLine}
+                    onAddSpeaker={addSpeaker}
+                    onCopySceneStaging={copySceneStaging}
+                    onSwitchStoryEditorView={switchStoryEditorView}
+                    onAddLine={addLine}
+                    lineBodyRefs={lineBodyRefs}
+                    speakerNameRefs={speakerNameRefs}
+                  />
                 ) : (
                   <div className="empty-creator-state">
-                    <h2>집중해서 편집할 장면이 없어요</h2>
-                    <p>빈 대사 또는 해설 장면을 만들면 바로 커서가 놓입니다.</p>
+                    <h2>집중해서 편집할 컷이 없어요</h2>
+                    <p>빈 대사 또는 해설 컷을 만들면 바로 커서가 놓입니다.</p>
                     <div>
                       <button
                         className="primary-button"
                         onClick={() => addLine("dialogue", true)}
                       >
-                        + 대사 장면
+                        + 대사 컷
                       </button>
                       <button
                         className="ghost-button"
                         onClick={() => addLine("narration", true)}
                       >
-                        + 해설 장면
+                        + 해설 컷
                       </button>
                     </div>
                   </div>
                 )}
               </section>
               {memoPopupOpen && (
-                <aside
-                  className={`memo-popup ${memoWindowSize}`}
-                  role="dialog"
-                  aria-modal="false"
-                  aria-label="창작 메모 찾기와 편집"
-                >
-                  <header className="memo-popup-heading">
-                    <div>
-                      <span className="eyebrow">플레이에는 보이지 않아요</span>
-                      <h2>창작 메모</h2>
-                      <p>{currentLocation}</p>
-                    </div>
-                    <div className="memo-popup-heading-actions">
-                      <button
-                        className="memo-popup-size"
-                        onClick={() =>
-                          setMemoWindowSize((current) =>
-                            current === "compact" ? "large" : "compact",
-                          )
-                        }
-                      >
-                        {memoWindowSize === "compact"
-                          ? "크게 보기"
-                          : "작게 보기"}
-                      </button>
-                      <button
-                        className="memo-popup-close"
-                        onClick={() => setMemoPopupOpen(false)}
-                        aria-label="창작 메모 닫기"
-                      >
-                        닫기
-                      </button>
-                    </div>
-                  </header>
-
-                  <div className="memo-finder">
-                    <div className="memo-search-box">
-                      <label htmlFor="memo-search-input">메모 찾기</label>
-                      <div>
-                        <input
-                          id="memo-search-input"
-                          type="search"
-                          value={memoSearch}
-                          onChange={(event) => setMemoSearch(event.target.value)}
-                          placeholder="예: 갈등, 토끼, 다음 챕터"
-                        />
-                        {memoSearch && (
-                          <button
-                            onClick={() => setMemoSearch("")}
-                            aria-label="메모 검색어 지우기"
-                          >
-                            지우기
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    <div className="memo-scope-filter" aria-label="메모 범위">
-                      {(
-                        [
-                          ["all", "전체"],
-                          ["story", "이야기 구성"],
-                          ["character", "인물"],
-                          ["relationship", "관계"],
-                          ["place", "장소·세계"],
-                          ["event", "사건·갈등"],
-                          ["free", "자유 메모"],
-                          ["chapter", "챕터"],
-                          ["scene", "장면"],
-                        ] as [MemoScope, string][]
-                      ).map(([scope, label]) => (
-                        <button
-                          key={scope}
-                          className={memoScope === scope ? "active" : ""}
-                          aria-pressed={memoScope === scope}
-                          onClick={() => setMemoScope(scope)}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                    <small className="memo-finder-hint">
-                      검색하면 작품의 모든 챕터와 장면에서 찾아요.
-                    </small>
-                  </div>
-
-                  {normalizedMemoSearch ? (
-                    <section className="memo-search-results" aria-live="polite">
-                      <header>
-                        <strong>
-                          검색 결과 {filteredMemoSearchResults.length}개
-                        </strong>
-                        <small>
-                          원하는 기록을 누르면 그 메모로 바로 이동해요.
-                        </small>
-                      </header>
-                      {filteredMemoSearchResults.length > 0 ? (
-                        <div className="memo-result-list">
-                          {filteredMemoSearchResults.map((result) => (
-                            <button
-                              key={result.id}
-                              onClick={() => openMemoSearchResult(result)}
-                            >
-                              <span>{result.context}</span>
-                              <strong>{result.label}</strong>
-                              <small>
-                                {result.content.trim() ||
-                                  "아직 작성하지 않은 메모예요."}
-                              </small>
-                            </button>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="memo-search-empty">
-                          <strong>맞는 메모를 찾지 못했어요.</strong>
-                          <p>검색어를 줄이거나 다른 범위를 선택해 보세요.</p>
-                        </div>
-                      )}
-                    </section>
-                  ) : (
-                    <>
-                      <div className="memo-popup-guide">
-                        <span>
-                          원하는 묶음을 펼쳐 글과 비교하고 바로 수정하세요.
-                        </span>
-                        <div>
-                          <button onClick={openVisibleMemoSections}>
-                            모두 펼치기
-                          </button>
-                          <button onClick={closeAllMemoSections}>
-                            모두 접기
-                          </button>
-                        </div>
-                      </div>
-
-                  {memoScopeAllowsSection("story") && (
-                    <details
-                    className="memo-section"
-                    open={memoSectionsOpen.story}
-                    onToggle={(event) =>
-                      setMemoSectionOpen("story", event.currentTarget.open)
-                    }
-                  >
-                    <summary>
-                      <span>
-                        <b>전체 이야기</b>
-                        <small>소재·주제·인물·갈등</small>
-                      </span>
-                      <strong>{memoSectionsOpen.story ? "접기" : "펼치기"}</strong>
-                    </summary>
-                    <div className="memo-fields">
-                      <label className="field">
-                        <span>한 줄 이야기</span>
-                        <textarea
-                          id="memo-field-story-premise"
-                          rows={3}
-                          value={draft.planning.premise}
-                          onChange={(event) =>
-                            updatePlanning({ premise: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>이야기 소재</span>
-                        <textarea
-                          id="memo-field-story-material"
-                          rows={2}
-                          value={draft.planning.material}
-                          onChange={(event) =>
-                            updatePlanning({ material: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>이야기 주제</span>
-                        <textarea
-                          id="memo-field-story-theme"
-                          rows={2}
-                          value={draft.planning.theme}
-                          onChange={(event) =>
-                            updatePlanning({ theme: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>핵심 인물</span>
-                        <textarea
-                          id="memo-field-story-main-character"
-                          rows={2}
-                          value={draft.planning.mainCharacter}
-                          onChange={(event) =>
-                            updatePlanning({
-                              mainCharacter: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>주인공이 바라는 것</span>
-                        <textarea
-                          id="memo-field-story-main-goal"
-                          rows={3}
-                          value={draft.planning.mainGoal}
-                          onChange={(event) =>
-                            updatePlanning({ mainGoal: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>주요 갈등</span>
-                        <textarea
-                          id="memo-field-story-central-problem"
-                          rows={3}
-                          value={draft.planning.centralProblem}
-                          onChange={(event) =>
-                            updatePlanning({
-                              centralProblem: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>실패하면 생기는 일</span>
-                        <textarea
-                          id="memo-field-story-stakes"
-                          rows={3}
-                          value={draft.planning.stakes}
-                          onChange={(event) =>
-                            updatePlanning({ stakes: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>마지막에 달라지는 점</span>
-                        <textarea
-                          id="memo-field-story-ending-change"
-                          rows={3}
-                          value={draft.planning.endingChange}
-                          onChange={(event) =>
-                            updatePlanning({
-                              endingChange: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                    </div>
-                    </details>
-                  )}
-
-                  {memoScopeAllowsSection("structure") && (
-                    <details
-                    className="memo-section"
-                    open={memoSectionsOpen.structure}
-                    onToggle={(event) =>
-                      setMemoSectionOpen("structure", event.currentTarget.open)
-                    }
-                  >
-                    <summary>
-                      <span>
-                        <b>이야기 뼈대</b>
-                        <small>{selectedStructure.title}</small>
-                      </span>
-                      <strong>
-                        {memoSectionsOpen.structure ? "접기" : "펼치기"}
-                      </strong>
-                    </summary>
-                    <div className="memo-fields">
-                      {selectedStructure.steps.map((step) => (
-                        <label className="field" key={step.key}>
-                          <span>{step.label}</span>
-                          <small>{step.guide}</small>
-                          <textarea
-                            id={`memo-field-structure-${step.key}`}
-                            rows={3}
-                            value={draft.planning[step.key]}
-                            onChange={(event) =>
-                              updatePlanning({
-                                [step.key]: event.target.value,
-                              } as Partial<StoryProject["planning"]>)
-                            }
-                          />
-                        </label>
-                      ))}
-                    </div>
-                    </details>
-                  )}
-
-                  {memoScopeAllowsSection("details") && (
-                    <details
-                    className="memo-section"
-                    open={memoSectionsOpen.details}
-                    onToggle={(event) =>
-                      setMemoSectionOpen("details", event.currentTarget.open)
-                    }
-                  >
-                    <summary>
-                      <span>
-                        <b>인물·배경·추가 메모</b>
-                        <small>세부 설정과 남겨 둘 생각</small>
-                      </span>
-                      <strong>
-                        {memoSectionsOpen.details ? "접기" : "펼치기"}
-                      </strong>
-                    </summary>
-                    <div className="memo-fields">
-                      <label className="field">
-                        <span>인물 설정</span>
-                        <textarea
-                          id="memo-field-details-characters"
-                          rows={5}
-                          value={draft.planning.characterNotes}
-                          onChange={(event) =>
-                            updatePlanning({
-                              characterNotes: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>배경·세계 설정</span>
-                        <textarea
-                          id="memo-field-details-world"
-                          rows={5}
-                          value={draft.planning.worldNotes}
-                          onChange={(event) =>
-                            updatePlanning({ worldNotes: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>전체 분위기</span>
-                        <textarea
-                          id="memo-field-details-mood"
-                          rows={3}
-                          value={draft.planning.mood}
-                          onChange={(event) =>
-                            updatePlanning({ mood: event.target.value })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>아직 정하지 못한 것</span>
-                        <textarea
-                          id="memo-field-details-questions"
-                          rows={4}
-                          value={draft.planning.openQuestions}
-                          onChange={(event) =>
-                            updatePlanning({
-                              openQuestions: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>자유 창작 메모</span>
-                        <textarea
-                          id="memo-field-details-free"
-                          rows={4}
-                          value={draft.planning.freeNotes}
-                          onChange={(event) =>
-                            updatePlanning({ freeNotes: event.target.value })
-                          }
-                        />
-                      </label>
-                    </div>
-                    </details>
-                  )}
-
-                  {memoScopeAllowsSection("creative") && (
-                    <details
-                      className="memo-section creative"
-                      open={memoSectionsOpen.creative}
-                      onToggle={(event) =>
-                        setMemoSectionOpen("creative", event.currentTarget.open)
-                      }
-                    >
-                      <summary>
-                        <span>
-                          <b>추가한 창작 메모</b>
-                          <small>자유 메모와 도움 틀 메모</small>
-                        </span>
-                        <strong>
-                          {memoSectionsOpen.creative ? "접기" : "펼치기"}
-                        </strong>
-                      </summary>
-                      <div className="memo-creative-list">
-                        {orderedCreativeMemos
-                          .filter(
-                            (memo) =>
-                              memoScope === "all" || memo.kind === memoScope,
-                          )
-                          .map((memo) => (
-                            <button
-                              type="button"
-                              key={memo.id}
-                              onClick={() => setSelectedCreativeMemoId(memo.id)}
-                            >
-                              <span>{creativeMemoKindLabel(memo.kind)}</span>
-                              <strong>{creativeMemoDisplayTitle(memo)}</strong>
-                              <small>{creativeMemoExcerpt(memo)}</small>
-                            </button>
-                          ))}
-                        {orderedCreativeMemos.filter(
-                          (memo) => memoScope === "all" || memo.kind === memoScope,
-                        ).length === 0 && (
-                          <p>이 범위에 만든 창작 메모가 아직 없어요.</p>
-                        )}
-                      </div>
-                    </details>
-                  )}
-
-                  {memoScopeAllowsSection("chapter") && (
-                    <details
-                    className="memo-section current"
-                    open={memoSectionsOpen.chapter}
-                    onToggle={(event) =>
-                      setMemoSectionOpen("chapter", event.currentTarget.open)
-                    }
-                  >
-                    <summary>
-                      <span>
-                        <b>현재 챕터</b>
-                        <small>
-                          {selectedChapter.order}.{" "}
-                          {selectedChapter.title || "제목 없음"}
-                        </small>
-                      </span>
-                      <strong>
-                        {memoSectionsOpen.chapter ? "접기" : "펼치기"}
-                      </strong>
-                    </summary>
-                    <div className="memo-fields">
-                      <label className="field">
-                        <span>이번 챕터에서 달라지는 일</span>
-                        <textarea
-                          id={`memo-field-chapter-${selectedChapter.id}-summary`}
-                          rows={3}
-                          value={selectedChapter.summary}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              summary: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>이 챕터의 역할</span>
-                        <textarea
-                          id={`memo-field-chapter-${selectedChapter.id}-purpose`}
-                          rows={3}
-                          value={selectedChapter.purpose}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              purpose: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>분위기·감정 흐름</span>
-                        <textarea
-                          id={`memo-field-chapter-${selectedChapter.id}-mood`}
-                          rows={3}
-                          value={selectedChapter.mood}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              mood: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>꼭 들어갈 사건</span>
-                        <textarea
-                          id={`memo-field-chapter-${selectedChapter.id}-keyEvents`}
-                          rows={4}
-                          value={selectedChapter.keyEvents}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              keyEvents: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <label className="field">
-                        <span>다음 챕터로 이어질 일</span>
-                        <textarea
-                          id={`memo-field-chapter-${selectedChapter.id}-nextChapterIdea`}
-                          rows={3}
-                          value={selectedChapter.nextChapterIdea}
-                          onChange={(event) =>
-                            updateChapter(selectedChapter.id, {
-                              nextChapterIdea: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                    </div>
-                    </details>
-                  )}
-
-                  {selectedLine && memoScopeAllowsSection("scene") && (
-                    <details
-                      className="memo-section current"
-                      open={memoSectionsOpen.scene}
-                      onToggle={(event) =>
-                        setMemoSectionOpen("scene", event.currentTarget.open)
-                      }
-                    >
-                      <summary>
-                        <span>
-                          <b>현재 장면</b>
-                          <small>
-                            장면 {selectedLineIndex + 1} ·{" "}
-                            {selectedLine.type === "narration"
-                              ? "해설"
-                              : selectedLine.speakerName || "화자 없음"}
-                          </small>
-                        </span>
-                        <strong>
-                          {memoSectionsOpen.scene ? "접기" : "펼치기"}
-                        </strong>
-                      </summary>
-                      <div className="memo-fields">
-                        <label className="field">
-                          <span>이 장면의 역할</span>
-                          <textarea
-                            id={`memo-field-scene-${selectedLine.id}-purposeNote`}
-                            rows={3}
-                            value={selectedLine.purposeNote}
-                            onChange={(event) =>
-                              updateLine(selectedLine.id, {
-                                purposeNote: event.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="field">
-                          <span>인물의 감정</span>
-                          <textarea
-                            id={`memo-field-scene-${selectedLine.id}-emotionNote`}
-                            rows={3}
-                            value={selectedLine.emotionNote}
-                            onChange={(event) =>
-                              updateLine(selectedLine.id, {
-                                emotionNote: event.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="field">
-                          <span>연출 메모</span>
-                          <textarea
-                            id={`memo-field-scene-${selectedLine.id}-directionNote`}
-                            rows={3}
-                            value={selectedLine.directionNote}
-                            onChange={(event) =>
-                              updateLine(selectedLine.id, {
-                                directionNote: event.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                      </div>
-                    </details>
-                    )}
-                    </>
-                  )}
-                </aside>
+                <MemoPopup
+                  draft={draft}
+                  currentLocation={currentLocation}
+                  memoWindowSize={memoWindowSize}
+                  onSetMemoWindowSize={setMemoWindowSize}
+                  onReturnFromMemoPopup={returnFromMemoPopup}
+                  memoSearch={memoSearch}
+                  onSetMemoSearch={setMemoSearch}
+                  memoScope={memoScope}
+                  onSetMemoScope={setMemoScope}
+                  normalizedMemoSearch={normalizedMemoSearch}
+                  filteredMemoSearchResults={filteredMemoSearchResults}
+                  onOpenMemoSearchResult={openMemoSearchResult}
+                  onOpenVisibleMemoSections={openVisibleMemoSections}
+                  onCloseAllMemoSections={closeAllMemoSections}
+                  memoSectionsOpen={memoSectionsOpen}
+                  onSetMemoSectionOpen={setMemoSectionOpen}
+                  memoScopeAllowsSection={memoScopeAllowsSection}
+                  selectedStructure={selectedStructure}
+                  selectedChapter={selectedChapter}
+                  selectedLine={selectedLine}
+                  selectedLineIndex={selectedLineIndex}
+                  orderedCreativeMemos={orderedCreativeMemos}
+                  onUpdatePlanning={updatePlanning}
+                  onUpdateChapter={updateChapter}
+                  onUpdateLine={updateLine}
+                  onSelectCreativeMemoId={setSelectedCreativeMemoId}
+                />
               )}
             </div>
           ) : (
             <section className="empty-creator-state no-chapter">
               <span>1</span>
-              <h1>첫 챕터부터 시작하세요</h1>
+              <h1>첫 장부터 시작하세요</h1>
               <p>
-                구상 화면에서 계획해도 되고, 바로 빈 장면을 만들어 써도 돼요.
+                구상 화면에서 계획해도 되고, 바로 빈 컷을 만들어 써도 돼요.
               </p>
               <div>
                 <button
@@ -5409,7 +3039,7 @@ export function StoryStudio() {
                   구상부터 하기
                 </button>
                 <button className="primary-button" onClick={addChapter}>
-                  + 첫 챕터 만들기
+                  + 첫 장 만들기
                 </button>
               </div>
             </section>
@@ -5418,15 +3048,8 @@ export function StoryStudio() {
       )}
 
       {hasUnappliedChanges && (
-        <div className="creator-apply-dock">
-          <div>
-            <span className="status-dot" />
-            <div>
-              <strong>플레이에 아직 적용하지 않은 수정이 있어요.</strong>
-              <small>편집 내용과 창작 메모는 기기에 자동 저장됐어요.</small>
-            </div>
-          </div>
-          <button onClick={applyDraft}>플레이에 적용</button>
+        <div className={workspaceMode === "plan" ? "plan-apply-container" : undefined}>
+          <StudioApplyDock onApply={applyDraft} />
         </div>
       )}
 
@@ -5436,29 +3059,27 @@ export function StoryStudio() {
       </footer>
 
       {blankConfirmOpen && (
-        <div className="blank-confirm-overlay" role="presentation">
-          <section
-            className="blank-confirm-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="빈 작품 시작 확인"
-          >
-            <span className="blank-confirm-mark">새 작품</span>
-            <h2>완전히 빈 작품을 시작할까요?</h2>
-            <p>현재 편집본은 직전 편집본으로 백업한 뒤 새 작품을 엽니다.</p>
-            <div>
-              <button
-                className="ghost-button"
-                onClick={() => setBlankConfirmOpen(false)}
-              >
-                아니요, 돌아가기
-              </button>
-              <button className="danger-button" onClick={startBlankProject}>
-                빈 작품 열기
-              </button>
-            </div>
-          </section>
-        </div>
+        <ModalDialog
+          overlayClassName="blank-confirm-overlay"
+          dialogClassName="blank-confirm-dialog"
+          label="빈 작품 시작 확인"
+          onClose={() => setBlankConfirmOpen(false)}
+        >
+          <span className="blank-confirm-mark">새 작품</span>
+          <h2>완전히 빈 작품을 시작할까요?</h2>
+          <p>현재 편집본은 직전 편집본으로 백업한 뒤 새 작품을 엽니다.</p>
+          <div>
+            <button
+              className="ghost-button"
+              onClick={() => setBlankConfirmOpen(false)}
+            >
+              아니요, 돌아가기
+            </button>
+            <button className="danger-button" onClick={startBlankProject}>
+              빈 작품 열기
+            </button>
+          </div>
+        </ModalDialog>
       )}
 
       {hydrated &&
@@ -5467,7 +3088,30 @@ export function StoryStudio() {
           <div className="creative-memo-editor-overlay" role="presentation">
             <CreativeMemoEditor
               memo={selectedCreativeMemo}
+              chapterTargets={creativeMemoLinkChapters}
+              lineTargets={selectedCreativeMemoLineTargets}
+              linkResolution={
+                selectedCreativeMemoLinkResolution ?? {
+                  status: "unlinked",
+                  label: "아직 연결한 장이나 컷이 없어요.",
+                }
+              }
               onClose={() => setSelectedCreativeMemoId(null)}
+              onChapterLinkChange={(chapterId) =>
+                updateCreativeMemo(selectedCreativeMemo.id, (memo) =>
+                  setCreativeMemoChapterLink(memo, chapterId),
+                )
+              }
+              onLineLinkChange={(lineId) =>
+                updateCreativeMemo(selectedCreativeMemo.id, (memo) =>
+                  setCreativeMemoLineLink({
+                    memo,
+                    chapters: draft.chapters,
+                    lines: draft.lines,
+                    lineId,
+                  }),
+                )
+              }
               onTitleChange={(value) =>
                 updateCreativeMemo(selectedCreativeMemo.id, (memo) => ({
                   ...memo,
@@ -5493,12 +3137,7 @@ export function StoryStudio() {
                 )
               }
               onDeleteField={(fieldId) =>
-                updateCreativeMemo(selectedCreativeMemo.id, (memo) => ({
-                  ...memo,
-                  fields: memo.fields
-                    .filter((field) => field.id !== fieldId)
-                    .map((field, index) => ({ ...field, order: index + 1 })),
-                }))
+                deleteCreativeMemoField(selectedCreativeMemo.id, fieldId)
               }
               onDeleteMemo={() => deleteCreativeMemo(selectedCreativeMemo.id)}
             />
@@ -5528,6 +3167,20 @@ export function StoryStudio() {
           </div>
         </div>
       )}
-    </main>
+
+      <ImportIssuesDialog
+        open={importIssues.open}
+        issues={importIssues.issues}
+        source={importIssues.source}
+        onClose={() => setImportIssues({ open: false, issues: [] })}
+      />
+      <ImportConfirmationDialog
+        open={importConfirmation.open}
+        project={importConfirmation.project}
+        fileName={importConfirmation.fileName}
+        onConfirm={confirmImport}
+        onCancel={() => setImportConfirmation({ open: false, project: null })}
+      />
+    </StudioShell>
   );
 }

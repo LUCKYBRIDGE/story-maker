@@ -1,8 +1,11 @@
 # ADR — Story Asset Taxonomy v1
 
-- 상태: Accepted
+- 상태: Superseded by `story-asset-taxonomy-v2.md` / transitional implementation
 - 결정일: 2026-08-31
 - 범위: Story Maker 기본 제공 캐릭터 이미지 분류와 Picker 탐색
+
+> 이 문서는 현재 v1 런타임 adapter가 도입된 이유를 보존하는 이력이다. 목표
+> taxonomy와 검색 의미는 `docs/decisions/story-asset-taxonomy-v2.md`를 따른다.
 
 ## 배경
 

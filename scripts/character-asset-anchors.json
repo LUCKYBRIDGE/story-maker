@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "canvas": {
+    "width": 800,
+    "height": 1200,
+    "alphaThreshold": 26,
+    "groundY": 1149,
+    "groundPassPx": 3,
+    "groundReviewPx": 6,
+    "centerPassPx": 12,
+    "centerReviewPx": 20,
+    "eyePassPx": 12,
+    "eyeReviewPx": 24,
+    "scalePassPercent": 3,
+    "scaleReviewPercent": 5
+  },
+  "groups": [
+    {
+      "id": "rabbit-turtle.rabbit.v1",
+      "label": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "selectors": [{ "story": "토끼와 자라", "groups": ["토끼"], "framing": "전신" }],
+      "candidateFiles": [
+        { "id": "candidate.rabbit.default", "path": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-default.webp", "pose": "기본 후보" },
+        { "id": "candidate.rabbit.happy", "path": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-happy.webp", "pose": "기쁨 후보" },
+        { "id": "candidate.rabbit.worried", "path": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-worried.webp", "pose": "걱정 후보" }
+      ],
+      "legacyIds": ["rabbit-turtle.character.rabbit-white-unified-720x900"],
+      "dynamicOuterParts": ["귀", "펼친 손", "소품"],
+      "coreRowMinPixels": 180
+    },
+    {
+      "id": "rabbit-turtle.turtle.v1",
+      "label": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "selectors": [{ "story": "토끼와 자라", "groups": ["자라"], "framing": "전신" }],
+      "candidateFiles": [
+        { "id": "candidate.turtle.default", "path": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-default.webp", "pose": "기본 후보" },
+        { "id": "candidate.turtle.happy", "path": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-happy.webp", "pose": "기쁨 후보" },
+        { "id": "candidate.turtle.surprised", "path": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-surprised.webp", "pose": "놀람 후보" }
+      ],
+      "dynamicOuterParts": ["펼친 손", "약초 꾸러미"],
+      "coreRowMinPixels": 180
+    },
+    {
+      "id": "rabbit-turtle.turtle-child.v1",
+      "label": "어린 자라 · 회상",
+      "referenceId": "rabbit-turtle.character.turtle-child-unified-720x900",
+      "selectors": [{ "story": "토끼와 자라", "groups": ["어린 자라"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "rabbit-turtle.dragonking.v1",
+      "label": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "selectors": [{ "story": "토끼와 자라", "groups": ["용왕", "젊은 용왕"], "framing": "전신" }],
+      "candidateFiles": [
+        { "id": "candidate.dragonking.happy", "path": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-happy.webp", "pose": "기쁨 후보" },
+        { "id": "candidate.dragonking.worried", "path": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-worried.webp", "pose": "걱정 후보" },
+        { "id": "candidate.dragonking.surprised", "path": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-surprised.webp", "pose": "놀람 후보" }
+      ],
+      "dynamicOuterParts": ["뿔", "수염", "왕관", "펼친 손"],
+      "coreRowMinPixels": 220
+    },
+    {
+      "id": "rabbit-turtle.physician.v1",
+      "label": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "selectors": [{ "story": "토끼와 자라", "groups": ["의관"], "framing": "전신" }],
+      "candidateFiles": [
+        { "id": "candidate.physician.happy", "path": "work/story-assets/candidates/character-emotion-additions/physician/physician-happy.webp", "pose": "기쁨 후보" },
+        { "id": "candidate.physician.serious", "path": "work/story-assets/candidates/character-emotion-additions/physician/physician-serious.webp", "pose": "진지함 후보" },
+        { "id": "candidate.physician.surprised", "path": "work/story-assets/candidates/character-emotion-additions/physician/physician-surprised.webp", "pose": "놀람 후보" }
+      ],
+      "dynamicOuterParts": ["관모", "펼친 손", "소품"],
+      "coreRowMinPixels": 180
+    },
+    {
+      "id": "rabbit-turtle.shrimp-clerk.v1",
+      "label": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "candidateFiles": [
+        { "id": "candidate.shrimp-clerk.default", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-default.webp", "pose": "기본 후보" },
+        { "id": "candidate.shrimp-clerk.happy", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-happy.webp", "pose": "기쁨 후보" },
+        { "id": "candidate.shrimp-clerk.worried", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-worried.webp", "pose": "걱정 후보" },
+        { "id": "candidate.shrimp-clerk.surprised", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-surprised.webp", "pose": "놀람 후보" },
+        { "id": "candidate.shrimp-clerk.serious-report", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-serious-report.webp", "pose": "진지한 보고 후보" },
+        { "id": "candidate.shrimp-clerk.sad-apologetic", "path": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-sad-apologetic.webp", "pose": "슬픔·사과 후보" }
+      ],
+      "dynamicOuterParts": ["더듬이", "관모", "펼친 집게", "홀"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.real.v1",
+      "label": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["진짜 옹고집"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손", "소품"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.double.v1",
+      "label": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["가짜 옹고집"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손", "소품"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.wife.v1",
+      "label": "옹고집의 아내",
+      "referenceId": "onggojib.character.wife-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["옹고집의 아내"], "framing": "전신" }],
+      "dynamicOuterParts": ["치마폭", "펼친 손"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.servant.v1",
+      "label": "옹고집의 하인",
+      "referenceId": "onggojib.character.servant-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["옹고집의 하인"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손", "소품"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.worker.v1",
+      "label": "일꾼",
+      "referenceId": "onggojib.character.worker-woodcutter-v2-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["일꾼"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손", "도구"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.second-child.v1",
+      "label": "둘째 아이",
+      "referenceId": "onggojib.character.second-child-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["둘째 아이"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손"],
+      "coreRowMinPixels": 140
+    },
+    {
+      "id": "onggojib.youngest-child.v1",
+      "label": "막내 아이",
+      "referenceId": "onggojib.character.youngest-child-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["막내 아이"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손"],
+      "coreRowMinPixels": 140
+    },
+    {
+      "id": "onggojib.magistrate.v1",
+      "label": "사또",
+      "referenceId": "onggojib.character.magistrate-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["사또"], "framing": "전신" }],
+      "dynamicOuterParts": ["관모", "펼친 손"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.child.v1",
+      "label": "아이",
+      "referenceId": "onggojib.character.child-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["아이"], "framing": "전신" }],
+      "dynamicOuterParts": ["펼친 손"],
+      "coreRowMinPixels": 140
+    },
+    {
+      "id": "onggojib.stranger.v1",
+      "label": "낯선 사람",
+      "referenceId": "onggojib.character.stranger-hidden-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["낯선 사람"], "framing": "전신" }],
+      "dynamicOuterParts": ["삿갓", "펼친 손"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.posol.v1",
+      "label": "포졸",
+      "referenceId": "onggojib.character.posol-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["포졸"], "framing": "전신" }],
+      "dynamicOuterParts": ["관모", "무기"],
+      "coreRowMinPixels": 160
+    },
+    {
+      "id": "onggojib.ensemble.v1",
+      "label": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "selectors": [{ "story": "옹고집전", "groups": ["옹고집전 여러 인물"], "framing": "여러 인물" }],
+      "manualOnly": true,
+      "dynamicOuterParts": ["여러 인물", "펼친 손", "소품"],
+      "coreRowMinPixels": 260
+    }
+  ],
+  "landmarks": {}
+}

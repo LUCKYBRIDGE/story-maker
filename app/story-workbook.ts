@@ -5,15 +5,14 @@ import {
   creativeMemoKindLabel,
   creativeMemoSourceLabel,
 } from "./creative-memos";
+import { formatStoryStageKeysForExport } from "./story-stages";
+import {
+  createStoryImportSnapshot,
+  StoryImportError,
+  type StoryImportSnapshot,
+} from "./story-import";
 
-export type StorySheetSnapshot = {
-  project: string;
-  speakers: string;
-  chapters: string;
-  chapterResources?: string;
-  lines: string;
-  creativeMemos?: string;
-};
+export type StorySheetSnapshot = StoryImportSnapshot;
 
 function cellText(value: CellValue) {
   if (value === null || value === undefined) return "";
@@ -36,41 +35,90 @@ function csvCell(value: string) {
 
 function worksheetToCsv(worksheet: Worksheet | undefined) {
   if (!worksheet) return "";
-  const rows: string[] = [];
+  let lastContentRow = 0;
   worksheet.eachRow({ includeEmpty: false }, (row) => {
+    if (row.hasValues) lastContentRow = row.number;
+  });
+  const rows: string[] = [];
+  for (let rowNumber = 1; rowNumber <= lastContentRow; rowNumber += 1) {
+    const row = worksheet.getRow(rowNumber);
     const values: string[] = [];
     for (let column = 1; column <= row.cellCount; column += 1) {
-      values.push(csvCell(cellText(row.getCell(column).value).trim()));
+      values.push(csvCell(cellText(row.getCell(column).value)));
     }
     rows.push(values.join(","));
-  });
+  }
   return rows.join("\n");
 }
 
 export async function readStoryWorkbook(file: File): Promise<StorySheetSnapshot> {
   const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(await file.arrayBuffer());
+  try {
+    await workbook.xlsx.load(await file.arrayBuffer());
+  } catch {
+    throw new StoryImportError([
+      {
+        severity: "error",
+        source: "excel",
+        sheet: "통합 문서",
+        row: 1,
+        column: "파일",
+        value: file.name,
+        message: "Excel 파일 내용을 읽을 수 없어요.",
+        fix: "공식 양식에서 다시 저장한 .xlsx 파일인지 확인해 주세요.",
+      },
+    ]);
+  }
   const projectSheet =
     workbook.getWorksheet("이야기 구성") ?? workbook.getWorksheet("작품");
   const chaptersSheet =
-    workbook.getWorksheet("챕터 흐름") ?? workbook.getWorksheet("챕터");
+    workbook.getWorksheet("장의 흐름") ??
+    workbook.getWorksheet("챕터 흐름") ??
+    workbook.getWorksheet("챕터") ??
+    workbook.getWorksheet("장");
   const linesSheet =
-    workbook.getWorksheet("장면") ?? workbook.getWorksheet("대사");
+    workbook.getWorksheet("컷 대본") ??
+    workbook.getWorksheet("대본과 컷") ??
+    workbook.getWorksheet("장면") ??
+    workbook.getWorksheet("대사") ??
+    workbook.getWorksheet("컷");
 
   if (!projectSheet || !chaptersSheet || !linesSheet) {
-    throw new Error(
-      "Excel에 ‘이야기 구성’, ‘챕터 흐름’, ‘장면’ 탭이 모두 있어야 해요. 이전 양식의 ‘작품’, ‘챕터’ 탭도 열 수 있어요.",
-    );
+    const missing = [
+      !projectSheet ? "이야기 구성 또는 작품" : "",
+      !chaptersSheet ? "장의 흐름(또는 챕터 흐름)" : "",
+      !linesSheet ? "컷 대본(또는 장면/대사)" : "",
+    ].filter(Boolean);
+    throw new StoryImportError([
+      {
+        severity: "error",
+        source: "excel",
+        sheet: "통합 문서",
+        row: 1,
+        column: "탭 이름",
+        value: missing.join(", "),
+        message: `필수 탭이 없어요: ${missing.join(", ")}.`,
+        fix: "공식 양식의 ‘이야기 구성’, ‘장의 흐름’(또는 ‘챕터 흐름’), ‘컷 대본’(또는 ‘장면’) 탭을 유지해 주세요. 이전 양식의 ‘작품’, ‘챕터’, ‘대사’도 열 수 있어요.",
+      },
+    ]);
   }
 
-  return {
+  return createStoryImportSnapshot({
+    source: "excel",
+    names: {
+      project: projectSheet.name,
+      chapters: chaptersSheet.name,
+      lines: linesSheet.name,
+    },
     project: worksheetToCsv(projectSheet),
     speakers: worksheetToCsv(workbook.getWorksheet("화자")),
     chapters: worksheetToCsv(chaptersSheet),
-    chapterResources: worksheetToCsv(workbook.getWorksheet("챕터 자료")),
+    chapterResources: worksheetToCsv(
+      workbook.getWorksheet("장의 자료") ?? workbook.getWorksheet("챕터 자료"),
+    ),
     lines: worksheetToCsv(linesSheet),
     creativeMemos: worksheetToCsv(workbook.getWorksheet("창작 메모")),
-  };
+  });
 }
 
 function addSheet(
@@ -153,11 +201,11 @@ export function createStoryWorkbook(
     "시작하기",
     [
       ["순서", "안내"],
-      [1, "웹과 파일은 모두 ‘이야기 구성 → 챕터 흐름 → 장면 쓰기 → 플레이’ 순서로 사용해요."],
+      [1, "웹과 파일은 모두 ‘이야기 구성 → 장의 흐름 → 대본·컷 쓰기 → 플레이’ 순서로 사용해요."],
       [2, "‘이야기 구성’에서 제목, 주인공, 갈등과 전체 줄거리를 정하세요."],
-      [3, "‘챕터 흐름’에서 각 챕터의 변화와 앞뒤 연결을 정하세요."],
-      [4, "‘챕터 자료’는 그 챕터에 쓸 화자, 캐릭터, 배경을 미리 좁힐 때만 사용해요."],
-      [5, "‘화자’와 ‘장면’에서 실제 플레이에 나올 이름, 대사와 해설을 쓰세요."],
+      [3, "‘장의 흐름’에서 각 장의 사건 변화와 앞뒤 연결을 정하세요."],
+      [4, "‘장의 자료’는 그 장에 쓸 기본 배경, 기본 인물(좌/우), 화자를 정할 때 사용해요."],
+      [5, "‘화자’와 ‘컷 대본’에서 실제 플레이에 나올 이름, 대사와 해설을 쓰세요."],
       [6, "Excel을 고친 뒤 웹에서 ‘Excel에서 불러오기’를 눌러 다시 여세요."],
       [7, "웹에서 고친 내용은 ‘Excel로 저장’을 눌러 새 파일로 보관하세요."],
       [8, "화자 이름과 캐릭터 이미지 이름은 서로 다른 값입니다."],
@@ -228,22 +276,24 @@ export function createStoryWorkbook(
 
   const chapterFlowSheet = addSheet(
     workbook,
-    "챕터 흐름",
+    "장의 흐름",
     [
       [
-        "챕터 ID",
+        "장 ID",
         "순서",
-        "챕터 제목",
-        "한 줄 줄거리",
-        "챕터 역할",
+        "장 제목",
+        "이야기 단계",
+        "한 줄 사건",
+        "장의 역할",
         "분위기",
         "꼭 들어갈 사건",
-        "다음 챕터 아이디어",
+        "다음 장 아이디어",
       ],
       ...chapters.map((chapter) => [
         chapter.id,
         chapter.order,
         chapter.title,
+        formatStoryStageKeysForExport(chapter.storyStageKeys || []),
         chapter.summary,
         chapter.purpose,
         chapter.mood,
@@ -251,7 +301,7 @@ export function createStoryWorkbook(
         chapter.nextChapterIdea,
       ]),
     ],
-    [22, 9, 28, 48, 48, 28, 56, 48],
+    [22, 9, 28, 20, 48, 48, 28, 56, 48],
   );
   for (let row = 2; row <= Math.max(200, chapterFlowSheet.rowCount); row += 1) {
     chapterFlowSheet.getCell(row, 2).dataValidation = {
@@ -264,14 +314,14 @@ export function createStoryWorkbook(
 
   addSheet(
     workbook,
-    "챕터 자료",
+    "장의 자료",
     [
       [
-        "챕터 ID",
+        "장 ID",
         "배경 이미지",
         "왼쪽 기본 이미지",
         "오른쪽 기본 이미지",
-        "이 챕터 화자",
+        "이 장의 화자",
         "캐릭터 이미지 목록",
         "장소·배경 목록",
       ],
@@ -301,11 +351,11 @@ export function createStoryWorkbook(
 
   const scenesSheet = addSheet(
     workbook,
-    "장면",
+    "컷 대본",
     [
       [
-        "장면 ID",
-        "챕터 ID",
+        "컷 ID",
+        "장 ID",
         "순서",
         "종류",
         "화자 위치",
@@ -313,8 +363,8 @@ export function createStoryWorkbook(
         "내용",
         "왼쪽 이미지",
         "오른쪽 이미지",
-        "장면 배경",
-        "장면 역할",
+        "컷 배경",
+        "컷 역할",
         "감정 메모",
         "연출 메모",
       ],
@@ -373,8 +423,8 @@ export function createStoryWorkbook(
         "메모 ID",
         "메모 종류",
         "메모 제목",
-        "연결 챕터 ID",
-        "연결 장면 ID",
+        "연결 장 ID",
+        "연결 컷 ID",
         "항목 ID",
         "항목 이름",
         "내용",

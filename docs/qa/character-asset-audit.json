@@ -1,0 +1,5076 @@
+{
+  "schemaVersion": 1,
+  "auditVersion": "character-anchor-audit-v1",
+  "inputDigest": "43cb9456e7c83dcc086e115897b4eee0cdd716d650ff2fec3f5c6822dec9ec49",
+  "standard": {
+    "width": 800,
+    "height": 1200,
+    "alphaThreshold": 26,
+    "groundY": 1149,
+    "groundPassPx": 3,
+    "groundReviewPx": 6,
+    "centerPassPx": 12,
+    "centerReviewPx": 20,
+    "eyePassPx": 12,
+    "eyeReviewPx": 24,
+    "scalePassPercent": 3,
+    "scaleReviewPercent": 5
+  },
+  "summary": {
+    "total": 88,
+    "registered": 70,
+    "candidates": 18,
+    "counts": {
+      "KEEP": 15,
+      "NORMALIZE-TRANSLATE": 1,
+      "NORMALIZE-UNIFORM-SCALE": 0,
+      "MANUAL-REVIEW": 71,
+      "REFERENCE-REMAKE": 0,
+      "REJECT": 0,
+      "LEGACY": 1
+    }
+  },
+  "results": [
+    {
+      "id": "candidate.rabbit.default",
+      "file": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-default.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "토끼 · 중간 회갈색",
+      "pose": "기본 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "e50ce3546755cefb48b9ead3ca678f0c45bc526ed956ef30b8e077fe58b0c7fd",
+        "alpha": {
+          "visiblePixels": 233897,
+          "bbox": {
+            "x": 233,
+            "y": 120,
+            "width": 334,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 195,
+          "coreHeight": 955,
+          "bodyCenterX": 399.04
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -3.82,
+        "coreHeightPercent": 0.1,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.rabbit.happy",
+      "file": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-happy.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "토끼 · 중간 회갈색",
+      "pose": "기쁨 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "e7ba7d0c6ee3a7e5f096744ad2ef2e8239d982b1527b5cad6795c1366b36faa5",
+        "alpha": {
+          "visiblePixels": 232523,
+          "bbox": {
+            "x": 198,
+            "y": 119,
+            "width": 405,
+            "height": 1031
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 208,
+          "coreHeight": 942,
+          "bodyCenterX": 381.58
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 21.28px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -21.28,
+        "coreHeightPercent": -1.26,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.rabbit.worried",
+      "file": "work/story-assets/candidates/character-emotion-additions/rabbit/rabbit-worried.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "토끼 · 중간 회갈색",
+      "pose": "걱정 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "7b8a1a916de56c049ecc3e6d31080838367cb956286496632f78d5db313d136f",
+        "alpha": {
+          "visiblePixels": 246355,
+          "bbox": {
+            "x": 189,
+            "y": 217,
+            "width": 423,
+            "height": 933
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 235,
+          "coreHeight": 915,
+          "bodyCenterX": 421.85
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 18.99px 차이 납니다."
+        },
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 -4.09% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 18.99,
+        "coreHeightPercent": -4.09,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-guilty-escape",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-guilty-escape.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "미안해서 도망",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b7977852a65709a1883186969f97f888bffba8b5ad5713e096debba03113af27",
+        "alpha": {
+          "visiblePixels": 269089,
+          "bbox": {
+            "x": 166,
+            "y": 120,
+            "width": 467,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 166,
+          "coreHeight": 984,
+          "bodyCenterX": 434.83
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -31.97px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 3.14% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 31.97,
+        "coreHeightPercent": 3.14,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-herb-bundle",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-herb-bundle.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "약초 꾸러미",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "71c465ca4c86c7001bcf6ecd98d57915785d7383360231ffa8920574e789ccc9",
+        "alpha": {
+          "visiblePixels": 242020,
+          "bbox": {
+            "x": 215,
+            "y": 120,
+            "width": 369,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 192,
+          "coreHeight": 958,
+          "bodyCenterX": 397.22
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -5.64,
+        "coreHeightPercent": 0.42,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-shocked",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-shocked.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "놀람",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "fd1aa772c6f736d7a1dc6be8c52e4b424e12a35e4ff0fbed920009aabb19823b",
+        "alpha": {
+          "visiblePixels": 242389,
+          "bbox": {
+            "x": 187,
+            "y": 120,
+            "width": 425,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 192,
+          "coreHeight": 958,
+          "bodyCenterX": 399.61
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -3.25,
+        "coreHeightPercent": 0.42,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-speaking-truth",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-speaking-truth.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "진실을 말함",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "df27d02938de48aa450f768a83bb36ee1df7fce7a9d0f1003c26a6a19b3f98d1",
+        "alpha": {
+          "visiblePixels": 239235,
+          "bbox": {
+            "x": 183,
+            "y": 120,
+            "width": 433,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 180,
+          "coreHeight": 970,
+          "bodyCenterX": 425.09
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -22.23px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 22.23,
+        "coreHeightPercent": 1.68,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-suspicious",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-suspicious.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "의심",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b36de5f404d4292c69e05dc32b17ed4128e78e9ecd23d6ffb986a21a2475c615",
+        "alpha": {
+          "visiblePixels": 243578,
+          "bbox": {
+            "x": 192,
+            "y": 120,
+            "width": 415,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 179,
+          "coreHeight": 971,
+          "bodyCenterX": 411.63
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 8.77,
+        "coreHeightPercent": 1.78,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-thinking",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-thinking.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "생각",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "eb9d5addf8c33a6756750f6e5c2d39f41e60d693fb5a477e3e8a1c4f13c14df7",
+        "alpha": {
+          "visiblePixels": 234535,
+          "bbox": {
+            "x": 206,
+            "y": 120,
+            "width": 388,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 196,
+          "coreHeight": 954,
+          "bodyCenterX": 402.86
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.rabbit-white-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "토끼",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.rabbit.v1",
+      "positionGroupLabel": "토끼 · 중간 회갈색",
+      "referenceId": "rabbit-turtle.character.rabbit-thinking",
+      "dynamicOuterParts": [
+        "귀",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "7024e5ba06597ad3d04d1ff4df51d413c0d6a725983ec28df959a5dd76cf29cf",
+        "alpha": {
+          "visiblePixels": 241384,
+          "bbox": {
+            "x": 196,
+            "y": 120,
+            "width": 408,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 184,
+          "coreHeight": 966,
+          "bodyCenterX": 408.88
+        }
+      },
+      "decision": "LEGACY",
+      "reasons": [
+        {
+          "code": "legacy",
+          "level": "info",
+          "message": "사용하지 않는 이전 자산으로 보관합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": null,
+        "bodyCenterDelta": null,
+        "coreHeightPercent": null,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.turtle.default",
+      "file": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-default.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "자라 · 기본 의상",
+      "pose": "기본 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "2af22b15315222ef02a76f3a104763e136783bdd7dbdd73c4942941cff2bcf9f",
+        "alpha": {
+          "visiblePixels": 306210,
+          "bbox": {
+            "x": 188,
+            "y": 128,
+            "width": 423,
+            "height": 1022
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 205,
+          "coreHeight": 945,
+          "bodyCenterX": 388.16
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 -17.21px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -17.21,
+        "coreHeightPercent": -0.94,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.turtle.happy",
+      "file": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-happy.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "자라 · 기본 의상",
+      "pose": "기쁨 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "730e98ad1c64980ad7206be8f17a19365b3318c042391adce649f85d1372332a",
+        "alpha": {
+          "visiblePixels": 310531,
+          "bbox": {
+            "x": 175,
+            "y": 121,
+            "width": 449,
+            "height": 1029
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 199,
+          "coreHeight": 951,
+          "bodyCenterX": 400.51
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -4.86,
+        "coreHeightPercent": -0.31,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.turtle.surprised",
+      "file": "work/story-assets/candidates/character-emotion-additions/turtle/turtle-surprised.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "자라 · 기본 의상",
+      "pose": "놀람 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "76c73d0fc2cdbc26416355ccc71bb03d95f4b23d775dfa3162871781612fc6a4",
+        "alpha": {
+          "visiblePixels": 310255,
+          "bbox": {
+            "x": 173,
+            "y": 121,
+            "width": 453,
+            "height": 1029
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 197,
+          "coreHeight": 953,
+          "bodyCenterX": 402.02
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -3.35,
+        "coreHeightPercent": -0.1,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-ashamed",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-ashamed.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "부끄러움",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "4c19dca390788303b506d509c4a0b9766c75dc9645cf5a8d9585be83ff877d48",
+        "alpha": {
+          "visiblePixels": 330440,
+          "bbox": {
+            "x": 174,
+            "y": 120,
+            "width": 451,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 181,
+          "coreHeight": 969,
+          "bodyCenterX": 386.68
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 -18.69px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -18.69,
+        "coreHeightPercent": 1.57,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-herb-bundle",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-herb-bundle.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "약초 꾸러미",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "e8c334e573681615def77d4637b7b027da2828ab017d54834ee5a95ec9effa18",
+        "alpha": {
+          "visiblePixels": 356069,
+          "bbox": {
+            "x": 145,
+            "y": 120,
+            "width": 509,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 190,
+          "coreHeight": 960,
+          "bodyCenterX": 397.68
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -7.69,
+        "coreHeightPercent": 0.63,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-offer",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-offer.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "제안",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "bbdc7e039d81699258abc4472f08620f8d484454a0eb2bb137ca9c3494d6d20c",
+        "alpha": {
+          "visiblePixels": 342419,
+          "bbox": {
+            "x": 105,
+            "y": 120,
+            "width": 590,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 195,
+          "coreHeight": 955,
+          "bodyCenterX": 451.43
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -46.06px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 46.06,
+        "coreHeightPercent": 0.1,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-resolve",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-resolve.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "결심",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "8ac6204430465772fca17ec6d8f989d79cbc7e68e462819aa48e84476b9246ef",
+        "alpha": {
+          "visiblePixels": 316828,
+          "bbox": {
+            "x": 166,
+            "y": 120,
+            "width": 468,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 196,
+          "coreHeight": 954,
+          "bodyCenterX": 405.37
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-tired",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-tired.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "지침",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b933ed942820d701d76ef04fb90993adcc6594d60d271173a042561a69cfb3f6",
+        "alpha": {
+          "visiblePixels": 305289,
+          "bbox": {
+            "x": 201,
+            "y": 120,
+            "width": 398,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 180,
+          "coreHeight": 970,
+          "bodyCenterX": 387.87
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 -17.5px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -17.5,
+        "coreHeightPercent": 1.68,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "자라",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle.v1",
+      "positionGroupLabel": "자라 · 기본 의상",
+      "referenceId": "rabbit-turtle.character.turtle-resolve",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "약초 꾸러미"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "01dbf90a8871252211a7a60d51dba4852b328b1c6036ea0e2e2532714531bd5a",
+        "alpha": {
+          "visiblePixels": 306168,
+          "bbox": {
+            "x": 198,
+            "y": 122,
+            "width": 403,
+            "height": 1026
+          },
+          "groundY": 1147,
+          "edgePixels": 0,
+          "coreTopY": 192,
+          "coreHeight": 956,
+          "bodyCenterX": 389.21
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 -16.16px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -2,
+        "bodyCenterDelta": -16.16,
+        "coreHeightPercent": 0.21,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-child-flashback",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-child-flashback.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "어린 자라",
+      "pose": "회상",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle-child.v1",
+      "positionGroupLabel": "어린 자라 · 회상",
+      "referenceId": "rabbit-turtle.character.turtle-child-unified-720x900",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "66e6eaa3056ba6cca8dae8c13a9a73d247088fac03c69357b72c9de27a68792d",
+        "alpha": {
+          "visiblePixels": 320500,
+          "bbox": {
+            "x": 179,
+            "y": 120,
+            "width": 442,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 160,
+          "coreHeight": 990,
+          "bodyCenterX": 401.49
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 7.47,
+        "coreHeightPercent": 1.54,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.turtle-child-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.turtle-child-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "어린 자라",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.turtle-child.v1",
+      "positionGroupLabel": "어린 자라 · 회상",
+      "referenceId": "rabbit-turtle.character.turtle-child-unified-720x900",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "901b1552b90b631e6ecbc184328dfb8fe920f2769bab5404c3159b3accd8dbd3",
+        "alpha": {
+          "visiblePixels": 306351,
+          "bbox": {
+            "x": 202,
+            "y": 123,
+            "width": 395,
+            "height": 1024
+          },
+          "groundY": 1146,
+          "edgePixels": 0,
+          "coreTopY": 172,
+          "coreHeight": 975,
+          "bodyCenterX": 394.02
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -3,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.dragonking.happy",
+      "file": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-happy.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "용왕 · 동일 인물 비율",
+      "pose": "기쁨 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "86d6f908b45a0c5cf30af74a3c0617579a9caaac68723ee9dba40b8c65869881",
+        "alpha": {
+          "visiblePixels": 321713,
+          "bbox": {
+            "x": 179,
+            "y": 120,
+            "width": 441,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 258,
+          "coreHeight": 892,
+          "bodyCenterX": 401.12
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 2.52,
+        "coreHeightPercent": 0.11,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.dragonking.surprised",
+      "file": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-surprised.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "용왕 · 동일 인물 비율",
+      "pose": "놀람 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "892acc9bc1c550cbe1bc7afc4c952fb37d4939afc449a570ca4d0306a550ffa0",
+        "alpha": {
+          "visiblePixels": 307136,
+          "bbox": {
+            "x": 194,
+            "y": 120,
+            "width": 411,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 254,
+          "coreHeight": 896,
+          "bodyCenterX": 392.74
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -5.86,
+        "coreHeightPercent": 0.56,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.dragonking.worried",
+      "file": "work/story-assets/candidates/character-emotion-additions/dragonking/dragonking-worried.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "용왕 · 동일 인물 비율",
+      "pose": "걱정 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "24b6fee4ed52f1b15d6e0f6277a8bb97e10d215ede66091ed481ffe13d26b142",
+        "alpha": {
+          "visiblePixels": 312194,
+          "bbox": {
+            "x": 187,
+            "y": 120,
+            "width": 425,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 253,
+          "coreHeight": 897,
+          "bodyCenterX": 398.39
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.21,
+        "coreHeightPercent": 0.67,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-command",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-command.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "명령",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "1421c73504e586097f53a86ca6173d595425f721f337d335fb8e87781a46a391",
+        "alpha": {
+          "visiblePixels": 320170,
+          "bbox": {
+            "x": 127,
+            "y": 120,
+            "width": 546,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 262,
+          "coreHeight": 888,
+          "bodyCenterX": 438.08
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -39.48px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 39.48,
+        "coreHeightPercent": -0.34,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-command-attached",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-command-attached.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "엄한 명령",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "4201ff7751b2b7d097753642cfe00eba0cb8f4c8cb944f7cd99cab8f1fb8ffd6",
+        "alpha": {
+          "visiblePixels": 277537,
+          "bbox": {
+            "x": 208,
+            "y": 120,
+            "width": 384,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 287,
+          "coreHeight": 863,
+          "bodyCenterX": 395.42
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 -3.14% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -3.18,
+        "coreHeightPercent": -3.14,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-critical-attached",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-critical-attached.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "위독",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "122fb63fcca1ef529330cee98bd26e86cca2a85f0ed0b963cfb26081f02b7dd6",
+        "alpha": {
+          "visiblePixels": 297840,
+          "bbox": {
+            "x": 195,
+            "y": 120,
+            "width": 409,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 215,
+          "coreHeight": 935,
+          "bodyCenterX": 398.01
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 4.94% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.59,
+        "coreHeightPercent": 4.94,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-critical-worse-attached",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-critical-worse-attached.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "매우 위독",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "bf673f87cac606a75d6eaf0fdb25b1765b28cbe8437d3466a3e109b8fd958a70",
+        "alpha": {
+          "visiblePixels": 311994,
+          "bbox": {
+            "x": 194,
+            "y": 120,
+            "width": 412,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 213,
+          "coreHeight": 937,
+          "bodyCenterX": 399.49
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 5.16% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0.89,
+        "coreHeightPercent": 5.16,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-recovered-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "회복",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "22d1dfa2f8d83bda78ddef404ee6034a9a90f7f163df2797f37601252d3e8640",
+        "alpha": {
+          "visiblePixels": 318039,
+          "bbox": {
+            "x": 188,
+            "y": 120,
+            "width": 423,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 259,
+          "coreHeight": 891,
+          "bodyCenterX": 398.6
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-sick-elder-attached",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-sick-elder-attached.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "병든 모습",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "9a609b2dc46469fcc5ee96a0321ea9ca0dfa52a467da2a0e824e90a5b8e85e1b",
+        "alpha": {
+          "visiblePixels": 288890,
+          "bbox": {
+            "x": 179,
+            "y": 120,
+            "width": 442,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 249,
+          "coreHeight": 901,
+          "bodyCenterX": 422.86
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -24.26px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 24.26,
+        "coreHeightPercent": 1.12,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "용왕",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "9a609b2dc46469fcc5ee96a0321ea9ca0dfa52a467da2a0e824e90a5b8e85e1b",
+        "alpha": {
+          "visiblePixels": 288890,
+          "bbox": {
+            "x": 179,
+            "y": 120,
+            "width": 442,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 249,
+          "coreHeight": 901,
+          "bodyCenterX": 422.86
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -24.26px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 24.26,
+        "coreHeightPercent": 1.12,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-young-attached",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-young-attached.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "젊은 용왕",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "0d9bc9bad5fecf3cbf3d8b1f066470c84a173bd994916c11c2efcbc89d222bf9",
+        "alpha": {
+          "visiblePixels": 282931,
+          "bbox": {
+            "x": 186,
+            "y": 181,
+            "width": 410,
+            "height": 967
+          },
+          "groundY": 1147,
+          "edgePixels": 0,
+          "coreTopY": 324,
+          "coreHeight": 824,
+          "bodyCenterX": 391.22
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 -7.52% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -2,
+        "bodyCenterDelta": -7.38,
+        "coreHeightPercent": -7.52,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.dragonking-young-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.dragonking-young-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "젊은 용왕",
+      "pose": "전신",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.dragonking.v1",
+      "positionGroupLabel": "용왕 · 동일 인물 비율",
+      "referenceId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+      "dynamicOuterParts": [
+        "뿔",
+        "수염",
+        "왕관",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "0d9bc9bad5fecf3cbf3d8b1f066470c84a173bd994916c11c2efcbc89d222bf9",
+        "alpha": {
+          "visiblePixels": 282931,
+          "bbox": {
+            "x": 186,
+            "y": 181,
+            "width": 410,
+            "height": 967
+          },
+          "groundY": 1147,
+          "edgePixels": 0,
+          "coreTopY": 324,
+          "coreHeight": 824,
+          "bodyCenterX": 391.22
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 -7.52% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -2,
+        "bodyCenterDelta": -7.38,
+        "coreHeightPercent": -7.52,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.physician.happy",
+      "file": "work/story-assets/candidates/character-emotion-additions/physician/physician-happy.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "의관 · 청록 의상",
+      "pose": "기쁨 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.physician.v1",
+      "positionGroupLabel": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a43700d3a3cae4d0e8eb3cef700cedf320c16a84db63cfd4ecfc32e12dfd071b",
+        "alpha": {
+          "visiblePixels": 344471,
+          "bbox": {
+            "x": 159,
+            "y": 118,
+            "width": 483,
+            "height": 1032
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 161,
+          "coreHeight": 989,
+          "bodyCenterX": 404.81
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0.07,
+        "coreHeightPercent": 0.2,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.physician.serious",
+      "file": "work/story-assets/candidates/character-emotion-additions/physician/physician-serious.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "의관 · 청록 의상",
+      "pose": "진지함 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.physician.v1",
+      "positionGroupLabel": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "50ac4ac589256670e25cb50f81dc37710555f4242c145b4ba79ac9669a646ff4",
+        "alpha": {
+          "visiblePixels": 349995,
+          "bbox": {
+            "x": 142,
+            "y": 125,
+            "width": 515,
+            "height": 1025
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 174,
+          "coreHeight": 976,
+          "bodyCenterX": 414.04
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 9.3,
+        "coreHeightPercent": -1.11,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.physician.surprised",
+      "file": "work/story-assets/candidates/character-emotion-additions/physician/physician-surprised.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "의관 · 청록 의상",
+      "pose": "놀람 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.physician.v1",
+      "positionGroupLabel": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "c37433e7d9c9b5882a2201dcb4e06e37b5089096ba3be561a654b44ff5cdb04f",
+        "alpha": {
+          "visiblePixels": 343411,
+          "bbox": {
+            "x": 158,
+            "y": 121,
+            "width": 483,
+            "height": 1029
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 160,
+          "coreHeight": 990,
+          "bodyCenterX": 402.6
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -2.14,
+        "coreHeightPercent": 0.3,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.palace-physician-worried",
+      "file": "public/story-assets/rabbit-turtle.character.palace-physician-worried.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "의관",
+      "pose": "걱정",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.physician.v1",
+      "positionGroupLabel": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "201f47405adc189c27fcf3320277c844541227d1d1b4e108cec1a28b4fb54851",
+        "alpha": {
+          "visiblePixels": 294529,
+          "bbox": {
+            "x": 190,
+            "y": 120,
+            "width": 420,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 210,
+          "coreHeight": 940,
+          "bodyCenterX": 403.75
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 -4.76% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.99,
+        "coreHeightPercent": -4.76,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "rabbit-turtle.character.physician-unified-720x900",
+      "file": "public/story-assets/rabbit-turtle.character.physician-unified-720x900.webp",
+      "source": "registered",
+      "story": "토끼와 자라",
+      "character": "의관",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.physician.v1",
+      "positionGroupLabel": "의관 · 청록 의상",
+      "referenceId": "rabbit-turtle.character.physician-unified-720x900",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "528826dc98286efa9f52680a3d00e8dbef7e7522e6a8b82d907c4f1545bd4765",
+        "alpha": {
+          "visiblePixels": 344539,
+          "bbox": {
+            "x": 156,
+            "y": 123,
+            "width": 487,
+            "height": 1024
+          },
+          "groundY": 1146,
+          "edgePixels": 0,
+          "coreTopY": 160,
+          "coreHeight": 987,
+          "bodyCenterX": 404.74
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -3,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.default",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-default.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "기본 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "6696bd95c2717c656b43d09b3bc3edce1e0acc30c036ec459f8d754520f42a7b",
+        "alpha": {
+          "visiblePixels": 223714,
+          "bbox": {
+            "x": 211,
+            "y": 170,
+            "width": 378,
+            "height": 980
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 287,
+          "coreHeight": 863,
+          "bodyCenterX": 414.9
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.happy",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-happy.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "기쁨 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "389512b8ecc492bf2c71a8e765a031b3dac1a20e3ce66afaf5cc7cd559137a48",
+        "alpha": {
+          "visiblePixels": 238520,
+          "bbox": {
+            "x": 201,
+            "y": 148,
+            "width": 398,
+            "height": 1002
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 268,
+          "coreHeight": 882,
+          "bodyCenterX": 416.18
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 1.28,
+        "coreHeightPercent": 2.2,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.sad-apologetic",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-sad-apologetic.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "슬픔·사과 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "c6e1c6d920606f7010b30040d1998b6c26707ddead2450027c0f048c7afde1f5",
+        "alpha": {
+          "visiblePixels": 221337,
+          "bbox": {
+            "x": 210,
+            "y": 184,
+            "width": 381,
+            "height": 966
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 271,
+          "coreHeight": 879,
+          "bodyCenterX": 414.59
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.31,
+        "coreHeightPercent": 1.85,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.serious-report",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-serious-report.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "진지한 보고 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "68505dc4e130e2eb258f343cd0699a9b8286f42ad321c42ccf2f3faa33ca90ed",
+        "alpha": {
+          "visiblePixels": 233100,
+          "bbox": {
+            "x": 178,
+            "y": 123,
+            "width": 445,
+            "height": 1027
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 286,
+          "coreHeight": 864,
+          "bodyCenterX": 391.35
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 23.55px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -23.55,
+        "coreHeightPercent": 0.12,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.surprised",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-surprised.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "놀람 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "4d211384fb6cf542886c3af8625e83bdaf2caa90c3ed80a54a2ef0dc5cd0b126",
+        "alpha": {
+          "visiblePixels": 224097,
+          "bbox": {
+            "x": 208,
+            "y": 132,
+            "width": 384,
+            "height": 1018
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 286,
+          "coreHeight": 864,
+          "bodyCenterX": 411.83
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -3.07,
+        "coreHeightPercent": 0.12,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "candidate.shrimp-clerk.worried",
+      "file": "work/story-assets/candidates/shrimp-clerk-emotions/shrimp-clerk-worried.webp",
+      "source": "candidate",
+      "story": "토끼와 자라",
+      "character": "새우 문관 · 자주색 관복 후보",
+      "pose": "걱정 후보",
+      "framing": "전신",
+      "positionGroup": "rabbit-turtle.shrimp-clerk.v1",
+      "positionGroupLabel": "새우 문관 · 자주색 관복 후보",
+      "referenceId": "candidate.shrimp-clerk.default",
+      "dynamicOuterParts": [
+        "더듬이",
+        "관모",
+        "펼친 집게",
+        "홀"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "55914a4008547c0deadc63ee2b77bbefe27461b71d14cb4f284f59176da6a5d0",
+        "alpha": {
+          "visiblePixels": 229949,
+          "bbox": {
+            "x": 208,
+            "y": 172,
+            "width": 385,
+            "height": 978
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 288,
+          "coreHeight": 862,
+          "bodyCenterX": 419.69
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 4.79,
+        "coreHeightPercent": -0.12,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-angry-pixel",
+      "file": "public/story-assets/onggojib.character.real-angry-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "분노",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "2645ab512b67d2d219b339d72d56564e7aebf472fe5881dd9b51902560bb990b",
+        "alpha": {
+          "visiblePixels": 321049,
+          "bbox": {
+            "x": 172,
+            "y": 120,
+            "width": 455,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 203,
+          "coreHeight": 947,
+          "bodyCenterX": 406.45
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 14.39px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 14.39,
+        "coreHeightPercent": -0.21,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-borrowed-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.real-borrowed-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "빌린 옷",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a18183485d296d1052067dcdb682c6457f45ef90e41a340cc5d29ef4a8668768",
+        "alpha": {
+          "visiblePixels": 346181,
+          "bbox": {
+            "x": 170,
+            "y": 120,
+            "width": 459,
+            "height": 1024
+          },
+          "groundY": 1143,
+          "edgePixels": 0,
+          "coreTopY": 205,
+          "coreHeight": 939,
+          "bodyCenterX": 396.53
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "ground-review",
+          "level": "review",
+          "message": "발선이 기준에서 -6px 차이 나 수동 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -6,
+        "bodyCenterDelta": 4.47,
+        "coreHeightPercent": -1.05,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-borrowed-pixel",
+      "file": "public/story-assets/onggojib.character.real-borrowed-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "빌린 옷",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "2b14f91153b3225deaa8dc67f34476d6615d1353b7506fee36ce0481aea7f576",
+        "alpha": {
+          "visiblePixels": 268624,
+          "bbox": {
+            "x": 213,
+            "y": 120,
+            "width": 373,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 201,
+          "coreHeight": 949,
+          "bodyCenterX": 395.03
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 2.97,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.real-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "이어지는 모습",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "99cbd5ae7c73ea78fe6491a12019f387922ec3296246a883aa746327602b4c36",
+        "alpha": {
+          "visiblePixels": 340098,
+          "bbox": {
+            "x": 152,
+            "y": 120,
+            "width": 495,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 201,
+          "coreHeight": 949,
+          "bodyCenterX": 392.06
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-exiled-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.real-exiled-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "쫓겨남",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "8930da5c4ebec2ba8aad8cb3b781dc770b05f6d9a65116f68df1638828ae05d7",
+        "alpha": {
+          "visiblePixels": 317016,
+          "bbox": {
+            "x": 179,
+            "y": 120,
+            "width": 439,
+            "height": 1022
+          },
+          "groundY": 1141,
+          "edgePixels": 0,
+          "coreTopY": 205,
+          "coreHeight": 937,
+          "bodyCenterX": 392.57
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "ground-translate",
+          "level": "normalize",
+          "message": "발선을 8px 평행이동하면 기준에 맞출 수 있습니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -8,
+        "bodyCenterDelta": 0.51,
+        "coreHeightPercent": -1.26,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-exiled-pixel",
+      "file": "public/story-assets/onggojib.character.real-exiled-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "쫓겨남",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "d10356fd2236658154a26dda05c59112b836eee01700fede2bb82bc09a8e16b9",
+        "alpha": {
+          "visiblePixels": 300859,
+          "bbox": {
+            "x": 187,
+            "y": 120,
+            "width": 426,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 188,
+          "coreHeight": 962,
+          "bodyCenterX": 397.88
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 5.82,
+        "coreHeightPercent": 1.37,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-exiled-pleading-v2-pixel",
+      "file": "public/story-assets/onggojib.character.real-exiled-pleading-v2-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "쫓겨나 애원",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "3c370a18041fc668c3aff179ff2522cef13211e4a69355e41f39ec3b1fb751a4",
+        "alpha": {
+          "visiblePixels": 319668,
+          "bbox": {
+            "x": 184,
+            "y": 120,
+            "width": 431,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 208,
+          "coreHeight": 942,
+          "bodyCenterX": 391.62
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.44,
+        "coreHeightPercent": -0.74,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-pixel",
+      "file": "public/story-assets/onggojib.character.real-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a3ced5e76fec87531ceae52fdc0ccb05fce652e6f14efc84dd2f63557d609902",
+        "alpha": {
+          "visiblePixels": 317923,
+          "bbox": {
+            "x": 169,
+            "y": 120,
+            "width": 462,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 201,
+          "coreHeight": 949,
+          "bodyCenterX": 397.16
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 5.1,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-remorse-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.real-remorse-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "후회",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "4d7aab036a537fe61f140eb53abc8ed9dfba1564486754ec647ee0bda0aa4689",
+        "alpha": {
+          "visiblePixels": 322681,
+          "bbox": {
+            "x": 165,
+            "y": 120,
+            "width": 470,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 194,
+          "coreHeight": 956,
+          "bodyCenterX": 404.02
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 11.96,
+        "coreHeightPercent": 0.74,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-remorse-pixel",
+      "file": "public/story-assets/onggojib.character.real-remorse-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "후회",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "fe04ddd6b4fd190d42baa0b4141a7c1b807a646c0e42ca83b040b7e27b12863b",
+        "alpha": {
+          "visiblePixels": 329191,
+          "bbox": {
+            "x": 173,
+            "y": 120,
+            "width": 453,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 185,
+          "coreHeight": 965,
+          "bodyCenterX": 389.73
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -2.33,
+        "coreHeightPercent": 1.69,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-resolve-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.real-resolve-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "결심",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "cdcf7b935eead2629b9b89e7a09defbacaeb9902c1347db1180431dfad758bc0",
+        "alpha": {
+          "visiblePixels": 338924,
+          "bbox": {
+            "x": 152,
+            "y": 120,
+            "width": 495,
+            "height": 1024
+          },
+          "groundY": 1143,
+          "edgePixels": 0,
+          "coreTopY": 203,
+          "coreHeight": 941,
+          "bodyCenterX": 405.36
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "ground-review",
+          "level": "review",
+          "message": "발선이 기준에서 -6px 차이 나 수동 확인이 필요합니다."
+        },
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 13.3px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -6,
+        "bodyCenterDelta": 13.3,
+        "coreHeightPercent": -0.84,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.real-resolve-pixel",
+      "file": "public/story-assets/onggojib.character.real-resolve-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "진짜 옹고집",
+      "pose": "결심",
+      "framing": "전신",
+      "positionGroup": "onggojib.real.v1",
+      "positionGroupLabel": "진짜 옹고집",
+      "referenceId": "onggojib.character.real-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "882023a886230b2773079c07b190df97fecc79c3abf916eeda95175f7a3c2166",
+        "alpha": {
+          "visiblePixels": 335679,
+          "bbox": {
+            "x": 157,
+            "y": 122,
+            "width": 485,
+            "height": 1026
+          },
+          "groundY": 1147,
+          "edgePixels": 0,
+          "coreTopY": 185,
+          "coreHeight": 963,
+          "bodyCenterX": 406.7
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 14.64px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -2,
+        "bodyCenterDelta": 14.64,
+        "coreHeightPercent": 1.48,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-firm-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-firm-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "단호",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "f5281170011b5ab2f295ababff75ad4b11ebb6b85e594a60b3998c2d540ebdd5",
+        "alpha": {
+          "visiblePixels": 351966,
+          "bbox": {
+            "x": 161,
+            "y": 120,
+            "width": 478,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 185,
+          "coreHeight": 965,
+          "bodyCenterX": 408.8
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 45.62px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -45.62,
+        "coreHeightPercent": -0.41,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-firm-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-firm-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "단호",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "89d20997e7cde0fa79375702eb238affdd9fcba49200005bec0c98dda4e76913",
+        "alpha": {
+          "visiblePixels": 346007,
+          "bbox": {
+            "x": 147,
+            "y": 123,
+            "width": 505,
+            "height": 1024
+          },
+          "groundY": 1146,
+          "edgePixels": 0,
+          "coreTopY": 198,
+          "coreHeight": 949,
+          "bodyCenterX": 407.83
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 46.59px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -3,
+        "bodyCenterDelta": -46.59,
+        "coreHeightPercent": -2.06,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "온화",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b2a9a0b32514323a873c0434d1808c18b81123972c0fc8af28962d6fbe6a0940",
+        "alpha": {
+          "visiblePixels": 360875,
+          "bbox": {
+            "x": 99,
+            "y": 120,
+            "width": 602,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 181,
+          "coreHeight": 969,
+          "bodyCenterX": 454.42
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-gentle-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-gentle-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "온화",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "3eab225fd0ec46999bcf2517e3e3461c589468e0f25a9460e530895263e5f770",
+        "alpha": {
+          "visiblePixels": 342088,
+          "bbox": {
+            "x": 116,
+            "y": 120,
+            "width": 568,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 200,
+          "coreHeight": 950,
+          "bodyCenterX": 452.11
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -2.31,
+        "coreHeightPercent": -1.96,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-offering-consistent-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-offering-consistent-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "건넴",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "ac4fed16e4f77bca8a8e484f09546a7175cfb7fb81c498fa8fa2b45ee08a7e37",
+        "alpha": {
+          "visiblePixels": 349004,
+          "bbox": {
+            "x": 105,
+            "y": 120,
+            "width": 589,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 196,
+          "coreHeight": 954,
+          "bodyCenterX": 453.51
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -0.91,
+        "coreHeightPercent": -1.55,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-blue-offering-pixel",
+      "file": "public/story-assets/onggojib.character.double-blue-offering-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "건넴",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "06b42718eac8fd2818a4a9703ef4bd534f6119f5eceeb35e0424e06eaf8b4939",
+        "alpha": {
+          "visiblePixels": 331734,
+          "bbox": {
+            "x": 137,
+            "y": 120,
+            "width": 526,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 194,
+          "coreHeight": 956,
+          "bodyCenterX": 432.62
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 21.8px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -21.8,
+        "coreHeightPercent": -1.34,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-gentle-pixel",
+      "file": "public/story-assets/onggojib.character.double-gentle-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "온화",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "34040bfab63d4e1376f2254bd388f59d10b42c25b6911920888208d2de9c1bdc",
+        "alpha": {
+          "visiblePixels": 293599,
+          "bbox": {
+            "x": 160,
+            "y": 120,
+            "width": 480,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 199,
+          "coreHeight": 951,
+          "bodyCenterX": 433.41
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 21.01px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -21.01,
+        "coreHeightPercent": -1.86,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-pixel",
+      "file": "public/story-assets/onggojib.character.double-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "34a1a137fd691c892bb5cd241604ff05f16ee8fb874504fa463e4d0e8d1c9ff4",
+        "alpha": {
+          "visiblePixels": 260641,
+          "bbox": {
+            "x": 220,
+            "y": 120,
+            "width": 359,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 200,
+          "coreHeight": 950,
+          "bodyCenterX": 396.65
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 57.77px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -57.77,
+        "coreHeightPercent": -1.96,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.double-real-source-pixel",
+      "file": "public/story-assets/onggojib.character.double-real-source-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "가짜 옹고집",
+      "pose": "정체가 드러남",
+      "framing": "전신",
+      "positionGroup": "onggojib.double.v1",
+      "positionGroupLabel": "가짜 옹고집",
+      "referenceId": "onggojib.character.double-blue-gentle-consistent-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a3ced5e76fec87531ceae52fdc0ccb05fce652e6f14efc84dd2f63557d609902",
+        "alpha": {
+          "visiblePixels": 317923,
+          "bbox": {
+            "x": 169,
+            "y": 120,
+            "width": 462,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 201,
+          "coreHeight": 949,
+          "bodyCenterX": 397.16
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 57.26px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -57.26,
+        "coreHeightPercent": -2.06,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.wife-concerned-pixel",
+      "file": "public/story-assets/onggojib.character.wife-concerned-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 아내",
+      "pose": "걱정",
+      "framing": "전신",
+      "positionGroup": "onggojib.wife.v1",
+      "positionGroupLabel": "옹고집의 아내",
+      "referenceId": "onggojib.character.wife-pixel",
+      "dynamicOuterParts": [
+        "치마폭",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "43989592186232acdfeb41406c7941ada4605598c94267817b007c9e99910fdc",
+        "alpha": {
+          "visiblePixels": 282727,
+          "bbox": {
+            "x": 148,
+            "y": 120,
+            "width": 504,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 163,
+          "coreHeight": 987,
+          "bodyCenterX": 449.54
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 -49.4px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 49.4,
+        "coreHeightPercent": -0.7,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.wife-pixel",
+      "file": "public/story-assets/onggojib.character.wife-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 아내",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.wife.v1",
+      "positionGroupLabel": "옹고집의 아내",
+      "referenceId": "onggojib.character.wife-pixel",
+      "dynamicOuterParts": [
+        "치마폭",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "e4a1818e60a250cc68b5cd8346dc20daad129543f239b3e97de37fc38cd3ef08",
+        "alpha": {
+          "visiblePixels": 289309,
+          "bbox": {
+            "x": 206,
+            "y": 120,
+            "width": 388,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 156,
+          "coreHeight": 994,
+          "bodyCenterX": 400.14
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.wife-resolved-pixel",
+      "file": "public/story-assets/onggojib.character.wife-resolved-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 아내",
+      "pose": "결심",
+      "framing": "전신",
+      "positionGroup": "onggojib.wife.v1",
+      "positionGroupLabel": "옹고집의 아내",
+      "referenceId": "onggojib.character.wife-pixel",
+      "dynamicOuterParts": [
+        "치마폭",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "1251c25ecbd7c22632ad1c91c42aebbd5c198dc246f3f254750deb8192251137",
+        "alpha": {
+          "visiblePixels": 315618,
+          "bbox": {
+            "x": 180,
+            "y": 120,
+            "width": 440,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 153,
+          "coreHeight": 997,
+          "bodyCenterX": 411.06
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 10.92,
+        "coreHeightPercent": 0.3,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.servant-household-pixel",
+      "file": "public/story-assets/onggojib.character.servant-household-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 하인",
+      "pose": "집안일",
+      "framing": "전신",
+      "positionGroup": "onggojib.servant.v1",
+      "positionGroupLabel": "옹고집의 하인",
+      "referenceId": "onggojib.character.servant-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "7b54e541af387f538b91e3d13e1dd0d6a8907d0fa16e84ca1d2b234fd5d6a55d",
+        "alpha": {
+          "visiblePixels": 227729,
+          "bbox": {
+            "x": 237,
+            "y": 123,
+            "width": 325,
+            "height": 1024
+          },
+          "groundY": 1146,
+          "edgePixels": 0,
+          "coreTopY": 192,
+          "coreHeight": 955,
+          "bodyCenterX": 402.89
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -3,
+        "bodyCenterDelta": 5.85,
+        "coreHeightPercent": -1.44,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.servant-injured-pixel",
+      "file": "public/story-assets/onggojib.character.servant-injured-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 하인",
+      "pose": "다침",
+      "framing": "전신",
+      "positionGroup": "onggojib.servant.v1",
+      "positionGroupLabel": "옹고집의 하인",
+      "referenceId": "onggojib.character.servant-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "0a18688bf5cbb313709117f9a398494ff363025ea5f756ce7c29d008e82642cb",
+        "alpha": {
+          "visiblePixels": 232125,
+          "bbox": {
+            "x": 228,
+            "y": 120,
+            "width": 344,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 189,
+          "coreHeight": 961,
+          "bodyCenterX": 412.26
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 15.22px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 15.22,
+        "coreHeightPercent": -0.83,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.servant-pixel",
+      "file": "public/story-assets/onggojib.character.servant-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집의 하인",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.servant.v1",
+      "positionGroupLabel": "옹고집의 하인",
+      "referenceId": "onggojib.character.servant-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "40836c0ae8351eda0f4cad72f953fd3b8d0ad5b85f32f1b90471502a919acd0f",
+        "alpha": {
+          "visiblePixels": 267222,
+          "bbox": {
+            "x": 201,
+            "y": 120,
+            "width": 397,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 181,
+          "coreHeight": 969,
+          "bodyCenterX": 397.04
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.worker-asking-v2-pixel",
+      "file": "public/story-assets/onggojib.character.worker-asking-v2-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "일꾼",
+      "pose": "부탁",
+      "framing": "전신",
+      "positionGroup": "onggojib.worker.v1",
+      "positionGroupLabel": "일꾼",
+      "referenceId": "onggojib.character.worker-woodcutter-v2-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "도구"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b9ae96b9348495ab2f00fe88e29a3ac948f94a3a9f2ea13a1f16a0d3bae27c92",
+        "alpha": {
+          "visiblePixels": 261917,
+          "bbox": {
+            "x": 218,
+            "y": 120,
+            "width": 364,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 177,
+          "coreHeight": 973,
+          "bodyCenterX": 405.85
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 40.32px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -40.32,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.worker-woodcutter-pixel",
+      "file": "public/story-assets/onggojib.character.worker-woodcutter-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "일꾼",
+      "pose": "나무꾼",
+      "framing": "전신",
+      "positionGroup": "onggojib.worker.v1",
+      "positionGroupLabel": "일꾼",
+      "referenceId": "onggojib.character.worker-woodcutter-v2-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "도구"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "021d943ef0ff80fef76b7ef79f2b3e56f25b5aa70aa94a1512b0b867eb9fa1f3",
+        "alpha": {
+          "visiblePixels": 286826,
+          "bbox": {
+            "x": 167,
+            "y": 122,
+            "width": 468,
+            "height": 1025
+          },
+          "groundY": 1146,
+          "edgePixels": 0,
+          "coreTopY": 175,
+          "coreHeight": 972,
+          "bodyCenterX": 425.84
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-translate",
+          "level": "normalize",
+          "message": "몸 중심을 20.33px 평행이동하는 보정 후보입니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -3,
+        "bodyCenterDelta": -20.33,
+        "coreHeightPercent": -0.1,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.worker-woodcutter-v2-pixel",
+      "file": "public/story-assets/onggojib.character.worker-woodcutter-v2-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "일꾼",
+      "pose": "나무꾼",
+      "framing": "전신",
+      "positionGroup": "onggojib.worker.v1",
+      "positionGroupLabel": "일꾼",
+      "referenceId": "onggojib.character.worker-woodcutter-v2-pixel",
+      "dynamicOuterParts": [
+        "펼친 손",
+        "도구"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "e67ee52d686ec0ea118a763a10839f502472f7a364c8ddbca92388879b1d4b1c",
+        "alpha": {
+          "visiblePixels": 282933,
+          "bbox": {
+            "x": 144,
+            "y": 120,
+            "width": 512,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 177,
+          "coreHeight": 973,
+          "bodyCenterX": 446.17
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.second-child-hesitant-pixel",
+      "file": "public/story-assets/onggojib.character.second-child-hesitant-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "둘째 아이",
+      "pose": "망설임",
+      "framing": "전신",
+      "positionGroup": "onggojib.second-child.v1",
+      "positionGroupLabel": "둘째 아이",
+      "referenceId": "onggojib.character.second-child-pixel",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "0bafb4362c0f3615565a32fa1b6bd4c71ec8eb69edbcac3982a2ade2882b86c6",
+        "alpha": {
+          "visiblePixels": 266624,
+          "bbox": {
+            "x": 201,
+            "y": 120,
+            "width": 397,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 160,
+          "coreHeight": 990,
+          "bodyCenterX": 425.03
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 몸 중심이 기준본과 13.67px 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 13.67,
+        "coreHeightPercent": 1.64,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.second-child-pixel",
+      "file": "public/story-assets/onggojib.character.second-child-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "둘째 아이",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.second-child.v1",
+      "positionGroupLabel": "둘째 아이",
+      "referenceId": "onggojib.character.second-child-pixel",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a7ff9c619441e20bc11e209be783f21cd00d974fec703c042dd07cfd2cce3a4a",
+        "alpha": {
+          "visiblePixels": 276945,
+          "bbox": {
+            "x": 175,
+            "y": 124,
+            "width": 450,
+            "height": 1020
+          },
+          "groundY": 1143,
+          "edgePixels": 0,
+          "coreTopY": 170,
+          "coreHeight": 974,
+          "bodyCenterX": 411.36
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "ground-review",
+          "level": "review",
+          "message": "발선이 기준에서 -6px 차이 나 수동 확인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -6,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.youngest-child-cautious-pixel",
+      "file": "public/story-assets/onggojib.character.youngest-child-cautious-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "막내 아이",
+      "pose": "조심",
+      "framing": "전신",
+      "positionGroup": "onggojib.youngest-child.v1",
+      "positionGroupLabel": "막내 아이",
+      "referenceId": "onggojib.character.youngest-child-pixel",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "b0882a923c76e9dfb07d82b31d82abfd337bb74ce94c88eefdc35fa0bd861481",
+        "alpha": {
+          "visiblePixels": 316584,
+          "bbox": {
+            "x": 183,
+            "y": 120,
+            "width": 433,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 130,
+          "coreHeight": 1020,
+          "bodyCenterX": 398.44
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0.33,
+        "coreHeightPercent": 1.29,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.youngest-child-pixel",
+      "file": "public/story-assets/onggojib.character.youngest-child-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "막내 아이",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.youngest-child.v1",
+      "positionGroupLabel": "막내 아이",
+      "referenceId": "onggojib.character.youngest-child-pixel",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "c9b502f2b015d1d676296b0a1efb50930189d0796df8ceb83232b0269b0243c3",
+        "alpha": {
+          "visiblePixels": 316937,
+          "bbox": {
+            "x": 187,
+            "y": 125,
+            "width": 429,
+            "height": 1017
+          },
+          "groundY": 1141,
+          "edgePixels": 0,
+          "coreTopY": 135,
+          "coreHeight": 1007,
+          "bodyCenterX": 398.11
+        }
+      },
+      "decision": "NORMALIZE-TRANSLATE",
+      "reasons": [
+        {
+          "code": "ground-translate",
+          "level": "normalize",
+          "message": "발선을 8px 평행이동하면 기준에 맞출 수 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": -8,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.magistrate-command-pixel",
+      "file": "public/story-assets/onggojib.character.magistrate-command-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "사또",
+      "pose": "명령",
+      "framing": "전신",
+      "positionGroup": "onggojib.magistrate.v1",
+      "positionGroupLabel": "사또",
+      "referenceId": "onggojib.character.magistrate-pixel",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "bf6675a492b78dc3f284c28c2e99f5956eecf2690136fbbefe993029db815693",
+        "alpha": {
+          "visiblePixels": 348354,
+          "bbox": {
+            "x": 116,
+            "y": 120,
+            "width": 567,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 177,
+          "coreHeight": 973,
+          "bodyCenterX": 446.64
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 2.41,
+        "coreHeightPercent": 0.1,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.magistrate-pixel",
+      "file": "public/story-assets/onggojib.character.magistrate-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "사또",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.magistrate.v1",
+      "positionGroupLabel": "사또",
+      "referenceId": "onggojib.character.magistrate-pixel",
+      "dynamicOuterParts": [
+        "관모",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "53b61aa080a0460bb1586f47400346223b7425269ca549445058fcf3eee6ddc6",
+        "alpha": {
+          "visiblePixels": 323473,
+          "bbox": {
+            "x": 133,
+            "y": 120,
+            "width": 533,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 178,
+          "coreHeight": 972,
+          "bodyCenterX": 444.23
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.child-pixel",
+      "file": "public/story-assets/onggojib.character.child-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "아이",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.child.v1",
+      "positionGroupLabel": "아이",
+      "referenceId": "onggojib.character.child-pixel",
+      "dynamicOuterParts": [
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "adf14024bdb1fc14f14107c02a65447cae4d3f3c1525db1b6e3702e46ecca2d3",
+        "alpha": {
+          "visiblePixels": 290021,
+          "bbox": {
+            "x": 205,
+            "y": 120,
+            "width": 390,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 150,
+          "coreHeight": 1000,
+          "bodyCenterX": 400.17
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.stranger-hidden-pixel",
+      "file": "public/story-assets/onggojib.character.stranger-hidden-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "낯선 사람",
+      "pose": "정체를 숨김",
+      "framing": "전신",
+      "positionGroup": "onggojib.stranger.v1",
+      "positionGroupLabel": "낯선 사람",
+      "referenceId": "onggojib.character.stranger-hidden-pixel",
+      "dynamicOuterParts": [
+        "삿갓",
+        "펼친 손"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "d803d73e906a47031721c8bd71e398364dfa1258777270b2f30858db82ca7a3b",
+        "alpha": {
+          "visiblePixels": 298535,
+          "bbox": {
+            "x": 187,
+            "y": 120,
+            "width": 425,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 188,
+          "coreHeight": 962,
+          "bodyCenterX": 397.31
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.posol-pixel",
+      "file": "public/story-assets/onggojib.character.posol-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "포졸",
+      "pose": "기본",
+      "framing": "전신",
+      "positionGroup": "onggojib.posol.v1",
+      "positionGroupLabel": "포졸",
+      "referenceId": "onggojib.character.posol-pixel",
+      "dynamicOuterParts": [
+        "관모",
+        "무기"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "8b54525e1e1d49d3d64b139bc8f29ddf774b0a167850b08471af6cecd3e22ea7",
+        "alpha": {
+          "visiblePixels": 267222,
+          "bbox": {
+            "x": 201,
+            "y": 120,
+            "width": 397,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 181,
+          "coreHeight": 969,
+          "bodyCenterX": 397.04
+        }
+      },
+      "decision": "KEEP",
+      "reasons": [
+        {
+          "code": "within-tolerance",
+          "level": "pass",
+          "message": "자동 측정 항목이 허용 범위 안에 있습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.group-fake-child-story-pixel",
+      "file": "public/story-assets/onggojib.character.group-fake-child-story-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집전 여러 인물",
+      "pose": "가짜 아이 이야기",
+      "framing": "여러 인물",
+      "positionGroup": "onggojib.ensemble.v1",
+      "positionGroupLabel": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "dynamicOuterParts": [
+        "여러 인물",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "81c0df516d1e8cc4aa030ee24ffb3c73505bae5be9ce2b2fffbf09d36e404e50",
+        "alpha": {
+          "visiblePixels": 453709,
+          "bbox": {
+            "x": 77,
+            "y": 120,
+            "width": 645,
+            "height": 1030
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 210,
+          "coreHeight": 940,
+          "bodyCenterX": 392.74
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "manual-only-group",
+          "level": "review",
+          "message": "여러 인물 또는 합성 포즈라 단일 인물 자동 비율 판정을 적용하지 않습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 0,
+        "coreHeightPercent": 0,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.group-fake-servant-worker-payment-pixel",
+      "file": "public/story-assets/onggojib.character.group-fake-servant-worker-payment-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집전 여러 인물",
+      "pose": "가짜 하인과 일꾼에게 품삯",
+      "framing": "여러 인물",
+      "positionGroup": "onggojib.ensemble.v1",
+      "positionGroupLabel": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "dynamicOuterParts": [
+        "여러 인물",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "955093307a216299adbe7cdbc140fbb585a78f0aa7171bfbe4d222573b376abf",
+        "alpha": {
+          "visiblePixels": 350767,
+          "bbox": {
+            "x": 10,
+            "y": 400,
+            "width": 780,
+            "height": 750
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 494,
+          "coreHeight": 656,
+          "bodyCenterX": 389.86
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 -30.21% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        },
+        {
+          "code": "manual-only-group",
+          "level": "review",
+          "message": "여러 인물 또는 합성 포즈라 단일 인물 자동 비율 판정을 적용하지 않습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -2.88,
+        "coreHeightPercent": -30.21,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.group-fake-wife-entering-pixel",
+      "file": "public/story-assets/onggojib.character.group-fake-wife-entering-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집전 여러 인물",
+      "pose": "가짜 아내 등장",
+      "framing": "여러 인물",
+      "positionGroup": "onggojib.ensemble.v1",
+      "positionGroupLabel": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "dynamicOuterParts": [
+        "여러 인물",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "2a2473e6d032329c9ba26a4888bf0c6634b44710463e3d4ff1cb23aafdf336a2",
+        "alpha": {
+          "visiblePixels": 411555,
+          "bbox": {
+            "x": 10,
+            "y": 276,
+            "width": 780,
+            "height": 874
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 352,
+          "coreHeight": 798,
+          "bodyCenterX": 350.39
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-unresolved",
+          "level": "review",
+          "message": "몸 중심 차이 -42.35px를 평행이동만으로 안전하게 해결할 수 없습니다."
+        },
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 -15.11% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        },
+        {
+          "code": "manual-only-group",
+          "level": "review",
+          "message": "여러 인물 또는 합성 포즈라 단일 인물 자동 비율 판정을 적용하지 않습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": -42.35,
+        "coreHeightPercent": -15.11,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.group-fake-worker-reward-pixel",
+      "file": "public/story-assets/onggojib.character.group-fake-worker-reward-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집전 여러 인물",
+      "pose": "가짜 일꾼에게 보상",
+      "framing": "여러 인물",
+      "positionGroup": "onggojib.ensemble.v1",
+      "positionGroupLabel": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "dynamicOuterParts": [
+        "여러 인물",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "a36f76ba427089bd3157d41644a1c9f2aa12006f04d030f24ab7957a230c0190",
+        "alpha": {
+          "visiblePixels": 460900,
+          "bbox": {
+            "x": 10,
+            "y": 191,
+            "width": 780,
+            "height": 959
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 279,
+          "coreHeight": 871,
+          "bodyCenterX": 395.02
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "scale-landmark-required",
+          "level": "review",
+          "message": "중심 신체 높이가 -7.34% 달라 눈·머리 기준점 확인이 필요합니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        },
+        {
+          "code": "manual-only-group",
+          "level": "review",
+          "message": "여러 인물 또는 합성 포즈라 단일 인물 자동 비율 판정을 적용하지 않습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 2.28,
+        "coreHeightPercent": -7.34,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    },
+    {
+      "id": "onggojib.character.group-real-ghost-servant-pass-pixel",
+      "file": "public/story-assets/onggojib.character.group-real-ghost-servant-pass-pixel.webp",
+      "source": "registered",
+      "story": "옹고집전",
+      "character": "옹고집전 여러 인물",
+      "pose": "진짜 옹고집과 하인",
+      "framing": "여러 인물",
+      "positionGroup": "onggojib.ensemble.v1",
+      "positionGroupLabel": "옹고집전 여러 인물",
+      "referenceId": "onggojib.character.group-fake-child-story-pixel",
+      "dynamicOuterParts": [
+        "여러 인물",
+        "펼친 손",
+        "소품"
+      ],
+      "metrics": {
+        "width": 800,
+        "height": 1200,
+        "channels": "srgba 4.0",
+        "hasAlpha": true,
+        "sha256": "622011138446c2c118edf171ab1c131a06eb2659029d33b91e7eec40de9b4d0f",
+        "alpha": {
+          "visiblePixels": 473112,
+          "bbox": {
+            "x": 10,
+            "y": 170,
+            "width": 780,
+            "height": 980
+          },
+          "groundY": 1149,
+          "edgePixels": 0,
+          "coreTopY": 249,
+          "coreHeight": 901,
+          "bodyCenterX": 417.34
+        }
+      },
+      "decision": "MANUAL-REVIEW",
+      "reasons": [
+        {
+          "code": "body-center-unresolved",
+          "level": "review",
+          "message": "몸 중심 차이 24.6px를 평행이동만으로 안전하게 해결할 수 없습니다."
+        },
+        {
+          "code": "core-height-review",
+          "level": "review",
+          "message": "동적 외곽을 줄인 중심 신체 높이가 기준본과 -4.15% 차이 납니다."
+        },
+        {
+          "code": "manual-landmarks-required",
+          "level": "review",
+          "message": "카툰 얼굴·눈·어깨는 안정적으로 자동 인식할 수 없어 수동 기준점 승인이 필요합니다."
+        },
+        {
+          "code": "manual-only-group",
+          "level": "review",
+          "message": "여러 인물 또는 합성 포즈라 단일 인물 자동 비율 판정을 적용하지 않습니다."
+        }
+      ],
+      "comparison": {
+        "groundDelta": 0,
+        "bodyCenterDelta": 24.6,
+        "coreHeightPercent": -4.15,
+        "eyeDelta": null,
+        "shoulderDelta": null,
+        "landmarkBodyHeightPercent": null,
+        "headBodyRatioPercent": null
+      }
+    }
+  ]
+}

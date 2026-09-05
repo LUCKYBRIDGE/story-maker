@@ -4,8 +4,25 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourceRoot = path.resolve(projectRoot, "../pinky-ne-site");
+const sourceCandidates = [
+  path.resolve(projectRoot, "../pinky-ne-site"),
+  path.resolve(projectRoot, "../pinky-ne-site-publish"),
+];
 const sourceCommit = "cc9552b44b41d1be4e79244d35f0cfdb2e849610";
+const sourceRoot = sourceCandidates.find((candidate) => {
+  try {
+    execFileSync("git", ["-C", candidate, "cat-file", "-e", `${sourceCommit}^{commit}`]);
+    return true;
+  } catch {
+    return false;
+  }
+});
+
+if (!sourceRoot) {
+  throw new Error(
+    `원본 커밋 ${sourceCommit}을 포함한 pinky-ne-site 저장소를 찾지 못했습니다.`,
+  );
+}
 const sourcePrefix = "games/ifstory/images/adventure/";
 const rabbitTurtleOriginalStems = new Set([
   "adventure_dragonking_recovered_unified_720x900",
@@ -227,13 +244,10 @@ const tagAliases = {
   연회장: ["잔치"],
 };
 
-function classifyFraming({ story, type, group, stem }) {
+function classifyFraming({ type, group, stem }) {
   if (type !== "character") return undefined;
   if (group === "옹고집전 여러 인물" || stem.includes("_group_")) {
     return "여러 인물";
-  }
-  if (story === "토끼와 자라" && !stem.includes("_unified_720x900")) {
-    return "상반신";
   }
   return "전신";
 }
