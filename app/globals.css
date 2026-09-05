@@ -8613,3 +8613,222 @@ img {
     margin-bottom: max(18px, env(safe-area-inset-bottom));
   }
 }
+
+
+/* U1-10: readable linear player. Long writing stays in document flow instead of a fixed speech window. */
+.player-shell {
+  min-width: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.player-shell > .story-stage {
+  min-height: calc(100dvh - 34px - env(safe-area-inset-bottom));
+  overflow: visible;
+}
+
+.player-shell .player-topbar {
+  align-items: center;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-right: max(clamp(16px, 4vw, 50px), env(safe-area-inset-right));
+  padding-left: max(clamp(16px, 4vw, 50px), env(safe-area-inset-left));
+  gap: 14px;
+}
+
+.player-title-block {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.player-story-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.player-top-actions {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.player-shell .story-stage > .story-stage-canvas {
+  width: min(100%, calc(clamp(180px, 56dvh, 620px) * 16 / 9));
+  max-width: 1100px;
+}
+
+.player-shell .story-stage > .dialogue-box {
+  width: min(calc(100% - 24px), 980px);
+  margin: 12px auto max(12px, env(safe-area-inset-bottom));
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.player-shell .story-stage > .dialogue-box.narration {
+  width: min(calc(100% - 24px), 860px);
+}
+
+.dialogue-meta {
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.dialogue-box p {
+  min-width: 0;
+  max-height: none;
+  margin: 12px 0 16px;
+  font-size: clamp(18px, 1vw + 14px, 22px);
+  line-height: 1.7;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dialogue-copy,
+.dialogue-box .narration-copy {
+  max-height: none;
+  white-space: pre-wrap;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dialogue-speaker {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.parenthetical-direction {
+  color: #f0dcb4;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.dialogue-box .narration-copy {
+  max-width: 72ch;
+  text-align: left;
+}
+
+.player-controls {
+  align-items: stretch;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.player-controls .ghost-button,
+.player-controls .primary-button {
+  min-height: 44px;
+}
+
+@media (max-width: 620px) {
+  .player-shell .player-topbar {
+    align-items: stretch;
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-left: max(12px, env(safe-area-inset-left));
+    flex-direction: column;
+  }
+
+  .player-topbar .player-story-title {
+    max-width: none;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .player-top-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .player-top-actions .chapter-jump {
+    min-width: 0;
+    flex: 1 1 180px;
+  }
+
+  .player-top-actions .chapter-jump select {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .player-topbar .ghost-button {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .player-shell .story-stage > .dialogue-box,
+  .player-shell .story-stage > .dialogue-box.narration {
+    width: min(calc(100% - 16px), 980px);
+    margin-top: 8px;
+    margin-bottom: max(8px, env(safe-area-inset-bottom));
+    padding: 14px;
+  }
+
+  .dialogue-meta {
+    font-size: 14px;
+  }
+
+  .dialogue-box p {
+    max-height: none;
+    margin: 10px 0 14px;
+    font-size: 17px;
+    line-height: 1.65;
+    overflow: visible;
+  }
+
+  .player-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .player-controls button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .player-controls button:first-child:nth-last-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  .player-shell .player-topbar {
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: 8px;
+    flex-direction: row;
+  }
+
+  .player-topbar .player-story-title {
+    font-size: 16px;
+  }
+
+  .player-top-actions {
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .player-shell .story-stage > .story-stage-canvas {
+    width: min(64vw, calc(72dvh * 16 / 9));
+    min-width: 280px;
+  }
+
+  .player-shell .story-stage > .dialogue-box,
+  .player-shell .story-stage > .dialogue-box.narration {
+    margin-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  .dialogue-box p {
+    max-height: none;
+    font-size: 16px;
+    line-height: 1.55;
+    overflow: visible;
+  }
+
+  .player-controls .ghost-button,
+  .player-controls .primary-button {
+    min-height: 44px;
+  }
+}
