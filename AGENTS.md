@@ -107,7 +107,7 @@
 ## 6. 표준 작업 흐름
 
 AI 개발 세션은 먼저 `docs/storygame-development-status.md`에서 유일한 `READY`
-작업 하나를 고르고 `docs/storygame-ai-implementation-runbook.md`, 
+작업 하나를 고르고 `docs/storygame-ai-implementation-runbook.md`,
 `docs/operations/chat-first-development.md`와 해당 원자 작업 카드를 따른다. 같은 세션에서 다음 작업까지 이어서 구현하지 않는다.
 단, 사용자가 계획·지침 정비만 명시한 세션은 기존 READY 구현을 시작하지 않고
 문서 작업으로 기록한다. 완료 이력은 보존하고 우선순위 유예는 DEFERRED로 표시한다.
