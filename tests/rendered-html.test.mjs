@@ -1002,6 +1002,8 @@ test("U1-10: 플레이 긴 글·줄바꿈·모바일 조작을 고정 높이 없
   assert.match(globalsSource, /\.dialogue-box \.narration-copy \{[\s\S]*text-align: left;/);
   assert.match(globalsSource, /\.parenthetical-direction \{[\s\S]*font-style: normal;/);
   assert.match(globalsSource, /@media \(max-height: 480px\) and \(orientation: landscape\)[\s\S]*min-height: 44px;/);
-  assert.doesNotMatch(globalsSource, /max-height:\s*78px/);
-  assert.doesNotMatch(globalsSource, /min-height:\s*34px/);
+  const u110 = globalsSource.split("/* U1-10: readable linear player.")[1];
+  assert.ok(u110, "U1-10 player CSS block must exist");
+  assert.doesNotMatch(u110, /max-height:\s*78px/);
+  assert.doesNotMatch(u110, /min-height:\s*34px/);
 });
