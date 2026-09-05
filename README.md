@@ -70,19 +70,53 @@ npm run template:generate
 `장`, `컷` 용어를 사용합니다. 이전 `작품`, `챕터`, `장면`, `대사` 탭도 계속
 읽으며, 다시 저장하면 현재 8개 탭 구조로 바뀝니다.
 
-## 화면 개편 계획(아직 구현 전)
+## 현재 개발 상태와 다음 흐름
 
-메인 A의 `새 이야기 만들기 / 이어만들기`, 독립 `이야기 구성`, 같은 장·컷을
-오가는 편집, 원작을 참고한 플레이를 기존 데이터·저장·Excel 구조에 맞춰
-점진 적용합니다. 계정·클라우드는 이번 구현에 포함하지 않습니다.
+현재 저장소는 U1 화면 정합화 작업을 U1-09까지 완료한 상태입니다. GitHub의
+`main` 브랜치가 기준이며, 상태표에 현재 작업 하나만 `READY`로 둡니다.
 
-- [실행 계획과 새 세션 프롬프트](docs/storygame-completion-execution-plan.md#11-u1-화면-정합화-실행-계획)
-- [확정/후보별 목업 9개](docs/design/mockups/README.md)
+```text
+메인
+  → 이야기 구성
+  ↔ 대본·컷 쓰기
+  ↔ 플레이
+  → 플레이에서 본 컷 고치기
+```
+
+현재 대기열은 다음과 같습니다.
+
+| 작업 | 상태 | 내용 |
+|---|---|---|
+| U1-01 ~ U1-09 | `DONE` | 메인 진입, 이야기 구성, 장·컷 편집, 공통 무대, 플레이 위치·예시 격리·현재 컷 수정 |
+| U1-10 | `READY` | 원작을 참고한 플레이 가독성·반응형 |
+| U1-11 | `BLOCKED` | 통합 호환·반응형 인수와 문서 마감. U1-10 뒤 시작 |
+| A1-02 | `DEFERRED` | 캐릭터 감정 세트 승인·무대 검수. 원본과 작업 카드는 보존 |
+
+U1-10을 시작할 때는 다음 순서를 지킵니다.
+
+1. `AGENTS.md`와 [개발 상태표](docs/storygame-development-status.md)를 읽고 유일한 `READY` 작업을 확인합니다.
+2. [AI 실행 런북](docs/storygame-ai-implementation-runbook.md)과 해당 원자 작업 카드를 읽습니다.
+3. 작업 카드의 허용 파일 안에서만 구현하고, 기존 작품·Excel·자산 ID·미커밋 사용자 작업을 보존합니다.
+4. 좁은 검사 → `npm run check` → `npm test` → 대표 화면 실제 흐름 순으로 검증합니다.
+5. 완료 증거를 상태표에 기록하고 다음 작업 하나만 `READY`로 엽니다. 같은 세션에서 다음 작업은 구현하지 않습니다.
+
+U1-09의 최신 증거는 좁은 검사 25/25, `npm run check`, Vinext 빌드 포함
+`npm test` 107/107, `git diff --check`, Chrome 1440×900·390×844 실제 흐름입니다.
+예시 재생·학생 작품·편집 위치·현재 컷 수정·삭제된 컷 안전 복귀를 확인했습니다.
+네이티브 iOS/Android 키보드는 도구가 없어 아직 검증하지 않았으며 U1-11에서 다룹니다.
+
+제품 범위에는 로그인, 학생 작품 서버, 실시간 공동 편집, Google OAuth, 학생용 AI
+자동 작성·이미지 생성, 공개 작품 커뮤니티, 선택지·분기형 플레이가 포함되지 않습니다.
+작품은 기기에 저장하고, 중요한 결과물은 Excel로 별도 보관합니다.
+
+계획과 근거 문서는 아래 순서로 읽습니다.
+
+- [현재 작업 상태와 완료 증거](docs/storygame-development-status.md)
+- [전체 실행 계획과 U1 순서](docs/storygame-completion-execution-plan.md#11-u1-화면-정합화-실행-계획)
+- [한 세션 실행 런북](docs/storygame-ai-implementation-runbook.md)
+- [원자 작업 카드](docs/tasks/storygame-atomic-task-cards.md)
 - [화면·데이터 계약](docs/decisions/studio-screen-flow-v1.md)
-- [현재 작업 상태](docs/storygame-development-status.md)
-
-이야기 구성은 사용자 위임에 따라 01안(장 목록+선택 상세)을 채택했습니다. 실화면 검증 상태는 U1-01 기준선을 따릅니다.
-위 계획을 현재 서비스 화면 구현 완료로 해석하지 않습니다.
+- [확정·후보 목업 기준표](docs/design/mockups/README.md)
 
 ## 개발 기준 문서
 

@@ -13,7 +13,7 @@
 |---|---|
 | 브랜치 | `main` |
 | 원격 저장소 | `origin` → `https://github.com/LUCKYBRIDGE/story-maker.git` |
-| 작업 트리 | 기존 미커밋 변경 있음 — 보존 필수 |
+| 작업 트리 | `main` 작업 트리 clean; 마지막 동기화 커밋 `767f76e` |
 | `npm run check` | 2026-09-05 U1-09 완료 검사 통과 |
 | `npm test` | 2026-09-05 Vinext 빌드 및 107/107 통과 |
 | 프로덕션 의존성 감사 | 2026-09-03 `npm audit --omit=dev` 0건 |
@@ -22,6 +22,7 @@
 | 자산 구조 | taxonomy v1 adapter 구현, v2는 목표 아키텍처만 확정 |
 | 캐릭터 정렬 | A1-01 자동 Audit 완료. A1-02는 71개 수동 검토·1개 평행이동 후보·1개 보관 자산을 남긴 `DEFERRED`(삭제 아님) |
 | 최신 전체 검사 기록 | 2026-09-05 U1-09 완료 시 `npm run check`, Vinext 빌드, `npm test` 107/107 통과 |
+| GitHub 동기화 | 2026-09-05 `767f76e`를 `origin/main`에 푸시 완료 |
 | 이번 좁은 검사 | 2026-09-05 U1-09 상태·위치·핵심 흐름: 시작 20/20, 완료 25/25 통과 |
 | 새 UI | U1-01~09 완료. 다음 작업 U1-10 플레이 가독성·반응형 |
 
@@ -144,7 +145,8 @@
   `/tmp/U1-09-{example,student}-{1440,390}.png`. 캡처를 열어 시각적으로 확인했다.
   iOS Simulator(simctl)·Android adb가 없어 네이티브 모바일 키보드는 미검증이며
   U1-11 실제 기기 항목으로 넘긴다. 자산·Excel·StoryProject 형식·의존성·호스팅
-  설정은 변경하지 않았다. 기존 작업을 보존했고 커밋·푸시·배포하지 않았다.
+  설정은 변경하지 않았다. 기존 작업을 보존했고 2026-09-05 커밋 `767f76e`로
+  `origin/main`에 푸시했다. 별도 배포는 하지 않았다.
 
 - U1-08 완료: 교육 UX 디자이너 주 책임, 프런트엔드 아키텍트·접근성 검토.
   `ScriptScreen.tsx`, `SceneFocusEditor.tsx`, `AssetPickerButton.tsx`,
