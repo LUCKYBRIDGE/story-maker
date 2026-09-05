@@ -982,3 +982,26 @@ test("G6-05: 대본·장면·메모·고쳐쓰기에 장의 다중 단계 연결
   assert.match(revisionCheck, /revision-stage-notice/);
   assert.match(globals, /\.revision-stage-notice/);
 });
+
+
+test("U1-10: 플레이 긴 글·줄바꿈·모바일 조작을 고정 높이 없이 읽을 수 있게 한다", async () => {
+  const [storyPlayerSource, globalsSource] = await Promise.all([
+    readFile(new URL("../app/components/StoryPlayer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(storyPlayerSource, /className="player-title-block"/);
+  assert.match(storyPlayerSource, /className="player-story-title"/);
+  assert.match(storyPlayerSource, /className="narration-copy" aria-live="polite"/);
+  assert.match(storyPlayerSource, /className="dialogue-copy" aria-live="polite"/);
+  assert.doesNotMatch(storyPlayerSource, /player-top-actions" style=/);
+  assert.doesNotMatch(storyPlayerSource, /player-controls" style=/);
+
+  assert.match(globalsSource, /U1-10: readable linear player/);
+  assert.match(globalsSource, /\.dialogue-copy,\s*\n\.dialogue-box \.narration-copy \{[\s\S]*white-space: pre-wrap;/);
+  assert.match(globalsSource, /\.dialogue-box \.narration-copy \{[\s\S]*text-align: left;/);
+  assert.match(globalsSource, /\.parenthetical-direction \{[\s\S]*font-style: normal;/);
+  assert.match(globalsSource, /@media \(max-height: 480px\) and \(orientation: landscape\)[\s\S]*min-height: 44px;/);
+  assert.doesNotMatch(globalsSource, /max-height:\s*78px/);
+  assert.doesNotMatch(globalsSource, /min-height:\s*34px/);
+});
