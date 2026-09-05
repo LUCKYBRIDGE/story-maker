@@ -198,6 +198,17 @@ CI로 이동한다. GUI/IME/실기기만 Work에 남긴다.
 ### B4 — 실기기 증거
 iOS/Android의 실제 키보드와 장치 고유 동작은 Work/실기기 게이트로 유지한다.
 
+### B5 — main 보호 규칙
+2026-09-05 확인 기준 GitHub `main`은 protected branch가 아니고 repository ruleset도 없다.
+CI workflow가 main에 정착하고 check 이름이 안정된 뒤, 별도 사용자 승인으로 다음 보호를 권장한다.
+
+- main 직접 개발 대신 PR 사용
+- 필수 CI check(`verify`) 성공 후 merge
+- force push 금지
+- 필요 이상으로 관리자 우회를 막아 개인 저장소 유지보수를 방해하지 않음
+
+보호 규칙은 저장소 쓰기 정책을 바꾸므로 운영 문서 반영만으로 자동 활성화하지 않는다.
+
 ## 11. 목표 비중
 
 기계적으로 비율을 맞추는 것이 목적은 아니지만 운영 목표는 다음과 같다.
