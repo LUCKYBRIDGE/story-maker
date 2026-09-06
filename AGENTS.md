@@ -2,7 +2,7 @@
 
 > Project: `storygame`
 > Canonical Shared Source: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
-> Local Execution Copy: `/Volumes/WAN2/apps/story-maker` (Work/로컬 검증용)
+> Local Execution Copy: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·검증용)
 > Product: 로그인 없이 기기 안에서 쓰고, Excel로 보관하며, 플레이로 고쳐 쓰는 학생용 스토리게임 창작 도구
 
 ## 1. 시작할 때 반드시 확인할 것
@@ -16,7 +16,7 @@
 3. 요청을 학생 가치, 범위, 제약, 완료 증거로 다시 쓴다.
 4. 아래 문서 우선순위에 따라 현재 결정을 확인한다.
 5. 작업에 맞는 주 책임 페르소나와 필수 검토 페르소나를 정한다.
-6. 실행 주체와 검증 주체는 `docs/operations/chat-first-development.md`의 등급을 따른다.
+6. 실행 주체와 검증 주체는 `docs/operations/github-first-hybrid-development.md`의 등급을 따른다.
 
 ## 2. 문서와 소스의 우선순위
 
@@ -27,7 +27,7 @@
 3. `docs/storygame-detailed-design.md` — 확정 제품 방향, 용어, 데이터와 화면 기준
 4. `docs/storygame-development-status.md` — 현재 실행 가능한 유일한 작업과 완료 증거
 5. `docs/storygame-ai-implementation-runbook.md` — 모든 AI 세션의 실행·중단 절차
-6. `docs/operations/chat-first-development.md` — Chat/CI/Work 실행 경계와 증거 계약
+6. `docs/operations/github-first-hybrid-development.md` — GitHub 기준선·Chat/Work 주도권·CI·증거 계약
 7. `docs/tasks/storygame-atomic-task-cards.md` — 작업별 허용 범위와 인수 조건
 8. `docs/storygame-completion-execution-plan.md` — 현황, 단계 순서와 단계별 완료 조건
 9. `docs/storygame-service-development-roadmap.md` — 장기 제품·교육·UX·기술 분석
@@ -72,9 +72,9 @@
   유지한다. 목업 숫자·잘린 인물·중복 버튼을 사양으로 복사하지 않는다.
 - 숨긴 계획 필드·여러 단계 연결·기존 Excel/자산 ID를 UI 단순화 때문에 삭제하지 않는다.
   계정·클라우드는 이름의 확장 가능성만 고려하며 미지원 기능을 실제처럼 표시하지 않는다.
-- 범위 안의 코드 편집과 검사는 자율적으로 진행할 수 있다.
-- 실제 구현을 요청받은 GitHub 연결 Chat은 작업 브랜치 생성, 커밋, push, draft PR 생성처럼
-  되돌릴 수 있는 GitHub 개발 작업을 기본 실행 범위로 삼을 수 있다. main 직접 쓰기는 하지 않는다.
+- 범위 안의 코드 편집과 검사는 주도 환경에서 자율적으로 진행할 수 있다.
+- 실제 구현을 요청받은 Chat 또는 Work는 정해진 작업 branch에서 수정하고, commit·push·draft PR처럼
+  되돌릴 수 있는 GitHub 개발 작업을 수행할 수 있다. main 직접 개발은 하지 않는다.
 - 새 패키지 설치·의존성 변경은 작업 카드와 제품 가치가 명확할 때만 수행한다.
 - main merge, 공개 배포, 데이터 파괴, 강제 push, 외부 비용 발생처럼 되돌리기 어렵거나
   사용자에게 직접 영향을 주는 작업은 사용자의 명시적 요청 또는 승인이 필요하다.
@@ -108,7 +108,7 @@
 
 AI 개발 세션은 먼저 `docs/storygame-development-status.md`에서 유일한 `READY`
 작업 하나를 고르고 `docs/storygame-ai-implementation-runbook.md`,
-`docs/operations/chat-first-development.md`와 해당 원자 작업 카드를 따른다. 같은 세션에서 다음 작업까지 이어서 구현하지 않는다.
+`docs/operations/github-first-hybrid-development.md`와 해당 원자 작업 카드를 따른다. 같은 세션에서 다음 작업까지 이어서 구현하지 않는다.
 단, 사용자가 계획·지침 정비만 명시한 세션은 기존 READY 구현을 시작하지 않고
 문서 작업으로 기록한다. 완료 이력은 보존하고 우선순위 유예는 DEFERRED로 표시한다.
 READY→IN_PROGRESS 실행 중에는 다음 READY를 동시에 열지 않는다.
@@ -157,18 +157,18 @@ READY→IN_PROGRESS 실행 중에는 다음 READY를 동시에 열지 않는다.
 인증·저장 구조를 추가하지 않는다.
 
 
-## 9. Chat-first 실행 주체
+## 9. GitHub-first 실행 주체
 
-기본 개발 주체는 GitHub 연결 Chat이다. Work/로컬은 Chat이 접근할 수 없는 실행 환경의
-증거를 얻기 위한 검증 게이트로 사용한다. 자세한 계약은
-`docs/operations/chat-first-development.md`를 따른다.
+개발의 공유 기준선은 GitHub다. 특정 도구의 사용률을 목표로 하지 않고 작업 특성에 따라
+`Chat Lead`, `Work Lead`, `Joint` 중 하나를 선택한다. 자세한 계약은
+`docs/operations/github-first-hybrid-development.md`를 따른다.
 
-- **C1 — Chat only**: 문서·ADR·상태 정합화처럼 GitHub 내용만으로 완료 증거를 만들 수 있는 작업.
-- **C2 — Chat + CI**: 도메인 로직·데이터·테스트·일반 컴포넌트처럼 자동 검증으로 완료 가능한 작업.
-- **W1 — Chat 구현 + Work 검증**: 반응형·IME·브라우저 실제 흐름처럼 로컬/실브라우저 증거가 필요한 작업.
-- **W2 — Work/실기기 필수**: iOS/Android 실제 키보드, OS 파일 대화상자, Web Serial처럼 실제 환경이 본질인 작업.
+- **Chat Lead**: GitHub 안의 정보가 충분하고 로직·데이터·문서·테스트·PR/CI 판단이 핵심인 작업.
+- **Work Lead**: 실제 브라우저·런타임·로컬 파일·자산·성능·OS/하드웨어 피드백 루프가 핵심인 작업.
+- **Joint**: 계약·테스트·리뷰와 실제 환경 구현이 모두 중요하여 역할을 나누는 작업.
+- 완료 증거는 주도권과 분리해 **G(GitHub) / A(자동 검증) / B(브라우저·로컬) / D(장치·OS)** 중
+  작업 카드가 요구하는 것만 수집한다.
 
-Work에 넘길 때 저장소 전체 재분석을 다시 시키지 않는다. 정확한 브랜치/PR, 검증 명령,
-화면 크기와 재현 흐름만 전달한다. Work에서 수정이 필요하면 원칙적으로 증상과 재현만
-Chat에 돌려주며, 로컬에서 직접 수정해야 하는 경우에는 같은 작업 브랜치에 즉시
-커밋·push하여 GitHub와 다시 동기화한다.
+누가 수정하든 같은 작업 branch/PR에 빠르게 동기화한다. Work가 더 빠른 런타임 수정은 Work가 직접
+수행해도 되며, commit·push 후 Chat이 PR/CI/회귀를 검토할 수 있다. 반대로 GitHub만으로 충분한
+작업을 단순 관례 때문에 Work로 넘기지 않는다.
