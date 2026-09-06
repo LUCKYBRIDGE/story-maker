@@ -7,7 +7,7 @@
 - 작업별 계약: `docs/tasks/storygame-atomic-task-cards.md`
 - 캐릭터 정렬 기준: `docs/decisions/character-pose-normalization-v1.md`
 - 제품·단계 기준: `docs/storygame-completion-execution-plan.md`
-- 실행 환경 계약: `docs/operations/chat-first-development.md`
+- 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
 
 ## 1. 이 문서가 해결하는 문제
 
@@ -49,7 +49,7 @@
      원격 작업 브랜치를 checkout하고 로컬 미커밋 변경을 먼저 보존한다.
 2. `AGENTS.md`를 처음부터 끝까지 읽는다.
 3. `docs/storygame-development-status.md`를 읽고 유일한 `READY` 작업을 찾는다.
-4. 이 런북, `docs/operations/chat-first-development.md`, 해당 원자 작업 카드를 읽는다.
+4. 이 런북, `docs/operations/github-first-hybrid-development.md`, 해당 원자 작업 카드를 읽는다.
 5. 카드가 지정한 제품 문서, 소스, 테스트를 읽는다. U1 화면 작업은
    `docs/design/mockups/README.md`와 화면 흐름 ADR도 읽는다. 이미지의 예문·숫자·
    잘린 인물·모순된 버튼을 사양으로 복제하지 않는다.
@@ -57,14 +57,15 @@
 
 ```text
 작업 ID:
-실행 등급: C1 / C2 / W1 / W2
+Lead: Chat / Work / Joint
+필수 증거: G / A / B / D 중 필요한 것
 한 문장 목표:
 주 책임 / 필수 검토 페르소나:
 허용 파일:
 비목표:
 인수 조건:
 자동 검증:
-Work/실기기 검증:
+브라우저·로컬·실기기 검증:
 중단 조건:
 ```
 
@@ -97,10 +98,10 @@ DEFERRED --(재개 결정 + 선행 조건 충족)--> READY
 - Work/로컬에서 미커밋 변경이 있으면 사용자 작업으로 보존하고 원격 diff와 분리한다.
 - 기존 변경과 분리할 수 없거나 의도가 충돌하면 구현하지 않고 중단한다.
 - 카드에 필요한 타입, 호출 경로, 저장 키, 오류 경로를 실제 코드로 확인한다.
-- GitHub 연결 Chat은 실행할 수 없는 로컬 검사를 실행했다고 쓰지 않는다. 가능한 정적 확인과
-  테스트 추가를 먼저 수행하고, push 후 CI 결과를 자동 검증 증거로 사용한다.
-- Work/로컬은 카드가 요구한 로컬/실기기 검증만 수행하며 CI에서 이미 통과한 동일 명령을
-  이유 없이 반복하지 않는다.
+- Chat은 실행할 수 없는 로컬 검사를 실행했다고 쓰지 않는다. GitHub 기반 구현·테스트·PR·CI에 집중한다.
+- Work가 Lead이면 실제 브라우저·런타임·로컬 파일 피드백을 이용해 직접 구현할 수 있다. 수정은 같은
+  작업 branch에 commit·push하여 PR을 공유 기준선으로 되돌린다.
+- CI에서 이미 통과한 동일 명령을 Work가 이유 없이 반복하지 않는다. OS/런타임 차이를 조사할 때만 반복한다.
 
 ### 5.2 최소 구현
 
@@ -117,8 +118,8 @@ DEFERRED --(재개 결정 + 선행 조건 충족)--> READY
 1. 변경 파일에 가장 가까운 단위 검사 또는 해당 회귀 검사를 코드로 고정
 2. GitHub PR CI: `npm run check`, `npm test`, 커밋 diff whitespace 검사
 3. 작업 카드가 요구하는 추가 호환 검사
-4. W1/W2인 경우에만 Work/로컬에서 실제 브라우저·IME·파일·실기기 흐름
-5. GitHub 최종 PR diff와, Work를 사용했다면 로컬 `git status`
+4. 작업이 B/D 증거를 요구하면 Work/로컬에서 실제 브라우저·IME·파일·실기기 흐름
+5. GitHub 최종 PR diff와, Work가 수정했다면 push 여부 및 로컬 `git status`
 
 CI에서 성공한 동일 `npm run check`/`npm test`를 Work가 다시 실행하는 것은 기본
 절차가 아니다. CI와 로컬 결과가 달라질 가능성이 있는 환경 문제를 조사할 때만 반복한다.
@@ -213,13 +214,17 @@ GitHub PR을 handoff의 단위로 사용한다.
 다음만 전달한다.
 
 ```text
-작업 ID / 실행 등급:
+작업 ID:
+Lead: Chat / Work / Joint
+필수 증거: G / A / B / D
 PR / branch:
-CI 결과:
-Work에서만 확인할 항목:
-정확한 viewport·기기·입력:
+현재 HEAD:
+이미 확보한 증거:
+다음 주체가 해야 할 일:
+viewport·기기·입력:
 재현 절차:
-수정 권한: 보고만 / 같은 branch에서 최소 수정 허용
+수정 가능 범위:
+완료 후 push 필요 여부:
 ```
 
 Work에 저장소 전체 재감사나 이미 끝난 설계 논의를 반복시키지 않는다.
@@ -242,8 +247,9 @@ Work가 코드를 수정했다면 장시간 로컬 전용 상태로 남기지 �
 
 ### 완료 판정
 
-- C1: GitHub diff와 문서 정합성 증거로 완료할 수 있다.
-- C2: 필수 CI가 통과하면 Work 없이 완료할 수 있다.
-- W1: CI + 카드가 요구한 Work/실브라우저 증거가 모두 있어야 한다.
-- W2: CI가 필요한 경우 통과하고, 실제 장치/OS 증거까지 있어야 한다.
+- 주도권(Chat/Work/Joint)과 완료 증거를 혼동하지 않는다.
+- 작업 카드가 G만 요구하면 GitHub diff·문서 정합성으로 완료할 수 있다.
+- A가 필요하면 CI/자동 검증이 통과해야 한다.
+- B가 필요하면 실제 브라우저·로컬 흐름 증거가 있어야 한다.
+- D가 필요하면 실제 장치·OS·하드웨어 증거가 있어야 한다.
 - 실행하지 않은 증거는 PASS로 간주하지 않는다.
