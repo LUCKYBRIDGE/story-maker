@@ -2,8 +2,8 @@
 
 - 기준일: 2026-09-05
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
-- 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/실환경 검증용)
-- 실행 환경 계약: `docs/operations/chat-first-development.md`
+- 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
+- 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
 - 실행 절차: `docs/storygame-ai-implementation-runbook.md`
 - 작업 계약: `docs/tasks/storygame-atomic-task-cards.md`
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
