@@ -14,7 +14,9 @@ description: 최소 변경(Surgical Edit) 원칙 기반 안전 구현 및 즉시
 - **Clean Git Scope**: 작업 대상 외 불필요한 파일 변경 배제
 
 
-## 3. 실행 환경
-- C1/C2 작업은 가능한 한 Chat에서 구현하고 GitHub diff/CI를 완료 증거로 사용합니다.
-- W1/W2 작업도 코드는 Chat이 기본 소유하며, 브라우저·IME·기기 증거만 Work/로컬에 handoff합니다.
-- Chat이 로컬 명령을 실행했다고 주장하거나, Work가 CI에서 이미 통과한 동일 검사를 관례적으로 반복하지 않습니다.
+## 3. 실행 주도권
+- `docs/operations/github-first-hybrid-development.md`를 기준으로 Chat Lead / Work Lead / Joint를 선택합니다.
+- GitHub 정보와 자동 검증이 중심이면 Chat이 주도합니다.
+- 실제 브라우저·런타임·로컬 파일·자산의 반복 피드백이 중심이면 Work가 직접 구현을 주도할 수 있습니다.
+- 누가 수정하든 같은 branch/PR에 commit·push하여 GitHub를 공유 기준선으로 유지합니다.
+- 완료 증거는 주도권과 별개로 G/A/B/D 중 필요한 것만 수집하며 자동 검사를 관례적으로 중복하지 않습니다.
