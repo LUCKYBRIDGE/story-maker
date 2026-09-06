@@ -18,10 +18,16 @@ description: 10단계 다차원 정밀 코드 리뷰 스킬
 
 
 ## 2. 실행 환경 검토
-리뷰에서 “로컬에서 돌려 봤다”는 주장보다 실제 증거 출처를 구분합니다.
+리뷰에서는 Lead가 누구였는지보다 실제 증거 출처와 변경의 재현 가능성을 구분합니다.
 - GitHub diff/문서: G evidence
 - Actions check/test: A evidence
 - 실제 브라우저/IME: B evidence
 - 실제 장치/OS: D evidence
 
 필수 증거가 없는 항목은 미검증으로 기록하며, 단순히 Work를 호출하기 위해 자동 검사를 중복하지 않습니다.
+
+
+## 3. 하이브리드 리뷰
+- Work가 만든 코드도 push된 PR diff와 CI를 기준으로 동일하게 리뷰합니다.
+- Chat이 만든 UI 코드도 B/D 증거가 필요한 경우 실제 환경 증거 없이 완료로 보지 않습니다.
+- 불필요한 도구 간 재작업보다 동일 branch/PR의 작은 handoff를 우선합니다.
