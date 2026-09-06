@@ -1,16 +1,22 @@
 # AGENTS.md — storygame 개발 운영 헌장
 
 > Project: `storygame`
-> Canonical Location: `/Volumes/WAN2/apps/story-maker`
+> Canonical Shared Source: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
+> Local Execution Copy: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·검증용)
 > Product: 로그인 없이 기기 안에서 쓰고, Excel로 보관하며, 플레이로 고쳐 쓰는 학생용 스토리게임 창작 도구
 
 ## 1. 시작할 때 반드시 확인할 것
 
-1. 저장소 루트, 현재 브랜치, 원격 저장소와 `git status`를 확인한다.
-2. 사용자 변경과 아직 커밋되지 않은 작업을 보존한다.
+1. 먼저 실행 환경을 판별한다.
+   - **GitHub 연결 Chat**: 현재 `main` HEAD, 작업 브랜치, 열린 PR, 상태표를 GitHub에서 확인한다.
+     로컬 `git status`나 로컬 미커밋 상태를 봤다고 주장하지 않는다.
+   - **Work/로컬**: 저장소 루트, 현재 브랜치, 원격 저장소와 `git status`를 확인한다.
+2. GitHub 공유 기준선과 Work/로컬 실행 복사본을 혼동하지 않는다. 로컬 미커밋 변경이
+   확인되면 사용자 작업으로 보존하고, 원격보다 앞선 변경을 숨긴 채 별도 개발을 진행하지 않는다.
 3. 요청을 학생 가치, 범위, 제약, 완료 증거로 다시 쓴다.
 4. 아래 문서 우선순위에 따라 현재 결정을 확인한다.
 5. 작업에 맞는 주 책임 페르소나와 필수 검토 페르소나를 정한다.
+6. 실행 주체와 검증 주체는 `docs/operations/github-first-hybrid-development.md`의 등급을 따른다.
 
 ## 2. 문서와 소스의 우선순위
 
@@ -21,12 +27,13 @@
 3. `docs/storygame-detailed-design.md` — 확정 제품 방향, 용어, 데이터와 화면 기준
 4. `docs/storygame-development-status.md` — 현재 실행 가능한 유일한 작업과 완료 증거
 5. `docs/storygame-ai-implementation-runbook.md` — 모든 AI 세션의 실행·중단 절차
-6. `docs/tasks/storygame-atomic-task-cards.md` — 작업별 허용 범위와 인수 조건
-7. `docs/storygame-completion-execution-plan.md` — 현황, 단계 순서와 단계별 완료 조건
-8. `docs/storygame-service-development-roadmap.md` — 장기 제품·교육·UX·기술 분석
-9. `docs/architecture/overview.md` — 현재 기술 구조
-10. `docs/architecture/storymaker-system-asset-architecture-master-plan.md` — 목표 시스템·자산 구조
-11. `docs/design/tokens.md` — UI 기준
+6. `docs/operations/github-first-hybrid-development.md` — GitHub 기준선·Chat/Work 주도권·CI·증거 계약
+7. `docs/tasks/storygame-atomic-task-cards.md` — 작업별 허용 범위와 인수 조건
+8. `docs/storygame-completion-execution-plan.md` — 현황, 단계 순서와 단계별 완료 조건
+9. `docs/storygame-service-development-roadmap.md` — 장기 제품·교육·UX·기술 분석
+10. `docs/architecture/overview.md` — 현재 기술 구조
+11. `docs/architecture/storymaker-system-asset-architecture-master-plan.md` — 목표 시스템·자산 구조
+12. `docs/design/tokens.md` — UI 기준
 
 지속할 아키텍처 결정은 `docs/decisions/`에 ADR로 남기고, 반복 가능한 작업 절차는
 `.agents/skills/`를 사용한다.
@@ -65,9 +72,12 @@
   유지한다. 목업 숫자·잘린 인물·중복 버튼을 사양으로 복사하지 않는다.
 - 숨긴 계획 필드·여러 단계 연결·기존 Excel/자산 ID를 UI 단순화 때문에 삭제하지 않는다.
   계정·클라우드는 이름의 확장 가능성만 고려하며 미지원 기능을 실제처럼 표시하지 않는다.
-- 범위 안의 코드 편집, 검사와 필요한 패키지 설치는 자율적으로 진행할 수 있다.
-- 데이터 파괴, 강제 푸시, 공개 배포처럼 되돌리기 어렵거나 외부 상태를 바꾸는
-  작업은 사용자의 명시적 요청 또는 승인이 필요하다.
+- 범위 안의 코드 편집과 검사는 주도 환경에서 자율적으로 진행할 수 있다.
+- 실제 구현을 요청받은 Chat 또는 Work는 정해진 작업 branch에서 수정하고, commit·push·draft PR처럼
+  되돌릴 수 있는 GitHub 개발 작업을 수행할 수 있다. main 직접 개발은 하지 않는다.
+- 새 패키지 설치·의존성 변경은 작업 카드와 제품 가치가 명확할 때만 수행한다.
+- main merge, 공개 배포, 데이터 파괴, 강제 push, 외부 비용 발생처럼 되돌리기 어렵거나
+  사용자에게 직접 영향을 주는 작업은 사용자의 명시적 요청 또는 승인이 필요하다.
 
 ## 5. 상황별 책임 페르소나
 
@@ -97,8 +107,8 @@
 ## 6. 표준 작업 흐름
 
 AI 개발 세션은 먼저 `docs/storygame-development-status.md`에서 유일한 `READY`
-작업 하나를 고르고 `docs/storygame-ai-implementation-runbook.md`와 해당 원자 작업
-카드를 따른다. 같은 세션에서 다음 작업까지 이어서 구현하지 않는다.
+작업 하나를 고르고 `docs/storygame-ai-implementation-runbook.md`,
+`docs/operations/github-first-hybrid-development.md`와 해당 원자 작업 카드를 따른다. 같은 세션에서 다음 작업까지 이어서 구현하지 않는다.
 단, 사용자가 계획·지침 정비만 명시한 세션은 기존 READY 구현을 시작하지 않고
 문서 작업으로 기록한다. 완료 이력은 보존하고 우선순위 유예는 DEFERRED로 표시한다.
 READY→IN_PROGRESS 실행 중에는 다음 READY를 동시에 열지 않는다.
@@ -118,10 +128,12 @@ READY→IN_PROGRESS 실행 중에는 다음 READY를 동시에 열지 않는다.
 
 1. 사용자 이야기와 인수 조건을 충족한다.
 2. 이전 저장본과 공식/이전 Excel 호환을 깨뜨리지 않는다.
-3. `npm run check`와 관련 테스트가 통과한다.
-4. 릴리스 대상 변경은 `npm test`가 통과한다.
-5. 보이는 UI 변경은 요청 또는 릴리스 범위에 맞는 대표 화면 크기에서 실제
-   흐름을 확인한다.
+3. `npm run check`와 관련 테스트가 통과한다. GitHub Actions CI의 성공 결과는
+   해당 자동 검증의 실행 증거로 인정한다.
+4. 릴리스 대상 변경은 `npm test`가 통과한다. CI가 실행한 동일 명령을 다시 Work에서
+   반복할 필요는 없다.
+5. 보이는 UI 변경은 작업 카드가 요구하는 대표 화면 크기에서 실제 흐름을 확인한다.
+   브라우저·IME·실기기 증거가 필요한 경우에만 Work/로컬 검증 게이트를 사용한다.
 6. 키보드 초점, 44px 터치 목표, 오류 안내와 모바일 키보드를 점검한다.
 7. 최종 diff에 무관한 변경, 비밀정보, 불필요한 생성 파일이 없다.
 8. 검증하지 못한 항목은 정확한 이유와 함께 보고한다.
@@ -143,3 +155,20 @@ READY→IN_PROGRESS 실행 중에는 다음 READY를 동시에 열지 않는다.
 
 확장 기능을 제안할 수는 있지만 기존 로컬 제작 경로를 약화시키거나 반쯤 구현한
 인증·저장 구조를 추가하지 않는다.
+
+
+## 9. GitHub-first 실행 주체
+
+개발의 공유 기준선은 GitHub다. 특정 도구의 사용률을 목표로 하지 않고 작업 특성에 따라
+`Chat Lead`, `Work Lead`, `Joint` 중 하나를 선택한다. 자세한 계약은
+`docs/operations/github-first-hybrid-development.md`를 따른다.
+
+- **Chat Lead**: GitHub 안의 정보가 충분하고 로직·데이터·문서·테스트·PR/CI 판단이 핵심인 작업.
+- **Work Lead**: 실제 브라우저·런타임·로컬 파일·자산·성능·OS/하드웨어 피드백 루프가 핵심인 작업.
+- **Joint**: 계약·테스트·리뷰와 실제 환경 구현이 모두 중요하여 역할을 나누는 작업.
+- 완료 증거는 주도권과 분리해 **G(GitHub) / A(자동 검증) / B(브라우저·로컬) / D(장치·OS)** 중
+  작업 카드가 요구하는 것만 수집한다.
+
+누가 수정하든 같은 작업 branch/PR에 빠르게 동기화한다. Work가 더 빠른 런타임 수정은 Work가 직접
+수행해도 되며, commit·push 후 Chat이 PR/CI/회귀를 검토할 수 있다. 반대로 GitHub만으로 충분한
+작업을 단순 관례 때문에 Work로 넘기지 않는다.
