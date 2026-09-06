@@ -17,7 +17,8 @@ description: Root Cause 분석, 가설 검증 및 자가 치유(Self-Healing) �
 - **3회 제한 원칙**: 동일 오류에 대해 3회 연속 실패 시 무리한 수정을 중단하고 상세 원인을 사용자에게 에스컬레이션.
 
 
-## 3. 증거 위치
-- CI 실패는 GitHub Actions job/step/log를 Chat이 직접 읽고 최소 수정합니다.
-- 실제 브라우저·IME·기기에서만 재현되는 실패는 Work가 재현 조건과 증거를 보고하고 Chat이 수정하는 것이 기본입니다.
-- Work가 로컬에서 수정해야 하는 경우 같은 branch에 즉시 commit·push하여 PR을 다시 공유 기준선으로 만듭니다.
+## 3. 주도 환경 선택
+- CI·정적 로직 실패는 Chat이 Actions job/step/log와 코드 diff를 중심으로 해결하는 것이 효율적입니다.
+- 브라우저 runtime·IME·focus·scroll·OS·하드웨어 문제는 Work가 직접 재현하고 수정하는 편이 효율적일 수 있습니다.
+- Joint 문제는 Work가 runtime 원인을 좁히고 Chat이 구조·회귀를 검토하거나 그 반대로 역할을 나눕니다.
+- 어떤 환경에서 수정하든 같은 branch에 commit·push하여 PR을 다시 공유 기준선으로 만듭니다.
