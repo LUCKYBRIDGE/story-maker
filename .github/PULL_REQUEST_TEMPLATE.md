@@ -1,7 +1,8 @@
 ## 작업
 
 - 작업 ID:
-- 실행 등급: C1 / C2 / W1 / W2
+- Lead: Chat / Work / Joint
+- 필수 증거: G / A / B / D
 - 기준 main:
 - 작업 branch:
 
@@ -21,16 +22,19 @@
 - [ ] CI — `npm test`
 - [ ] CI — committed diff whitespace
 
-## Work / 실제 환경 검증
+## 브라우저 / 로컬 / 실기기 검증
 
-- [ ] 불필요(C1/C2)
-- [ ] 필요(W1/W2)
+- [ ] B 증거 불필요
+- [ ] B 증거 필요
+- [ ] D 증거 불필요
+- [ ] D 증거 필요
 
 필요한 경우에만 아래를 채운다.
 
 - viewport / 기기:
 - 실제 흐름:
 - IME / 파일 / OS / 하드웨어:
+- Work가 직접 수정했다면 commit SHA:
 - 증거 위치:
 
 ## 미검증
