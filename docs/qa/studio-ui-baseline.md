@@ -274,4 +274,3 @@ premise=한 줄 이야기, summary=이 장에서 일어나는 일이다. 나머�
 
 - 4번째 컷 긴 무공백 문자열도 `overflowWrap: anywhere`에 의해 가로 스크롤 넘침 없이 안전하게 줄바꿈됨 ([컷4 캡처](evidence/U1-11-200cuts-player-cut4-unbroken.png)).
 - 200컷 탐색 및 전환 과정에서 메모리 누수나 입력 지연, 데이터 유실이 일체 발생하지 않음 (P0/P1 결함 0건).
-
