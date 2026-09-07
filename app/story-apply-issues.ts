@@ -1,4 +1,5 @@
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
+import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "./story-cut-length";
 
 export type StoryApplyIssueCode =
   | "missing-title"
@@ -7,7 +8,8 @@ export type StoryApplyIssueCode =
   | "empty-chapter"
   | "empty-line"
   | "missing-speaker-name"
-  | "narration-parentheses";
+  | "narration-parentheses"
+  | "line-too-long";
 
 export type StoryApplyIssueField =
   | "title"
@@ -98,6 +100,14 @@ export function findStoryApplyIssues(project: StoryProject): StoryApplyIssue[] {
     }
     for (const line of lines) {
       const prefix = linePrefix(chapter, line);
+      const length = countStoryCharacters(line.text);
+      if (length > STORY_CUT_CHARACTER_LIMIT) {
+        issues.push({
+          id: `line-too-long:${line.id}`, code: "line-too-long", field: "line-body",
+          chapterId: chapter.id, lineId: line.id,
+          message: `${prefix}은 ${length}자예요. 한 컷 ${STORY_CUT_CHARACTER_LIMIT}자 안으로 줄이거나 ‘여러 컷으로 나누기’를 눌러 주세요. 원문은 그대로 보관돼요.`,
+        });
+      }
       if (!line.text.trim()) {
         issues.push({
           id: `empty-line:${line.id}`,

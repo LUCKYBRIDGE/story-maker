@@ -1,4 +1,5 @@
 import type { Chapter, StoryLine } from "./story-data";
+import { splitStoryText } from "./story-cut-length";
 
 export function moveStoryChapter({ chapters, chapterId, direction }: {
   chapters: Chapter[];
@@ -183,5 +184,28 @@ export function deleteStoryLine({
     ok: true,
     lines: replaceChapterLines(lines, source.chapterId, nextChapterLines),
     ...(selectedLineId === undefined ? {} : { selectedLineId }),
+  };
+}
+
+/** Original ID (including continuation pointer) stays on the first cut. */
+export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOptions): StoryLineCommandResult {
+  const source = lines.find(line => line.id === lineId);
+  if (!source) return { ok: false, code: "line-not-found" };
+  const chunks = splitStoryText(source.text);
+  if (chunks.length === 1) return { ok: true, lines, selectedLineId: lineId };
+  const ids = new Set(lines.map(line => line.id));
+  const splitLines: StoryLine[] = [{ ...source, text: chunks[0] }];
+  for (const text of chunks.slice(1)) {
+    const id = createId();
+    if (ids.has(id)) return { ok: false, code: "duplicate-id" };
+    ids.add(id);
+    splitLines.push({ ...source, id, text });
+  }
+  const chapterLines = orderedLines(lines, source.chapterId);
+  const next = chapterLines.flatMap(line => line.id === lineId ? splitLines : [line]);
+  return {
+    ok: true,
+    lines: replaceChapterLines(lines, source.chapterId, withContinuousOrder(next)),
+    selectedLineId: lineId,
   };
 }
