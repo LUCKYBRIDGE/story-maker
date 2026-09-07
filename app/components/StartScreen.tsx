@@ -50,6 +50,7 @@ export function StartScreen({
 }: StartScreenProps) {
   const excelInputRef = useRef<HTMLInputElement>(null);
   const [sheetUrl, setSheetUrl] = useState("");
+  const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
 
@@ -70,10 +71,48 @@ export function StartScreen({
           </p>
         </div>
 
+        <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist">
+          <button
+            type="button"
+            className={`entry-tab-button ${activeTab === "create" ? "active" : ""}`}
+            onClick={() => setActiveTab("create")}
+            aria-selected={activeTab === "create"}
+            role="tab"
+            id="tab-create"
+            aria-controls="panel-create"
+          >
+            ✦ 새 이야기 만들기
+          </button>
+          <button
+            type="button"
+            className={`entry-tab-button ${activeTab === "continue" ? "active" : ""}`}
+            onClick={() => setActiveTab("continue")}
+            aria-selected={activeTab === "continue"}
+            role="tab"
+            id="tab-continue"
+            aria-controls="panel-continue"
+          >
+            ↻ 이어만들기
+          </button>
+          <button
+            type="button"
+            className={`entry-tab-button ${activeTab === "example" ? "active" : ""}`}
+            onClick={() => setActiveTab("example")}
+            aria-selected={activeTab === "example"}
+            role="tab"
+            id="tab-example"
+            aria-controls="panel-example"
+          >
+            👀 둘러보기
+          </button>
+        </nav>
+
         <div className="entry-choice-grid">
           <section
-            className="entry-choice-card entry-new-story-card"
-            aria-labelledby="new-story-title"
+            id="panel-create"
+            role="tabpanel"
+            aria-labelledby="tab-create"
+            className={`entry-choice-card entry-new-story-card ${activeTab !== "create" ? "tab-hidden" : ""}`}
           >
             <header>
               <span aria-hidden="true">✦</span>
@@ -92,6 +131,19 @@ export function StartScreen({
               <strong>빈 이야기부터 만들기</strong>
               <small>제목과 첫 장을 직접 정해요.</small>
             </button>
+
+            {localDraftStatus === "available" && (
+              <div className="entry-quick-resume">
+                <span>이 기기에 만들던 이야기가 있어요.</span>
+                <button
+                  type="button"
+                  onClick={onResumeSavedDraft}
+                  disabled={entryBusy || busy}
+                >
+                  이 기기에서 이어만들기 ➔
+                </button>
+              </div>
+            )}
 
             <details className="entry-template-options">
               <summary>준비된 앞이야기에서 시작하기 · 3가지</summary>
@@ -150,8 +202,10 @@ export function StartScreen({
           </section>
 
           <section
-            className="entry-choice-card entry-continue-card"
-            aria-labelledby="continue-story-title"
+            id="panel-continue"
+            role="tabpanel"
+            aria-labelledby="tab-continue"
+            className={`entry-choice-card entry-continue-card ${activeTab !== "continue" ? "tab-hidden" : ""}`}
           >
             <header>
               <span aria-hidden="true">↻</span>
@@ -214,6 +268,23 @@ export function StartScreen({
               </button>
             </div>
           </section>
+
+          <aside
+            id="panel-example"
+            role="tabpanel"
+            aria-labelledby="tab-example"
+            className={`entry-example-strip ${activeTab !== "example" ? "tab-hidden" : ""}`}
+            aria-label="독립 예시 작품"
+          >
+            <div>
+              <span className="eyebrow">둘러보기</span>
+              <strong>만들기 전에 완성된 예시를 볼 수도 있어요.</strong>
+              <small>놀퀴즈가 준비한 예시 작품이에요.</small>
+            </div>
+            <button type="button" onClick={onPlayExample} disabled={busy}>
+              예시 작품 플레이
+            </button>
+          </aside>
         </div>
 
         <input
@@ -227,17 +298,6 @@ export function StartScreen({
             onOpenExcelFile(file);
           }}
         />
-
-        <aside className="entry-example-strip" aria-label="독립 예시 작품">
-          <div>
-            <span className="eyebrow">둘러보기</span>
-            <strong>만들기 전에 완성된 예시를 볼 수도 있어요.</strong>
-            <small>놀퀴즈가 준비한 예시 작품이에요.</small>
-          </div>
-          <button type="button" onClick={onPlayExample} disabled={busy}>
-            예시 작품 플레이
-          </button>
-        </aside>
 
         {entryNotice && (
           <p className="entry-error" role="alert">
