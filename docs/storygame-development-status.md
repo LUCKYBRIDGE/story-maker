@@ -1,7 +1,9 @@
 # storygame 개발 상태표
 
 - 기준일: 2026-09-05
-- 기준 저장소: `/Volumes/WAN2/apps/story-maker`
+- 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
+- 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
+- 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
 - 실행 절차: `docs/storygame-ai-implementation-runbook.md`
 - 작업 계약: `docs/tasks/storygame-atomic-task-cards.md`
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
@@ -11,9 +13,9 @@
 
 | 항목 | 현재 사실 |
 |---|---|
-| 브랜치 | `main` |
-| 원격 저장소 | `origin` → `https://github.com/LUCKYBRIDGE/story-maker.git` |
-| 작업 트리 | `main` 작업 트리 clean; 마지막 동기화 커밋 `767f76e` |
+| 공유 기준선 | GitHub `main`; 세션 시작 시 HEAD를 다시 조회 |
+| 원격 저장소 | `LUCKYBRIDGE/story-maker`; 로컬에서는 `origin`으로 사용 |
+| 로컬 작업 트리 | 2026-09-05 U1-09 완료 당시 clean / `767f76e`; 이후 상태는 Work/로컬에서 다시 확인 |
 | `npm run check` | 2026-09-05 U1-09 완료 검사 통과 |
 | `npm test` | 2026-09-05 Vinext 빌드 및 107/107 통과 |
 | 프로덕션 의존성 감사 | 2026-09-03 `npm audit --omit=dev` 0건 |
@@ -22,7 +24,7 @@
 | 자산 구조 | taxonomy v1 adapter 구현, v2는 목표 아키텍처만 확정 |
 | 캐릭터 정렬 | A1-01 자동 Audit 완료. A1-02는 71개 수동 검토·1개 평행이동 후보·1개 보관 자산을 남긴 `DEFERRED`(삭제 아님) |
 | 최신 전체 검사 기록 | 2026-09-05 U1-09 완료 시 `npm run check`, Vinext 빌드, `npm test` 107/107 통과 |
-| GitHub 동기화 | 2026-09-05 `767f76e`를 `origin/main`에 푸시 완료 |
+| GitHub 기준선 | U1-09 코드 `767f76e` 이후 문서 커밋 `b0f919f`까지 `main` 반영; 이후 HEAD는 세션 시작 시 재조회 |
 | 이번 좁은 검사 | 2026-09-05 U1-09 상태·위치·핵심 흐름: 시작 20/20, 완료 25/25 통과 |
 | 새 UI | U1-01~09 완료. 다음 작업 U1-10 플레이 가독성·반응형 |
 
