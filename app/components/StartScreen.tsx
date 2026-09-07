@@ -65,80 +65,74 @@ export function StartScreen({
   return (
     <main className="entry-shell">
       <section className="entry-card" aria-labelledby="entry-title">
-        <div className="entry-brand">
-          <span className="brand-mark large">놀퀴즈</span>
-          <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
-          <div className="entry-brand-mascots" aria-hidden="true">
-            <img
-              src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
-              alt=""
-              className="brand-mascot mascot-rabbit"
-            />
-            <img
-              src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
-              alt=""
-              className="brand-mascot mascot-turtle"
-            />
-            <img
-              src="/story-assets/onggojib.character.real-angry-pixel.webp"
-              alt=""
-              className="brand-mascot mascot-onggojib"
-            />
+        <div className="book-cover-header">
+          <div className="entry-brand">
+            <span className="brand-mark large">놀퀴즈</span>
+            <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
+          </div>
+          <div className="book-cover-seal" aria-hidden="true">
+            ✦ 동화책 창작 스튜디오 ✦
           </div>
         </div>
 
-        <div className="book-cover-hero-illustration" aria-hidden="true">
-          <div className="hero-artwork-bg">
-            <img
-              src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
-              alt=""
-              className="hero-bg-image sea-palace"
-            />
-            <img
-              src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
-              alt=""
-              className="hero-bg-image court-yard"
-            />
+        <div className="book-cover-layout">
+          <div className="master-book-cover" aria-hidden="true">
+            <div className="master-book-spine" />
+            <div className="master-cover-top">
+              <span className="master-cover-badge">✦ 놀퀴즈 명작 전래동화 ✦</span>
+            </div>
+            <div className="master-cover-artwork">
+              <div className="cover-art-scenery">
+                <img
+                  src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                  alt=""
+                  className="cover-bg-image sea-palace"
+                />
+                <img
+                  src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+                  alt=""
+                  className="cover-bg-image court-yard"
+                />
+              </div>
+              <div className="cover-art-characters master-cover-chars">
+                <div className="cover-char-wrap char-turtle">
+                  <img
+                    src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
+                    alt=""
+                  />
+                </div>
+                <div className="cover-char-wrap char-rabbit">
+                  <img
+                    src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                    alt=""
+                  />
+                </div>
+                <div className="cover-char-wrap char-onggojib">
+                  <img
+                    src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                    alt=""
+                  />
+                </div>
+                <div className="cover-char-wrap char-fake-onggojib">
+                  <img
+                    src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div className="cover-art-lighting" />
+            </div>
+            <div className="master-cover-bottom">
+              <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
+              <h1 id="entry-title">이야기를 만들어 볼까요?</h1>
+              <p>
+                새 이야기를 시작하거나, 이 기기와 파일에 보관한 이야기를 이어서
+                만들 수 있어요.
+              </p>
+            </div>
           </div>
-          <div className="hero-artwork-characters">
-            <div className="hero-char-wrap char-turtle">
-              <img
-                src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
-                alt=""
-              />
-            </div>
-            <div className="hero-char-wrap char-rabbit">
-              <img
-                src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
-                alt=""
-              />
-            </div>
-            <div className="hero-char-wrap char-onggojib">
-              <img
-                src="/story-assets/onggojib.character.real-angry-pixel.webp"
-                alt=""
-              />
-            </div>
-            <div className="hero-char-wrap char-fake-onggojib">
-              <img
-                src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
-                alt=""
-              />
-            </div>
-          </div>
-          <div className="hero-artwork-overlay">
-            <span className="hero-book-seal">✦ 놀퀴즈 명작 전래동화 컬렉션 ✦</span>
-          </div>
-        </div>
 
-        <div className="entry-copy">
-          <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
-          <h1 id="entry-title">이야기를 만들어 볼까요?</h1>
-          <p>
-            새 이야기를 시작하거나, 이 기기와 파일에 보관한 이야기를 이어서
-            만들 수 있어요.
-          </p>
-        </div>
+          <div className="book-cover-content">
 
         <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist"
           onKeyDown={(event) => {
@@ -237,13 +231,14 @@ export function StartScreen({
               </div>
               <small>전래동화의 앞부분을 다시 쓴 글이에요. 앞부분도 읽고 고칠 수 있고, 결말은 내가 정해요.</small>
             </div>
-            <div className="entry-template-list">
+            <div className="entry-template-list book-shelf-grid">
               <button
                 type="button"
-                className="entry-template-card rabbit-theme"
+                className="entry-template-card book-jacket-card rabbit-theme"
                 onClick={onStartRabbitTurtleContinuation}
                 disabled={controlsBusy}
               >
+                <div className="book-jacket-spine" aria-hidden="true" />
                 <div className="template-cover" aria-hidden="true">
                   <img
                     src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
@@ -266,10 +261,11 @@ export function StartScreen({
               </button>
               <button
                 type="button"
-                className="entry-template-card onggojib-theme"
+                className="entry-template-card book-jacket-card onggojib-theme"
                 onClick={onStartOnggojibContinuation}
                 disabled={controlsBusy}
               >
+                <div className="book-jacket-spine" aria-hidden="true" />
                 <div className="template-cover" aria-hidden="true">
                   <img
                     src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
@@ -379,6 +375,8 @@ export function StartScreen({
             </button>
           </aside>
         </div>
+      </div>
+    </div>
 
         <input
           ref={excelInputRef}
