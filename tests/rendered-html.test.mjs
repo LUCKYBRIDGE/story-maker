@@ -40,10 +40,9 @@ test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면�
   assert.match(html, /Excel 파일에서 이어만들기/);
   assert.match(html, /공개 Google 시트/);
   assert.match(html, /이어쓰기 템플릿/);
-  assert.match(html, /<details class="entry-template-options"><summary>준비된 앞이야기에서 시작하기 · 3가지<\/summary>/);
-  assert.match(html, /토끼와 자라 · 땅에서 만난 뒤/);
-  assert.match(html, /토끼와 자라 · 용궁에 묶인 토끼/);
-  assert.match(html, /옹고집전 · 아내의 선택 이후/);
+  assert.match(html, /<details class="entry-template-options"><summary>이야기 읽고 이어 쓰기 · 2가지<\/summary>/);
+  assert.match(html, /토끼와 자라 · 용궁에서 위기에 처하다/);
+  assert.match(html, /옹고집전 · 처음 재판장에 끌려오다/);
   assert.match(html, /예시 작품 플레이/);
   assert.match(html, /이 기기의 이야기를 확인하고 있어요/);
   assert.doesNotMatch(html, /Google로 시작하기/);
@@ -138,7 +137,7 @@ test("이전 저장본과 새 창작 메모 데이터는 빈 배열로 안전하
   assert.deepEqual(result.example, []);
 });
 
-test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름을 제공한다", () => {
+test("기본 예시와 두 이어쓰기 템플릿은 끊김 없는 챕터 흐름을 제공한다", () => {
   const projectRoot = fileURLToPath(new URL("../", import.meta.url));
   const output = execFileSync(
     process.execPath,
@@ -152,13 +151,11 @@ test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름
         const {
           DEFAULT_PROJECT,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE,
-          RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
           ONGGOJIB_CONTINUATION_TEMPLATE,
         } = await import("./app/story-data.ts");
         const projects = [
           DEFAULT_PROJECT,
           RABBIT_TURTLE_CONTINUATION_TEMPLATE,
-          RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
           ONGGOJIB_CONTINUATION_TEMPLATE,
         ];
         console.log(JSON.stringify(projects.map((project) => ({
@@ -197,11 +194,11 @@ test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름
 
   assert.deepEqual(
     summaries.map((summary) => summary.lineCount),
-    [16, 15, 26, 32],
+    [16, 11, 9],
   );
   assert.deepEqual(
     summaries.map((summary) => summary.blankCount),
-    [0, 1, 1, 1],
+    [0, 1, 1],
   );
   assert.ok(summaries.every((summary) => summary.duplicateIds === 0));
   assert.ok(
@@ -217,18 +214,15 @@ test("기본 예시와 세 이어쓰기 템플릿은 끊김 없는 챕터 흐름
     "믿음을 확인하는 약속",
     "함께 쓴 첫 문장",
   ]);
-  assert.deepEqual(summaries[3].chapterTitles, [
-    "말이 사라진 밥상",
-    "아이들이 말을 시작하다",
-    "두 옹고집이 마주치다",
-    "두 옹고집의 첫 관아",
-    "아내가 선택한 사람",
+  assert.deepEqual(summaries[2].chapterTitles, [
+    "인색한 옹고집",
+    "똑같은 사람이 나타나다",
+    "처음 재판장에 끌려오다",
     "여기서부터 이어 쓰기",
   ]);
   assert.deepEqual(summaries[0].chapterSceneCounts, [3, 3, 3, 4, 3]);
-  assert.deepEqual(summaries[1].chapterSceneCounts, [6, 6, 2, 1]);
-  assert.deepEqual(summaries[2].chapterSceneCounts, [6, 6, 7, 6, 1]);
-  assert.deepEqual(summaries[3].chapterSceneCounts, [5, 11, 5, 9, 1, 1]);
+  assert.deepEqual(summaries[1].chapterSceneCounts, [3, 4, 3, 1]);
+  assert.deepEqual(summaries[2].chapterSceneCounts, [3, 4, 1, 1]);
 });
 
 test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된다", async () => {
@@ -304,17 +298,10 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(storyData, /backgroundAssetIds:\s*string\[\]/);
   assert.match(storyData, /function createBlankProject/);
   assert.match(storyData, /RABBIT_TURTLE_CONTINUATION_TEMPLATE/);
-  assert.match(storyData, /RABBIT_TURTLE_CONTINUATION_TEMPLATE_2/);
   assert.match(storyData, /continuation-chapter-2/);
   assert.match(storyData, /palace-continuation-chapter-2/);
-  assert.match(storyData, /자라가 토끼에게 건네는 첫 말을 직접 써 보세요/);
-  assert.match(storyData, /결박된 토끼가 살아남기 위해 하는 첫 말을 직접 써 보세요/);
-  assert.match(
-    storyData,
-    /아이들을 지켜 준 저 사람과 돌아가겠습니다/,
-  );
-  assert.match(storyData, /오늘 마당에 까치가……/);
-  assert.match(storyData, /그래서 어떻게 되었느냐/);
+  assert.match(storyData, /위기에 처한 토끼의 다음 말이나 행동부터 이어 써 보세요/);
+  assert.doesNotMatch(storyData, /아이들을 지켜 준 저 사람과 돌아가겠습니다/);
   assert.match(storyData, /title: "뜻밖의 재회"/);
   assert.match(storyData, /title: "믿음을 확인하는 약속"/);
   assert.match(storyData, /title: "함께 쓴 첫 문장"/);
@@ -380,35 +367,13 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     "플레이와 편집 화면에서 브랜드명이 불필요하게 반복되면 안 됩니다.",
   );
   assert.match(studio, /기본 제공 이미지 © 놀퀴즈/);
+  assert.match(storyData, /호위들이 토끼를 붙잡았다/);
   assert.match(
     storyData,
-    /아이들이 놀랍니다\. 부인, 아이들을 데리고 뒤로 물러서시오/,
-  );
-  assert.match(
-    storyData,
-    /호위들이 토끼의 앞발을 묶었다/,
-  );
-  assert.match(storyData, /어린 자라/);
-  assert.match(
-    storyData,
-    /작은 목소리라도 내가 끝까지 듣겠다/,
-  );
-  assert.match(
-    storyData,
-    /아내의 선택을 들은 진짜 옹고집 또는 다른 인물의 첫 반응을 써 보세요/,
+    /처음 재판장에 끌려온 옹고집의 다음 말이나 행동부터 이어 써 보세요/,
   );
   assert.match(storyData, /ONGGOJIB_CONTINUATION_TEMPLATE/);
-  assert.match(storyData, /어두워진 용궁 대청에 조개등 불빛이 켜졌다/);
-  assert.match(storyData, /용궁에서 작은 잔치가 열리오/);
-  assert.match(storyData, /호위들을 도와 토끼를 묶어라/);
-  assert.match(
-    storyData,
-    /토끼의 반응 → 자라의 선택이나 시도 → 더 커진 문제/,
-  );
-  assert.match(
-    storyData,
-    /진짜 옹고집의 첫 반응 → 사또의 판결이나 새 조건/,
-  );
+  assert.match(storyData, /이제 재판이 시작되려는 참이었다/);
   assert.match(sceneThumbnail, /function shouldMirrorAsset/);
   assert.match(sceneThumbnail, /function assetPlacementClass/);
   assert.match(sceneFocusEditor, /function SceneStagingCopy/);
@@ -471,11 +436,9 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /Excel로 저장/);
   assert.match(studio, /시트에서 불러오기/);
   assert.match(studio, /빈 작품 시작/);
-  assert.match(studio, /function startRabbitTurtleContinuation1/);
-  assert.match(studio, /function startRabbitTurtleContinuation2/);
-  assert.match(startScreen, /시작할 곳:\s*자라의 첫 설득/);
-  assert.match(startScreen, /시작할 곳:\s*토끼의 첫 대응/);
-  assert.match(startScreen, /시작할 곳:\s*선택 뒤 첫 컷/);
+  assert.match(studio, /function startRabbitTurtleContinuation/);
+  assert.match(startScreen, /시작할 곳:\s*위기에 처한 토끼의 다음 말/);
+  assert.match(startScreen, /시작할 곳:\s*첫 재판장에 선 옹고집의 다음 말/);
   assert.match(studio, /처음부터 읽고 고치기/);
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
@@ -704,7 +667,7 @@ test("U1-07: 세 무대가 읽기 전용 인물 렌더러와 이미지 실패 �
   const sources = await Promise.all(["SceneThumbnail", "SceneFocusEditor", "StoryPlayer", "StoryStage"].map(name =>
     readFile(new URL(`../app/components/${name}.tsx`, import.meta.url), "utf8")));
   for (const source of sources.slice(0, 3)) {
-    assert.match(source, /<StoryStageCanvas/);
+    assert.match(source, /<StoryStageCanvas|<StorySceneFrame/);
     assert.doesNotMatch(source, /backgroundImage:/);
   }
   assert.match(sources[3], /onError=\{\(\) => setFailed\(true\)\}/);
@@ -777,7 +740,7 @@ test("G4-02: 이미지 지연 로딩, 비동기 디코딩 및 플레이어 선�
 
   // StoryPlayer 다음 컷 선로딩 및 즉시 렌더링 검증
   assert.match(storyPlayerSource, /다음 컷 자산 선로딩/);
-  assert.match(storyPlayerSource, /<StoryStageCanvas stage=\{stage\} variant="player"/);
+  assert.match(storyPlayerSource, /<StorySceneFrame stage=\{stage\} variant="player"/);
 });
 
 test("G4-03: 키보드 조작·Escape·포커스 트랩 및 접근성 마감 검사", async () => {

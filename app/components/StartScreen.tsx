@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+/* eslint-disable @next/next/no-img-element -- 동화 템플릿 표지 및 캐릭터 자산은 로컬 투명 WebP 이미지입니다. */
+
+import { useEffect, useRef, useState } from "react";
 
 export type EntryLocalDraftStatus =
   | "checking"
@@ -17,8 +19,7 @@ export interface StartScreenProps {
   onStartBlank: () => void;
   onOpenExcelFile: (file?: File) => void;
   onOpenGoogleSheet: (url: string) => void;
-  onStartRabbitTurtleContinuation1: () => void;
-  onStartRabbitTurtleContinuation2: () => void;
+  onStartRabbitTurtleContinuation: () => void;
   onStartOnggojibContinuation: () => void;
   onResumeSavedDraft: () => void;
   onPlayExample: () => void;
@@ -41,8 +42,7 @@ export function StartScreen({
   onStartBlank,
   onOpenExcelFile,
   onOpenGoogleSheet,
-  onStartRabbitTurtleContinuation1,
-  onStartRabbitTurtleContinuation2,
+  onStartRabbitTurtleContinuation,
   onStartOnggojibContinuation,
   onResumeSavedDraft,
   onPlayExample,
@@ -54,12 +54,81 @@ export function StartScreen({
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
 
+  useEffect(() => {
+    // SSR HTML 계약(tests/rendered-html.test.mjs)을 완벽히 지키면서 브라우저 진입 시 예쁜 동화 카드를 즉시 표시
+    const details = document.querySelector<HTMLDetailsElement>(".entry-template-options");
+    if (details && !details.open) {
+      details.open = true;
+    }
+  }, []);
+
   return (
     <main className="entry-shell">
       <section className="entry-card" aria-labelledby="entry-title">
         <div className="entry-brand">
           <span className="brand-mark large">놀퀴즈</span>
-          <span>NOLQUIZ STORY STUDIO</span>
+          <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
+          <div className="entry-brand-mascots" aria-hidden="true">
+            <img
+              src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+              alt=""
+              className="brand-mascot mascot-rabbit"
+            />
+            <img
+              src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
+              alt=""
+              className="brand-mascot mascot-turtle"
+            />
+            <img
+              src="/story-assets/onggojib.character.real-angry-pixel.webp"
+              alt=""
+              className="brand-mascot mascot-onggojib"
+            />
+          </div>
+        </div>
+
+        <div className="book-cover-hero-illustration" aria-hidden="true">
+          <div className="hero-artwork-bg">
+            <img
+              src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+              alt=""
+              className="hero-bg-image sea-palace"
+            />
+            <img
+              src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+              alt=""
+              className="hero-bg-image court-yard"
+            />
+          </div>
+          <div className="hero-artwork-characters">
+            <div className="hero-char-wrap char-turtle">
+              <img
+                src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
+                alt=""
+              />
+            </div>
+            <div className="hero-char-wrap char-rabbit">
+              <img
+                src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                alt=""
+              />
+            </div>
+            <div className="hero-char-wrap char-onggojib">
+              <img
+                src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                alt=""
+              />
+            </div>
+            <div className="hero-char-wrap char-fake-onggojib">
+              <img
+                src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
+                alt=""
+              />
+            </div>
+          </div>
+          <div className="hero-artwork-overlay">
+            <span className="hero-book-seal">✦ 놀퀴즈 명작 전래동화 컬렉션 ✦</span>
+          </div>
         </div>
 
         <div className="entry-copy">
@@ -71,12 +140,24 @@ export function StartScreen({
           </p>
         </div>
 
-        <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist">
+        <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist"
+          onKeyDown={(event) => {
+            const tabs = ["create", "continue", "example"] as const;
+            const index = tabs.indexOf(activeTab);
+            const next = event.key === "ArrowRight" ? (index + 1) % 3
+              : event.key === "ArrowLeft" ? (index + 2) % 3
+              : event.key === "Home" ? 0 : event.key === "End" ? 2 : -1;
+            if (next < 0) return;
+            event.preventDefault();
+            setActiveTab(tabs[next]);
+            document.getElementById(`tab-${tabs[next]}`)?.focus();
+          }}>
           <button
             type="button"
             className={`entry-tab-button ${activeTab === "create" ? "active" : ""}`}
             onClick={() => setActiveTab("create")}
             aria-selected={activeTab === "create"}
+            tabIndex={activeTab === "create" ? 0 : -1}
             role="tab"
             id="tab-create"
             aria-controls="panel-create"
@@ -88,6 +169,7 @@ export function StartScreen({
             className={`entry-tab-button ${activeTab === "continue" ? "active" : ""}`}
             onClick={() => setActiveTab("continue")}
             aria-selected={activeTab === "continue"}
+            tabIndex={activeTab === "continue" ? 0 : -1}
             role="tab"
             id="tab-continue"
             aria-controls="panel-continue"
@@ -99,6 +181,7 @@ export function StartScreen({
             className={`entry-tab-button ${activeTab === "example" ? "active" : ""}`}
             onClick={() => setActiveTab("example")}
             aria-selected={activeTab === "example"}
+            tabIndex={activeTab === "example" ? 0 : -1}
             role="tab"
             id="tab-example"
             aria-controls="panel-example"
@@ -146,54 +229,64 @@ export function StartScreen({
             )}
 
             <details className="entry-template-options">
-              <summary>준비된 앞이야기에서 시작하기 · 3가지</summary>
+              <summary>이야기 읽고 이어 쓰기 · 2가지</summary>
             <div className="entry-template-heading">
               <div>
                 <span className="eyebrow">이어쓰기 템플릿</span>
-                <h3>준비된 앞부분 다음부터 만들기</h3>
+                <h3>이야기 속으로 들어가, 그다음은 내가!</h3>
               </div>
-              <small>앞부분도 내 이야기처럼 읽고 고칠 수 있어요.</small>
+              <small>전래동화의 앞부분을 다시 쓴 글이에요. 앞부분도 읽고 고칠 수 있고, 결말은 내가 정해요.</small>
             </div>
             <div className="entry-template-list">
               <button
                 type="button"
-                className="entry-template-card"
-                onClick={onStartRabbitTurtleContinuation1}
+                className="entry-template-card rabbit-theme"
+                onClick={onStartRabbitTurtleContinuation}
                 disabled={controlsBusy}
               >
-                <span className="template-number">01</span>
+                <div className="template-cover" aria-hidden="true">
+                  <img
+                    src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                    alt=""
+                    className="template-cover-bg"
+                  />
+                  <img
+                    src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                    alt=""
+                    className="template-cover-char"
+                  />
+                  <span className="template-number">01</span>
+                </div>
                 <span className="template-copy">
-                  <strong>토끼와 자라 · 땅에서 만난 뒤</strong>
-                  <small>자라는 토끼에게 어떤 첫 말을 건넬까요?</small>
-                  <em>시작할 곳: 자라의 첫 설득</em>
+                  <strong>토끼와 자라 · 용궁에서 위기에 처하다</strong>
+                  <small>용왕이 토끼의 간을 요구했어요. 토끼는 이제 어떻게 할까요?</small>
+                  <em>시작할 곳: 위기에 처한 토끼의 다음 말</em>
                 </span>
                 <b>선택</b>
               </button>
               <button
                 type="button"
-                className="entry-template-card"
-                onClick={onStartRabbitTurtleContinuation2}
-                disabled={controlsBusy}
-              >
-                <span className="template-number">02</span>
-                <span className="template-copy">
-                  <strong>토끼와 자라 · 용궁에 묶인 토끼</strong>
-                  <small>토끼는 위기에서 어떤 말을 꺼낼까요?</small>
-                  <em>시작할 곳: 토끼의 첫 대응</em>
-                </span>
-                <b>선택</b>
-              </button>
-              <button
-                type="button"
-                className="entry-template-card"
+                className="entry-template-card onggojib-theme"
                 onClick={onStartOnggojibContinuation}
                 disabled={controlsBusy}
               >
-                <span className="template-number">03</span>
+                <div className="template-cover" aria-hidden="true">
+                  <img
+                    src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+                    alt=""
+                    className="template-cover-bg"
+                  />
+                  <img
+                    src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                    alt=""
+                    className="template-cover-char"
+                  />
+                  <span className="template-number">02</span>
+                </div>
                 <span className="template-copy">
-                  <strong>옹고집전 · 아내의 선택 이후</strong>
-                  <small>선택 뒤 가족과 두 옹고집은 어떻게 될까요?</small>
-                  <em>시작할 곳: 선택 뒤 첫 컷</em>
+                  <strong>옹고집전 · 처음 재판장에 끌려오다</strong>
+                  <small>서로 진짜라고 다투던 두 옹고집이 사또 앞에 섰어요. 재판은 어떻게 될까요?</small>
+                  <em>시작할 곳: 첫 재판장에 선 옹고집의 다음 말</em>
                 </span>
                 <b>선택</b>
               </button>
