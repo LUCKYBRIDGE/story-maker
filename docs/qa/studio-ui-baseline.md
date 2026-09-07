@@ -203,3 +203,42 @@ premise=한 줄 이야기, summary=이 장에서 일어나는 일이다. 나머�
 따라서 U1-01 인수 조건은 완료다. U1-02도 완료됐으므로 다음 한 작업은 공통 셸과
 목표 토큰을 제한적으로 적용하는 U1-03이다. 이번 카드에서는 서비스 코드·이미지·
 호스팅 설정을 수정하지 않았다.
+
+## 6. U1-10 플레이 가독성 및 반응형 브라우저 실측 검증 (2026-09-07)
+
+- 주 책임: 교육 UX 디자이너 / Work Lead / 검토: 접근성 검토자, 프런트엔드 아키텍트
+- 검증 환경: Work/로컬 headless Chrome 152.0.7977.82, CDP 기반 자동화 및 DOM 실측
+- 실측 데이터 원본: [U1-10-capture-metrics.json](evidence/U1-10-capture-metrics.json)
+
+### 뷰포트별 실측 결과 요약
+
+| 뷰포트 | 윈도우 너비/높이(px) | scrollWidth (px) | 가로 넘침 | 본문 글자 크기 | maxHeight | 조작부 44px 여부 | 캡처 링크 |
+|---|---|---|---|---|---|---|---|
+| 데스크톱 기본 | 1440×900 | 1440 | 없음 (PASS) | 22px | none | 전원 ≥44px (PASS) | [1440 캡처](evidence/U1-10-player-stress-1440.png) |
+| 노트북 | 1280×720 | 1280 | 없음 (PASS) | 22px | none | 전원 ≥44px (PASS) | [1280 캡처](evidence/U1-10-player-stress-1280.png) |
+| 태블릿 가로 | 1024×768 | 1024 | 없음 (PASS) | 22px | none | 전원 ≥44px (PASS) | [1024 캡처](evidence/U1-10-player-stress-1024.png) |
+| 태블릿 세로 | 820×1180 | 820 | 없음 (PASS) | 22px | none | 전원 ≥44px (PASS) | [820 캡처](evidence/U1-10-player-stress-820.png) |
+| 모바일 세로 | 390×844 | 390 | 없음 (PASS) | 17px | none | 전원 ≥44px (PASS) | [390 캡처](evidence/U1-10-player-stress-390.png) |
+| 모바일 가로 | 844×390 | 844 | 없음 (PASS) | 16px | none | 전원 ≥44px (PASS) | [844x390 캡처](evidence/U1-10-player-stress-844x390.png) |
+| 소형 모바일 | 320×800 | 320 | 없음 (PASS) | 17px | none | 전원 ≥44px (PASS) | [320 캡처](evidence/U1-10-player-stress-320.png) |
+| 200% 확대 | 1280×720 (scale 2) | 1280 | 없음 (PASS) | 22px | none | 전원 ≥44px (PASS) | [zoom200 캡처](evidence/U1-10-player-stress-zoom200.png) |
+
+### 상호작용 및 가독성 검증 상세
+
+1. **긴 글 완독성 (1000자 대사/해설)**:
+   - 1017자 대사 컷: 모바일 78px 고정 높이 해제, `overflow: visible`, `overflowWrap: anywhere` 적용으로 뷰포트 스크롤을 통해 전체 본문 완독 가능.
+   - 1000자 해설 컷: `.dialogue-box.narration` 폭이 모바일에서 374px로 가용 폭에 최적화되며 가로 넘침 없음 ([해설 캡처](evidence/U1-10-player-narration-390.png)).
+2. **화자 및 괄호 지시문 위계**:
+   - `토끼:` 화자명 분리 및 `(눈을 동그랗게 뜨며)` 지시문이 `.parenthetical-direction` 스타일(#f0dcb4, bold)로 강조 표시됨을 확인.
+3. **줄바꿈 및 무공백 문자열**:
+   - 다중 단락 줄바꿈: `whiteSpace: pre-wrap` 보존 확인 ([줄바꿈 캡처](evidence/U1-10-player-newlines-390.png)).
+   - 긴 무공백 문자열: `wordBreak: break-word`, `overflowWrap: anywhere`에 의해 가로 스크롤 넘침 없이 자연스럽게 줄바꿈됨 ([무공백 캡처](evidence/U1-10-player-unbroken-error-390.png)).
+4. **자산 에러/빈 자산 무대 안전성**:
+   - 없는 자산 ID 및 빈 배경에서도 공통 무대 캔버스 비율(16:9)이 붕괴되지 않고 대체 렌더링 유지.
+5. **조작 접근성 (44px 터치 타깃)**:
+   - 다음 컷, 이전, 이 컷 고치기, 편집으로 돌아가기 버튼 및 장 선택기 select 엘리먼트 모두 `height >= 44px` 충족.
+6. **실제 이야기 템플릿 재생**:
+   - 토끼와 자라 예시 플레이 및 메인 복귀 확인 ([토끼 캡처](evidence/U1-10-player-rabbit-example-1440.png)).
+   - 옹고집전 템플릿(03) 모바일 390px 재생 및 컷 전환 확인 ([옹고집전 캡처](evidence/U1-10-player-onggojib-390.png)).
+7. **작업 위치 복원**:
+   - `이 컷 고치기` 클릭 시 현재 재생 컷 안정 ID를 유지한 채 스튜디오 편집 화면으로 안전 복귀 확인.
