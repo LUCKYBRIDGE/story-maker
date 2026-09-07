@@ -14,6 +14,11 @@ import {
 import { assetName } from "./ResourceWidgets";
 import { SceneThumbnail, containsParentheses, unique } from "./SceneThumbnail";
 import { StoryRevisionCheck } from "./StoryRevisionCheck";
+import { StorySceneFrame } from "./StoryStage";
+import { DialogueInline, DialogueText } from "./StoryPlayer";
+import { resolveStoryStage } from "../story-stage-view";
+import { CutLengthGuide } from "./CutLengthGuide";
+import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
 
 export type ImageView = "text" | "small";
 
@@ -30,6 +35,7 @@ export interface ScriptScreenProps {
   onSelectLine: (lineId: string) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
+  onSplitLine: (lineId: string) => void;
   onOpenStoryEditorScene: (line: StoryLine) => void;
   onMoveLine: (lineId: string, delta: -1 | 1) => void;
   onDuplicateLine: (lineId: string) => void;
@@ -53,6 +59,7 @@ export function ScriptScreen({
   onSelectLine,
   onChangeLineType,
   onUpdateLine,
+  onSplitLine,
   onOpenStoryEditorScene,
   onMoveLine,
   onDuplicateLine,
@@ -97,7 +104,13 @@ export function ScriptScreen({
               이 컷 꾸미기
             </button>
           </header>
-          <SceneThumbnail chapter={selectedChapter} line={selectedLine} />
+          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" speaker={selectedLine.speaker}>
+            <div className="dialogue-box">
+              <p>{selectedLine.type === "narration"
+                ? <DialogueText text={selectedLine.text || "아래 글상자에 해설을 써 보세요."} />
+                : <DialogueInline speakerName={selectedLine.speakerName} text={selectedLine.text || "아래 글상자에 대사를 써 보세요."} />}</p>
+            </div>
+          </StorySceneFrame>
         </section>
       )}
       <div className="script-scene-list">
@@ -226,8 +239,11 @@ export function ScriptScreen({
                     })
                   }
                   aria-label={`${index + 1}컷 내용`}
+                  aria-describedby={`cut-length-${line.id}`}
+                  aria-invalid={countStoryCharacters(line.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
                 />
               </div>
+              <CutLengthGuide id={`cut-length-${line.id}`} text={line.text} onSplit={() => onSplitLine(line.id)} />
               <small
                 className={`scene-writing-help ${
                   line.type === "narration" && containsParentheses(line.text)

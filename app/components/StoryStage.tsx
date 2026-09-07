@@ -1,22 +1,38 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- Story assets are local transparent images. */
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { resolveStoryStage } from "../story-stage-view";
 
 type CharacterView = ReturnType<typeof resolveStoryStage>["left"];
 type BackgroundView = ReturnType<typeof resolveStoryStage>["background"];
 
-export function StoryStageCanvas({ stage, variant, speaker }: {
+export function StorySceneFrame({ stage, variant, speaker, heading, children }: {
+  stage: ReturnType<typeof resolveStoryStage>;
+  variant: "editor" | "player";
+  speaker?: "left" | "right" | "narration";
+  heading?: ReactNode;
+  children: ReactNode;
+}) {
+  return <div className="story-scene-frame" data-scene-variant={variant}>
+    <StoryStageBackground background={stage.background} loading="eager" />
+    {heading && <div className="story-scene-heading">{heading}</div>}
+    <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} showBackground={false} />
+    {children}
+  </div>;
+}
+
+export function StoryStageCanvas({ stage, variant, speaker, showBackground = true }: {
   stage: ReturnType<typeof resolveStoryStage>;
   variant: "thumbnail" | "editor" | "player";
   speaker?: "left" | "right" | "narration";
+  showBackground?: boolean;
 }) {
   const loading = variant === "thumbnail" ? "lazy" : "eager";
   return <div className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
-    <StoryStageBackground background={stage.background} loading={loading} />
-    <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant === "player" && speaker === "right"} />
-    <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant === "player" && speaker === "left"} />
+    {showBackground && <StoryStageBackground background={stage.background} loading={loading} />}
+    <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right"} />
+    <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left"} />
   </div>;
 }
 

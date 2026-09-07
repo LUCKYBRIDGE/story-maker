@@ -1,6 +1,6 @@
 "use client";
 
-import { StoryStageCanvas } from "./StoryStage";
+import { StorySceneFrame } from "./StoryStage";
 
 import { useEffect, useRef } from "react";
 import type { StoryProject } from "../story-data";
@@ -152,6 +152,7 @@ export function StoryPlayer({
       <div
         className="story-stage"
       >
+        <StorySceneFrame stage={stage} variant="player" speaker={line?.speaker} heading={
         <header className="player-topbar">
           <div className="player-title-block">
             <span className="eyebrow">스토리 플레이</span>
@@ -184,8 +185,7 @@ export function StoryPlayer({
               {isExample ? "예시 닫기" : "편집으로 돌아가기"}
             </button>
           </div>
-        </header>
-        <StoryStageCanvas stage={stage} variant="player" speaker={line?.speaker} />
+        </header>}>
         <section
           className={`dialogue-box ${
             line?.type === "narration" ? "narration" : ""
@@ -243,6 +243,7 @@ export function StoryPlayer({
             </button>
           </div>
         </section>
+        </StorySceneFrame>
       </div>
       {atStoryEnd && !isExample && (
         <section className="player-revision-surface">

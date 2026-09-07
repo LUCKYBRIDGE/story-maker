@@ -45,13 +45,14 @@ import {
 } from "./components/MemoPopup";
 import { AddSpeaker, ResourcePool, assetName } from "./components/ResourceWidgets";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
+import { splitStoryLine } from "./story-commands";
 import {
   cloneProject,
   createBlankProject,
   DEFAULT_PROJECT,
   ONGGOJIB_CONTINUATION_TEMPLATE,
   RABBIT_TURTLE_CONTINUATION_TEMPLATE,
-  RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
+  createContinuationPreview,
   type Chapter,
   type StoryLine,
   type StoryProject,
@@ -286,6 +287,7 @@ export function StoryStudio() {
   } | null>(null);
   const [editorRestoreRequest, setEditorRestoreRequest] =
     useState<StoryEditorRestoreRequest | null>(null);
+  const [splitUndo, setSplitUndo] = useState<{ before: StoryProject; after: StoryProject; location: StoryEditorLocation } | null>(null);
   const [applyIssuesVisible, setApplyIssuesVisible] = useState(false);
   const [highlightedApplyIssueId, setHighlightedApplyIssueId] = useState("");
   const [applyIssueFocusRequest, setApplyIssueFocusRequest] =
@@ -577,28 +579,36 @@ export function StoryStudio() {
   useEffect(() => {
     if (!editorRestoreRequest) return;
     const request = editorRestoreRequest;
-    const frame = window.requestAnimationFrame(() => {
-      const lineBody = lineBodyRefs.current.get(request.location.lineId);
-      const sceneCard = sceneCardRefs.current.get(request.location.lineId);
-      const target = lineBody ?? sceneCard;
-      if (request.scrollY !== undefined) {
-        window.scrollTo({ top: request.scrollY, behavior: "auto" });
-      } else {
-        target?.scrollIntoView({ block: "center", behavior: "auto" });
-      }
-      if (request.location.focusTarget === "line-body" && lineBody) {
-        lineBody.focus({ preventScroll: true });
-        const selection = clampStoryEditorTextSelection(
-          request.selection,
-          lineBody.value.length,
-        );
-        if (selection) {
-          lineBody.setSelectionRange(selection.start, selection.end);
+    let secondFrame: number | null = null;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        const lineBody = lineBodyRefs.current.get(request.location.lineId);
+        const sceneCard = sceneCardRefs.current.get(request.location.lineId);
+        const target = lineBody ?? sceneCard;
+        if (request.scrollY !== undefined) {
+          window.scrollTo({ top: request.scrollY, behavior: "auto" });
+        } else {
+          target?.scrollIntoView({ block: "center", behavior: "auto" });
         }
-      }
-      setEditorRestoreRequest(null);
+        if (request.location.focusTarget === "line-body" && lineBody) {
+          lineBody.focus({ preventScroll: true });
+          const selection = clampStoryEditorTextSelection(
+            request.selection,
+            lineBody.value.length,
+          );
+          if (selection) {
+            lineBody.setSelectionRange(selection.start, selection.end);
+          }
+        }
+        setEditorRestoreRequest(null);
+      });
     });
-    return () => window.cancelAnimationFrame(frame);
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) {
+        window.cancelAnimationFrame(secondFrame);
+      }
+    };
   }, [editorRestoreRequest]);
   useEffect(() => {
     if (!applyIssueFocusRequest) return;
@@ -1562,6 +1572,29 @@ export function StoryStudio() {
     setNotice("컷을 삭제했어요. 바로 되돌릴 수 있어요.");
   }
 
+  function splitLine(lineId: string) {
+    const source = draft.lines.find(line => line.id === lineId);
+    if (!source) return;
+    let splitCounter = 0;
+    const createId = () => {
+      splitCounter += 1;
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return `line-${crypto.randomUUID()}`;
+      }
+      return `line-${Date.now()}-${splitCounter}-${Math.random().toString(36).slice(2, 8)}`;
+    };
+    const result = splitStoryLine({ lines: draft.lines, lineId, createId });
+    if (!result.ok) { reportStoryLineCommandFailure(result.code); return; }
+    if (result.lines === draft.lines) return;
+    if (!backupDraft("before-reset")) return;
+    const after = { ...draft, lines: result.lines };
+    const location: StoryEditorLocation = { chapterId: source.chapterId, lineId, view: editorMode, focusTarget: "line-body" };
+    setSplitUndo({ before: draft, after, location });
+    setDraft(after);
+    requestStoryEditorRestore(location, { lines: result.lines });
+    setNotice(`글을 ${result.lines.length - draft.lines.length + 1}컷으로 나눴어요. 화자·무대와 모든 글자는 그대로예요. 문장이 자연스럽게 이어지는지 읽어 보세요. 나누기 전 원문은 복구 기록에도 남았어요.`);
+  }
+
   function moveLine(lineId: string, direction: -1 | 1) {
     const command = moveStoryLine({ lines: draft.lines, lineId, direction });
     if (!command.ok) {
@@ -2035,14 +2068,7 @@ export function StoryStudio() {
     message: string,
   ) {
     const template = cloneProject(source);
-    const playableLines = template.lines.filter((line) => line.text.trim());
-    const playableStart = cloneProject({
-      ...template,
-      chapters: template.chapters.filter((chapter) =>
-        playableLines.some((line) => line.chapterId === chapter.id),
-      ),
-      lines: playableLines,
-    });
+    const playableStart = createContinuationPreview(template);
     if (!backupDraft("before-template")) return;
     setDraft(template);
     setLocalDraftStatus("available");
@@ -2050,6 +2076,10 @@ export function StoryStudio() {
     const activeSave = saveActiveProject(playableStart);
     setSelectedChapterId(continuationChapterId);
     setSelectedLineId(continuationLineId);
+    setEditorRestoreRequest({ location: {
+      chapterId: continuationChapterId, lineId: continuationLineId,
+      view: "scene", focusTarget: "none",
+    } });
     setWorkspaceMode("create");
     setEditorMode("scene");
     setMobileProjectOpen(false);
@@ -2061,21 +2091,12 @@ export function StoryStudio() {
     setNotice(activeSave.ok ? message : activeSave.message);
   }
 
-  function startRabbitTurtleContinuation1() {
+  function startRabbitTurtleContinuation() {
     startContinuationTemplate(
       RABBIT_TURTLE_CONTINUATION_TEMPLATE,
-      "continuation-chapter-2",
-      "continuation-line-6",
-      "토끼와 자라가 만난 다음 컷을 열었어요. 자라의 첫 말부터 이어 써 보세요.",
-    );
-  }
-
-  function startRabbitTurtleContinuation2() {
-    startContinuationTemplate(
-      RABBIT_TURTLE_CONTINUATION_TEMPLATE_2,
       "palace-continuation-chapter-2",
       "palace-continuation-line-7",
-      "용궁에 묶인 토끼의 다음 컷을 열었어요. 토끼의 첫 말부터 이어 써 보세요.",
+      "용궁에서 위기에 처한 토끼의 빈 컷을 열었어요. 여기서부터 다음 말이나 행동을 써 보세요.",
     );
   }
 
@@ -2084,7 +2105,7 @@ export function StoryStudio() {
       ONGGOJIB_CONTINUATION_TEMPLATE,
       "onggojib-continuation",
       "onggojib-continuation-line-1",
-      "아내가 가짜 옹고집을 선택한 다음 컷을 열었어요. 선택 뒤 첫 반응부터 이어 써 보세요.",
+      "옹고집이 처음 재판장에 끌려온 다음의 빈 컷을 열었어요. 재판은 아직 시작되지 않았어요. 여기서부터 이어 써 보세요.",
     );
   }
 
@@ -2298,9 +2319,8 @@ export function StoryStudio() {
           onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
           onOpenExcelFile={openExcelFile}
           onOpenGoogleSheet={updateFromSheet}
-          onStartRabbitTurtleContinuation1={() => requestEntryChoice("토끼와 자라 · 땅에서 만난 뒤", startRabbitTurtleContinuation1)}
-          onStartRabbitTurtleContinuation2={() => requestEntryChoice("토끼와 자라 · 용궁에 묶인 토끼", startRabbitTurtleContinuation2)}
-          onStartOnggojibContinuation={() => requestEntryChoice("옹고집전 · 아내의 선택 이후", startOnggojibContinuation)}
+          onStartRabbitTurtleContinuation={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
+          onStartOnggojibContinuation={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
           onResumeSavedDraft={resumeStudio}
           onPlayExample={() => openPlay(0, "example")}
           onAbortUpdate={() => updateController.current?.abort()}
@@ -2524,6 +2544,19 @@ export function StoryStudio() {
         </section>
       )}
 
+      {splitUndo && draft === splitUndo.after && (
+        <section className="creator-undo" role="status">
+          <span>긴 글을 여러 컷으로 나눴어요.</span>
+          <button type="button" onClick={() => {
+            if (!backupDraft("before-reset")) return;
+            setDraft(splitUndo.before);
+            requestStoryEditorRestore(splitUndo.location, { lines: splitUndo.before.lines });
+            setSplitUndo(null);
+            setNotice("컷 나누기를 되돌렸어요. 원문이 그대로 복원됐어요.");
+          }}>컷 나누기 되돌리기</button>
+        </section>
+      )}
+
       {continuationPoint && workspaceMode === "create" && (
         <section
           className="continuation-edit-bar"
@@ -2605,7 +2638,7 @@ export function StoryStudio() {
           onAddSpeaker={addSpeaker}
         />
       ) : (
-        <section className="making-workspace">
+        <section className={`making-workspace ${mobileEditorToolsOpen ? "mobile-context-open" : ""}`}>
           <header
             className={`making-toolbar ${
               mobileEditorToolsOpen ? "mobile-open" : ""
@@ -2617,7 +2650,7 @@ export function StoryStudio() {
               onClick={() => setMobileEditorToolsOpen((current) => !current)}
             >
               <span>
-                <strong>편집 방법</strong>
+                <strong>편집 방법·이 장 정보</strong>
                 <small>
                   {editorMode === "chapter" ? "이 장 대본" : "컷 꾸미기"} ·{" "}
                   {imageView === "text" ? "글만" : "작은 그림"}
@@ -2771,7 +2804,7 @@ export function StoryStudio() {
                   </div>
                   <div>
                     <button
-                      className="quiet-button"
+                      className="quiet-button chapter-resources-toggle"
                       onClick={() =>
                         setChapterResourcesOpen((current) => !current)
                       }
@@ -2792,7 +2825,7 @@ export function StoryStudio() {
                   </div>
                 </header>
 
-                <section className="chapter-context-strip">
+                <section className="chapter-context-strip" aria-label="이 장의 이야기 맥락">
                   <div>
                     <span>이번 장에서 달라지는 일</span>
                     <strong>
@@ -2932,6 +2965,7 @@ export function StoryStudio() {
                     onOpenStoryEditorScene={(line) =>
                       openStoryEditorScene(line)
                     }
+                    onSplitLine={splitLine}
                     onMoveLine={(lineId, delta) =>
                       moveLine(lineId, delta)
                     }
@@ -2965,6 +2999,7 @@ export function StoryStudio() {
                     onMoveThroughStory={moveThroughStory}
                     onChangeLineType={changeLineType}
                     onUpdateLine={updateLine}
+                    onSplitLine={splitLine}
                     onAddSpeaker={addSpeaker}
                     onCopySceneStaging={copySceneStaging}
                     onSwitchStoryEditorView={switchStoryEditorView}
