@@ -242,3 +242,36 @@ premise=한 줄 이야기, summary=이 장에서 일어나는 일이다. 나머�
    - 옹고집전 템플릿(03) 모바일 390px 재생 및 컷 전환 확인 ([옹고집전 캡처](evidence/U1-10-player-onggojib-390.png)).
 7. **작업 위치 복원**:
    - `이 컷 고치기` 클릭 시 현재 재생 컷 안정 ID를 유지한 채 스튜디오 편집 화면으로 안전 복귀 확인.
+
+## 7. U1-11 통합 호환·반응형 인수 및 마일스톤 마감 검증 (2026-09-07)
+
+- 주 책임: QA·릴리스 책임자 / Work Lead / 검토: 초등 국어 교사, 데이터 신뢰성 엔지니어
+- 검증 환경: Work/로컬 headless Chrome 152.0.7977.82, CDP 기반 자동화 및 DOM 실측
+- 실측 데이터 원본: [U1-11-capture-metrics.json](evidence/U1-11-capture-metrics.json)
+
+### 1. 학생 창작 전체 라이프사이클 브라우저 검증 (CF-01~12)
+- 메인 화면 진입 및 템플릿(토끼와 자라 01) 선택 ([홈 화면 캡처](evidence/U1-11-flow-01-home-1440.png)).
+- 이야기 구성 화면 전환: 3·4·5단계 구조 선택기 및 발단·전개·위기·절정·결말 탭 정상 작동 ([구성 화면 캡처](evidence/U1-11-flow-02-planning-1440.png)).
+- 대본·컷 쓰기 화면 전환: 대사 본문 편집 및 플레이에 적용 정상 수행.
+- 플레이어 재생 및 컷 확인: 무대 연출, 캐릭터, 대사 박스 정상 렌더링 ([플레이어 캡처](evidence/U1-11-flow-03-player-1440.png)).
+- `이 컷 고치기` 상호작용: 플레이어에서 버튼 클릭 시 모달이 닫히며 해당 컷의 안정 ID로 스튜디오 편집 화면에 정확히 복귀함 ([복귀 화면 캡처](evidence/U1-11-flow-04-fix-cut-return-1440.png)).
+- 로컬 저장 무결성: `storygame:draft:v1` 및 `storygame:active:v1` 문서 봉투 정상 보존 확인.
+
+### 2. 200컷 대규모 스트레스 및 7개 뷰포트 + zoom200 실측 (CF-13)
+- 5개 장, 총 200컷, 1000자 대사, 1000자 해설, 다중 줄바꿈, 긴 무공백 문자열 포함.
+- 초기 로드 및 렌더링: 1809ms (DOM 멈춤/오류 없음, [200컷 에디터 캡처](evidence/U1-11-200cuts-editor-1440.png)).
+
+| 뷰포트 | 윈도우 너비/높이(px) | scrollWidth (px) | 가로 넘침 | maxHeight | 조작부 44px 여부 | 캡처 링크 |
+|---|---|---|---|---|---|---|
+| 데스크톱 기본 | 1440×900 | 1440 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [1440 캡처](evidence/U1-11-200cuts-player-1440.png) |
+| 노트북 | 1280×720 | 1280 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [1280 캡처](evidence/U1-11-200cuts-player-1280.png) |
+| 태블릿 가로 | 1024×768 | 1024 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [1024 캡처](evidence/U1-11-200cuts-player-1024.png) |
+| 태블릿 세로 | 820×1180 | 820 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [820 캡처](evidence/U1-11-200cuts-player-820.png) |
+| 모바일 세로 | 390×844 | 390 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [390 캡처](evidence/U1-11-200cuts-player-390.png) |
+| 모바일 가로 | 844×390 | 844 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [844x390 캡처](evidence/U1-11-200cuts-player-844x390.png) |
+| 소형 모바일 | 320×800 | 320 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [320 캡처](evidence/U1-11-200cuts-player-320.png) |
+| 200% 확대 | 1280×720 (scale 2) | 1280 | 없음 (PASS) | none | 전원 ≥44px (PASS) | [zoom200 캡처](evidence/U1-11-200cuts-player-zoom200.png) |
+
+- 4번째 컷 긴 무공백 문자열도 `overflowWrap: anywhere`에 의해 가로 스크롤 넘침 없이 안전하게 줄바꿈됨 ([컷4 캡처](evidence/U1-11-200cuts-player-cut4-unbroken.png)).
+- 200컷 탐색 및 전환 과정에서 메모리 누수나 입력 지연, 데이터 유실이 일체 발생하지 않음 (P0/P1 결함 0건).
+

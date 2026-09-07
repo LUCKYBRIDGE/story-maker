@@ -1,0 +1,467 @@
+{
+  "timestamp": "2026-09-07T07:47:48.346Z",
+  "scenario1_student_flow": {
+    "templateStarted": true,
+    "planning": true,
+    "scriptEditing": true,
+    "playOpen": true,
+    "fixCutReturn": true,
+    "storageSaved": true
+  },
+  "scenario2_200cuts_stress": {
+    "renderDurationMs": 1809,
+    "viewports": {
+      "320": {
+        "windowWidth": 320,
+        "windowHeight": 800,
+        "scrollWidth": 320,
+        "scrollHeight": 801,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 320,
+          "height": 180
+        },
+        "dialogueBox": {
+          "width": 304,
+          "height": 239,
+          "top": 294
+        },
+        "textCopy": {
+          "fontSize": "17px",
+          "lineHeight": "28.05px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 211.9,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 74.1,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 131,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 131,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "390": {
+        "windowWidth": 390,
+        "windowHeight": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 845,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 390,
+          "height": 219
+        },
+        "dialogueBox": {
+          "width": 374,
+          "height": 239,
+          "top": 334
+        },
+        "textCopy": {
+          "fontSize": "17px",
+          "lineHeight": "28.05px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 281.9,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 74.1,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 166,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 166,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "820": {
+        "windowWidth": 820,
+        "windowHeight": 1180,
+        "scrollWidth": 820,
+        "scrollHeight": 1181,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 820,
+          "height": 461
+        },
+        "dialogueBox": {
+          "width": 796,
+          "height": 239,
+          "top": 556
+        },
+        "textCopy": {
+          "fontSize": "22px",
+          "lineHeight": "37.4px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "1024": {
+        "windowWidth": 1024,
+        "windowHeight": 768,
+        "scrollWidth": 1024,
+        "scrollHeight": 822,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 765,
+          "height": 430
+        },
+        "dialogueBox": {
+          "width": 860,
+          "height": 247,
+          "top": 528
+        },
+        "textCopy": {
+          "fontSize": "22px",
+          "lineHeight": "37.4px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "1280": {
+        "windowWidth": 1280,
+        "windowHeight": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 806,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 717,
+          "height": 403
+        },
+        "dialogueBox": {
+          "width": 860,
+          "height": 250,
+          "top": 509
+        },
+        "textCopy": {
+          "fontSize": "22px",
+          "lineHeight": "37.4px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "1440": {
+        "windowWidth": 1440,
+        "windowHeight": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 907,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 896,
+          "height": 504
+        },
+        "dialogueBox": {
+          "width": 860,
+          "height": 250,
+          "top": 611
+        },
+        "textCopy": {
+          "fontSize": "22px",
+          "lineHeight": "37.4px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "844x390": {
+        "windowWidth": 844,
+        "windowHeight": 390,
+        "scrollWidth": 844,
+        "scrollHeight": 612,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 499,
+          "height": 281
+        },
+        "dialogueBox": {
+          "width": 820,
+          "height": 215,
+          "top": 355
+        },
+        "textCopy": {
+          "fontSize": "16px",
+          "lineHeight": "24.8px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      },
+      "zoom200": {
+        "windowWidth": 1280,
+        "windowHeight": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 806,
+        "horizontalOverflow": false,
+        "canvas": {
+          "width": 717,
+          "height": 403
+        },
+        "dialogueBox": {
+          "width": 860,
+          "height": 250,
+          "top": 509
+        },
+        "textCopy": {
+          "fontSize": "22px",
+          "lineHeight": "37.4px",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "overflowWrap": "anywhere",
+          "wordBreak": "break-word"
+        },
+        "buttons": [
+          {
+            "tag": "select",
+            "text": "1장. 뜻밖의 재회2장. 숨기지 않은",
+            "width": 241,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "예시 닫기",
+            "width": 95.6,
+            "height": 46,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "이전",
+            "width": 63.7,
+            "height": 44,
+            "valid44px": true
+          },
+          {
+            "tag": "button",
+            "text": "다음 컷",
+            "width": 85.7,
+            "height": 44,
+            "valid44px": true
+          }
+        ],
+        "allButtonsValid": true,
+        "textLength": 56
+      }
+    },
+    "overflowPassed": true,
+    "allButtons44px": true
+  },
+  "allFlowsPassed": true
+}
