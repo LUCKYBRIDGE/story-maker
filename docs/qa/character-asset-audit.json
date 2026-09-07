@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "auditVersion": "character-anchor-audit-v1",
-  "inputDigest": "43cb9456e7c83dcc086e115897b4eee0cdd716d650ff2fec3f5c6822dec9ec49",
+  "inputDigest": "5d1a0712fb6cdf1292fa5fd073256c366ff61041cfb00f20b9f4f19f26fe6e28",
   "standard": {
     "width": 800,
     "height": 1200,
@@ -107,11 +107,11 @@
         "height": 1200,
         "channels": "srgba 4.0",
         "hasAlpha": true,
-        "sha256": "e7ba7d0c6ee3a7e5f096744ad2ef2e8239d982b1527b5cad6795c1366b36faa5",
+        "sha256": "c5905945dd94d05973f2a8cf2095e3432ed967126c3f70f938021df3404cf466",
         "alpha": {
           "visiblePixels": 232523,
           "bbox": {
-            "x": 198,
+            "x": 219,
             "y": 119,
             "width": 405,
             "height": 1031
@@ -120,16 +120,11 @@
           "edgePixels": 0,
           "coreTopY": 208,
           "coreHeight": 942,
-          "bodyCenterX": 381.58
+          "bodyCenterX": 402.58
         }
       },
       "decision": "MANUAL-REVIEW",
       "reasons": [
-        {
-          "code": "body-center-translate",
-          "level": "normalize",
-          "message": "몸 중심을 21.28px 평행이동하는 보정 후보입니다."
-        },
         {
           "code": "manual-landmarks-required",
           "level": "review",
@@ -138,7 +133,7 @@
       ],
       "comparison": {
         "groundDelta": 0,
-        "bodyCenterDelta": -21.28,
+        "bodyCenterDelta": -0.28,
         "coreHeightPercent": -1.26,
         "eyeDelta": null,
         "shoulderDelta": null,
@@ -167,11 +162,11 @@
         "height": 1200,
         "channels": "srgba 4.0",
         "hasAlpha": true,
-        "sha256": "7b8a1a916de56c049ecc3e6d31080838367cb956286496632f78d5db313d136f",
+        "sha256": "dbb408636f189361c217a0a2c3d95263d348b4927def724f830ea8dd28769142",
         "alpha": {
           "visiblePixels": 246355,
           "bbox": {
-            "x": 189,
+            "x": 170,
             "y": 217,
             "width": 423,
             "height": 933
@@ -180,16 +175,11 @@
           "edgePixels": 0,
           "coreTopY": 235,
           "coreHeight": 915,
-          "bodyCenterX": 421.85
+          "bodyCenterX": 402.85
         }
       },
       "decision": "MANUAL-REVIEW",
       "reasons": [
-        {
-          "code": "body-center-review",
-          "level": "review",
-          "message": "동적 외곽을 줄인 몸 중심이 기준본과 18.99px 차이 납니다."
-        },
         {
           "code": "core-height-review",
           "level": "review",
@@ -203,7 +193,7 @@
       ],
       "comparison": {
         "groundDelta": 0,
-        "bodyCenterDelta": 18.99,
+        "bodyCenterDelta": -0.01,
         "coreHeightPercent": -4.09,
         "eyeDelta": null,
         "shoulderDelta": null,
@@ -631,11 +621,11 @@
         "height": 1200,
         "channels": "srgba 4.0",
         "hasAlpha": true,
-        "sha256": "2af22b15315222ef02a76f3a104763e136783bdd7dbdd73c4942941cff2bcf9f",
+        "sha256": "9f822efa9664897a846e0c66ddf9376499c3ef236bab996063172cae67075807",
         "alpha": {
           "visiblePixels": 306210,
           "bbox": {
-            "x": 188,
+            "x": 205,
             "y": 128,
             "width": 423,
             "height": 1022
@@ -644,16 +634,11 @@
           "edgePixels": 0,
           "coreTopY": 205,
           "coreHeight": 945,
-          "bodyCenterX": 388.16
+          "bodyCenterX": 405.16
         }
       },
       "decision": "MANUAL-REVIEW",
       "reasons": [
-        {
-          "code": "body-center-review",
-          "level": "review",
-          "message": "동적 외곽을 줄인 몸 중심이 기준본과 -17.21px 차이 납니다."
-        },
         {
           "code": "manual-landmarks-required",
           "level": "review",
@@ -662,7 +647,7 @@
       ],
       "comparison": {
         "groundDelta": 0,
-        "bodyCenterDelta": -17.21,
+        "bodyCenterDelta": -0.21,
         "coreHeightPercent": -0.94,
         "eyeDelta": null,
         "shoulderDelta": null,
@@ -2410,11 +2395,11 @@
         "height": 1200,
         "channels": "srgba 4.0",
         "hasAlpha": true,
-        "sha256": "68505dc4e130e2eb258f343cd0699a9b8286f42ad321c42ccf2f3faa33ca90ed",
+        "sha256": "6121f4e02505cb4c996c0c256f63e3d58342458481e2bcb9d6246c415ffe3fae",
         "alpha": {
           "visiblePixels": 233100,
           "bbox": {
-            "x": 178,
+            "x": 202,
             "y": 123,
             "width": 445,
             "height": 1027
@@ -2423,16 +2408,11 @@
           "edgePixels": 0,
           "coreTopY": 286,
           "coreHeight": 864,
-          "bodyCenterX": 391.35
+          "bodyCenterX": 415.35
         }
       },
       "decision": "MANUAL-REVIEW",
       "reasons": [
-        {
-          "code": "body-center-translate",
-          "level": "normalize",
-          "message": "몸 중심을 23.55px 평행이동하는 보정 후보입니다."
-        },
         {
           "code": "manual-landmarks-required",
           "level": "review",
@@ -2441,7 +2421,7 @@
       ],
       "comparison": {
         "groundDelta": 0,
-        "bodyCenterDelta": -23.55,
+        "bodyCenterDelta": 0.45,
         "coreHeightPercent": 0.12,
         "eyeDelta": null,
         "shoulderDelta": null,
