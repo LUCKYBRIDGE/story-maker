@@ -63,4 +63,3 @@ A1-02 후보 자산의 시각적 기준점은 사람의 승인이 필요하므�
 `app/story-data.ts`, `app/components/{StoryStage,SceneFocusEditor,StoryPlayer,StartScreen,ScriptScreen,CutLengthGuide}.tsx`,
 `app/StoryStudio.tsx`, `app/globals.css`다. 다음 세션은 상태표와 해당 카드부터 읽고
 `npm run check`, `npm test`, `git diff --check` 및 영향받는 브라우저 흐름으로 검증한다.
-

@@ -45,7 +45,7 @@ test("canMergeStoryLines: 같은 화자·위치의 대사와 해설끼리는 합
     const diffSpeaker = commands.canMergeStoryLines(base, { ...base, id: "line-2", order: 2, speakerName: "토끼" });
     const diffPosition = commands.canMergeStoryLines(base, { ...base, id: "line-2", order: 2, speaker: "right" });
     const diffChapter = commands.canMergeStoryLines(base, { ...base, id: "line-2", chapterId: "chapter-2" });
-    
+
     const narration1 = { ...base, id: "nar-1", type: "narration", speaker: "narration", speakerName: "해설" };
     const narration2 = { ...base, id: "nar-2", type: "narration", speaker: "narration", speakerName: "해설", text: "해설 둘" };
     const bothNarration = commands.canMergeStoryLines(narration1, narration2);
