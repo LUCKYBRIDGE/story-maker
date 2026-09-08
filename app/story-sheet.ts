@@ -1,3 +1,5 @@
+import { COVER_FIELDS, DEFAULT_COVER, isStoryCover } from "./story-cover";
+import { isStorySceneEffect } from "./story-scene-effect";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
   cloneProject,
@@ -769,7 +771,21 @@ export function buildProjectFromSheet(
         );
       }
 
+      const effectType = getValue(row, "연출 효과", "effect_type");
+      const effectStrength = getValue(row, "연출 강도", "effect_intensity");
+      const effectTrigger = getValue(row, "연출 시점", "effect_trigger");
+      const effectDelay = getValue(row, "연출 지연(초)", "effect_delay");
+      const effect = effectType || effectStrength || effectTrigger || effectDelay ? {
+        type: effectType, intensity: effectStrength || "soft",
+        trigger: effectTrigger || "scene-enter", delayMs: Number(effectDelay || 0) * 1000,
+      } : undefined;
+      if (effect && !isStorySceneEffect(effect)) {
+        issues.push(issueAt(snapshot.source, row, ["연출 효과", "effect_type"], effectType,
+          "연출 효과 설정을 읽을 수 없어요.",
+          "효과: shake/flash-red/fade-black/crack/spotlight, 강도: soft/strong, 시점: scene-enter/with-dialogue/after-delay, 지연: 0~10초로 입력해 주세요."));
+      }
       return {
+        ...(isStorySceneEffect(effect) ? { effect } : {}),
         id: lineId,
         chapterId,
         order: Number(getValue(row, "순서", "order")) || index + 1,
@@ -868,7 +884,16 @@ export function buildProjectFromSheet(
     Array.from(creativeMemoGroups.values()),
   );
 
+  const coverValues = COVER_FIELDS.map(([key,label]) => [key, getRawValue(projectRow,label)] as const);
+  const hasCover = coverValues.some(([,value]) => value.trim() !== "");
+  const cover = { ...DEFAULT_COVER, ...Object.fromEntries(coverValues.filter(([,value]) => value !== "").map(([key,value]) => [key, key === "titleSize" ? Number(value) : value])) };
+  if (hasCover && !isStoryCover(cover)) {
+    const label = COVER_FIELDS.find(([key]) => !isStoryCover({...DEFAULT_COVER, [key]:cover[key]}))?.[1] ?? "표지 배치";
+    throw new StoryImportError([issueAt(snapshot.source, projectRow, [label], getRawValue(projectRow,label),
+      "표지 설정을 읽을 수 없어요.", "표지 제목 크기는 24~52, 제목 색은 #RRGGBB 형식으로 입력하고, 배치·위치는 웹에서 내보낸 값을 유지해 주세요.")]);
+  }
   return cloneProject({
+    ...(hasCover && isStoryCover(cover) ? {cover} : {}),
     id: extractSheetId(sheetUrl)
       ? `sheet-${extractSheetId(sheetUrl)}`
       : `excel-${Date.now()}`,

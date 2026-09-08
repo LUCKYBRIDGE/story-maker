@@ -7,6 +7,7 @@ import { ASSET_BY_ID } from "./AssetPickerButton";
 import type { Chapter, StoryLine } from "../story-data";
 
 import { resolveStoryStage, stagePlacementClass, stageShouldMirror } from "../story-stage-view";
+import { resolveAssetUrl } from "../story-asset-url";
 export { CHARACTER_FACING } from "../story-stage-view";
 
 export function assetPlacementClass(assetId: string) { return stagePlacementClass(assetId); }
@@ -36,7 +37,7 @@ export function AssetPreview({
   return (
     <img
       className={className}
-      src={asset.src}
+      src={resolveAssetUrl(asset.src)}
       alt={alt}
       loading={loading}
       decoding="async"

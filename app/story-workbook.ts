@@ -1,3 +1,4 @@
+import { COVER_FIELDS } from "./story-cover";
 import ExcelJS, { type CellValue, type Worksheet } from "exceljs";
 import type { StoryAsset } from "./story-assets";
 import type { StoryProject } from "./story-data";
@@ -258,6 +259,7 @@ export function createStoryWorkbook(
       ["배경·세계 설정", project.planning.worldNotes, "시간, 장소와 이야기 속 규칙"],
       ["아직 정하지 못한 것", project.planning.openQuestions, "나중에 결정할 질문이나 빈칸"],
       ["자유 창작 메모", project.planning.freeNotes, "떠오른 대사, 장소와 연출 아이디어"],
+      ...COVER_FIELDS.map(([key,label]) => [label, project.cover?.[key] ?? "", "웹의 표지 꾸미기에서 변경할 수 있어요."]),
     ],
     [26, 76, 56],
     { autoFilter: false },
@@ -367,6 +369,7 @@ export function createStoryWorkbook(
         "컷 역할",
         "감정 메모",
         "연출 메모",
+        "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
       ],
       ...project.lines
         .slice()
@@ -398,9 +401,11 @@ export function createStoryWorkbook(
           line.purposeNote,
           line.emotionNote,
           line.directionNote,
+          line.effect?.type ?? "", line.effect?.intensity ?? "",
+          line.effect?.trigger ?? "", line.effect ? line.effect.delayMs / 1000 : "",
         ]),
     ],
-    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48],
+    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18],
   );
   for (let row = 2; row <= Math.max(500, scenesSheet.rowCount); row += 1) {
     scenesSheet.getCell(row, 4).dataValidation = {

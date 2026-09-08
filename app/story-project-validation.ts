@@ -1,3 +1,5 @@
+import { isStoryCover } from "./story-cover";
+import { isStorySceneEffect } from "./story-scene-effect";
 import { normalizeCreativeMemos } from "./creative-memos";
 import type { Chapter, StoryLine, StoryPlanning, StoryProject } from "./story-data";
 import {
@@ -334,6 +336,9 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       addIssue(issues, "invalid-type", path, "line must be an object.");
       return emptyLine(index);
     }
+    if (record.effect !== undefined && !isStorySceneEffect(record.effect)) {
+      addIssue(issues, "invalid-value", `${path}.effect`, "Invalid scene effect settings.");
+    }
     const type = record.type;
     const speaker = record.speaker;
     if (type !== "dialogue" && type !== "narration") {
@@ -359,6 +364,7 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       purposeNote: optionalString(record, "purposeNote", path, issues),
       emotionNote: optionalString(record, "emotionNote", path, issues),
       directionNote: optionalString(record, "directionNote", path, issues),
+      ...(isStorySceneEffect(record.effect) ? { effect: { ...record.effect } } : {}),
     };
   });
 }
@@ -404,7 +410,11 @@ export function normalizeAndValidateStoryProject(value: unknown) {
     addIssue(issues, "invalid-type", "$.project", "project must be an object.");
     return { issues };
   }
+  if (record.cover !== undefined && !isStoryCover(record.cover)) {
+    addIssue(issues, "invalid-value", "$.project.cover", "표지 설정을 읽을 수 없어요. 원본을 보관하고 표지 설정을 확인해 주세요.");
+  }
   const project: StoryProject = {
+    ...(isStoryCover(record.cover) ? { cover: {...record.cover} } : {}),
     id: requiredString(record, "id", "$.project", issues),
     title: requiredString(record, "title", "$.project", issues),
     description: requiredString(record, "description", "$.project", issues),

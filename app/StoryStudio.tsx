@@ -34,7 +34,9 @@ import { ScriptScreen } from "./components/ScriptScreen";
 import { unique } from "./components/SceneThumbnail";
 import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
 import { SceneFocusEditor, ImageField } from "./components/SceneFocusEditor";
-import { StoryPlayer } from "./components/StoryPlayer";
+import { StoryBookPlayback } from "./components/StoryBookPlayback";
+import { BookCoverEditor } from "./components/BookCoverEditor";
+import { resolveAssetUrl } from "./story-asset-url";
 import {
   ImportIssuesDialog,
   ImportConfirmationDialog,
@@ -2401,7 +2403,7 @@ export function StoryStudio() {
   if (view === "play" && playerUi.context) {
     const context = playerUi.context;
     return (
-      <StoryPlayer
+      <StoryBookPlayback
         project={context.project}
         startIndex={playIndex}
         isExample={context.kind === "example"}
@@ -2422,6 +2424,7 @@ export function StoryStudio() {
     return (
       <>
         <StartScreen
+          savedProject={localDraftStatus === "available" ? draft : undefined}
           entryBusy={entryBusy}
           localDraftStatus={localDraftStatus}
           entryNotice={entryNotice}
@@ -2491,6 +2494,7 @@ export function StoryStudio() {
         setProjectToolsOpen((current) => !current)
       }
     >
+      <BookCoverEditor key={draft.id} project={draft} onApply={(title, cover) => setDraft(project => ({...project, title, cover}))} />
 
       <button
         className="mobile-panel-toggle project-info-toggle"
@@ -2564,7 +2568,7 @@ export function StoryStudio() {
             </button>
             <button onClick={saveExcelFile}>Excel로 저장</button>
             <a
-              href="/templates/놀퀴즈_스토리_템플릿.xlsx"
+              href={resolveAssetUrl("/templates/놀퀴즈_스토리_템플릿.xlsx")}
               download
             >
               빈 양식 받기

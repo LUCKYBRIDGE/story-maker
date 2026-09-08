@@ -1,5 +1,7 @@
 "use client";
 
+import { SceneEffectEditor } from "./SceneEffectEditor";
+
 import { StorySceneFrame } from "./StoryStage";
 import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { CutLengthGuide } from "./CutLengthGuide";
@@ -568,6 +570,8 @@ export function SceneFocusEditor({
           다음 컷 →
         </button>
       </div>
+
+      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
 
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">
         {SCENE_FOCUS_TABS.map(([tab, label], index) => (

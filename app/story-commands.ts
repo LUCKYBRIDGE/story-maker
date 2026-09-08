@@ -213,6 +213,8 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
 
 export function canMergeStoryLines(first: StoryLine, second: StoryLine): boolean {
   if (first.chapterId !== second.chapterId) return false;
+  // Merging would move or discard the second cut’s timed effect.
+  if (first.effect || second.effect) return false;
   if (first.type !== second.type) return false;
   if (first.type === "narration") return true;
   return (

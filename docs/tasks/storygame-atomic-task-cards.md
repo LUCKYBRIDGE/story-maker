@@ -1254,3 +1254,35 @@ npm test
 - 중단: P1 결함 또는 필수 실기기 검수 불가 시 전체 UI 릴리스 완료를 주장하지 않는다. 큰 제품 수정은 별도 카드, 자동 커밋/배포 금지.
 - 되돌리기: 공통 되돌리기 적용; 사용자 작품·기존 미커밋 변경을 보존한다.
 - 상태표: 모두 통과 시 U1-11 DONE. 새 P1 수정 카드가 있으면 그 카드 하나만 READY, 없으면 유예한 A1-02의 승인·실행 조건을 재점검해 READY로 전환한다. 준비되지 않았으면 사유와 재개 조건을 적고 임의로 완료하지 않는다. 같은 세션에서 다음 작업은 하지 않는다.
+
+## CE-01 — 컷별 장면 연출 (2026-09-08 사용자 지정)
+
+- 선행: 기존 편집/플레이 및 v1 저장·Excel 경로. 사용자 직접 요청으로 실행.
+- 학생 가치: 극적 순간을 학생이 직접 선택한다.
+- 주 책임: 프런트엔드 아키텍트. 검토: 교육 UX, 데이터 신뢰성. Work Lead; G/A/B.
+- 허용: story-scene-effect·훅·공통 설정창, ScriptScreen/SceneFocusEditor/StoryStage/StoryPlayer,
+  story-data/project-validation/sheet/workbook/commands, globals.css, 공식 양식 생성기·양식, 관련 테스트·기준 문서·빠른 현황 스크립트.
+- 금지: 로그인·외부 API·분기 플레이·새 의존성·main merge·배포.
+- 사전: main 원격 일치/clean 확인, 저장·Excel 재구성 경로와 컷 이동 확인.
+- 절차: 1) 선택적 데이터 계약 2) 취소 가능한 연출 엔진 3) 공통 설정/미리보기 4) 저장·Excel 5) 자동·브라우저 검증.
+- 인수: 5종/강도/3시점 설정, 없음 유지, 취소는 원본 보존, 왕복 보존과 오류 거부,
+  빠른 이동 시 연출 취소, 동작 줄이기 및 키보드/44px, 데스크톱·모바일 캡처/프레임 측정.
+- 검증: `node --test tests/story-scene-effect.test.mjs`, `npm run check`, `npm test`, `git diff --check`; 브라우저 1365×900 및 390×844.
+- 중단: 작품 손실·회귀·UI 조작 불가 시 완료 선언/푸시를 보류하고 원인을 수정한다.
+- 상태표: CE-01만 IN_PROGRESS→검증 후 DONE. 기존 완료 이력과 자산 승인 대기 유지.
+
+## BC-01 — 내 책 표지와 커튼 (사용자 직접 지정)
+
+- 선행: CE-01. 주 책임: 교육 UX/프런트엔드, 검토: 데이터 신뢰성·접근성. Work Lead, G/A/B.
+- 가치: 학생이 제목·지은이와 책의 분위기를 정하고 완성한 작품을 무대에 올린다.
+- 허용: 표지 도메인·편집/표시·커튼·재생 컴포넌트, StoryStudio/StartScreen/StoryPlayer,
+  story-data/project-validation/sheet/workbook, globals.css, 양식 생성기/산출물, 관련 tests 및 기존 기준 문서.
+- 비목표: 자유 캔버스 편집기·이미지 생성/업로드·새 의존성·계정·main merge·배포.
+- 사전 확인: clean, 원격 main과 선행 CE-01 차이 확인, 저장/Excel 및 첫 컷 연출 경로 확인.
+- 절차: 1) 선택적 cover 계약 2) 기본 표지/커스텀 편집 3) 진입·이어만들기·재생 4) 왕복 5) 실제 브라우저.
+- 인수: 제목과 작품 제목 일치; 취소 원본 보존; 기본 배치/글꼴/색/위치/그림 변경; 자동 저장 및 Excel 보존;
+  기존 작품 기본 표지; 커튼 뒤 첫 컷 효과 시작; 중간 컷 빠른 진입; 종료·뒤표지; 키보드/동작 줄이기/모바일.
+- 검증: `node --test tests/story-cover.test.mjs`, `npm run check`, `npm test`, `git diff --check`;
+  `PLAYWRIGHT_MODULE=<기존 모듈> node tests/browser/story-book.mjs` (1365×900, 390×844).
+- 중단: 데이터 손실·기존 회귀·모바일 조작 불가 시 완료 선언을 보류하고 원인 수정. 새 패키지 불필요.
+- 상태: BC-01만 IN_PROGRESS→증거 충족 후 DONE. 기존 자산 승인 대기 유지.

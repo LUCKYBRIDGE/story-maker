@@ -2,7 +2,11 @@
 
 /* eslint-disable @next/next/no-img-element -- 동화 템플릿 표지 및 캐릭터 자산은 로컬 투명 WebP 이미지입니다. */
 
+import { TheaterCurtain } from "./TheaterCurtain";
+import { BookCover } from "./BookCover";
+import type { StoryProject } from "../story-data";
 import { useEffect, useRef, useState } from "react";
+import { resolveAssetUrl } from "../story-asset-url";
 
 export type EntryLocalDraftStatus =
   | "checking"
@@ -11,6 +15,7 @@ export type EntryLocalDraftStatus =
   | "failed";
 
 export interface StartScreenProps {
+  savedProject?: StoryProject;
   entryBusy?: boolean;
   localDraftStatus?: EntryLocalDraftStatus;
   entryNotice?: string;
@@ -34,6 +39,7 @@ const LOCAL_DRAFT_MESSAGES: Record<EntryLocalDraftStatus, string> = {
 };
 
 export function StartScreen({
+  savedProject,
   entryBusy = false,
   localDraftStatus = "checking",
   entryNotice = "",
@@ -52,9 +58,17 @@ export function StartScreen({
   const [sheetUrl, setSheetUrl] = useState("");
   const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
   const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("rabbit");
+  const [curtainOpen, setCurtainOpen] = useState(false);
+  const insideRef = useRef<HTMLDivElement>(null);
   const [isBookOpen, setIsBookOpen] = useState(false);
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
+
+  useEffect(() => {
+    if (!isBookOpen || curtainOpen) return;
+    const frame = requestAnimationFrame(() => insideRef.current?.querySelector<HTMLButtonElement>('[role="tab"]')?.focus({preventScroll:true}));
+    return () => cancelAnimationFrame(frame);
+  }, [isBookOpen, curtainOpen]);
 
   useEffect(() => {
     // SSR HTML 계약(tests/rendered-html.test.mjs)을 완벽히 지키면서 브라우저 진입 시 예쁜 동화 카드를 즉시 표시
@@ -77,6 +91,7 @@ export function StartScreen({
   const handleOpenBook = () => {
     if (isBookOpen) return;
     setIsBookOpen(true);
+    setCurtainOpen(true);
   };
 
   const handleCloseBook = () => {
@@ -90,6 +105,7 @@ export function StartScreen({
 
   return (
     <main className={`entry-shell theme-${coverTheme} ${isBookOpen ? "book-is-open" : "book-is-closed"}`}>
+      {curtainOpen && <TheaterCurtain onComplete={() => setCurtainOpen(false)} />}
       <section className="entry-card book-cover-edition" aria-labelledby="entry-title">
         {/* A. 닫힌 동화책 겉표지 뷰: 사용자가 첫 화면에서 오직 한 권의 동화책 표지만 마주하는 화면 */}
         <div className={`storybook-closed-view ${isBookOpen ? "is-hidden" : "is-visible"}`}>
@@ -151,20 +167,20 @@ export function StartScreen({
                 {coverTheme === "rabbit" ? (
                   <>
                     <img
-                      src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                      src={resolveAssetUrl("/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp")}
                       alt=""
                       className="cover-bg-image sea-palace"
                     />
                     <div className="cover-stage-characters">
                       <div className="stage-char char-turtle">
                         <img
-                          src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
+                          src={resolveAssetUrl("/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp")}
                           alt=""
                         />
                       </div>
                       <div className="stage-char char-rabbit">
                         <img
-                          src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                          src={resolveAssetUrl("/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp")}
                           alt=""
                         />
                       </div>
@@ -173,20 +189,20 @@ export function StartScreen({
                 ) : (
                   <>
                     <img
-                      src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+                      src={resolveAssetUrl("/story-assets/onggojib.background.magistrate-yard-pixel.webp")}
                       alt=""
                       className="cover-bg-image court-yard"
                     />
                     <div className="cover-stage-characters">
                       <div className="stage-char char-onggojib">
                         <img
-                          src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                          src={resolveAssetUrl("/story-assets/onggojib.character.real-angry-pixel.webp")}
                           alt=""
                         />
                       </div>
                       <div className="stage-char char-fake-onggojib">
                         <img
-                          src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
+                          src={resolveAssetUrl("/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp")}
                           alt=""
                         />
                       </div>
@@ -215,7 +231,7 @@ export function StartScreen({
         </div>
 
         {/* B. 펼쳐진 책 내부 (Book Inside Spread): 터치 후 3D 책장이 넘어가며 나타나는 화면 */}
-        <div className={`book-inside-spread ${isBookOpen ? "is-visible" : "is-hidden"}`}>
+        <div ref={insideRef} inert={curtainOpen} className={`book-inside-spread ${isBookOpen ? "is-visible" : "is-hidden"}`}>
           <div className="open-book-header">
             <div className="entry-brand">
               <span className="brand-mark large">놀퀴즈</span>
@@ -356,12 +372,12 @@ export function StartScreen({
                   <div className="book-jacket-spine" aria-hidden="true" />
                   <div className="template-cover" aria-hidden="true">
                     <img
-                      src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                      src={resolveAssetUrl("/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp")}
                       alt=""
                       className="template-cover-bg"
                     />
                     <img
-                      src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                      src={resolveAssetUrl("/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp")}
                       alt=""
                       className="template-cover-char"
                     />
@@ -383,12 +399,12 @@ export function StartScreen({
                   <div className="book-jacket-spine" aria-hidden="true" />
                   <div className="template-cover" aria-hidden="true">
                     <img
-                      src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+                      src={resolveAssetUrl("/story-assets/onggojib.background.magistrate-yard-pixel.webp")}
                       alt=""
                       className="template-cover-bg"
                     />
                     <img
-                      src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                      src={resolveAssetUrl("/story-assets/onggojib.character.real-angry-pixel.webp")}
                       alt=""
                       className="template-cover-char"
                     />
@@ -425,6 +441,7 @@ export function StartScreen({
                 role="status"
                 aria-live="polite"
               >
+                {localDraftStatus === "available" && savedProject && <div className="saved-book-preview"><BookCover project={savedProject} /></div>}
                 <div className="local-state-info">
                   <span className="local-state-icon" aria-hidden="true">💻</span>
                   <div>

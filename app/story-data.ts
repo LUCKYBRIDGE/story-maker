@@ -1,3 +1,7 @@
+import type { StoryCover } from "./story-cover";
+export type { StoryCover } from "./story-cover";
+import type { StorySceneEffect } from "./story-scene-effect";
+export type { StorySceneEffect } from "./story-scene-effect";
 import type { CreativeMemo } from "./creative-memos";
 import {
   canonicalizeStoryStageKeys,
@@ -25,6 +29,7 @@ export type Chapter = {
 };
 
 export type StoryLine = {
+  effect?: StorySceneEffect;
   id: string;
   chapterId: string;
   order: number;
@@ -63,6 +68,7 @@ export type StoryPlanning = {
 };
 
 export type StoryProject = {
+  cover?: StoryCover;
   id: string;
   title: string;
   description: string;
