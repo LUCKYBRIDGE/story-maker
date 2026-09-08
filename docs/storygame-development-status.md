@@ -31,6 +31,7 @@
   결과는 rabbit-turtle.poster.art.webp (940×1672), onggojib.poster.art.webp (941×1672), 각 약 208KiB.
   요청한 고해상도 대신 도구가 반환한 원본 크기를 보존하고 WebP quality 90으로 1회 압축했다.
   UI 텍스트/프레임은 해상도 독립적이며 비트맵 자체의 무한 확대 선명도를 보장하지 않는다.
+- 후속 사용자 문구 결정: 두 테마 설명을 `당신이 직접 만들어 가는 이야기`로 통일한다.
 - 배포: [PR #7](https://github.com/LUCKYBRIDGE/story-maker/pull/7) main 병합,
   [GitHub Pages 배포 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34285350856),
   [병합 후 CI 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34285350875), Cloudflare Pages 검사도 성공.
