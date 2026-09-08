@@ -6465,6 +6465,28 @@ img {
   color: var(--mint-strong);
 }
 
+.scene-card-actions .scene-add-button {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.scene-card-actions .scene-add-button:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.scene-card-actions .scene-merge-button {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.scene-card-actions .scene-merge-button:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
 .scene-more-actions {
   position: relative;
 }
@@ -6495,7 +6517,9 @@ img {
   top: calc(100% + 5px);
   right: 0;
   display: flex;
+  flex-wrap: wrap;
   min-width: 230px;
+  max-width: 280px;
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 10px;

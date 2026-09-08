@@ -19,6 +19,7 @@ import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { resolveStoryStage } from "../story-stage-view";
 import { CutLengthGuide } from "./CutLengthGuide";
 import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
+import { canMergeStoryLines } from "../story-commands";
 
 export type ImageView = "text" | "small";
 
@@ -40,7 +41,8 @@ export interface ScriptScreenProps {
   onMoveLine: (lineId: string, delta: -1 | 1) => void;
   onDuplicateLine: (lineId: string) => void;
   onRemoveLine: (lineId: string) => void;
-  onAddLine: (type: StoryLine["type"]) => void;
+  onAddLine: (type: StoryLine["type"], insertAfterLineId?: string) => void;
+  onMergeLine: (sourceLineId: string, targetLineId: string) => void;
   sceneCardRefs?: MutableRefObject<Map<string, HTMLElement>>;
   speakerNameRefs?: MutableRefObject<Map<string, HTMLSelectElement>>;
   lineBodyRefs?: MutableRefObject<Map<string, HTMLTextAreaElement>>;
@@ -65,6 +67,7 @@ export function ScriptScreen({
   onDuplicateLine,
   onRemoveLine,
   onAddLine,
+  onMergeLine,
   sceneCardRefs,
   speakerNameRefs,
   lineBodyRefs,
@@ -114,7 +117,17 @@ export function ScriptScreen({
         </section>
       )}
       <div className="script-scene-list">
-        {selectedChapterLines.map((line, index) => (
+        {selectedChapterLines.map((line, index) => {
+          const prevLine = index > 0 ? selectedChapterLines[index - 1] : undefined;
+          const nextLine =
+            index < selectedChapterLines.length - 1
+              ? selectedChapterLines[index + 1]
+              : undefined;
+          const canMergeWithNext = nextLine ? canMergeStoryLines(line, nextLine) : false;
+          const canMergeWithPrev = prevLine ? canMergeStoryLines(prevLine, line) : false;
+          const canMerge = canMergeWithNext || canMergeWithPrev;
+
+          return (
           <article
             className={`script-scene-card ${line.type} ${
               line.id === selectedLine?.id ? "active" : ""
@@ -162,8 +175,7 @@ export function ScriptScreen({
                           aria-label={`${index + 1}컷 화자 위치`}
                           onChange={(event) =>
                             onUpdateLine(line.id, {
-                              speaker: event.target
-                                .value as StoryLine["speaker"],
+                              speaker: event.target.value as StoryLine["speaker"],
                             })
                           }
                         >
@@ -197,6 +209,7 @@ export function ScriptScreen({
                       >
                         {unique([
                           line.speakerName,
+                          ...draft.speakerNames,
                           ...selectedChapter.chapterSpeakerNames,
                         ]).map((name) => (
                           <option value={name} key={name}>
@@ -284,6 +297,39 @@ export function ScriptScreen({
                 <div className="scene-card-actions">
                   <button
                     type="button"
+                    className="scene-add-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onAddLine(line.type, line.id);
+                    }}
+                    title="이 컷 바로 아래에 새 컷을 추가해요"
+                  >
+                    + 컷 추가
+                  </button>
+                  <button
+                    type="button"
+                    className="scene-merge-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (canMergeWithNext && nextLine) {
+                        onMergeLine(line.id, nextLine.id);
+                      } else if (canMergeWithPrev && prevLine) {
+                        onMergeLine(prevLine.id, line.id);
+                      }
+                    }}
+                    disabled={!canMerge}
+                    title={
+                      canMergeWithNext
+                        ? `다음 컷(${index + 2}컷)과 하나로 합치기`
+                        : canMergeWithPrev
+                          ? `이전 컷(${index}컷)과 하나로 합치기`
+                          : "대사·해설 종류와 인물이 같은 앞뒤 컷이 있을 때만 합칠 수 있어요"
+                    }
+                  >
+                    컷 합치기
+                  </button>
+                  <button
+                    type="button"
                     className="scene-focus-button"
                     onClick={(event) => {
                       event.stopPropagation();
@@ -295,6 +341,45 @@ export function ScriptScreen({
                   <details className="scene-more-actions">
                     <summary>더보기</summary>
                     <div>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onAddLine(line.type, line.id);
+                        }}
+                      >
+                        아래에 컷 추가
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (nextLine) onMergeLine(line.id, nextLine.id);
+                        }}
+                        disabled={!canMergeWithNext}
+                        title={
+                          !canMergeWithNext
+                            ? "다음 컷과 대사·해설 종류나 인물이 달라요"
+                            : "다음 컷과 하나로 합쳐요"
+                        }
+                      >
+                        다음 컷과 합치기
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (prevLine) onMergeLine(prevLine.id, line.id);
+                        }}
+                        disabled={!canMergeWithPrev}
+                        title={
+                          !canMergeWithPrev
+                            ? "이전 컷과 대사·해설 종류나 인물이 달라요"
+                            : "이전 컷과 하나로 합쳐요"
+                        }
+                      >
+                        이전 컷과 합치기
+                      </button>
                       <button
                         type="button"
                         onClick={(event) => {
@@ -362,7 +447,8 @@ export function ScriptScreen({
               />
             )}
           </article>
-        ))}
+          );
+        })}
         {selectedChapterLines.length === 0 && (
           <div className="empty-script">
             <strong>아직 컷이 없어요.</strong>

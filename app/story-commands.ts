@@ -18,7 +18,8 @@ export function moveStoryChapter({ chapters, chapterId, direction }: {
 export type StoryLineCommandFailureCode =
   | "line-not-found"
   | "cannot-move"
-  | "duplicate-id";
+  | "duplicate-id"
+  | "cannot-merge";
 
 export type StoryLineCommandResult =
   | { ok: true; lines: StoryLine[]; selectedLineId?: string }
@@ -207,5 +208,69 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
     ok: true,
     lines: replaceChapterLines(lines, source.chapterId, withContinuousOrder(next)),
     selectedLineId: lineId,
+  };
+}
+
+export function canMergeStoryLines(first: StoryLine, second: StoryLine): boolean {
+  if (first.chapterId !== second.chapterId) return false;
+  if (first.type !== second.type) return false;
+  if (first.type === "narration") return true;
+  return (
+    first.speaker === second.speaker &&
+    first.speakerName.trim() === second.speakerName.trim()
+  );
+}
+
+export type MergeStoryLinesOptions = {
+  lines: StoryLine[];
+  sourceLineId: string;
+  targetLineId: string;
+};
+
+export function mergeStoryLines({
+  lines,
+  sourceLineId,
+  targetLineId,
+}: MergeStoryLinesOptions): StoryLineCommandResult {
+  const first = lines.find((line) => line.id === sourceLineId);
+  const second = lines.find((line) => line.id === targetLineId);
+  if (!first || !second) return { ok: false, code: "line-not-found" };
+  if (!canMergeStoryLines(first, second)) {
+    return { ok: false, code: "cannot-merge" };
+  }
+
+  const [earlier, later] = first.order < second.order ? [first, second] : [second, first];
+
+  const text1 = earlier.text.trim();
+  const text2 = later.text.trim();
+  const combinedText =
+    !text1 ? text2
+    : !text2 ? text1
+    : earlier.text.endsWith("\n") || earlier.text.endsWith(" ")
+      ? `${earlier.text}${later.text}`
+      : `${earlier.text} ${later.text}`;
+
+  const mergedLine: StoryLine = {
+    ...earlier,
+    text: combinedText,
+    leftAssetId: earlier.leftAssetId || later.leftAssetId,
+    rightAssetId: earlier.rightAssetId || later.rightAssetId,
+    backgroundId: earlier.backgroundId || later.backgroundId,
+    purposeNote: earlier.purposeNote || later.purposeNote,
+    emotionNote: earlier.emotionNote || later.emotionNote,
+    directionNote: earlier.directionNote || later.directionNote,
+  };
+
+  const chapterLines = orderedLines(lines, earlier.chapterId);
+  const next = chapterLines.flatMap((line) => {
+    if (line.id === earlier.id) return [mergedLine];
+    if (line.id === later.id) return [];
+    return [line];
+  });
+
+  return {
+    ok: true,
+    lines: replaceChapterLines(lines, earlier.chapterId, withContinuousOrder(next)),
+    selectedLineId: earlier.id,
   };
 }

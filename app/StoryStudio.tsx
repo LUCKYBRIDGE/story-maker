@@ -104,6 +104,7 @@ import {
   duplicateStoryLine,
   moveStoryLine,
   moveStoryChapter,
+  mergeStoryLines,
   type StoryLineCommandFailureCode,
 } from "./story-commands";
 import {
@@ -1481,32 +1482,46 @@ export function StoryStudio() {
         ? "새 컷 ID가 이미 있어요. 다시 시도해 주세요."
         : code === "cannot-move"
           ? "더 이상 이 방향으로 컷을 옮길 수 없어요."
-          : "바꾸려는 컷을 찾지 못했어요.",
+          : code === "cannot-merge"
+            ? "대사·해설 종류와 인물이 같을 때만 합칠 수 있어요."
+            : "바꾸려는 컷을 찾지 못했어요.",
     );
   }
 
-  function addLine(type: StoryLine["type"], openScene = false) {
+  function addLine(
+    type: StoryLine["type"],
+    openScene = false,
+    insertAfterLineId?: string,
+  ) {
     if (!selectedChapter) return;
+    const refLine = insertAfterLineId
+      ? draft.lines.find((candidate) => candidate.id === insertAfterLineId)
+      : undefined;
     const firstSpeaker =
-      selectedChapter.chapterSpeakerNames[0] ??
-      draft.speakerNames[0] ??
-      "주인공";
+      refLine && refLine.type === "dialogue"
+        ? refLine.speakerName
+        : selectedChapter.chapterSpeakerNames[0] ??
+          draft.speakerNames[0] ??
+          "주인공";
+    const speakerPosition =
+      refLine && refLine.type === "dialogue" ? refLine.speaker : "left";
     const command = createStoryLine({
       lines: draft.lines,
       chapterId: selectedChapter.id,
       createId: () => `line-${Date.now()}`,
       insertAfterLineId:
-        openScene && selectedLine?.chapterId === selectedChapter.id
+        insertAfterLineId ??
+        (openScene && selectedLine?.chapterId === selectedChapter.id
           ? selectedLine.id
-          : undefined,
+          : undefined),
       line: {
         type,
-        speaker: type === "narration" ? "narration" : "left",
+        speaker: type === "narration" ? "narration" : speakerPosition,
         speakerName: type === "narration" ? "해설" : firstSpeaker,
         text: "",
-        leftAssetId: "",
-        rightAssetId: "",
-        backgroundId: "",
+        leftAssetId: refLine?.leftAssetId ?? "",
+        rightAssetId: refLine?.rightAssetId ?? "",
+        backgroundId: refLine?.backgroundId ?? "",
         purposeNote: "",
         emotionNote: "",
         directionNote: "",
@@ -1543,6 +1558,26 @@ export function StoryStudio() {
       }),
       { lines: command.lines },
     );
+  }
+
+  function mergeLines(sourceLineId: string, targetLineId: string) {
+    const command = mergeStoryLines({
+      lines: draft.lines,
+      sourceLineId,
+      targetLineId,
+    });
+    if (!command.ok) {
+      reportStoryLineCommandFailure(command.code);
+      return;
+    }
+    setDraft((project) => ({
+      ...project,
+      lines: command.lines,
+    }));
+    if (command.selectedLineId) {
+      setSelectedLineId(command.selectedLineId);
+    }
+    setNotice("두 컷을 하나로 합쳤어요.");
   }
 
   function removeLine(lineId: string) {
@@ -2975,7 +3010,10 @@ export function StoryStudio() {
                     onRemoveLine={(lineId) =>
                       removeLine(lineId)
                     }
-                    onAddLine={(type) => addLine(type)}
+                    onAddLine={(type, insertAfterLineId) =>
+                      addLine(type, false, insertAfterLineId)
+                    }
+                    onMergeLine={mergeLines}
                     sceneCardRefs={sceneCardRefs}
                     speakerNameRefs={speakerNameRefs}
                     lineBodyRefs={lineBodyRefs}
