@@ -11,7 +11,7 @@
 
 ## 현재 요청: HS-01 첫 화면 공통 UI와 반응형
 
-- 상태: `DONE` (2026-09-09 사용자 직접 지정). Work Lead · G/A/B. 공개 배포 전 PR 검토 단계.
+- 상태: `DONE` (2026-09-09 사용자 직접 지정). Work Lead · G/A/B. PR #7 병합 및 공개 배포 완료 (`67b4e26`).
 - 기준: 원격 main `19abbd9`, clean 상태에서 `codex/start-screen-responsive` 분기.
 - 주 책임: 교육 UX, 검토 관점: 접근성·QA. 첫 화면/일러스트/관련 검사만 수정.
 - 인수: 두 테마 공통 UI 치수, 44px 버튼, 태블릿 양방향·웹·200% 확대,
@@ -23,12 +23,18 @@
 - 재현: dev 서버 후 `PLAYWRIGHT_MODULE=<기존 설치 경로>/playwright/index.mjs node tests/browser/start-screen.mjs`.
   결과/캡처는 기본 `/tmp/start-screen-qa`; `QA_URL`, `QA_OUTPUT` 지정 가능.
 - 200% CSS zoom에서 모달 입력과 CTA 접근·가로 넘침 검증, 720×450 재배치 별도 확인.
-  네이티브 브라우저 확대 메뉴와 물리 태블릿 터치/IME는 미검증.
+  후속 공개 검증에서 실제 Chrome 확대 메뉴 200%를 확인하고 테마 변경·모달 탭·시트 입력란 접근,
+  Escape 초점 복귀·읽기 앞표지·첫 컷·다음 컷·예시 닫기까지 통과했다. 검증 후 100%로 복원했다.
+  물리 태블릿 터치/IME는 미검증.
 - 자산: 사용자 제공 원본을 built-in imagegen으로 각각 편집. 프롬프트는 모든 글자·로고·버튼·금색 프레임·현판 제거,
   인물 얼굴·포즈·의상·색·머리/몸 비율·발과 배경 구도 보존, 상단 여백과 하단 종이색 유지.
   결과는 rabbit-turtle.poster.art.webp (940×1672), onggojib.poster.art.webp (941×1672), 각 약 208KiB.
   요청한 고해상도 대신 도구가 반환한 원본 크기를 보존하고 WebP quality 90으로 1회 압축했다.
   UI 텍스트/프레임은 해상도 독립적이며 비트맵 자체의 무한 확대 선명도를 보장하지 않는다.
+- 배포: [PR #7](https://github.com/LUCKYBRIDGE/story-maker/pull/7) main 병합,
+  [GitHub Pages 배포 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34285350856),
+  [병합 후 CI 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34285350875), Cloudflare Pages 검사도 성공.
+  [공개 화면](https://luckybridge.github.io/story-maker/)에서 신규 일러스트와 공통 UI·실제 상호작용 확인.
 - 최초 정적 빌드의 캐시 DB 오류는 기존 .next를 작업 외부에 보존하고 새 빌드하여 해결했다.
 - 기존 A1-02 승인 대기는 유지한다. 게임 캐릭터 자산과 저장/Excel 형식은 범위 밖이다.
 
