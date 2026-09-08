@@ -199,118 +199,100 @@ img {
 
 .nolstory-poster-viewport {
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at 50% 15%, #182335 0%, #0c121d 75%, #060910 100%);
-  padding: clamp(0px, 2vh, 24px) clamp(0px, 2vw, 16px);
-  position: relative;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: radial-gradient(ellipse at 25% 35%, #344457 0%, transparent 52%), radial-gradient(ellipse at 78% 65%, #55412e 0%, transparent 52%), #0c1522;
 }
 
 .nolstory-poster-frame {
+  container-type: inline-size;
   position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 500px;
-  aspect-ratio: 576 / 1024;
-  border-radius: clamp(0px, 2.5vw, 24px);
-  overflow: hidden;
-  box-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 40px rgba(245, 158, 11, 0.08);
-  background: #0f172a;
-  user-select: none;
-  touch-action: manipulation;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 600px;
+  min-height: 0;
+  aspect-ratio: 9 / 16;
+  padding: 4% 6% 5%;
+  color: #103452;
+  background: #fbf5e9;
+  border-radius: 20px;
+  box-shadow: 0 28px 80px #0009, -6px 0 0 #a98046, -9px 0 0 #493827, 0 0 100px #e8c17720;
+  font-family: "Nanum Myeongjo", "Batang", "Songti SC", serif;
 }
-
-@media (min-width: 600px) {
-  .nolstory-poster-frame:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 32px 70px -10px rgba(0, 0, 0, 0.85),
-      0 0 0 1.5px rgba(245, 158, 11, 0.35),
-      0 0 50px rgba(245, 158, 11, 0.15);
-  }
+.nolstory-poster-frame::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 1.6%;
+  border: 3px double #c9984b;
+  border-radius: 22px 12px;
+  box-shadow: inset 0 0 0 3px #fff9;
+  pointer-events: none;
 }
-
 .nolstory-poster-img {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  display: block;
+  object-fit: cover;
+  border-radius: inherit;
   pointer-events: none;
 }
-
-/* 🌟 포스터 위 인터랙티브 핫스팟 버튼 레이어 */
-.poster-hotspots-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
+.poster-brand { text-align: center; }
+.poster-brand svg { width: clamp(28px, 7cqi, 44px); height: auto; margin: auto; }
+.poster-brand strong { display: block; font-size: clamp(20px, 4.8cqi, 30px); font-weight: 900; line-height: 1.2; }
+.poster-brand p { margin: 8px 0 0; color: #78562e; font-size: clamp(12px, 2.9cqi, 18px); font-weight: 700; line-height: 1.5; }
+.poster-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4%; width: 100%; margin-top: 3cqi; }
+.poster-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 44px;
+  padding: clamp(10px, 2.4cqi, 16px) clamp(10px, 2.5cqi, 18px);
+  border: 2px solid #cba365;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #fffdf7, #f2e7d1);
+  box-shadow: inset 0 0 0 2px #fff9, 0 4px 8px #71512433;
+  font-size: clamp(13px, 3.25cqi, 21px);
+  font-weight: 800;
+  line-height: 1.35;
 }
+.poster-button > span:nth-child(2) { white-space: nowrap; }
+.poster-button > span:first-child, .poster-button > span:last-child { font-size: 1.3em; }
+.poster-create { color: #fffaf0; border-color: #dfb455; background: linear-gradient(120deg, #194564, #10283e); box-shadow: inset 0 0 0 1px #ffffff40, 0 4px 8px #71512433; }
+.poster-button:hover { filter: brightness(1.06); }
+.poster-button:focus-visible { outline: 3px solid #1678b1; outline-offset: 4px; }
+.poster-heading { width: 100%; text-align: center; margin-top: 1.5cqi; }
+.poster-leaves { width: 7cqi; height: 8cqi; margin: auto; }
+.poster-heading h2 { margin: 0; font-size: clamp(38px, 11.5cqi, 72px); letter-spacing: -.07em; line-height: 1.25; font-weight: 900; white-space: nowrap; }
+.poster-heading h2 > span { color: #744a25; }
+.poster-author { display: flex; align-items: center; justify-content: center; gap: 2cqi; margin: 3cqi 0 0; font-size: clamp(15px, 3.8cqi, 24px); font-weight: 800; line-height: 1.5; }
+.poster-author > span { color: #b68a3f; font-size: .8em; }
+.poster-description { margin: 1.5cqi 0 0; color: #626562; font-size: clamp(13px, 3.2cqi, 20px); font-weight: 700; }
+.poster-scene-space { flex: 1; min-height: 60cqi; }
+.poster-read { width: 86%; justify-content: center; gap: 3cqi; padding: 3cqi 5cqi; font-size: clamp(18px, 4.5cqi, 28px); color: #251b0b; background: linear-gradient(115deg, #fff0a4, #ffcd58 55%, #dba740); border-color: #bc852e; box-shadow: inset 0 0 0 2px #fff2bf, 0 4px 0 #b38238, 0 8px 14px #72501f33; }
+.poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font: 500 clamp(10px, 2.2cqi, 14px)/1.6 sans-serif; }
 
-.poster-hotspot {
-  position: absolute;
-  background: transparent;
-  border: none;
-  border-radius: 9999px;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+@media (max-width: 600px) {
+  .nolstory-poster-frame { padding: 4% 6% 5%; border-radius: 0; box-shadow: none; }
 }
-
-.poster-hotspot:focus-visible {
-  outline: 3px solid #f59e0b;
-  outline-offset: 3px;
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.85);
+@media (min-width: 601px) {
+  .nolstory-poster-viewport { padding: 28px; }
+  .nolstory-poster-frame { width: clamp(420px, 66vw, 600px); padding: 30px 32px 28px; }
 }
-
-.poster-hotspot:hover .hotspot-visual-pulse {
-  opacity: 1;
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
+  .nolstory-poster-frame { width: clamp(420px, 52vw, 540px); }
 }
-
-.poster-hotspot:active {
-  transform: scale(0.96);
-}
-
-.hotspot-visual-pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(245, 158, 11, 0.12) 70%, transparent 100%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-/* 1. 상단 좌측: [ ↻ 이야기변경 > ] (38/576 = 6.6%, 132/1024 = 12.9%) */
-.hotspot-change-theme {
-  top: 12.8%;
-  left: 6.5%;
-  width: 40.5%;
-  height: 6.3%;
-}
-
-/* 2. 상단 우측: [ 🖌️ 나만의 이야기 > ] (298/576 = 51.7%, 132/1024 = 12.9%) */
-.hotspot-my-story {
-  top: 12.8%;
-  left: 52%;
-  width: 41.5%;
-  height: 6.3%;
-}
-
-/* 3. 하단 중앙: [ 📖 놀스토리 작품 읽기 ➔ ] (center 50%, top 80%) */
-.hotspot-read-story {
-  top: 80%;
-  left: 23%;
-  width: 54%;
-  height: 6.8%;
+@media (min-width: 1025px) {
+  .nolstory-poster-viewport { padding: 40px; background: radial-gradient(ellipse at 50% 22%, #455366 0%, transparent 52%), radial-gradient(ellipse at 50% 85%, #665039 0%, transparent 48%), #0a121e; }
+  .nolstory-poster-frame { width: clamp(460px, 42vw, 640px); max-width: 640px; }
 }
 
 /* 저작권 푸터 */
@@ -393,8 +375,8 @@ img {
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
@@ -2841,8 +2823,8 @@ img {
 
 .line-card-number {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border-radius: 12px;
   background: var(--gold-soft);
@@ -11064,3 +11046,7 @@ img {
   .book-play-entry .student-book { max-width: 310px; }.book-play-entry { justify-content: flex-start; padding-top: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .theater-drape { visibility: hidden; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nolstory-studio-backdrop, .nolstory-studio-modal { transition: none; }
+}
