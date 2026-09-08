@@ -689,9 +689,23 @@ export function StoryPlanScreen({
                             </button>
                           );
                         })}
+                        <button
+                          type="button"
+                          className={`stage-select-button none-stage-button ${selectedChapterStageKeys.length === 0 ? "active" : ""}`}
+                          aria-pressed={selectedChapterStageKeys.length === 0}
+                          onClick={() => {
+                            onUpdateChapter(selectedChapter.id, {
+                              storyStageKeys: [],
+                            });
+                          }}
+                          title="이 장의 이야기 단계를 비워두고 자유롭게 써요"
+                        >
+                          <span className="stage-check-icon">{selectedChapterStageKeys.length === 0 ? "●" : "○"}</span>
+                          <span className="stage-label">설정 안 함 (자유)</span>
+                        </button>
                       </div>
                       <p className="field-guide">
-                        한 장에 여러 단계를 담거나(예: 위기·절정), 비워 두어도 괜찮아요.
+                        이야기 단계를 설정하지 않고 자유롭게 써도 괜찮아요. 한 장에 여러 단계를 담을 수도 있어요.
                       </p>
                     </div>
 

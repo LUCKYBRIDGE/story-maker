@@ -20,7 +20,6 @@ import { StoryEntryDialog } from "./components/StoryEntryDialog";
 import {
   StoryPlanScreen,
   STORY_STRUCTURE_OPTIONS,
-  chapterArcLabel,
 } from "./components/StoryPlanScreen";
 import {
   canonicalizeStoryStageKeys,
@@ -2755,20 +2754,14 @@ export function StoryStudio() {
                     +
                   </button>
                 </div>
-                {sortedChapters.map((chapter, chapterIndex) => {
+                {sortedChapters.map((chapter) => {
                   const chapterKeys = canonicalizeStoryStageKeys(chapter.storyStageKeys);
                   const arcLabel =
                     continuationPoint?.chapterId === chapter.id
                       ? "이어쓰기"
-                      : formatStoryStageLabels(
-                          chapterKeys,
-                          selectedStructure.mode,
-                          chapterArcLabel(
-                            chapterIndex,
-                            sortedChapters.length,
-                            selectedStructure.steps,
-                          ),
-                        );
+                      : chapterKeys.length > 0
+                        ? formatStoryStageLabels(chapterKeys, selectedStructure.mode)
+                        : "단계 미설정";
                   return (
                     <button
                       key={chapter.id}
@@ -2819,6 +2812,9 @@ export function StoryStudio() {
                   <div>
                     <span className="eyebrow">
                       {selectedChapter.order}장
+                      {canonicalizeStoryStageKeys(selectedChapter.storyStageKeys).length > 0
+                        ? ` · ${formatStoryStageLabels(selectedChapter.storyStageKeys, selectedStructure.mode)}`
+                        : " · 단계 미설정"}
                     </span>
                     <h1>{selectedChapter.title || "제목 없는 장"}</h1>
                     <p>
@@ -3014,6 +3010,8 @@ export function StoryStudio() {
                       addLine(type, false, insertAfterLineId)
                     }
                     onMergeLine={mergeLines}
+                    onUpdateChapter={updateChapter}
+                    onUpdatePlanning={updatePlanning}
                     sceneCardRefs={sceneCardRefs}
                     speakerNameRefs={speakerNameRefs}
                     lineBodyRefs={lineBodyRefs}

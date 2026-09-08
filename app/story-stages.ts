@@ -34,6 +34,55 @@ export interface StoryStructureOption {
 
 export const STORY_STRUCTURE_OPTIONS: StoryStructureOption[] = [
   {
+    mode: "three",
+    title: "처음 → 중간 → 끝",
+    shortTitle: "3단계",
+    steps: [
+      {
+        label: "처음",
+        guide: "누가 어디에 있고, 어떤 일이 시작되나요?",
+        key: "opening",
+      },
+      {
+        label: "중간",
+        guide: "어떤 문제가 생기고, 인물은 무엇을 하나요?",
+        key: "middle",
+      },
+      {
+        label: "끝",
+        guide: "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
+        key: "ending",
+      },
+    ],
+  },
+  {
+    mode: "four",
+    title: "발단 → 전개 → 절정 → 결말",
+    shortTitle: "4단계",
+    steps: [
+      {
+        label: "발단",
+        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
+        key: "opening",
+      },
+      {
+        label: "전개",
+        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
+        key: "middle",
+      },
+      {
+        label: "절정",
+        guide: "갈등이 가장 커지고, 주인공이 가장 중요한 선택이나 행동을 하나요?",
+        key: "climax",
+      },
+      {
+        label: "결말",
+        guide: "선택의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
+        key: "ending",
+      },
+    ],
+  },
+  {
     mode: "five",
     title: "발단 → 전개 → 위기 → 절정 → 결말",
     shortTitle: "5단계",
@@ -65,55 +114,6 @@ export const STORY_STRUCTURE_OPTIONS: StoryStructureOption[] = [
       },
     ],
   },
-  {
-    mode: "four",
-    title: "발단 → 전개 → 위기 → 결말",
-    shortTitle: "4단계",
-    steps: [
-      {
-        label: "발단",
-        guide: "인물과 배경을 보여 주고, 어떤 사건이 시작되나요?",
-        key: "opening",
-      },
-      {
-        label: "전개",
-        guide: "주인공이 목표를 향해 움직이며 갈등이 어떻게 커지나요?",
-        key: "middle",
-      },
-      {
-        label: "위기",
-        guide: "가장 큰 어려움이 닥치고, 주인공은 무엇을 선택하나요?",
-        key: "crisis",
-      },
-      {
-        label: "결말",
-        guide: "선택의 결과는 무엇이고, 인물이나 상황이 어떻게 달라지나요?",
-        key: "ending",
-      },
-    ],
-  },
-  {
-    mode: "three",
-    title: "처음 → 중간 → 끝",
-    shortTitle: "3단계",
-    steps: [
-      {
-        label: "처음",
-        guide: "누가 어디에 있고, 어떤 일이 시작되나요?",
-        key: "opening",
-      },
-      {
-        label: "중간",
-        guide: "어떤 문제가 생기고, 인물은 무엇을 하나요?",
-        key: "middle",
-      },
-      {
-        label: "끝",
-        guide: "문제는 어떻게 마무리되고, 무엇이 달라지나요?",
-        key: "ending",
-      },
-    ],
-  },
 ];
 
 export const STAGE_NAME_TO_KEY: Record<string, StoryStageKey> = {
@@ -128,6 +128,12 @@ export const STAGE_NAME_TO_KEY: Record<string, StoryStageKey> = {
   처음: "opening",
   중간: "middle",
   끝: "ending",
+
+  // Korean 4-stage classical names
+  기: "opening",
+  승: "middle",
+  전: "climax",
+  결: "ending",
 
   // English keys
   opening: "opening",
@@ -284,11 +290,11 @@ export function recommendChapterStageKeys(
   if (mode === "four") {
     if (chapterCount === 2) {
       if (chapterIndex === 0) return ["opening", "middle"];
-      return ["crisis", "ending"];
+      return ["climax", "ending"];
     }
     if (chapterCount === 3) {
       if (chapterIndex === 0) return ["opening"];
-      if (chapterIndex === 1) return ["middle", "crisis"];
+      if (chapterIndex === 1) return ["middle", "climax"];
       return ["ending"];
     }
   }

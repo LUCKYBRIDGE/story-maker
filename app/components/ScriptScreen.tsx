@@ -10,6 +10,8 @@ import type { StoryApplyIssue } from "../story-apply-issues";
 import {
   canonicalizeStoryStageKeys,
   formatStoryStageLabels,
+  getStructureOption,
+  type StoryStructureMode,
 } from "../story-stages";
 import { assetName } from "./ResourceWidgets";
 import { SceneThumbnail, containsParentheses, unique } from "./SceneThumbnail";
@@ -43,6 +45,8 @@ export interface ScriptScreenProps {
   onRemoveLine: (lineId: string) => void;
   onAddLine: (type: StoryLine["type"], insertAfterLineId?: string) => void;
   onMergeLine: (sourceLineId: string, targetLineId: string) => void;
+  onUpdateChapter?: (chapterId: string, patch: Partial<Chapter>) => void;
+  onUpdatePlanning?: (patch: Partial<StoryProject["planning"]>) => void;
   sceneCardRefs?: MutableRefObject<Map<string, HTMLElement>>;
   speakerNameRefs?: MutableRefObject<Map<string, HTMLSelectElement>>;
   lineBodyRefs?: MutableRefObject<Map<string, HTMLTextAreaElement>>;
@@ -68,12 +72,18 @@ export function ScriptScreen({
   onRemoveLine,
   onAddLine,
   onMergeLine,
+  onUpdateChapter,
+  onUpdatePlanning,
   sceneCardRefs,
   speakerNameRefs,
   lineBodyRefs,
 }: ScriptScreenProps) {
+  const selectedChapterStageKeys = canonicalizeStoryStageKeys(
+    selectedChapter.storyStageKeys,
+  );
+  const selectedStructure = getStructureOption(draft.planning.structureMode);
   const chapterStageLabel = formatStoryStageLabels(
-    canonicalizeStoryStageKeys(selectedChapter.storyStageKeys),
+    selectedChapterStageKeys,
     draft.planning.structureMode,
     `${selectedChapter.order}장`,
   );
@@ -92,6 +102,79 @@ export function ScriptScreen({
               ? `${selectedLineIndex + 1}컷 편집 중`
               : "컷 없음"}
           </span>
+        </div>
+      </div>
+      <div
+        className="script-stage-bar"
+        role="group"
+        aria-label="이 장의 이야기 단계 선택"
+      >
+        <div className="script-stage-mode-group">
+          <span className="script-stage-bar-label">이야기 단계:</span>
+          {onUpdatePlanning ? (
+            <select
+              className="script-stage-mode-select"
+              value={draft.planning.structureMode}
+              onChange={(e) =>
+                onUpdatePlanning({
+                  structureMode: e.target.value as StoryStructureMode,
+                })
+              }
+              aria-label="이야기 구성 단계 방식"
+            >
+              <option value="three">3단계 (처음 → 중간 → 끝)</option>
+              <option value="four">4단계 (발단 → 전개 → 절정 → 결말)</option>
+              <option value="five">5단계 (발단 → 전개 → 위기 → 절정 → 결말)</option>
+            </select>
+          ) : (
+            <span className="script-stage-mode-badge">
+              {selectedStructure.title}
+            </span>
+          )}
+        </div>
+        <div
+          className="script-stage-pill-list"
+          role="group"
+          aria-label={`${selectedChapter.order}장 이야기 단계 선택`}
+        >
+          {selectedStructure.steps.map((step) => {
+            const isSelected = selectedChapterStageKeys.includes(step.key);
+            return (
+              <button
+                key={step.key}
+                type="button"
+                className={`stage-pill-btn ${isSelected ? "active" : ""}`}
+                aria-pressed={isSelected}
+                onClick={() => {
+                  if (!onUpdateChapter) return;
+                  const nextKeys = isSelected
+                    ? selectedChapterStageKeys.filter((k) => k !== step.key)
+                    : [step.key];
+                  onUpdateChapter(selectedChapter.id, {
+                    storyStageKeys: canonicalizeStoryStageKeys(nextKeys),
+                  });
+                }}
+                title={step.guide}
+              >
+                {step.label}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            className={`stage-pill-btn none-stage-btn ${
+              selectedChapterStageKeys.length === 0 ? "active" : ""
+            }`}
+            aria-pressed={selectedChapterStageKeys.length === 0}
+            onClick={() => {
+              if (onUpdateChapter) {
+                onUpdateChapter(selectedChapter.id, { storyStageKeys: [] });
+              }
+            }}
+            title="이 장에는 이야기 단계를 설정하지 않고 자유롭게 작성해요"
+          >
+            설정 안 함 (자유)
+          </button>
         </div>
       </div>
       {selectedLine && (
