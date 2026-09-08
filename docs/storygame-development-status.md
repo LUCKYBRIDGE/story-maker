@@ -9,7 +9,30 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 요청: BC-01 내 책 표지와 커튼
+## 현재 요청: HS-01 첫 화면 공통 UI와 반응형
+
+- 상태: `DONE` (2026-09-09 사용자 직접 지정). Work Lead · G/A/B. 공개 배포 전 PR 검토 단계.
+- 기준: 원격 main `19abbd9`, clean 상태에서 `codex/start-screen-responsive` 분기.
+- 주 책임: 교육 UX, 검토 관점: 접근성·QA. 첫 화면/일러스트/관련 검사만 수정.
+- 인수: 두 테마 공통 UI 치수, 44px 버튼, 태블릿 양방향·웹·200% 확대,
+  SSR 문구·모달·키보드 유지, check/test/build:pages 통과, PR 생성.
+- 최종 로컬 검증: `npm run check` 오류 0, `npm test` 147/147 (SSR·키보드 계약 포함), `npm run build:pages` 통과.
+- Chrome 자동 브라우저: 360×800, 390×844, 600×960, 768×1024, 820×1180,
+  1024×768, 1440×900, 1920×1080, 720×450에서 두 테마 공통 영역 좌표 변화 0px,
+  가로 넘침 0, 메인 버튼 44px 이상, 모달 초점·탭·Escape 복귀·읽기 진입 통과.
+- 재현: dev 서버 후 `PLAYWRIGHT_MODULE=<기존 설치 경로>/playwright/index.mjs node tests/browser/start-screen.mjs`.
+  결과/캡처는 기본 `/tmp/start-screen-qa`; `QA_URL`, `QA_OUTPUT` 지정 가능.
+- 200% CSS zoom에서 모달 입력과 CTA 접근·가로 넘침 검증, 720×450 재배치 별도 확인.
+  네이티브 브라우저 확대 메뉴와 물리 태블릿 터치/IME는 미검증.
+- 자산: 사용자 제공 원본을 built-in imagegen으로 각각 편집. 프롬프트는 모든 글자·로고·버튼·금색 프레임·현판 제거,
+  인물 얼굴·포즈·의상·색·머리/몸 비율·발과 배경 구도 보존, 상단 여백과 하단 종이색 유지.
+  결과는 rabbit-turtle.poster.art.webp (940×1672), onggojib.poster.art.webp (941×1672), 각 약 208KiB.
+  요청한 고해상도 대신 도구가 반환한 원본 크기를 보존하고 WebP quality 90으로 1회 압축했다.
+  UI 텍스트/프레임은 해상도 독립적이며 비트맵 자체의 무한 확대 선명도를 보장하지 않는다.
+- 최초 정적 빌드의 캐시 DB 오류는 기존 .next를 작업 외부에 보존하고 새 빌드하여 해결했다.
+- 기존 A1-02 승인 대기는 유지한다. 게임 캐릭터 자산과 저장/Excel 형식은 범위 밖이다.
+
+## 이전 요청: BC-01 내 책 표지와 커튼
 
 - 상태: `DONE` (사용자 직접 지정 후속 작업). Work Lead · G/A/B.
 - branch: `codex/book-covers-curtain`; CE-01의 `c8d5912`에서 분기. 원격 main에는 CE-01이 아직 통합되지 않아 후속 브랜치가 이를 포함한다.

@@ -69,15 +69,28 @@ export function StartScreen({
     }
   }, []);
 
-  // ESC 키로 창작 모달 닫기
+  // 숨겨진 SSR 콘텐츠는 유지하면서 모달 안에서만 키보드 초점을 이동한다.
   useEffect(() => {
+    if (!isStudioModalOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const dialog = document.querySelector<HTMLElement>(".nolstory-studio-modal");
+    dialog?.querySelector<HTMLButtonElement>(".btn-modal-close")?.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab" && dialog) {
+        const items = Array.from(dialog.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), summary, [tabindex="0"]')).filter(el => el.getClientRects().length > 0 && el.tabIndex >= 0);
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
       if (e.key === "Escape" && isStudioModalOpen) {
         setIsStudioModalOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
   }, [isStudioModalOpen]);
 
   const toggleCoverTheme = () => {
@@ -90,57 +103,42 @@ export function StartScreen({
 
   return (
     <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
-      {/* 🌟 1. 서비스 메인: 사용자가 제공한 럭셔리 동화책 포스터 화면 */}
-      <div className="nolstory-poster-frame">
+      <div className="nolstory-poster-frame" inert={isStudioModalOpen}>
         <img
-          src={resolveAssetUrl(
-            coverTheme === "rabbit"
-              ? "/story-assets/rabbit-turtle.poster.cover-576x1024.webp"
-              : "/story-assets/onggojib.poster.cover-576x1024.webp"
-          )}
-          alt={coverTheme === "rabbit" ? "토끼와 자라 - 놀스토리" : "옹고집전 - 놀스토리"}
+          src={resolveAssetUrl(`/story-assets/${coverTheme === "rabbit" ? "rabbit-turtle" : "onggojib"}.poster.art.webp`)}
+          alt=""
+          width={coverTheme === "rabbit" ? 940 : 941}
+          height={1672}
           className="nolstory-poster-img"
+          fetchPriority="high"
         />
-
-        {/* 인터랙티브 핫스팟 버튼 3개 (시안의 버튼 위치에 1:1 매핑) */}
-        <div className="poster-hotspots-layer" role="toolbar" aria-label="놀스토리 메인 메뉴">
-          {/* 상단 좌측: [ ↻ 이야기변경 > ] */}
-          <button
-            type="button"
-            className="poster-hotspot hotspot-change-theme"
-            onClick={toggleCoverTheme}
-            title="다른 이야기로 변경하기"
-            aria-label={`이야기 변경 (현재: ${coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"})`}
-          >
-            <span className="hotspot-visual-pulse" aria-hidden="true" />
-            <span className="sr-only">이야기변경</span>
+        <header className="poster-brand">
+          <svg viewBox="0 0 48 36" aria-hidden="true"><path d="M24 7Q13 0 3 4v26q11-4 21 2 10-6 21-2V4Q35 0 24 7Z" fill="#123653" stroke="#c99239" strokeWidth="2"/><path d="M24 7v25" stroke="#e5b760" strokeWidth="2"/></svg>
+          <strong>놀스토리</strong>
+          <p>이야기로 만나는<br />더 넓은 세상</p>
+        </header>
+        <nav className="poster-menu" aria-label="놀스토리 메인 메뉴">
+          <button type="button" className="poster-button poster-change" onClick={toggleCoverTheme}
+            aria-label={`이야기 변경 (현재: ${coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"})`}>
+            <span aria-hidden="true">↻</span><span>이야기변경</span><span aria-hidden="true">›</span>
           </button>
-
-          {/* 상단 우측: [ 🖌️ 나만의 이야기 > ] */}
-          <button
-            type="button"
-            className="poster-hotspot hotspot-my-story"
-            onClick={() => setIsStudioModalOpen(true)}
-            title="나만의 이야기 만들기 또는 불러오기"
-            aria-label="나만의 이야기 창작 공작소 열기"
-          >
-            <span className="hotspot-visual-pulse" aria-hidden="true" />
-            <span className="sr-only">나만의 이야기</span>
+          <button type="button" className="poster-button poster-create" onClick={() => setIsStudioModalOpen(true)}
+            aria-label="나만의 이야기 창작 공작소 열기">
+            <span aria-hidden="true">🖌</span><span>나만의 이야기</span><span aria-hidden="true">›</span>
           </button>
-
-          {/* 하단 중앙: [ 📖 놀스토리 작품 읽기 ➔ ] */}
-          <button
-            type="button"
-            className="poster-hotspot hotspot-read-story"
-            onClick={onPlayExample}
-            disabled={busy}
-            title="놀스토리 작품 읽기"
-            aria-label="놀스토리 작품 읽기"
-          >
-            <span className="hotspot-visual-pulse" aria-hidden="true" />
-            <span className="sr-only">놀스토리 작품 읽기</span>
-          </button>
-        </div>
+        </nav>
+        <section className="poster-heading" aria-live="polite" aria-atomic="true">
+          <svg className="poster-leaves" viewBox="0 0 48 56" aria-hidden="true"><path d="M24 54Q23 30 32 8M25 40 10 25" fill="none" stroke="#7c8c59" strokeWidth="2"/><path d="M29 26Q18 10 35 2q8 14-6 24M23 40Q6 42 5 22q17 1 18 18M26 43q0-18 19-18-1 17-19 18" fill="#96a474"/></svg>
+          <h2><span>{coverTheme === "rabbit" ? "토끼" : "옹고"}</span>{coverTheme === "rabbit" ? "와 자라" : "집전"}</h2>
+          <p className="poster-author"><span aria-hidden="true">✦</span> 이 이야기의 작가: 당신 <span aria-hidden="true">✦</span></p>
+          <p className="poster-description">학생이 직접 만들어 가는 이야기</p>
+        </section>
+        <div className="poster-scene-space" aria-hidden="true" />
+        <button type="button" className="poster-button poster-read" onClick={onPlayExample} disabled={busy}
+          aria-label="놀스토리 작품 읽기">
+          <span aria-hidden="true">📖</span><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
+        </button>
+        <footer className="poster-footer">기본 제공 이미지 © 놀퀴즈<span aria-hidden="true"> · </span><wbr />학생 스토리게임 제작에 자유롭게 사용</footer>
       </div>
 
       {/* 🌟 2. '나만의 이야기' 창작 공작소 모달 (새 이야기 / Excel / 템플릿 / 기기 복원) */}
@@ -150,6 +148,7 @@ export function StartScreen({
           if (e.target === e.currentTarget) setIsStudioModalOpen(false);
         }}
         aria-hidden={!isStudioModalOpen}
+        inert={!isStudioModalOpen}
       >
         <section
           className="nolstory-studio-modal"
@@ -518,10 +517,6 @@ export function StartScreen({
           </p>
         </section>
       </div>
-
-      <footer className="entry-copyright">
-        기본 제공 이미지 © 놀퀴즈 · 학생 스토리게임 제작에 자유롭게 사용
-      </footer>
 
       {busy && (
         <div className="update-overlay" role="dialog" aria-modal="true">
