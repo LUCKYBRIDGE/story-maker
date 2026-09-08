@@ -24,7 +24,12 @@ import {
 import {
   canonicalizeStoryStageKeys,
   formatStoryStageLabels,
+  detectStageConsistencyIssues,
+  applyStageSuggestion,
+  type StageConsistencyWarning,
+  type StageSuggestion,
 } from "./story-stages";
+import { StageCorrectionDialog } from "./components/StageCorrectionDialog";
 import { ScriptScreen } from "./components/ScriptScreen";
 import { unique } from "./components/SceneThumbnail";
 import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
@@ -302,6 +307,11 @@ export function StoryStudio() {
     project: StoryProject | null;
     fileName?: string;
   }>({ open: false, project: null, fileName: "" });
+  const [stageWarningModal, setStageWarningModal] =
+    useState<StageConsistencyWarning | null>(null);
+  const [dismissedStageSignature, setDismissedStageSignature] = useState<
+    string | null
+  >(null);
   const [revisionResponses, setRevisionResponses] =
     useState<StoryRevisionResponses>({});
   const updateController = useRef<AbortController | null>(null);
@@ -926,13 +936,29 @@ export function StoryStudio() {
   ];
   const readyStoryItems = storyChecklist.filter((item) => item.ready).length;
 
+  const stageConsistencyWarning = useMemo(() => {
+    return detectStageConsistencyIssues(draft.chapters, draft.planning.structureMode);
+  }, [draft.chapters, draft.planning.structureMode]);
+
   function updatePlanning(
     changes: Partial<StoryProject["planning"]>,
   ) {
-    setDraft((project) => ({
-      ...project,
-      planning: { ...project.planning, ...changes },
-    }));
+    setDraft((project) => {
+      const nextDraft = {
+        ...project,
+        planning: { ...project.planning, ...changes },
+      };
+      if (changes.structureMode) {
+        const warning = detectStageConsistencyIssues(
+          nextDraft.chapters,
+          changes.structureMode,
+        );
+        if (warning && warning.signature !== dismissedStageSignature) {
+          setStageWarningModal(warning);
+        }
+      }
+      return nextDraft;
+    });
   }
 
   function setMemoSectionOpen(section: MemoSection, open: boolean) {
@@ -1100,12 +1126,54 @@ export function StoryStudio() {
   }
 
   function updateChapter(chapterId: string, changes: Partial<Chapter>) {
-    setDraft((project) => ({
-      ...project,
-      chapters: project.chapters.map((chapter) =>
+    setDraft((project) => {
+      const nextChapters = project.chapters.map((chapter) =>
         chapter.id === chapterId ? { ...chapter, ...changes } : chapter,
-      ),
-    }));
+      );
+      if (changes.storyStageKeys) {
+        const warning = detectStageConsistencyIssues(
+          nextChapters,
+          project.planning.structureMode,
+        );
+        if (warning && warning.signature !== dismissedStageSignature) {
+          setStageWarningModal(warning);
+        }
+      }
+      return {
+        ...project,
+        chapters: nextChapters,
+      };
+    });
+  }
+
+  function handleApplyStageSuggestion(suggestion: StageSuggestion) {
+    setDraft((project) => {
+      const applied = applyStageSuggestion(project.chapters, suggestion);
+      return {
+        ...project,
+        chapters: applied.chapters,
+        planning: {
+          ...project.planning,
+          structureMode: applied.structureMode,
+        },
+      };
+    });
+    setStageWarningModal(null);
+    setDismissedStageSignature(null);
+    setNotice("이야기 단계를 추천대로 정리했어요.");
+  }
+
+  function handleDismissStageWarning() {
+    if (stageWarningModal) {
+      setDismissedStageSignature(stageWarningModal.signature);
+    }
+    setStageWarningModal(null);
+  }
+
+  function handleOpenStageWarning() {
+    if (stageConsistencyWarning) {
+      setStageWarningModal(stageConsistencyWarning);
+    }
   }
 
   function updateLine(lineId: string, changes: Partial<StoryLine>) {
@@ -1919,6 +1987,15 @@ export function StoryStudio() {
         : "작품을 편집본으로 열었어요.",
     );
     setImportConfirmation({ open: false, project: null });
+
+    const warning = detectStageConsistencyIssues(
+      imported.chapters,
+      imported.planning.structureMode,
+    );
+    if (warning) {
+      setStageWarningModal(warning);
+      setDismissedStageSignature(null);
+    }
   }
 
   async function updateFromSheet(sourceUrl = draft.sheetUrl) {
@@ -2670,6 +2747,8 @@ export function StoryStudio() {
           onAddAssetToChapter={(id, type) => addAssetToChapter(id, type)}
           onRemoveAssetFromChapter={(id, type) => removeAsset(id, type)}
           onAddSpeaker={addSpeaker}
+          stageWarning={stageConsistencyWarning}
+          onOpenStageWarning={handleOpenStageWarning}
         />
       ) : (
         <section className={`making-workspace ${mobileEditorToolsOpen ? "mobile-context-open" : ""}`}>
@@ -3012,6 +3091,8 @@ export function StoryStudio() {
                     onMergeLine={mergeLines}
                     onUpdateChapter={updateChapter}
                     onUpdatePlanning={updatePlanning}
+                    stageWarning={stageConsistencyWarning}
+                    onOpenStageWarning={handleOpenStageWarning}
                     sceneCardRefs={sceneCardRefs}
                     speakerNameRefs={speakerNameRefs}
                     lineBodyRefs={lineBodyRefs}
@@ -3152,6 +3233,13 @@ export function StoryStudio() {
           </div>
         </ModalDialog>
       )}
+
+      <StageCorrectionDialog
+        open={Boolean(stageWarningModal)}
+        warning={stageWarningModal}
+        onApplySuggestion={handleApplyStageSuggestion}
+        onDismiss={handleDismissStageWarning}
+      />
 
       {hydrated &&
         selectedCreativeMemo &&

@@ -53,8 +53,6 @@ export function StartScreen({
   const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
   const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("rabbit");
   const [isBookOpen, setIsBookOpen] = useState(false);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [isPageTurning, setIsPageTurning] = useState(false);
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
 
@@ -77,30 +75,17 @@ export function StartScreen({
   };
 
   const handleOpenBook = () => {
-    if (isFlipping || isBookOpen) return;
-    setIsFlipping(true);
-    setTimeout(() => {
-      setIsBookOpen(true);
-      setIsFlipping(false);
-    }, 600);
+    if (isBookOpen) return;
+    setIsBookOpen(true);
   };
 
   const handleCloseBook = () => {
-    if (isFlipping || !isBookOpen) return;
-    setIsFlipping(true);
+    if (!isBookOpen) return;
     setIsBookOpen(false);
-    setTimeout(() => {
-      setIsFlipping(false);
-    }, 600);
   };
 
   const handleTabChange = (tab: "create" | "continue" | "example") => {
-    if (tab === activeTab) return;
-    setIsPageTurning(true);
     setActiveTab(tab);
-    setTimeout(() => {
-      setIsPageTurning(false);
-    }, 450);
   };
 
   return (
@@ -132,7 +117,7 @@ export function StartScreen({
           {/* 1. 웅장하고 아름다운 진짜 양장본 동화책 겉표지 (클릭/터치 시 책 넘김 애니메이션) */}
           <div className="storybook-3d-stage">
             <div
-              className={`main-storybook-cover theme-${coverTheme} ${isFlipping ? "flipping" : ""}`}
+              className={`main-storybook-cover theme-${coverTheme}`}
               onClick={handleOpenBook}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
@@ -231,7 +216,6 @@ export function StartScreen({
 
         {/* B. 펼쳐진 책 내부 (Book Inside Spread): 터치 후 3D 책장이 넘어가며 나타나는 화면 */}
         <div className={`book-inside-spread ${isBookOpen ? "is-visible" : "is-hidden"}`}>
-          <div className="book-ribbon" aria-hidden="true" />
           <div className="open-book-header">
             <div className="entry-brand">
               <span className="brand-mark large">놀퀴즈</span>
@@ -248,52 +232,22 @@ export function StartScreen({
               </button>
               <button
                 type="button"
+                className="btn-header-example"
+                onClick={onPlayExample}
+                disabled={busy}
+                title="완성된 예시 동화 읽어보기"
+              >
+                👀 예시 읽기
+              </button>
+              <button
+                type="button"
                 className="btn-close-book"
                 onClick={handleCloseBook}
                 title="동화책 겉표지로 돌아가기"
               >
-                📕 책 덮기
+                📕 책 표지로
               </button>
             </div>
-          </div>
-
-          {/* 2. 표지 하단 3대 즉시 시작 액션 바 (예시작품 읽기 / 새 이야기 쓰기 / 이어 쓰기) */}
-          <div className="book-band-quick-actions" role="region" aria-label="이야기 바로 시작">
-            <button
-              type="button"
-              className="band-action-btn action-example"
-              onClick={onPlayExample}
-              disabled={busy}
-            >
-              <span className="btn-icon" aria-hidden="true">👀</span>
-              <div className="btn-content">
-                <strong>예시 작품 읽어보기</strong>
-                <small>완성된 동화 바로 감상하기</small>
-              </div>
-            </button>
-            <button
-              type="button"
-              className="band-action-btn action-create"
-              onClick={onStartBlank}
-              disabled={controlsBusy}
-            >
-              <span className="btn-icon" aria-hidden="true">✦</span>
-              <div className="btn-content">
-                <strong>새 이야기 쓰기</strong>
-                <small>빈 이야기부터 시작하기</small>
-              </div>
-            </button>
-            <button
-              type="button"
-              className={`band-action-btn action-continue ${activeTab === "continue" ? "active" : ""}`}
-              onClick={() => handleTabChange("continue")}
-            >
-              <span className="btn-icon" aria-hidden="true">📖</span>
-              <div className="btn-content">
-                <strong>이어 쓰기</strong>
-                <small>템플릿 및 보관 파일 열기</small>
-              </div>
-            </button>
           </div>
 
         <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist"
@@ -318,7 +272,8 @@ export function StartScreen({
             id="tab-create"
             aria-controls="panel-create"
           >
-            ✦ 새 이야기 만들기
+            <span className="tab-icon" aria-hidden="true">✦</span>
+            <span>새 이야기 만들기</span>
           </button>
           <button
             type="button"
@@ -330,7 +285,11 @@ export function StartScreen({
             id="tab-continue"
             aria-controls="panel-continue"
           >
-            ↻ 이어만들기
+            <span className="tab-icon" aria-hidden="true">↻</span>
+            <span>이어만들기</span>
+            {localDraftStatus === "available" && (
+              <span className="tab-badge" title="저장된 작품 있음">작품 있음</span>
+            )}
           </button>
           <button
             type="button"
@@ -342,113 +301,107 @@ export function StartScreen({
             id="tab-example"
             aria-controls="panel-example"
           >
-            👀 둘러보기
+            <span className="tab-icon" aria-hidden="true">👀</span>
+            <span>둘러보기</span>
           </button>
         </nav>
 
-        <div className={`entry-choice-grid ${isPageTurning ? "page-turning-anim" : ""}`}>
+        <div className="entry-choice-grid">
           <section
             id="panel-create"
             role="tabpanel"
             aria-labelledby="tab-create"
             className={`entry-choice-card entry-new-story-card ${activeTab !== "create" ? "tab-hidden" : ""}`}
           >
-            <header>
-              <span aria-hidden="true">✦</span>
+            <header className="entry-card-header">
+              <span className="header-icon" aria-hidden="true">✦</span>
               <div>
                 <h2 id="new-story-title">새 이야기 만들기</h2>
-                <p>빈 이야기 또는 준비된 앞이야기에서 시작해요.</p>
+                <p>빈 도화지에서 자유롭게 시작하거나, 준비된 재미있는 앞이야기에서 시작해요.</p>
               </div>
             </header>
 
-            <button
-              type="button"
-              className="entry-blank-story-button"
-              onClick={onStartBlank}
-              disabled={controlsBusy}
-            >
-              <strong>빈 이야기부터 만들기</strong>
-              <small>제목과 첫 장을 직접 정해요.</small>
-            </button>
-
-            {localDraftStatus === "available" && (
-              <div className="entry-quick-resume">
-                <span>이 기기에 만들던 이야기가 있어요.</span>
-                <button
-                  type="button"
-                  onClick={onResumeSavedDraft}
-                  disabled={entryBusy || busy}
-                >
-                  이 기기에서 이어만들기 ➔
-                </button>
-              </div>
-            )}
+            <div className="new-story-start-row">
+              <button
+                type="button"
+                className="entry-blank-story-button"
+                onClick={onStartBlank}
+                disabled={controlsBusy}
+              >
+                <div className="blank-btn-icon" aria-hidden="true">✏️</div>
+                <div className="blank-btn-text">
+                  <strong>빈 이야기부터 만들기</strong>
+                  <small>제목과 첫 장을 직접 정해요.</small>
+                </div>
+                <span className="blank-btn-arrow" aria-hidden="true">시작하기 ➔</span>
+              </button>
+            </div>
 
             <details className="entry-template-options">
               <summary>이야기 읽고 이어 쓰기 · 2가지</summary>
-            <div className="entry-template-heading">
-              <div>
-                <span className="eyebrow">이어쓰기 템플릿</span>
-                <h3>이야기 속으로 들어가, 그다음은 내가!</h3>
+              <div className="entry-template-heading">
+                <div>
+                  <span className="eyebrow">이어쓰기 템플릿</span>
+                  <h3>이야기 속으로 들어가, 그다음은 내가!</h3>
+                </div>
+                <small>전래동화의 앞부분을 다시 쓴 글이에요. 앞부분도 읽고 고칠 수 있고, 결말은 내가 정해요.</small>
               </div>
-              <small>전래동화의 앞부분을 다시 쓴 글이에요. 앞부분도 읽고 고칠 수 있고, 결말은 내가 정해요.</small>
-            </div>
-            <div className="entry-template-list book-shelf-grid">
-              <button
-                type="button"
-                className="entry-template-card book-jacket-card rabbit-theme"
-                onClick={onStartRabbitTurtleContinuation}
-                disabled={controlsBusy}
-              >
-                <div className="book-jacket-spine" aria-hidden="true" />
-                <div className="template-cover" aria-hidden="true">
-                  <img
-                    src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
-                    alt=""
-                    className="template-cover-bg"
-                  />
-                  <img
-                    src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
-                    alt=""
-                    className="template-cover-char"
-                  />
-                  <span className="template-number">01</span>
-                </div>
-                <span className="template-copy">
-                  <strong>토끼와 자라 · 용궁에서 위기에 처하다</strong>
-                  <small>용왕이 토끼의 간을 요구했어요. 토끼는 이제 어떻게 할까요?</small>
-                  <em>시작할 곳: 위기에 처한 토끼의 다음 말</em>
-                </span>
-                <b>선택</b>
-              </button>
-              <button
-                type="button"
-                className="entry-template-card book-jacket-card onggojib-theme"
-                onClick={onStartOnggojibContinuation}
-                disabled={controlsBusy}
-              >
-                <div className="book-jacket-spine" aria-hidden="true" />
-                <div className="template-cover" aria-hidden="true">
-                  <img
-                    src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
-                    alt=""
-                    className="template-cover-bg"
-                  />
-                  <img
-                    src="/story-assets/onggojib.character.real-angry-pixel.webp"
-                    alt=""
-                    className="template-cover-char"
-                  />
-                  <span className="template-number">02</span>
-                </div>
-                <span className="template-copy">
-                  <strong>옹고집전 · 처음 재판장에 끌려오다</strong>
-                  <small>서로 진짜라고 다투던 두 옹고집이 사또 앞에 섰어요. 재판은 어떻게 될까요?</small>
-                  <em>시작할 곳: 첫 재판장에 선 옹고집의 다음 말</em>
-                </span>
-                <b>선택</b>
-              </button>
-            </div>
+              <div className="entry-template-list book-shelf-grid">
+                <button
+                  type="button"
+                  className="entry-template-card book-jacket-card rabbit-theme"
+                  onClick={onStartRabbitTurtleContinuation}
+                  disabled={controlsBusy}
+                >
+                  <div className="book-jacket-spine" aria-hidden="true" />
+                  <div className="template-cover" aria-hidden="true">
+                    <img
+                      src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                      alt=""
+                      className="template-cover-bg"
+                    />
+                    <img
+                      src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                      alt=""
+                      className="template-cover-char"
+                    />
+                    <span className="template-number">01</span>
+                  </div>
+                  <span className="template-copy">
+                    <strong>토끼와 자라 · 용궁에서 위기에 처하다</strong>
+                    <small>용왕이 토끼의 간을 요구했어요. 토끼는 이제 어떻게 할까요?</small>
+                    <em>시작할 곳: 위기에 처한 토끼의 다음 말</em>
+                  </span>
+                  <b>선택</b>
+                </button>
+                <button
+                  type="button"
+                  className="entry-template-card book-jacket-card onggojib-theme"
+                  onClick={onStartOnggojibContinuation}
+                  disabled={controlsBusy}
+                >
+                  <div className="book-jacket-spine" aria-hidden="true" />
+                  <div className="template-cover" aria-hidden="true">
+                    <img
+                      src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+                      alt=""
+                      className="template-cover-bg"
+                    />
+                    <img
+                      src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                      alt=""
+                      className="template-cover-char"
+                    />
+                    <span className="template-number">02</span>
+                  </div>
+                  <span className="template-copy">
+                    <strong>옹고집전 · 처음 재판장에 끌려오다</strong>
+                    <small>서로 진짜라고 다투던 두 옹고집이 사또 앞에 섰어요. 재판은 어떻게 될까요?</small>
+                    <em>시작할 곳: 첫 재판장에 선 옹고집의 다음 말</em>
+                  </span>
+                  <b>선택</b>
+                </button>
+              </div>
             </details>
           </section>
 
@@ -458,65 +411,82 @@ export function StartScreen({
             aria-labelledby="tab-continue"
             className={`entry-choice-card entry-continue-card ${activeTab !== "continue" ? "tab-hidden" : ""}`}
           >
-            <header>
-              <span aria-hidden="true">↻</span>
+            <header className="entry-card-header">
+              <span className="header-icon" aria-hidden="true">↻</span>
               <div>
                 <h2 id="continue-story-title">이어만들기</h2>
                 <p>저장 위치를 몰라도 아래에서 고르면 돼요.</p>
               </div>
             </header>
 
-            <div
-              className={`entry-local-state ${localDraftStatus}`}
-              role="status"
-              aria-live="polite"
-            >
-              <strong>{LOCAL_DRAFT_MESSAGES[localDraftStatus]}</strong>
-              {localDraftStatus === "available" && (
-                <button
-                  type="button"
-                  onClick={onResumeSavedDraft}
-                  disabled={entryBusy || busy}
-                >
-                  이 기기에서 이어만들기
-                </button>
-              )}
-              {localDraftStatus === "failed" && (
-                <small>Excel 파일이 있다면 아래에서 안전하게 열 수 있어요.</small>
-              )}
-            </div>
+            <div className="continue-options-stack">
+              <div
+                className={`entry-local-state ${localDraftStatus}`}
+                role="status"
+                aria-live="polite"
+              >
+                <div className="local-state-info">
+                  <span className="local-state-icon" aria-hidden="true">💻</span>
+                  <div>
+                    <span className="local-state-label">이 기기에 저장된 작품</span>
+                    <strong>{LOCAL_DRAFT_MESSAGES[localDraftStatus]}</strong>
+                  </div>
+                </div>
+                {localDraftStatus === "available" && (
+                  <button
+                    type="button"
+                    className="btn-local-resume"
+                    onClick={onResumeSavedDraft}
+                    disabled={entryBusy || busy}
+                  >
+                    이 기기에서 이어만들기 ➔
+                  </button>
+                )}
+                {localDraftStatus === "failed" && (
+                  <small className="local-state-guide">Excel 파일이 있다면 아래에서 안전하게 열 수 있어요.</small>
+                )}
+              </div>
 
-            <button
-              type="button"
-              className="entry-continue-method"
-              onClick={() => excelInputRef.current?.click()}
-              disabled={controlsBusy}
-            >
-              <span aria-hidden="true">X</span>
-              <span>
-                <strong>Excel 파일에서 이어만들기</strong>
-                <small>이전에 내려받아 보관한 작품 파일을 열어요.</small>
-              </span>
-            </button>
-
-            <div className="entry-sheet-method">
-              <label htmlFor="entry-google-sheet-url">공개 Google 시트</label>
-              <p>로그인 없이 공개된 작품 시트 주소를 읽어요.</p>
-              <input
-                id="entry-google-sheet-url"
-                type="url"
-                value={sheetUrl}
-                onChange={(event) => setSheetUrl(event.target.value)}
-                placeholder="공개 Google 시트 주소"
-                disabled={controlsBusy}
-              />
               <button
                 type="button"
-                onClick={() => onOpenGoogleSheet(sheetUrl.trim())}
-                disabled={controlsBusy || !sheetUrl.trim()}
+                className="entry-continue-method"
+                onClick={() => excelInputRef.current?.click()}
+                disabled={controlsBusy}
               >
-                시트에서 이어만들기
+                <span className="method-badge-icon" aria-hidden="true">📊</span>
+                <span className="method-text">
+                  <strong>Excel 파일에서 이어만들기</strong>
+                  <small>이전에 내려받아 보관한 작품 파일을 열어요.</small>
+                </span>
+                <span className="method-arrow" aria-hidden="true">파일 열기 ➔</span>
               </button>
+
+              <div className="entry-sheet-method">
+                <div className="sheet-header">
+                  <span className="sheet-icon" aria-hidden="true">🌐</span>
+                  <div>
+                    <label htmlFor="entry-google-sheet-url">공개 Google 시트</label>
+                    <p>로그인 없이 공개된 작품 시트 주소를 읽어요.</p>
+                  </div>
+                </div>
+                <div className="sheet-input-group">
+                  <input
+                    id="entry-google-sheet-url"
+                    type="url"
+                    value={sheetUrl}
+                    onChange={(event) => setSheetUrl(event.target.value)}
+                    placeholder="공개 Google 시트 주소"
+                    disabled={controlsBusy}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onOpenGoogleSheet(sheetUrl.trim())}
+                    disabled={controlsBusy || !sheetUrl.trim()}
+                  >
+                    시트에서 이어만들기
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -524,17 +494,26 @@ export function StartScreen({
             id="panel-example"
             role="tabpanel"
             aria-labelledby="tab-example"
-            className={`entry-example-strip ${activeTab !== "example" ? "tab-hidden" : ""}`}
+            className={`entry-choice-card entry-example-strip ${activeTab !== "example" ? "tab-hidden" : ""}`}
             aria-label="독립 예시 작품"
           >
-            <div>
-              <span className="eyebrow">둘러보기</span>
-              <strong>만들기 전에 완성된 예시를 볼 수도 있어요.</strong>
-              <small>놀퀴즈가 준비한 예시 작품이에요.</small>
+            <header className="entry-card-header">
+              <span className="header-icon" aria-hidden="true">👀</span>
+              <div>
+                <h2>둘러보기</h2>
+                <p>만들기 전에 완성된 예시를 볼 수도 있어요.</p>
+              </div>
+            </header>
+            <div className="example-content-card">
+              <div className="example-info">
+                <span className="eyebrow">놀퀴즈 준비 예시 작품</span>
+                <strong>토끼와 자라 완성본 미리보기</strong>
+                <small>놀퀴즈가 준비한 예시 작품이에요.</small>
+              </div>
+              <button type="button" className="btn-play-example" onClick={onPlayExample} disabled={busy}>
+                예시 작품 플레이 ➔
+              </button>
             </div>
-            <button type="button" onClick={onPlayExample} disabled={busy}>
-              예시 작품 플레이
-            </button>
           </aside>
         </div>
 

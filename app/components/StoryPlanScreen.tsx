@@ -28,6 +28,7 @@ import {
   type StoryArcKey,
   type StoryStructureOption,
   type StoryStructureStep,
+  type StageConsistencyWarning,
 } from "../story-stages";
 
 export function chapterArcLabel(
@@ -83,6 +84,8 @@ export interface StoryPlanScreenProps {
   onAddAssetToChapter: (id: string, type: "character" | "background") => void;
   onRemoveAssetFromChapter: (id: string, type: "character" | "background") => void;
   onAddSpeaker: (name: string, selectNew: boolean) => void;
+  stageWarning?: StageConsistencyWarning | null;
+  onOpenStageWarning?: () => void;
 }
 
 export function StoryPlanScreen({
@@ -116,6 +119,8 @@ export function StoryPlanScreen({
   onAddAssetToChapter,
   onRemoveAssetFromChapter,
   onAddSpeaker,
+  stageWarning,
+  onOpenStageWarning,
 }: StoryPlanScreenProps) {
   function moveSelectedChapter(direction: -1 | 1, button: HTMLButtonElement) {
     if (!selectedChapter) return;
@@ -593,6 +598,25 @@ export function StoryPlanScreen({
                     + 새 장(場) 추가
                   </button>
                 </div>
+
+                {stageWarning && onOpenStageWarning && (
+                  <div className="chapter-flow-guidance" style={{ borderColor: "#f59e0b", background: "#fffbeb" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
+                      <p style={{ margin: 0, color: "#92400e" }}>
+                        <span className="guidance-tag" style={{ background: "#fef3c7", color: "#92400e" }}>💡 단계 다듬기 안내</span>
+                        {" "}
+                        <strong>{stageWarning.title}</strong>: {stageWarning.detectedPattern}
+                      </p>
+                      <button
+                        type="button"
+                        className="script-stage-advisory-btn"
+                        onClick={onOpenStageWarning}
+                      >
+                        자세히 보기
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {stageAnalysis.unlinkedStages.length > 0 && sortedChapters.length > 0 && (
                   <div className="chapter-flow-guidance">

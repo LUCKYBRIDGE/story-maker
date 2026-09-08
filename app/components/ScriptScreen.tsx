@@ -12,6 +12,7 @@ import {
   formatStoryStageLabels,
   getStructureOption,
   type StoryStructureMode,
+  type StageConsistencyWarning,
 } from "../story-stages";
 import { assetName } from "./ResourceWidgets";
 import { SceneThumbnail, containsParentheses, unique } from "./SceneThumbnail";
@@ -47,6 +48,8 @@ export interface ScriptScreenProps {
   onMergeLine: (sourceLineId: string, targetLineId: string) => void;
   onUpdateChapter?: (chapterId: string, patch: Partial<Chapter>) => void;
   onUpdatePlanning?: (patch: Partial<StoryProject["planning"]>) => void;
+  stageWarning?: StageConsistencyWarning | null;
+  onOpenStageWarning?: () => void;
   sceneCardRefs?: MutableRefObject<Map<string, HTMLElement>>;
   speakerNameRefs?: MutableRefObject<Map<string, HTMLSelectElement>>;
   lineBodyRefs?: MutableRefObject<Map<string, HTMLTextAreaElement>>;
@@ -74,6 +77,8 @@ export function ScriptScreen({
   onMergeLine,
   onUpdateChapter,
   onUpdatePlanning,
+  stageWarning,
+  onOpenStageWarning,
   sceneCardRefs,
   speakerNameRefs,
   lineBodyRefs,
@@ -130,6 +135,16 @@ export function ScriptScreen({
             <span className="script-stage-mode-badge">
               {selectedStructure.title}
             </span>
+          )}
+          {stageWarning && onOpenStageWarning && (
+            <button
+              type="button"
+              className="script-stage-advisory-btn"
+              onClick={onOpenStageWarning}
+              title="이야기 단계 다듬기 안내 열기"
+            >
+              💡 단계 다듬기 안내
+            </button>
           )}
         </div>
         <div
