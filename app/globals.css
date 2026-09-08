@@ -193,12 +193,216 @@ img {
   display: none !important;
 }
 
-.book-is-open .storybook-closed-view {
-  display: none !important;
+/* 🌟 살아 숨 쉬는 동화 히어로 무대 (Living Hero Stage Showcase) */
+.living-hero-stage {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: clamp(16px, 2.5vh, 26px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  background: #0f172a;
+  min-height: clamp(340px, 45vh, 420px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.storybook-3d-stage {
+.hero-stage-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-backdrop-img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85) contrast(1.05);
+}
+
+.hero-stage-lighting {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.25) 75%, rgba(15, 23, 42, 0.5) 100%);
+}
+
+.hero-stage-characters {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-actor {
+  position: absolute;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.hero-actor.actor-left {
+  left: clamp(14px, 4.5vw, 60px);
+  animation: heroActorFloatLeft 4s ease-in-out infinite;
+}
+
+.hero-actor.actor-right {
+  right: clamp(14px, 4.5vw, 60px);
+  animation: heroActorFloatRight 4.4s ease-in-out infinite 0.5s;
+}
+
+@keyframes heroActorFloatLeft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes heroActorFloatRight {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+.hero-actor-img {
+  height: clamp(150px, 24vw, 240px);
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.55));
+}
+
+/* 생생한 캐릭터 말풍선 (Living Speech Bubble) */
+.hero-speech-bubble {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  color: #0f172a;
+  padding: 8px 14px;
+  border-radius: 16px;
+  max-width: clamp(150px, 22vw, 210px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 0 1.5px rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+  position: relative;
+  text-align: left;
+}
+
+.hero-speech-bubble.urgent {
+  background: #fffdf5;
+  border: 1.5px solid #f59e0b;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25), 0 0 0 1px #f59e0b;
+}
+
+.hero-speech-bubble .bubble-speaker {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.hero-speech-bubble.urgent .bubble-speaker {
+  color: #b45309;
+}
+
+.hero-speech-bubble p {
+  font-size: clamp(11.5px, 1.3vw, 13px);
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* 중앙 오버레이 및 핵심 콜투액션(CTA) */
+.hero-stage-overlay-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: clamp(14px, 2vh, 22px) 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.22);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  margin-bottom: 8px;
+}
+
+.hero-title {
+  font-size: clamp(19px, 2.7vw, 29px);
+  font-weight: 900;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.hero-description {
+  font-size: clamp(12.5px, 1.4vw, 14.5px);
+  color: #e2e8f0;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* ✏️ 메인 시작 버튼 (손가락을 대고 싶게 만드는 버튼) */
+.btn-hero-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(12px, 1.8vh, 16px) clamp(22px, 3.2vw, 36px);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  color: #ffffff;
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 900;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-hero-start:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(217, 119, 6, 0.75), 0 0 0 3px rgba(255, 255, 255, 0.75);
+}
+
+.btn-hero-start .hero-btn-icon {
+  font-size: 19px;
+}
+
+@media (max-width: 640px) {
+  .living-hero-stage {
+    min-height: 360px;
+  }
+  .hero-actor.actor-left {
+    left: 8px;
+  }
+  .hero-actor.actor-right {
+    right: 8px;
+  }
+  .hero-actor-img {
+    height: 130px;
+  }
+  .hero-speech-bubble {
+    max-width: 135px;
+    padding: 6px 10px;
+  }
+  .hero-stage-overlay-content {
+    padding-bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-actor.actor-left,
+  .hero-actor.actor-right {
+    animation: none;
+  }
 }
 
 /* 1. 웅장하고 아름다운 진짜 양장본 동화책 겉표지 (Master Storybook Cover) */
@@ -10723,10 +10927,78 @@ img {
 .book-play-entry { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 32px 24px; background: radial-gradient(ellipse at top,#33443f,#0d171c 80%); color: #f6eddb; }
 .book-entry-label { text-align: center; font-size: 14px; letter-spacing: .12em; }.book-entry-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .book-entry-actions button { min-height: 44px; padding: 12px 20px; border: 1px solid #a7b6ac; border-radius: 10px; color: #f6eddb; background: #263b34; }.book-entry-actions .primary-button { color: #1b3029; background: #e3c686; border-color: #e3c686; }
-.theater-curtain { position: fixed; inset: 0; overflow: hidden; z-index: 350; isolation: isolate; }
-.theater-drape { position: absolute; inset: 0 auto 0 0; width: 50.1%; background: repeating-linear-gradient(90deg,#421c2a 0%,#853e50 8%,#a85b68 11%,#562332 17%,#321320 21%); box-shadow: inset 0 50px 70px #0008, 10px 0 35px #0007; border-bottom: 8px solid #b9955c; }
-.theater-drape.right { left: auto; right: 0; background-position: 30px; }
-.theater-curtain button { position: absolute; right: 18px; bottom: 18px; min-height: 44px; padding: 10px 18px; border: 1px solid #f7e8c8; border-radius: 9px; background: #1c1c23e8; color: #fff4dc; }
+.theater-curtain {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 350;
+  isolation: isolate;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, rgba(10, 15, 26, 0.95) 100%);
+  pointer-events: auto;
+}
+
+.theater-spotlight-beam {
+  position: absolute;
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 90vw);
+  height: 120%;
+  background: radial-gradient(ellipse 65% 55% at 50% 30%, rgba(255, 246, 214, 0.45) 0%, rgba(255, 230, 160, 0.18) 40%, transparent 75%);
+  pointer-events: none;
+  animation: spotlightPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.theater-spotlight-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 35%, rgba(6, 11, 20, 0.88) 85%);
+  pointer-events: none;
+}
+
+@keyframes spotlightPulse {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.85); }
+  60% { opacity: 1; transform: translateX(-50%) scale(1.04); }
+  100% { opacity: 0.9; transform: translateX(-50%) scale(1); }
+}
+
+.theater-drape {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 50.1%;
+  background: linear-gradient(to right, #090e17 0%, #111a28 65%, #182335 100%);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+}
+
+.theater-drape.right {
+  left: auto;
+  right: 0;
+  background: linear-gradient(to left, #090e17 0%, #111a28 65%, #182335 100%);
+}
+
+.theater-curtain button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid rgba(247, 232, 200, 0.5);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: #fff4dc;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.theater-curtain button:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #f7e8c8;
+  transform: translateY(-1px);
+}
 .book-opening-stage { min-height: 100dvh; background: #182438; }.book-opening-stage .story-scene-frame { min-height: 100dvh; border-radius: 0; }
 @media (max-width: 700px) {
   .book-editor-backdrop { padding: 10px; }.book-editor-dialog { max-height: calc(100dvh - 20px); }

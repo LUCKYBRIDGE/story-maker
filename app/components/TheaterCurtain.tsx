@@ -22,6 +22,8 @@ export function TheaterCurtain({ onComplete, closing = false }: { onComplete: ()
   }, [closing]);
   return <div ref={rootRef} className="theater-curtain" aria-label={closing ? "무대의 막이 내려요" : "무대가 열리고 있어요"}>
     <div className="theater-drape left" aria-hidden="true" /><div className="theater-drape right" aria-hidden="true" />
+    <div className="theater-spotlight-beam" aria-hidden="true" />
+    <div className="theater-spotlight-glow" aria-hidden="true" />
     <button type="button" onClick={onComplete} autoFocus>연출 건너뛰기</button>
   </div>;
 }

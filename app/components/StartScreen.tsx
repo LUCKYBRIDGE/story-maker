@@ -2,7 +2,6 @@
 
 /* eslint-disable @next/next/no-img-element -- 동화 템플릿 표지 및 캐릭터 자산은 로컬 투명 WebP 이미지입니다. */
 
-import { TheaterCurtain } from "./TheaterCurtain";
 import { BookCover } from "./BookCover";
 import type { StoryProject } from "../story-data";
 import { useEffect, useRef, useState } from "react";
@@ -58,17 +57,8 @@ export function StartScreen({
   const [sheetUrl, setSheetUrl] = useState("");
   const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
   const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("rabbit");
-  const [curtainOpen, setCurtainOpen] = useState(false);
-  const insideRef = useRef<HTMLDivElement>(null);
-  const [isBookOpen, setIsBookOpen] = useState(false);
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
-
-  useEffect(() => {
-    if (!isBookOpen || curtainOpen) return;
-    const frame = requestAnimationFrame(() => insideRef.current?.querySelector<HTMLButtonElement>('[role="tab"]')?.focus({preventScroll:true}));
-    return () => cancelAnimationFrame(frame);
-  }, [isBookOpen, curtainOpen]);
 
   useEffect(() => {
     // SSR HTML 계약(tests/rendered-html.test.mjs)을 완벽히 지키면서 브라우저 진입 시 예쁜 동화 카드를 즉시 표시
@@ -88,183 +78,142 @@ export function StartScreen({
     setCoverTheme((prev) => (prev === "rabbit" ? "onggojib" : "rabbit"));
   };
 
-  const handleOpenBook = () => {
-    if (isBookOpen) return;
-    setIsBookOpen(true);
-    setCurtainOpen(true);
-  };
-
-  const handleCloseBook = () => {
-    if (!isBookOpen) return;
-    setIsBookOpen(false);
-  };
-
   const handleTabChange = (tab: "create" | "continue" | "example") => {
     setActiveTab(tab);
   };
 
   return (
-    <main className={`entry-shell theme-${coverTheme} ${isBookOpen ? "book-is-open" : "book-is-closed"}`}>
-      {curtainOpen && <TheaterCurtain onComplete={() => setCurtainOpen(false)} />}
+    <main className={`entry-shell theme-${coverTheme} book-is-open`}>
       <section className="entry-card book-cover-edition" aria-labelledby="entry-title">
-        {/* A. 닫힌 동화책 겉표지 뷰: 사용자가 첫 화면에서 오직 한 권의 동화책 표지만 마주하는 화면 */}
-        <div className={`storybook-closed-view ${isBookOpen ? "is-hidden" : "is-visible"}`}>
-          {/* 상단 헤더: 브랜드 및 다른 동화책 보기 토글 */}
-          <div className="book-cover-header">
-            <div className="entry-brand">
-              <span className="brand-mark large">놀퀴즈</span>
-              <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
-            </div>
-            <div className="header-actions">
-              <button
-                type="button"
-                className="theme-toggle-button"
-                onClick={toggleCoverTheme}
-                title="다른 동화책 표지로 바꾸기"
-              >
-                ↻ 다른 동화 보기 ({coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라"})
-              </button>
-              <div className="book-cover-seal" aria-hidden="true">
-                ✦ 동화책 창작 스튜디오 ✦
-              </div>
-            </div>
+        {/* 🌟 1. 상단 통합 헤더: 브랜드 및 동화 무대 전환 */}
+        <div className="open-book-header">
+          <div className="entry-brand">
+            <span className="brand-mark large">놀퀴즈</span>
+            <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
           </div>
-
-          {/* 1. 웅장하고 아름다운 진짜 양장본 동화책 겉표지 (클릭/터치 시 책 넘김 애니메이션) */}
-          <div className="storybook-3d-stage">
-            <div
-              className={`main-storybook-cover theme-${coverTheme}`}
-              onClick={handleOpenBook}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleOpenBook();
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              aria-label="동화책을 터치하여 책을 펼치고 이야기 시작하기"
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle-button"
+              onClick={toggleCoverTheme}
+              title="다른 동화 무대로 바꾸기"
             >
-              <div className="cover-spine" aria-hidden="true" />
-              <div className="cover-gold-trim" aria-hidden="true" />
-              <div className="cover-corner top-left" aria-hidden="true" />
-              <div className="cover-corner top-right" aria-hidden="true" />
-              <div className="cover-corner bottom-left" aria-hidden="true" />
-              <div className="cover-corner bottom-right" aria-hidden="true" />
-
-              {/* 터치 안내 플로팅 뱃지 */}
-              <div className="cover-open-callout" aria-hidden="true">
-                <span className="open-callout-icon">📖</span>
-                <span className="open-callout-text">터치하여 책 펼치기</span>
-                <span className="open-callout-arrow">➔</span>
-              </div>
-
-              <div className="cover-badge-wrap">
-                <span className="cover-badge">✦ 놀퀴즈 명작 전래동화 ✦</span>
-              </div>
-
-              <div className="cover-stage-illustration" aria-hidden="true">
-                {coverTheme === "rabbit" ? (
-                  <>
-                    <img
-                      src={resolveAssetUrl("/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp")}
-                      alt=""
-                      className="cover-bg-image sea-palace"
-                    />
-                    <div className="cover-stage-characters">
-                      <div className="stage-char char-turtle">
-                        <img
-                          src={resolveAssetUrl("/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp")}
-                          alt=""
-                        />
-                      </div>
-                      <div className="stage-char char-rabbit">
-                        <img
-                          src={resolveAssetUrl("/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp")}
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <img
-                      src={resolveAssetUrl("/story-assets/onggojib.background.magistrate-yard-pixel.webp")}
-                      alt=""
-                      className="cover-bg-image court-yard"
-                    />
-                    <div className="cover-stage-characters">
-                      <div className="stage-char char-onggojib">
-                        <img
-                          src={resolveAssetUrl("/story-assets/onggojib.character.real-angry-pixel.webp")}
-                          alt=""
-                        />
-                      </div>
-                      <div className="stage-char char-fake-onggojib">
-                        <img
-                          src={resolveAssetUrl("/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp")}
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-                <div className="cover-stage-lighting" />
-              </div>
-
-              <div className="cover-title-section">
-                <h2 className="cover-book-title">
-                  {coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"}
-                </h2>
-                <p className="cover-book-author">지은이: 놀퀴즈</p>
-                <div className="cover-subtitle-box">
-                  <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
-                  <h1 id="entry-title">이야기를 만들어 볼까요?</h1>
-                  <p>
-                    새 이야기를 시작하거나, 이 기기와 파일에 보관한 이야기를 이어서
-                    만들 수 있어요.
-                  </p>
-                </div>
-              </div>
-            </div>
+              ↻ 다른 동화 무대 ({coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라"})
+            </button>
+            <button
+              type="button"
+              className="btn-header-example"
+              onClick={onPlayExample}
+              disabled={busy}
+              title="완성된 예시 동화 읽어보기"
+            >
+              👀 예시 읽기
+            </button>
           </div>
         </div>
 
-        {/* B. 펼쳐진 책 내부 (Book Inside Spread): 터치 후 3D 책장이 넘어가며 나타나는 화면 */}
-        <div ref={insideRef} inert={curtainOpen} className={`book-inside-spread ${isBookOpen ? "is-visible" : "is-hidden"}`}>
-          <div className="open-book-header">
-            <div className="entry-brand">
-              <span className="brand-mark large">놀퀴즈</span>
-              <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
-            </div>
-            <div className="header-actions">
-              <button
-                type="button"
-                className="theme-toggle-button"
-                onClick={toggleCoverTheme}
-                title="다른 동화 테마로 바꾸기"
-              >
-                ↻ 동화 테마 ({coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라"})
-              </button>
-              <button
-                type="button"
-                className="btn-header-example"
-                onClick={onPlayExample}
-                disabled={busy}
-                title="완성된 예시 동화 읽어보기"
-              >
-                👀 예시 읽기
-              </button>
-              <button
-                type="button"
-                className="btn-close-book"
-                onClick={handleCloseBook}
-                title="동화책 겉표지로 돌아가기"
-              >
-                📕 책 표지로
-              </button>
-            </div>
+        {/* 🌟 2. 살아 숨 쉬는 동화 히어로 무대 (Living Hero Stage Showcase) */}
+        <div className="living-hero-stage" aria-label="살아있는 동화 무대 쇼케이스">
+          <div className="hero-stage-backdrop">
+            <img
+              src={resolveAssetUrl(
+                coverTheme === "rabbit"
+                  ? "/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
+                  : "/story-assets/onggojib.background.magistrate-yard-pixel.webp"
+              )}
+              alt=""
+              className="hero-backdrop-img"
+            />
+            <div className="hero-stage-lighting" />
           </div>
+
+          <div className="hero-stage-characters">
+            {coverTheme === "rabbit" ? (
+              <>
+                <div className="hero-actor actor-left turtle-floating">
+                  <div className="hero-speech-bubble left">
+                    <span className="bubble-speaker">자라</span>
+                    <p>용왕님, 토끼를 데려왔습니다!</p>
+                  </div>
+                  <img
+                    src={resolveAssetUrl("/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp")}
+                    alt="자라"
+                    className="hero-actor-img"
+                  />
+                </div>
+                <div className="hero-actor actor-right rabbit-floating">
+                  <div className="hero-speech-bubble right urgent">
+                    <span className="bubble-speaker">토끼</span>
+                    <p>간을 내놓으라니... 어쩌지?!</p>
+                  </div>
+                  <img
+                    src={resolveAssetUrl("/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp")}
+                    alt="토끼"
+                    className="hero-actor-img"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="hero-actor actor-left fake-onggojib-floating">
+                  <div className="hero-speech-bubble left">
+                    <span className="bubble-speaker">가짜 옹고집</span>
+                    <p>제가 진짜 집주인입니다, 사또님!</p>
+                  </div>
+                  <img
+                    src={resolveAssetUrl("/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp")}
+                    alt="가짜 옹고집"
+                    className="hero-actor-img"
+                  />
+                </div>
+                <div className="hero-actor actor-right real-onggojib-floating">
+                  <div className="hero-speech-bubble right urgent">
+                    <span className="bubble-speaker">진짜 옹고집</span>
+                    <p>저놈이 가짜요! 내 집을 돌려주시오!</p>
+                  </div>
+                  <img
+                    src={resolveAssetUrl("/story-assets/onggojib.character.real-angry-pixel.webp")}
+                    alt="진짜 옹고집"
+                    className="hero-actor-img"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="hero-stage-overlay-content">
+            <span className="hero-badge">✦ 위기의 순간, 이야기를 만들어 볼까요? ✦</span>
+            <h1 id="entry-title" className="hero-title">
+              {coverTheme === "rabbit"
+                ? "용궁에 잡혀간 토끼, 어떻게 살아남을까?"
+                : "사또 앞에 선 두 옹고집, 누가 진짜일까?"}
+            </h1>
+            <p className="hero-description">
+              {coverTheme === "rabbit"
+                ? "용왕이 토끼의 간을 요구했어요! 토끼의 기막힌 핑계를 내가 직접 지어볼까요?"
+                : "진짜와 가짜가 뒤바뀐 재판장! 사또의 질문에 어떻게 대답해야 이길까요?"}
+            </p>
+            <button
+              type="button"
+              className="btn-hero-start"
+              onClick={
+                coverTheme === "rabbit"
+                  ? onStartRabbitTurtleContinuation
+                  : onStartOnggojibContinuation
+              }
+              disabled={controlsBusy}
+            >
+              <span className="hero-btn-icon">✏️</span>
+              <strong>
+                {coverTheme === "rabbit"
+                  ? "위기에 빠진 토끼의 다음 대사 쓰기 ➔"
+                  : "사또 앞 옹고집의 진짜 변명 쓰기 ➔"}
+              </strong>
+            </button>
+          </div>
+        </div>
+
+        <div className="book-inside-spread is-visible">
 
         <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist"
           onKeyDown={(event) => {
