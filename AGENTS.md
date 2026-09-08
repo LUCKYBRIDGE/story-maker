@@ -44,6 +44,7 @@
 
 ## 3. 필수 명령
 
+- 초고속 상태 확인: `npm run status:check` (또는 `STATUS.md` 참조, 세션 토큰 최소화)
 - 개발: `npm run dev`
 - 정적 검사: `npm run check`
 - 빌드: `npm run build`
