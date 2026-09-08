@@ -193,12 +193,272 @@ img {
   display: none !important;
 }
 
-.book-is-open .storybook-closed-view {
-  display: none !important;
+/* =========================================================
+   🌟 놀스토리 마스터 동화책 포스터 뷰 & 인터랙티브 핫스팟
+   ========================================================= */
+
+.nolstory-poster-viewport {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 15%, #182335 0%, #0c121d 75%, #060910 100%);
+  padding: clamp(0px, 2vh, 24px) clamp(0px, 2vw, 16px);
+  position: relative;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-.storybook-3d-stage {
+.nolstory-poster-frame {
+  position: relative;
   width: 100%;
+  max-width: 500px;
+  aspect-ratio: 576 / 1024;
+  border-radius: clamp(0px, 2.5vw, 24px);
+  overflow: hidden;
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 40px rgba(245, 158, 11, 0.08);
+  background: #0f172a;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 600px) {
+  .nolstory-poster-frame:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      0 32px 70px -10px rgba(0, 0, 0, 0.85),
+      0 0 0 1.5px rgba(245, 158, 11, 0.35),
+      0 0 50px rgba(245, 158, 11, 0.15);
+  }
+}
+
+.nolstory-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+/* 🌟 포스터 위 인터랙티브 핫스팟 버튼 레이어 */
+.poster-hotspots-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.poster-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.poster-hotspot:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.85);
+}
+
+.poster-hotspot:hover .hotspot-visual-pulse {
+  opacity: 1;
+}
+
+.poster-hotspot:active {
+  transform: scale(0.96);
+}
+
+.hotspot-visual-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(245, 158, 11, 0.12) 70%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* 1. 상단 좌측: [ ↻ 이야기변경 > ] (38/576 = 6.6%, 132/1024 = 12.9%) */
+.hotspot-change-theme {
+  top: 12.8%;
+  left: 6.5%;
+  width: 40.5%;
+  height: 6.3%;
+}
+
+/* 2. 상단 우측: [ 🖌️ 나만의 이야기 > ] (298/576 = 51.7%, 132/1024 = 12.9%) */
+.hotspot-my-story {
+  top: 12.8%;
+  left: 52%;
+  width: 41.5%;
+  height: 6.3%;
+}
+
+/* 3. 하단 중앙: [ 📖 놀스토리 작품 읽기 ➔ ] (center 50%, top 80%) */
+.hotspot-read-story {
+  top: 80%;
+  left: 23%;
+  width: 54%;
+  height: 6.8%;
+}
+
+/* 저작권 푸터 */
+.entry-copyright {
+  text-align: center;
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-top: 14px;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================================
+   🌟 '나만의 이야기' 창작 공작소 모달 & 바텀시트
+   ========================================================= */
+
+.nolstory-studio-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(10, 15, 26, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nolstory-studio-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nolstory-studio-backdrop.is-closed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nolstory-studio-modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90dvh;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  position: relative;
+  padding: 24px 20px;
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.nolstory-studio-backdrop.is-open .nolstory-studio-modal {
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 600px) {
+  .nolstory-studio-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .nolstory-studio-modal {
+    max-height: 88dvh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 22px 16px 32px 16px;
+    transform: translateY(100%);
+  }
+  .nolstory-studio-backdrop.is-open .nolstory-studio-modal {
+    transform: translateY(0);
+  }
+}
+
+.btn-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.btn-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: scale(1.06);
+}
+
+.modal-header-banner {
+  text-align: center;
+  padding: 8px 12px 16px 12px;
+}
+
+.modal-header-banner .brand-mark {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e3a8a;
+  letter-spacing: 0.08em;
+}
+
+.modal-header-banner .brand-subtext {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.12em;
+  margin-top: 1px;
+}
+
+.modal-main-title {
+  font-size: clamp(20px, 3.2vw, 26px);
+  font-weight: 900;
+  color: #0f172a;
+  margin: 6px 0 4px 0;
+  letter-spacing: -0.02em;
+}
+
+.modal-main-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.modal-scroll-area {
+  margin-top: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-actor.actor-left,
+  .hero-actor.actor-right {
+    animation: none;
+  }
 }
 
 /* 1. 웅장하고 아름다운 진짜 양장본 동화책 겉표지 (Master Storybook Cover) */
@@ -10723,10 +10983,78 @@ img {
 .book-play-entry { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 32px 24px; background: radial-gradient(ellipse at top,#33443f,#0d171c 80%); color: #f6eddb; }
 .book-entry-label { text-align: center; font-size: 14px; letter-spacing: .12em; }.book-entry-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .book-entry-actions button { min-height: 44px; padding: 12px 20px; border: 1px solid #a7b6ac; border-radius: 10px; color: #f6eddb; background: #263b34; }.book-entry-actions .primary-button { color: #1b3029; background: #e3c686; border-color: #e3c686; }
-.theater-curtain { position: fixed; inset: 0; overflow: hidden; z-index: 350; isolation: isolate; }
-.theater-drape { position: absolute; inset: 0 auto 0 0; width: 50.1%; background: repeating-linear-gradient(90deg,#421c2a 0%,#853e50 8%,#a85b68 11%,#562332 17%,#321320 21%); box-shadow: inset 0 50px 70px #0008, 10px 0 35px #0007; border-bottom: 8px solid #b9955c; }
-.theater-drape.right { left: auto; right: 0; background-position: 30px; }
-.theater-curtain button { position: absolute; right: 18px; bottom: 18px; min-height: 44px; padding: 10px 18px; border: 1px solid #f7e8c8; border-radius: 9px; background: #1c1c23e8; color: #fff4dc; }
+.theater-curtain {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 350;
+  isolation: isolate;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, rgba(10, 15, 26, 0.95) 100%);
+  pointer-events: auto;
+}
+
+.theater-spotlight-beam {
+  position: absolute;
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 90vw);
+  height: 120%;
+  background: radial-gradient(ellipse 65% 55% at 50% 30%, rgba(255, 246, 214, 0.45) 0%, rgba(255, 230, 160, 0.18) 40%, transparent 75%);
+  pointer-events: none;
+  animation: spotlightPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.theater-spotlight-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 35%, rgba(6, 11, 20, 0.88) 85%);
+  pointer-events: none;
+}
+
+@keyframes spotlightPulse {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.85); }
+  60% { opacity: 1; transform: translateX(-50%) scale(1.04); }
+  100% { opacity: 0.9; transform: translateX(-50%) scale(1); }
+}
+
+.theater-drape {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 50.1%;
+  background: linear-gradient(to right, #090e17 0%, #111a28 65%, #182335 100%);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+}
+
+.theater-drape.right {
+  left: auto;
+  right: 0;
+  background: linear-gradient(to left, #090e17 0%, #111a28 65%, #182335 100%);
+}
+
+.theater-curtain button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid rgba(247, 232, 200, 0.5);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: #fff4dc;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.theater-curtain button:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #f7e8c8;
+  transform: translateY(-1px);
+}
 .book-opening-stage { min-height: 100dvh; background: #182438; }.book-opening-stage .story-scene-frame { min-height: 100dvh; border-radius: 0; }
 @media (max-width: 700px) {
   .book-editor-backdrop { padding: 10px; }.book-editor-dialog { max-height: calc(100dvh - 20px); }
