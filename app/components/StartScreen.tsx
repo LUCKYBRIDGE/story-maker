@@ -51,6 +51,7 @@ export function StartScreen({
   const excelInputRef = useRef<HTMLInputElement>(null);
   const [sheetUrl, setSheetUrl] = useState("");
   const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
+  const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("rabbit");
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
 
@@ -60,69 +61,110 @@ export function StartScreen({
     if (details && !details.open) {
       details.open = true;
     }
+    // 첫 진입/새로고침 시 50% 확률로 옹고집전 또는 토끼와 자라 표지 랜덤 선택
+    if (Math.random() < 0.5) {
+      requestAnimationFrame(() => {
+        setCoverTheme("onggojib");
+      });
+    }
   }, []);
 
+  const toggleCoverTheme = () => {
+    setCoverTheme((prev) => (prev === "rabbit" ? "onggojib" : "rabbit"));
+  };
+
   return (
-    <main className="entry-shell">
-      <section className="entry-card" aria-labelledby="entry-title">
+    <main className={`entry-shell theme-${coverTheme}`}>
+      <section className="entry-card book-cover-edition" aria-labelledby="entry-title">
+        {/* 상단 헤더: 브랜드 및 다른 동화책 보기 토글 */}
         <div className="book-cover-header">
           <div className="entry-brand">
             <span className="brand-mark large">놀퀴즈</span>
             <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
           </div>
-          <div className="book-cover-seal" aria-hidden="true">
-            ✦ 동화책 창작 스튜디오 ✦
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle-button"
+              onClick={toggleCoverTheme}
+              title="다른 동화책 표지로 바꾸기"
+            >
+              ↻ 다른 동화 보기 ({coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라"})
+            </button>
+            <div className="book-cover-seal" aria-hidden="true">
+              ✦ 동화책 창작 스튜디오 ✦
+            </div>
           </div>
         </div>
 
-        <div className="book-cover-layout">
-          <div className="master-book-cover" aria-hidden="true">
-            <div className="master-book-spine" />
-            <div className="master-cover-top">
-              <span className="master-cover-badge">✦ 놀퀴즈 명작 전래동화 ✦</span>
-            </div>
-            <div className="master-cover-artwork">
-              <div className="cover-art-scenery">
+        {/* 1. 웅장하고 아름다운 진짜 양장본 동화책 겉표지 (랜덤: 토끼와 자라 vs 옹고집전) */}
+        <div className={`main-storybook-cover theme-${coverTheme}`}>
+          <div className="cover-spine" aria-hidden="true" />
+          <div className="cover-gold-trim" aria-hidden="true" />
+          <div className="cover-corner top-left" aria-hidden="true" />
+          <div className="cover-corner top-right" aria-hidden="true" />
+          <div className="cover-corner bottom-left" aria-hidden="true" />
+          <div className="cover-corner bottom-right" aria-hidden="true" />
+
+          <div className="cover-badge-wrap">
+            <span className="cover-badge">✦ 놀퀴즈 명작 전래동화 ✦</span>
+          </div>
+
+          <div className="cover-stage-illustration" aria-hidden="true">
+            {coverTheme === "rabbit" ? (
+              <>
                 <img
                   src="/story-assets/rabbit-turtle.background.rabbit-turtle-bg-palace-welcome.webp"
                   alt=""
                   className="cover-bg-image sea-palace"
                 />
+                <div className="cover-stage-characters">
+                  <div className="stage-char char-turtle">
+                    <img
+                      src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
+                      alt=""
+                    />
+                  </div>
+                  <div className="stage-char char-rabbit">
+                    <img
+                      src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
                 <img
                   src="/story-assets/onggojib.background.magistrate-yard-pixel.webp"
                   alt=""
                   className="cover-bg-image court-yard"
                 />
-              </div>
-              <div className="cover-art-characters master-cover-chars">
-                <div className="cover-char-wrap char-turtle">
-                  <img
-                    src="/story-assets/rabbit-turtle.character.turtle-unified-720x900.webp"
-                    alt=""
-                  />
+                <div className="cover-stage-characters">
+                  <div className="stage-char char-onggojib">
+                    <img
+                      src="/story-assets/onggojib.character.real-angry-pixel.webp"
+                      alt=""
+                    />
+                  </div>
+                  <div className="stage-char char-fake-onggojib">
+                    <img
+                      src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
+                      alt=""
+                    />
+                  </div>
                 </div>
-                <div className="cover-char-wrap char-rabbit">
-                  <img
-                    src="/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"
-                    alt=""
-                  />
-                </div>
-                <div className="cover-char-wrap char-onggojib">
-                  <img
-                    src="/story-assets/onggojib.character.real-angry-pixel.webp"
-                    alt=""
-                  />
-                </div>
-                <div className="cover-char-wrap char-fake-onggojib">
-                  <img
-                    src="/story-assets/onggojib.character.double-blue-gentle-consistent-pixel.webp"
-                    alt=""
-                  />
-                </div>
-              </div>
-              <div className="cover-art-lighting" />
-            </div>
-            <div className="master-cover-bottom">
+              </>
+            )}
+            <div className="cover-stage-lighting" />
+          </div>
+
+          <div className="cover-title-section">
+            <h2 className="cover-book-title">
+              {coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"}
+            </h2>
+            <p className="cover-book-author">지은이: 놀퀴즈</p>
+            <div className="cover-subtitle-box">
               <span className="eyebrow">학생이 직접 만드는 비주얼 이야기</span>
               <h1 id="entry-title">이야기를 만들어 볼까요?</h1>
               <p>
@@ -131,8 +173,46 @@ export function StartScreen({
               </p>
             </div>
           </div>
+        </div>
 
-          <div className="book-cover-content">
+        {/* 2. 표지 하단 3대 즉시 시작 액션 바 (예시작품 읽기 / 새 이야기 쓰기 / 이어 쓰기) */}
+        <div className="book-band-quick-actions" role="region" aria-label="이야기 바로 시작">
+          <button
+            type="button"
+            className="band-action-btn action-example"
+            onClick={onPlayExample}
+            disabled={busy}
+          >
+            <span className="btn-icon" aria-hidden="true">👀</span>
+            <div className="btn-content">
+              <strong>예시 작품 읽어보기</strong>
+              <small>완성된 동화 바로 감상하기</small>
+            </div>
+          </button>
+          <button
+            type="button"
+            className="band-action-btn action-create"
+            onClick={onStartBlank}
+            disabled={controlsBusy}
+          >
+            <span className="btn-icon" aria-hidden="true">✦</span>
+            <div className="btn-content">
+              <strong>새 이야기 쓰기</strong>
+              <small>빈 이야기부터 시작하기</small>
+            </div>
+          </button>
+          <button
+            type="button"
+            className={`band-action-btn action-continue ${activeTab === "continue" ? "active" : ""}`}
+            onClick={() => setActiveTab("continue")}
+          >
+            <span className="btn-icon" aria-hidden="true">📖</span>
+            <div className="btn-content">
+              <strong>이어 쓰기</strong>
+              <small>템플릿 및 보관 파일 열기</small>
+            </div>
+          </button>
+        </div>
 
         <nav className="entry-tab-nav" aria-label="시작 방식 선택" role="tablist"
           onKeyDown={(event) => {
@@ -375,8 +455,6 @@ export function StartScreen({
             </button>
           </aside>
         </div>
-      </div>
-    </div>
 
         <input
           ref={excelInputRef}
