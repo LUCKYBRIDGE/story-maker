@@ -1,3 +1,4 @@
+import { isStorySceneEffect } from "./story-scene-effect";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
   cloneProject,
@@ -769,7 +770,21 @@ export function buildProjectFromSheet(
         );
       }
 
+      const effectType = getValue(row, "연출 효과", "effect_type");
+      const effectStrength = getValue(row, "연출 강도", "effect_intensity");
+      const effectTrigger = getValue(row, "연출 시점", "effect_trigger");
+      const effectDelay = getValue(row, "연출 지연(초)", "effect_delay");
+      const effect = effectType || effectStrength || effectTrigger || effectDelay ? {
+        type: effectType, intensity: effectStrength || "soft",
+        trigger: effectTrigger || "scene-enter", delayMs: Number(effectDelay || 0) * 1000,
+      } : undefined;
+      if (effect && !isStorySceneEffect(effect)) {
+        issues.push(issueAt(snapshot.source, row, ["연출 효과", "effect_type"], effectType,
+          "연출 효과 설정을 읽을 수 없어요.",
+          "효과: shake/flash-red/fade-black/crack/spotlight, 강도: soft/strong, 시점: scene-enter/with-dialogue/after-delay, 지연: 0~10초로 입력해 주세요."));
+      }
       return {
+        ...(isStorySceneEffect(effect) ? { effect } : {}),
         id: lineId,
         chapterId,
         order: Number(getValue(row, "순서", "order")) || index + 1,

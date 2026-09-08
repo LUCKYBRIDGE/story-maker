@@ -367,6 +367,7 @@ export function createStoryWorkbook(
         "컷 역할",
         "감정 메모",
         "연출 메모",
+        "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
       ],
       ...project.lines
         .slice()
@@ -398,9 +399,11 @@ export function createStoryWorkbook(
           line.purposeNote,
           line.emotionNote,
           line.directionNote,
+          line.effect?.type ?? "", line.effect?.intensity ?? "",
+          line.effect?.trigger ?? "", line.effect ? line.effect.delayMs / 1000 : "",
         ]),
     ],
-    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48],
+    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18],
   );
   for (let row = 2; row <= Math.max(500, scenesSheet.rowCount); row += 1) {
     scenesSheet.getCell(row, 4).dataValidation = {

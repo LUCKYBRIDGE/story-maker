@@ -1,3 +1,4 @@
+import { isStorySceneEffect } from "./story-scene-effect";
 import { normalizeCreativeMemos } from "./creative-memos";
 import type { Chapter, StoryLine, StoryPlanning, StoryProject } from "./story-data";
 import {
@@ -334,6 +335,9 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       addIssue(issues, "invalid-type", path, "line must be an object.");
       return emptyLine(index);
     }
+    if (record.effect !== undefined && !isStorySceneEffect(record.effect)) {
+      addIssue(issues, "invalid-value", `${path}.effect`, "Invalid scene effect settings.");
+    }
     const type = record.type;
     const speaker = record.speaker;
     if (type !== "dialogue" && type !== "narration") {
@@ -359,6 +363,7 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       purposeNote: optionalString(record, "purposeNote", path, issues),
       emotionNote: optionalString(record, "emotionNote", path, issues),
       directionNote: optionalString(record, "directionNote", path, issues),
+      ...(isStorySceneEffect(record.effect) ? { effect: { ...record.effect } } : {}),
     };
   });
 }

@@ -10632,3 +10632,42 @@ img {
     box-shadow: 0 0 0 4px rgba(245, 158, 11, 0);
   }
 }
+
+/* Cinematic effects animate only transform/opacity; reading and navigation stay usable. */
+.scene-effect-overlay { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }
+.scene-effect-overlay[data-effect="flash-red"] { background: #c82035; }
+.scene-effect-overlay[data-effect="fade-black"] { background: #000; }
+.scene-effect-overlay[data-effect="spotlight"] { background: radial-gradient(ellipse at 50% 35%, transparent 12%, #070a15 65%); }
+.scene-effect-overlay[data-effect="crack"] { background: rgb(20 24 50 / 35%); }
+.scene-effect-overlay svg { width: 100%; height: 100%; fill: none; stroke: #e4f3ff; stroke-width: .7; }
+.story-scene-frame:has(> .scene-effect-overlay) > .dialogue-box,
+.story-scene-frame:has(> .scene-effect-overlay) > .story-scene-heading { z-index: 3; }
+.scene-effect-button, .scene-card-actions .scene-effect-button { min-height: 44px; }
+.scene-effect-backdrop { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 16px; background: rgb(10 18 32 / 65%); }
+.scene-effect-dialog { width: min(680px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: #fffdf8; color: #263449; border-radius: 18px; padding: 20px; box-shadow: 0 24px 80px #0005; }
+.scene-effect-dialog header, .scene-effect-dialog footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.scene-effect-dialog h2 { margin: 0; font-size: 22px; }
+.scene-effect-dialog header p { margin: 6px 0 16px; }
+.scene-effect-dialog button, .scene-effect-dialog select, .scene-effect-dialog input { min-height: 44px; }
+.scene-effect-dialog button:focus-visible, .scene-effect-dialog select:focus-visible, .scene-effect-dialog input:focus-visible { outline: 3px solid #4268b0; outline-offset: 2px; }
+.scene-effect-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.scene-effect-choices button { text-align: left; padding: 12px; border: 1px solid #bdc6d3; border-radius: 10px; background: white; color: #263449; }
+.scene-effect-choices button[aria-pressed="true"] { border-color: #49669b; background: #eaf0fc; box-shadow: inset 0 0 0 1px #49669b; }
+.scene-effect-choices small { display: block; margin-top: 6px; font-size: 12px; line-height: 1.5; color: #526079; }
+.scene-effect-fields { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.scene-effect-fields label { display: grid; gap: 6px; flex: 1 1 150px; min-width: 0; font-size: 14px; }
+.scene-effect-fields select, .scene-effect-fields input { width: 100%; padding: 8px; border: 1px solid #9ba8ba; border-radius: 8px; background: white; color: #263449; }
+.scene-effect-preview { margin-top: 16px; }
+.scene-effect-preview .story-scene-frame > .story-stage-canvas { height: 160px; flex: none; }
+.scene-effect-preview .dialogue-box { max-height: 100px; overflow-y: auto; }
+.scene-effect-preview p { margin: 0; font-size: 14px; }
+.scene-effect-help { font-size: 13px; line-height: 1.6; color: #526079; }
+.scene-effect-dialog footer { flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 620px) {
+  .scene-effect-dialog { padding: 14px; }
+  .scene-effect-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .scene-card-actions { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-effect-overlay { visibility: hidden; }
+}

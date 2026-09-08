@@ -152,7 +152,7 @@ export function StoryPlayer({
       <div
         className="story-stage"
       >
-        <StorySceneFrame stage={stage} variant="player" speaker={line?.speaker} heading={
+        <StorySceneFrame stage={stage} variant="player" effect={line?.effect} playbackKey={line?.id} speaker={line?.speaker} heading={
         <header className="player-topbar">
           <div className="player-title-block">
             <span className="eyebrow">스토리 플레이</span>

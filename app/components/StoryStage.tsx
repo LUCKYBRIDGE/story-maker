@@ -2,22 +2,30 @@
 /* eslint-disable @next/next/no-img-element -- Story assets are local transparent images. */
 
 import { useState, type ReactNode } from "react";
+import { useSceneEffect } from "../hooks/useSceneEffect";
+import type { StorySceneEffect } from "../story-scene-effect";
 import type { resolveStoryStage } from "../story-stage-view";
 
 type CharacterView = ReturnType<typeof resolveStoryStage>["left"];
 type BackgroundView = ReturnType<typeof resolveStoryStage>["background"];
 
-export function StorySceneFrame({ stage, variant, speaker, heading, children }: {
+export function StorySceneFrame({ stage, variant, speaker, heading, children, effect, playbackKey }: {
   stage: ReturnType<typeof resolveStoryStage>;
   variant: "editor" | "player";
   speaker?: "left" | "right" | "narration";
   heading?: ReactNode;
   children: ReactNode;
+  effect?: StorySceneEffect;
+  playbackKey?: string | number;
 }) {
-  return <div className="story-scene-frame" data-scene-variant={variant}>
+  const frameRef = useSceneEffect(effect, playbackKey);
+  return <div ref={frameRef} className="story-scene-frame" data-scene-variant={variant}>
     <StoryStageBackground background={stage.background} loading="eager" />
     {heading && <div className="story-scene-heading">{heading}</div>}
     <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} showBackground={false} />
+    {effect && effect.type !== "shake" && <div className="scene-effect-overlay" data-effect={effect.type} aria-hidden="true">
+      {effect.type === "crack" && <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M48 42 L30 0 M48 42 L80 0 M48 42 L100 35 M48 42 L85 100 M48 42 L20 100 M48 42 L0 48 M30 0 L35 24 L48 42 L62 64 L85 100 M62 64 L100 68 M35 24 L12 16" /></svg>}
+    </div>}
     {children}
   </div>;
 }

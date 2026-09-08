@@ -207,6 +207,7 @@ const scenesSheet = addSheet(
       "컷 역할",
       "감정 메모",
       "연출 메모",
+      "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
     ],
     [
       "scene-1",
@@ -224,7 +225,7 @@ const scenesSheet = addSheet(
       "",
     ],
   ],
-  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48],
+  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18],
 );
 for (let row = 2; row <= 500; row += 1) {
   scenesSheet.getCell(row, 4).dataValidation = {

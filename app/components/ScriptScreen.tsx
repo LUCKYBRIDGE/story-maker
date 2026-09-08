@@ -1,5 +1,7 @@
 "use client";
 
+import { SceneEffectEditor } from "./SceneEffectEditor";
+
 import type { MutableRefObject } from "react";
 import type { Chapter, StoryLine, StoryProject } from "../story-data";
 import type {
@@ -393,6 +395,7 @@ export function ScriptScreen({
                   </small>
                 </div>
                 <div className="scene-card-actions">
+                  <SceneEffectEditor line={line} chapter={selectedChapter} onChange={effect => onUpdateLine(line.id, { effect })} />
                   <button
                     type="button"
                     className="scene-add-button"
@@ -421,7 +424,9 @@ export function ScriptScreen({
                         ? `다음 컷(${index + 2}컷)과 하나로 합치기`
                         : canMergeWithPrev
                           ? `이전 컷(${index}컷)과 하나로 합치기`
-                          : "대사·해설 종류와 인물이 같은 앞뒤 컷이 있을 때만 합칠 수 있어요"
+                          : line.effect || nextLine?.effect || prevLine?.effect
+                            ? "연출 시점을 지키려면 효과를 먼저 없앤 뒤 합쳐 주세요"
+                            : "대사·해설 종류와 인물이 같은 앞뒤 컷이 있을 때만 합칠 수 있어요"
                     }
                   >
                     컷 합치기
