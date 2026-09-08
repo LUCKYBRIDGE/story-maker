@@ -34,7 +34,8 @@ import { ScriptScreen } from "./components/ScriptScreen";
 import { unique } from "./components/SceneThumbnail";
 import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
 import { SceneFocusEditor, ImageField } from "./components/SceneFocusEditor";
-import { StoryPlayer } from "./components/StoryPlayer";
+import { StoryBookPlayback } from "./components/StoryBookPlayback";
+import { BookCoverEditor } from "./components/BookCoverEditor";
 import {
   ImportIssuesDialog,
   ImportConfirmationDialog,
@@ -2401,7 +2402,7 @@ export function StoryStudio() {
   if (view === "play" && playerUi.context) {
     const context = playerUi.context;
     return (
-      <StoryPlayer
+      <StoryBookPlayback
         project={context.project}
         startIndex={playIndex}
         isExample={context.kind === "example"}
@@ -2422,6 +2423,7 @@ export function StoryStudio() {
     return (
       <>
         <StartScreen
+          savedProject={localDraftStatus === "available" ? draft : undefined}
           entryBusy={entryBusy}
           localDraftStatus={localDraftStatus}
           entryNotice={entryNotice}
@@ -2491,6 +2493,7 @@ export function StoryStudio() {
         setProjectToolsOpen((current) => !current)
       }
     >
+      <BookCoverEditor key={draft.id} project={draft} onApply={(title, cover) => setDraft(project => ({...project, title, cover}))} />
 
       <button
         className="mobile-panel-toggle project-info-toggle"

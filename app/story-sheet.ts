@@ -1,3 +1,4 @@
+import { COVER_FIELDS, DEFAULT_COVER, isStoryCover } from "./story-cover";
 import { isStorySceneEffect } from "./story-scene-effect";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
@@ -883,7 +884,16 @@ export function buildProjectFromSheet(
     Array.from(creativeMemoGroups.values()),
   );
 
+  const coverValues = COVER_FIELDS.map(([key,label]) => [key, getRawValue(projectRow,label)] as const);
+  const hasCover = coverValues.some(([,value]) => value.trim() !== "");
+  const cover = { ...DEFAULT_COVER, ...Object.fromEntries(coverValues.filter(([,value]) => value !== "").map(([key,value]) => [key, key === "titleSize" ? Number(value) : value])) };
+  if (hasCover && !isStoryCover(cover)) {
+    const label = COVER_FIELDS.find(([key]) => !isStoryCover({...DEFAULT_COVER, [key]:cover[key]}))?.[1] ?? "표지 배치";
+    throw new StoryImportError([issueAt(snapshot.source, projectRow, [label], getRawValue(projectRow,label),
+      "표지 설정을 읽을 수 없어요.", "표지 제목 크기는 24~52, 제목 색은 #RRGGBB 형식으로 입력하고, 배치·위치는 웹에서 내보낸 값을 유지해 주세요.")]);
+  }
   return cloneProject({
+    ...(hasCover && isStoryCover(cover) ? {cover} : {}),
     id: extractSheetId(sheetUrl)
       ? `sheet-${extractSheetId(sheetUrl)}`
       : `excel-${Date.now()}`,

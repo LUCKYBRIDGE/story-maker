@@ -1270,3 +1270,19 @@ npm test
 - 검증: `node --test tests/story-scene-effect.test.mjs`, `npm run check`, `npm test`, `git diff --check`; 브라우저 1365×900 및 390×844.
 - 중단: 작품 손실·회귀·UI 조작 불가 시 완료 선언/푸시를 보류하고 원인을 수정한다.
 - 상태표: CE-01만 IN_PROGRESS→검증 후 DONE. 기존 완료 이력과 자산 승인 대기 유지.
+
+## BC-01 — 내 책 표지와 커튼 (사용자 직접 지정)
+
+- 선행: CE-01. 주 책임: 교육 UX/프런트엔드, 검토: 데이터 신뢰성·접근성. Work Lead, G/A/B.
+- 가치: 학생이 제목·지은이와 책의 분위기를 정하고 완성한 작품을 무대에 올린다.
+- 허용: 표지 도메인·편집/표시·커튼·재생 컴포넌트, StoryStudio/StartScreen/StoryPlayer,
+  story-data/project-validation/sheet/workbook, globals.css, 양식 생성기/산출물, 관련 tests 및 기존 기준 문서.
+- 비목표: 자유 캔버스 편집기·이미지 생성/업로드·새 의존성·계정·main merge·배포.
+- 사전 확인: clean, 원격 main과 선행 CE-01 차이 확인, 저장/Excel 및 첫 컷 연출 경로 확인.
+- 절차: 1) 선택적 cover 계약 2) 기본 표지/커스텀 편집 3) 진입·이어만들기·재생 4) 왕복 5) 실제 브라우저.
+- 인수: 제목과 작품 제목 일치; 취소 원본 보존; 기본 배치/글꼴/색/위치/그림 변경; 자동 저장 및 Excel 보존;
+  기존 작품 기본 표지; 커튼 뒤 첫 컷 효과 시작; 중간 컷 빠른 진입; 종료·뒤표지; 키보드/동작 줄이기/모바일.
+- 검증: `node --test tests/story-cover.test.mjs`, `npm run check`, `npm test`, `git diff --check`;
+  `PLAYWRIGHT_MODULE=<기존 모듈> node tests/browser/story-book.mjs` (1365×900, 390×844).
+- 중단: 데이터 손실·기존 회귀·모바일 조작 불가 시 완료 선언을 보류하고 원인 수정. 새 패키지 불필요.
+- 상태: BC-01만 IN_PROGRESS→증거 충족 후 DONE. 기존 자산 승인 대기 유지.

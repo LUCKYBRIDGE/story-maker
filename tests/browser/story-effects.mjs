@@ -68,6 +68,7 @@ for (const viewport of [{width:1365,height:900},{width:390,height:844}]) {
   assert.equal(saved.lines[5].effect.delayMs,1500);
   assert.equal(saved.lines[6].effect,undefined);
   await page.locator('.creator-primary-nav button').nth(2).click();
+  await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
   const frame=page.locator('.player-shell .story-scene-frame');
   await frame.waitFor();
   const next=page.getByRole('button',{name:'다음 컷',exact:true});

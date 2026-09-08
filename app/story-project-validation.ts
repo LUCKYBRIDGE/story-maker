@@ -1,3 +1,4 @@
+import { isStoryCover } from "./story-cover";
 import { isStorySceneEffect } from "./story-scene-effect";
 import { normalizeCreativeMemos } from "./creative-memos";
 import type { Chapter, StoryLine, StoryPlanning, StoryProject } from "./story-data";
@@ -409,7 +410,11 @@ export function normalizeAndValidateStoryProject(value: unknown) {
     addIssue(issues, "invalid-type", "$.project", "project must be an object.");
     return { issues };
   }
+  if (record.cover !== undefined && !isStoryCover(record.cover)) {
+    addIssue(issues, "invalid-value", "$.project.cover", "표지 설정을 읽을 수 없어요. 원본을 보관하고 표지 설정을 확인해 주세요.");
+  }
   const project: StoryProject = {
+    ...(isStoryCover(record.cover) ? { cover: {...record.cover} } : {}),
     id: requiredString(record, "id", "$.project", issues),
     title: requiredString(record, "title", "$.project", issues),
     description: requiredString(record, "description", "$.project", issues),

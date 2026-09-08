@@ -1,3 +1,4 @@
+import { COVER_FIELDS } from "./story-cover";
 import ExcelJS, { type CellValue, type Worksheet } from "exceljs";
 import type { StoryAsset } from "./story-assets";
 import type { StoryProject } from "./story-data";
@@ -258,6 +259,7 @@ export function createStoryWorkbook(
       ["배경·세계 설정", project.planning.worldNotes, "시간, 장소와 이야기 속 규칙"],
       ["아직 정하지 못한 것", project.planning.openQuestions, "나중에 결정할 질문이나 빈칸"],
       ["자유 창작 메모", project.planning.freeNotes, "떠오른 대사, 장소와 연출 아이디어"],
+      ...COVER_FIELDS.map(([key,label]) => [label, project.cover?.[key] ?? "", "웹의 표지 꾸미기에서 변경할 수 있어요."]),
     ],
     [26, 76, 56],
     { autoFilter: false },

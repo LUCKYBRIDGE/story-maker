@@ -55,6 +55,7 @@ export interface StoryPlayerProps {
   startIndex: number;
   onIndexChange: (index: number) => void;
   onBack: () => void;
+  onFinish?: () => void;
   onEditCut?: (cut: PlayedStoryCut) => void;
   isExample?: boolean;
   revisionResponses: StoryRevisionResponses;
@@ -67,6 +68,7 @@ export function StoryPlayer({
   onIndexChange,
   onBack,
   onEditCut,
+  onFinish,
   isExample = false,
   revisionResponses,
   onRevisionResponse,
@@ -217,6 +219,7 @@ export function StoryPlayer({
             </p>
           )}
           <div className="player-controls">
+            {atStoryEnd && onFinish && <button type="button" onClick={onFinish}>공연 마치기</button>}
             {!isExample && onEditCut && (
               <button type="button" className="ghost-button" disabled={!line}
                 onClick={() => line && onEditCut({ projectId: project.id, lineId: line.id })}>
