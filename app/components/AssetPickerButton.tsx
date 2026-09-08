@@ -9,6 +9,7 @@ import {
   normalizeAssetSearch,
   sortStoryAssets,
 } from "../story-asset-picker-utils";
+import { resolveAssetUrl } from "../story-asset-url";
 
 export type AssetView = "all" | "favorites" | "recent";
 export type AssetLibraryScope = "recommended" | "all";
@@ -280,7 +281,7 @@ export function AssetPickerButton({
                 <div className="asset-picker-current">
                   <span className={`asset-picker-current-thumb ${type}`}>
                     <img
-                      src={selectedAsset.src}
+                      src={resolveAssetUrl(selectedAsset.src)}
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -298,7 +299,7 @@ export function AssetPickerButton({
                   <div className="asset-picker-preview" aria-live="polite">
                     <span className={`asset-picker-current-thumb ${type}`}>
                       <img
-                        src={pendingAsset.src}
+                        src={resolveAssetUrl(pendingAsset.src)}
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -492,7 +493,7 @@ export function AssetPickerButton({
                           >
                             <span className={`asset-picker-thumb ${asset.type}`}>
                               <img
-                                src={asset.src}
+                                src={resolveAssetUrl(asset.src)}
                                 alt=""
                                 loading="lazy"
                                 decoding="async"

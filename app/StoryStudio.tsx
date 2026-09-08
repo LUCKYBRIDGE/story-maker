@@ -36,6 +36,7 @@ import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
 import { SceneFocusEditor, ImageField } from "./components/SceneFocusEditor";
 import { StoryBookPlayback } from "./components/StoryBookPlayback";
 import { BookCoverEditor } from "./components/BookCoverEditor";
+import { resolveAssetUrl } from "./story-asset-url";
 import {
   ImportIssuesDialog,
   ImportConfirmationDialog,
@@ -2567,7 +2568,7 @@ export function StoryStudio() {
             </button>
             <button onClick={saveExcelFile}>Excel로 저장</button>
             <a
-              href="/templates/놀퀴즈_스토리_템플릿.xlsx"
+              href={resolveAssetUrl("/templates/놀퀴즈_스토리_템플릿.xlsx")}
               download
             >
               빈 양식 받기

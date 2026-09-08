@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 import { useSceneEffect } from "../hooks/useSceneEffect";
 import type { StorySceneEffect } from "../story-scene-effect";
 import type { resolveStoryStage } from "../story-stage-view";
+import { resolveAssetUrl } from "../story-asset-url";
 
 type CharacterView = ReturnType<typeof resolveStoryStage>["left"];
 type BackgroundView = ReturnType<typeof resolveStoryStage>["background"];
@@ -52,7 +53,7 @@ function StageBackgroundImage({ background, loading }: { background: BackgroundV
   const [failed, setFailed] = useState(false);
   if (!background.id) return null;
   return <div className="story-stage-background" data-asset-id={background.id}>
-    {background.src && !failed ? <img src={background.src} alt="" draggable={false} decoding="async" loading={loading} onError={() => setFailed(true)} />
+    {background.src && !failed ? <img src={resolveAssetUrl(background.src)} alt="" draggable={false} decoding="async" loading={loading} onError={() => setFailed(true)} />
       : <span className="story-stage-background-error" role="img" aria-label="배경을 표시할 수 없어요">배경을 표시할 수 없어요</span>}
   </div>;
 }
@@ -82,7 +83,7 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
   return <img
     className={`${classes} ${character.mirrored ? "mirrored" : ""}`}
     data-asset-id={character.id}
-    src={character.src}
+    src={resolveAssetUrl(character.src)}
     alt={variant === "thumbnail" ? "" : character.label}
     draggable={false}
     loading={loading}

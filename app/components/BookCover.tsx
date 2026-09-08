@@ -4,12 +4,13 @@ import { useState, type CSSProperties } from "react";
 import type { StoryProject } from "../story-data";
 import { COVER_THEMES, coverTextPanel, coverTitleSize, resolveStoryCover } from "../story-cover";
 import { ASSET_BY_ID } from "./AssetPickerButton";
+import { resolveAssetUrl } from "../story-asset-url";
 
 function CoverImage({ id, kind }: { id: string; kind: "background" | "character" }) {
   const [failed, setFailed] = useState(false);
   const asset = ASSET_BY_ID.get(id);
   if (!asset || asset.type !== kind || failed) return null;
-  return <img className={`book-art-${kind}`} src={asset.src} alt="" draggable={false} onError={() => setFailed(true)} />;
+  return <img className={`book-art-${kind}`} src={resolveAssetUrl(asset.src)} alt="" draggable={false} onError={() => setFailed(true)} />;
 }
 export function BookCover({ project, back = false }: { project: StoryProject; back?: boolean }) {
   const cover = resolveStoryCover(project);
