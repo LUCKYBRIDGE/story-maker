@@ -1,6 +1,9 @@
 "use client";
 
-import { StoryStageCanvas } from "./StoryStage";
+import { StorySceneFrame } from "./StoryStage";
+import { DialogueInline, DialogueText } from "./StoryPlayer";
+import { CutLengthGuide } from "./CutLengthGuide";
+import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
 
 import { useState, type MutableRefObject } from "react";
 import type { Chapter, StoryLine, StoryProject } from "../story-data";
@@ -434,6 +437,7 @@ export interface SceneFocusEditorProps {
   onMoveThroughStory: (delta: -1 | 1) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
+  onSplitLine: (lineId: string) => void;
   onAddSpeaker: (name: string, selectNew?: boolean) => void;
   onCopySceneStaging: (sourceLineId: string) => void;
   onSwitchStoryEditorView: (view: "chapter" | "scene") => void;
@@ -460,6 +464,7 @@ export function SceneFocusEditor({
   onMoveThroughStory,
   onChangeLineType,
   onUpdateLine,
+  onSplitLine,
   onAddSpeaker,
   onCopySceneStaging,
   onSwitchStoryEditorView,
@@ -564,12 +569,6 @@ export function SceneFocusEditor({
         </button>
       </div>
 
-      <section
-        className="editable-stage"
-      >
-        <StoryStageCanvas stage={stage} variant="editor" />
-      </section>
-
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">
         {SCENE_FOCUS_TABS.map(([tab, label], index) => (
           <button
@@ -608,15 +607,23 @@ export function SceneFocusEditor({
         ))}
       </div>
 
+      <StorySceneFrame stage={stage} variant="editor" speaker={selectedLine.speaker}
+        heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
       {activeTab === "text" ? (
-        <label
-          className={`editable-stage-dialogue ${
+        <div
+          className={`editable-stage-dialogue dialogue-box ${
             selectedLine.type === "narration" ? "narration" : ""
           }`}
           role="tabpanel"
           id="scene-panel-text"
           aria-labelledby="scene-tab-text"
         >
+          {draft.continuation?.lineId === selectedLine.id && !selectedLine.text.trim() && selectedStoryLineIndex > 0 && (
+            <div className="scene-continuation-context">
+              <small>앞 장면 · 여기서부터 내 이야기</small>
+              <p>{orderedDraftLines[selectedStoryLineIndex - 1].text}</p>
+            </div>
+          )}
           {selectedLine.type === "narration" && (
             <span className="editable-stage-kind">
               <b>해설</b>
@@ -660,24 +667,29 @@ export function SceneFocusEditor({
                   : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
               }
               aria-label="현재 컷 글상자"
+              aria-describedby={`cut-length-${selectedLine.id}`}
+              aria-invalid={countStoryCharacters(selectedLine.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
             />
           </div>
-          <small
-            className={`stage-writing-help ${
-              selectedLine.type === "narration" &&
-              containsParentheses(selectedLine.text)
-                ? "warning"
-                : ""
-            }`}
-          >
-            {selectedLine.type === "narration"
-              ? containsParentheses(selectedLine.text)
-                ? "해설에는 괄호를 쓸 수 없어요."
-                : "해설은 괄호 없이 씁니다."
-              : "속마음·표정·행동은 (괄호 안에) 직접 씁니다."}
-          </small>
-        </label>
+          {selectedLine.type === "narration" &&
+            containsParentheses(selectedLine.text) && (
+              <small className="stage-writing-help warning" role="alert">
+                해설에는 괄호를 쓸 수 없어요.
+              </small>
+            )}
+          <CutLengthGuide id={`cut-length-${selectedLine.id}`} text={selectedLine.text} onSplit={() => onSplitLine(selectedLine.id)} />
+        </div>
       ) : (
+        <div className="dialogue-box scene-preview-dialogue">
+          <span className="dialogue-meta">이미지 미리보기 · 글은 그대로예요</span>
+          <p>{selectedLine.type === "narration"
+            ? <DialogueText text={selectedLine.text || "여기에 해설을 써 보세요."} />
+            : <DialogueInline speakerName={stage.speakerName} text={selectedLine.text || "여기에 다음 말을 써 보세요."} />}</p>
+        </div>
+      )}
+      </StorySceneFrame>
+
+      {activeTab !== "text" && (
         <SceneAssetChoicePanel
           chapter={selectedChapter}
           line={selectedLine}

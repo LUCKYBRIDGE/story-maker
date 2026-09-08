@@ -28,6 +28,7 @@ import {
   type StoryArcKey,
   type StoryStructureOption,
   type StoryStructureStep,
+  type StageConsistencyWarning,
 } from "../story-stages";
 
 export function chapterArcLabel(
@@ -83,6 +84,8 @@ export interface StoryPlanScreenProps {
   onAddAssetToChapter: (id: string, type: "character" | "background") => void;
   onRemoveAssetFromChapter: (id: string, type: "character" | "background") => void;
   onAddSpeaker: (name: string, selectNew: boolean) => void;
+  stageWarning?: StageConsistencyWarning | null;
+  onOpenStageWarning?: () => void;
 }
 
 export function StoryPlanScreen({
@@ -116,6 +119,8 @@ export function StoryPlanScreen({
   onAddAssetToChapter,
   onRemoveAssetFromChapter,
   onAddSpeaker,
+  stageWarning,
+  onOpenStageWarning,
 }: StoryPlanScreenProps) {
   function moveSelectedChapter(direction: -1 | 1, button: HTMLButtonElement) {
     if (!selectedChapter) return;
@@ -594,6 +599,25 @@ export function StoryPlanScreen({
                   </button>
                 </div>
 
+                {stageWarning && onOpenStageWarning && (
+                  <div className="chapter-flow-guidance" style={{ borderColor: "#f59e0b", background: "#fffbeb" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
+                      <p style={{ margin: 0, color: "#92400e" }}>
+                        <span className="guidance-tag" style={{ background: "#fef3c7", color: "#92400e" }}>💡 단계 다듬기 안내</span>
+                        {" "}
+                        <strong>{stageWarning.title}</strong>: {stageWarning.detectedPattern}
+                      </p>
+                      <button
+                        type="button"
+                        className="script-stage-advisory-btn"
+                        onClick={onOpenStageWarning}
+                      >
+                        자세히 보기
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {stageAnalysis.unlinkedStages.length > 0 && sortedChapters.length > 0 && (
                   <div className="chapter-flow-guidance">
                     <span className="guidance-tag">💡 이야기 구성 안내</span>
@@ -689,9 +713,23 @@ export function StoryPlanScreen({
                             </button>
                           );
                         })}
+                        <button
+                          type="button"
+                          className={`stage-select-button none-stage-button ${selectedChapterStageKeys.length === 0 ? "active" : ""}`}
+                          aria-pressed={selectedChapterStageKeys.length === 0}
+                          onClick={() => {
+                            onUpdateChapter(selectedChapter.id, {
+                              storyStageKeys: [],
+                            });
+                          }}
+                          title="이 장의 이야기 단계를 비워두고 자유롭게 써요"
+                        >
+                          <span className="stage-check-icon">{selectedChapterStageKeys.length === 0 ? "●" : "○"}</span>
+                          <span className="stage-label">설정 안 함 (자유)</span>
+                        </button>
                       </div>
                       <p className="field-guide">
-                        한 장에 여러 단계를 담거나(예: 위기·절정), 비워 두어도 괜찮아요.
+                        이야기 단계를 설정하지 않고 자유롭게 써도 괜찮아요. 한 장에 여러 단계를 담을 수도 있어요.
                       </p>
                     </div>
 

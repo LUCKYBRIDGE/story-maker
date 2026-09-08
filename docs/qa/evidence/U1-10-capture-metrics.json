@@ -1,0 +1,573 @@
+{
+  "timestamp": "2026-09-07T06:06:00.789Z",
+  "viewports": {
+    "320": {
+      "windowWidth": 320,
+      "windowHeight": 800,
+      "scrollWidth": 320,
+      "scrollHeight": 2076,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 320,
+        "height": 180
+      },
+      "dialogueBox": {
+        "width": 304,
+        "height": 1661,
+        "top": 373
+      },
+      "textCopy": {
+        "fontSize": "17px",
+        "lineHeight": "28.05px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 296,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 122.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 272,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 131,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 131,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "390": {
+      "windowWidth": 390,
+      "windowHeight": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1700,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 390,
+        "height": 219
+      },
+      "dialogueBox": {
+        "width": 374,
+        "height": 1324,
+        "top": 334
+      },
+      "textCopy": {
+        "fontSize": "17px",
+        "lineHeight": "28.05px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 233.4,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 122.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 342,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 166,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 166,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "820": {
+      "windowWidth": 820,
+      "windowHeight": 1180,
+      "scrollWidth": 820,
+      "scrollHeight": 1629,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 820,
+        "height": 461
+      },
+      "dialogueBox": {
+        "width": 796,
+        "height": 1026,
+        "top": 556
+      },
+      "textCopy": {
+        "fontSize": "22px",
+        "lineHeight": "37.4px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "1024": {
+      "windowWidth": 1024,
+      "windowHeight": 768,
+      "scrollWidth": 1024,
+      "scrollHeight": 1460,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 765,
+        "height": 430
+      },
+      "dialogueBox": {
+        "width": 980,
+        "height": 885,
+        "top": 528
+      },
+      "textCopy": {
+        "fontSize": "22px",
+        "lineHeight": "37.4px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "1280": {
+      "windowWidth": 1280,
+      "windowHeight": 720,
+      "scrollWidth": 1280,
+      "scrollHeight": 1444,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 717,
+        "height": 403
+      },
+      "dialogueBox": {
+        "width": 980,
+        "height": 888,
+        "top": 509
+      },
+      "textCopy": {
+        "fontSize": "22px",
+        "lineHeight": "37.4px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "1440": {
+      "windowWidth": 1440,
+      "windowHeight": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 1545,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 896,
+        "height": 504
+      },
+      "dialogueBox": {
+        "width": 980,
+        "height": 888,
+        "top": 611
+      },
+      "textCopy": {
+        "fontSize": "22px",
+        "lineHeight": "37.4px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "844x390": {
+      "windowWidth": 844,
+      "windowHeight": 390,
+      "scrollWidth": 844,
+      "scrollHeight": 949,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 499,
+        "height": 281
+      },
+      "dialogueBox": {
+        "width": 820,
+        "height": 552,
+        "top": 355
+      },
+      "textCopy": {
+        "fontSize": "16px",
+        "lineHeight": "24.8px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    },
+    "zoom200": {
+      "windowWidth": 1280,
+      "windowHeight": 720,
+      "scrollWidth": 1280,
+      "scrollHeight": 1444,
+      "horizontalOverflow": false,
+      "canvas": {
+        "width": 717,
+        "height": 403
+      },
+      "dialogueBox": {
+        "width": 980,
+        "height": 888,
+        "top": 509
+      },
+      "textCopy": {
+        "fontSize": "22px",
+        "lineHeight": "37.4px",
+        "maxHeight": "none",
+        "overflow": "visible",
+        "overflowWrap": "anywhere",
+        "wordBreak": "break-word"
+      },
+      "buttons": [
+        {
+          "tag": "select",
+          "text": "1장. 긴 대사와 해설2장. 무공백과",
+          "width": 209,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "편집으로 돌아가기",
+          "width": 150.9,
+          "height": 46,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이 컷 고치기",
+          "width": 113.6,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "이전",
+          "width": 63.7,
+          "height": 44,
+          "valid44px": true
+        },
+        {
+          "tag": "button",
+          "text": "다음 컷",
+          "width": 85.7,
+          "height": 44,
+          "valid44px": true
+        }
+      ],
+      "allButtonsValid": true,
+      "hasParenthetical": true,
+      "hasSpeaker": true,
+      "dialogueTextLength": 1017
+    }
+  },
+  "interactions": {
+    "cut1": {
+      "length": 1017,
+      "hasParenthetical": true,
+      "parentheticalText": "(눈을 동그랗게 뜨며)",
+      "hasSpeaker": true,
+      "speakerText": "토끼:",
+      "hasEditCutButton": true
+    },
+    "cut2": {
+      "isNarration": true,
+      "length": 1000,
+      "boxWidth": 374,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    "cut3": {
+      "textSnippet": "자라: 첫 번째 줄바꿈 본문입니다.\n\n두 번째 단락은 한 줄을 띄웠습니다",
+      "whiteSpace": "pre-wrap",
+      "hasNewlines": true
+    },
+    "cut4": {
+      "scrollWidth": 390,
+      "overflow": false,
+      "hasStage": true,
+      "wordBreak": "break-word",
+      "overflowWrap": "anywhere"
+    },
+    "chapterJump": {
+      "metaText": "1장. 긴 대사와 해설1 / 4",
+      "isChapter1": true
+    },
+    "editCut": {
+      "inFocusEditor": true,
+      "inScript": false,
+      "inStudio": true,
+      "playerClosed": true
+    },
+    "backToEditor": {
+      "inStudio": true,
+      "playerClosed": true
+    },
+    "onggojib": {
+      "overflow": false
+    }
+  },
+  "overflowPassed": true,
+  "allButtons44px": true
+}

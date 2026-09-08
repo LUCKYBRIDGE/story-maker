@@ -10,10 +10,19 @@ import type { StoryApplyIssue } from "../story-apply-issues";
 import {
   canonicalizeStoryStageKeys,
   formatStoryStageLabels,
+  getStructureOption,
+  type StoryStructureMode,
+  type StageConsistencyWarning,
 } from "../story-stages";
 import { assetName } from "./ResourceWidgets";
 import { SceneThumbnail, containsParentheses, unique } from "./SceneThumbnail";
 import { StoryRevisionCheck } from "./StoryRevisionCheck";
+import { StorySceneFrame } from "./StoryStage";
+import { DialogueInline, DialogueText } from "./StoryPlayer";
+import { resolveStoryStage } from "../story-stage-view";
+import { CutLengthGuide } from "./CutLengthGuide";
+import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
+import { canMergeStoryLines } from "../story-commands";
 
 export type ImageView = "text" | "small";
 
@@ -30,11 +39,17 @@ export interface ScriptScreenProps {
   onSelectLine: (lineId: string) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
+  onSplitLine: (lineId: string) => void;
   onOpenStoryEditorScene: (line: StoryLine) => void;
   onMoveLine: (lineId: string, delta: -1 | 1) => void;
   onDuplicateLine: (lineId: string) => void;
   onRemoveLine: (lineId: string) => void;
-  onAddLine: (type: StoryLine["type"]) => void;
+  onAddLine: (type: StoryLine["type"], insertAfterLineId?: string) => void;
+  onMergeLine: (sourceLineId: string, targetLineId: string) => void;
+  onUpdateChapter?: (chapterId: string, patch: Partial<Chapter>) => void;
+  onUpdatePlanning?: (patch: Partial<StoryProject["planning"]>) => void;
+  stageWarning?: StageConsistencyWarning | null;
+  onOpenStageWarning?: () => void;
   sceneCardRefs?: MutableRefObject<Map<string, HTMLElement>>;
   speakerNameRefs?: MutableRefObject<Map<string, HTMLSelectElement>>;
   lineBodyRefs?: MutableRefObject<Map<string, HTMLTextAreaElement>>;
@@ -53,17 +68,27 @@ export function ScriptScreen({
   onSelectLine,
   onChangeLineType,
   onUpdateLine,
+  onSplitLine,
   onOpenStoryEditorScene,
   onMoveLine,
   onDuplicateLine,
   onRemoveLine,
   onAddLine,
+  onMergeLine,
+  onUpdateChapter,
+  onUpdatePlanning,
+  stageWarning,
+  onOpenStageWarning,
   sceneCardRefs,
   speakerNameRefs,
   lineBodyRefs,
 }: ScriptScreenProps) {
+  const selectedChapterStageKeys = canonicalizeStoryStageKeys(
+    selectedChapter.storyStageKeys,
+  );
+  const selectedStructure = getStructureOption(draft.planning.structureMode);
   const chapterStageLabel = formatStoryStageLabels(
-    canonicalizeStoryStageKeys(selectedChapter.storyStageKeys),
+    selectedChapterStageKeys,
     draft.planning.structureMode,
     `${selectedChapter.order}장`,
   );
@@ -84,6 +109,89 @@ export function ScriptScreen({
           </span>
         </div>
       </div>
+      <div
+        className="script-stage-bar"
+        role="group"
+        aria-label="이 장의 이야기 단계 선택"
+      >
+        <div className="script-stage-mode-group">
+          <span className="script-stage-bar-label">이야기 단계:</span>
+          {onUpdatePlanning ? (
+            <select
+              className="script-stage-mode-select"
+              value={draft.planning.structureMode}
+              onChange={(e) =>
+                onUpdatePlanning({
+                  structureMode: e.target.value as StoryStructureMode,
+                })
+              }
+              aria-label="이야기 구성 단계 방식"
+            >
+              <option value="three">3단계 (처음 → 중간 → 끝)</option>
+              <option value="four">4단계 (발단 → 전개 → 절정 → 결말)</option>
+              <option value="five">5단계 (발단 → 전개 → 위기 → 절정 → 결말)</option>
+            </select>
+          ) : (
+            <span className="script-stage-mode-badge">
+              {selectedStructure.title}
+            </span>
+          )}
+          {stageWarning && onOpenStageWarning && (
+            <button
+              type="button"
+              className="script-stage-advisory-btn"
+              onClick={onOpenStageWarning}
+              title="이야기 단계 다듬기 안내 열기"
+            >
+              💡 단계 다듬기 안내
+            </button>
+          )}
+        </div>
+        <div
+          className="script-stage-pill-list"
+          role="group"
+          aria-label={`${selectedChapter.order}장 이야기 단계 선택`}
+        >
+          {selectedStructure.steps.map((step) => {
+            const isSelected = selectedChapterStageKeys.includes(step.key);
+            return (
+              <button
+                key={step.key}
+                type="button"
+                className={`stage-pill-btn ${isSelected ? "active" : ""}`}
+                aria-pressed={isSelected}
+                onClick={() => {
+                  if (!onUpdateChapter) return;
+                  const nextKeys = isSelected
+                    ? selectedChapterStageKeys.filter((k) => k !== step.key)
+                    : [step.key];
+                  onUpdateChapter(selectedChapter.id, {
+                    storyStageKeys: canonicalizeStoryStageKeys(nextKeys),
+                  });
+                }}
+                title={step.guide}
+              >
+                {step.label}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            className={`stage-pill-btn none-stage-btn ${
+              selectedChapterStageKeys.length === 0 ? "active" : ""
+            }`}
+            aria-pressed={selectedChapterStageKeys.length === 0}
+            onClick={() => {
+              if (onUpdateChapter) {
+                onUpdateChapter(selectedChapter.id, { storyStageKeys: [] });
+              }
+            }}
+            title="이 장에는 이야기 단계를 설정하지 않고 자유롭게 작성해요"
+          >
+            설정 안 함 (자유)
+          </button>
+        </div>
+      </div>
       {selectedLine && (
         <section className="script-selected-stage" aria-label="현재 컷 무대">
           <header>
@@ -97,11 +205,27 @@ export function ScriptScreen({
               이 컷 꾸미기
             </button>
           </header>
-          <SceneThumbnail chapter={selectedChapter} line={selectedLine} />
+          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" speaker={selectedLine.speaker}>
+            <div className="dialogue-box">
+              <p>{selectedLine.type === "narration"
+                ? <DialogueText text={selectedLine.text || "아래 글상자에 해설을 써 보세요."} />
+                : <DialogueInline speakerName={selectedLine.speakerName} text={selectedLine.text || "아래 글상자에 대사를 써 보세요."} />}</p>
+            </div>
+          </StorySceneFrame>
         </section>
       )}
       <div className="script-scene-list">
-        {selectedChapterLines.map((line, index) => (
+        {selectedChapterLines.map((line, index) => {
+          const prevLine = index > 0 ? selectedChapterLines[index - 1] : undefined;
+          const nextLine =
+            index < selectedChapterLines.length - 1
+              ? selectedChapterLines[index + 1]
+              : undefined;
+          const canMergeWithNext = nextLine ? canMergeStoryLines(line, nextLine) : false;
+          const canMergeWithPrev = prevLine ? canMergeStoryLines(prevLine, line) : false;
+          const canMerge = canMergeWithNext || canMergeWithPrev;
+
+          return (
           <article
             className={`script-scene-card ${line.type} ${
               line.id === selectedLine?.id ? "active" : ""
@@ -124,109 +248,281 @@ export function ScriptScreen({
               </span>
             </div>
             <div className="scene-writing-fields">
-              <div className="scene-inline-controls">
-                <span className={`scene-kind-badge ${line.type}`}>
-                  {line.type === "narration"
-                    ? "해설 · 이야기 설명"
-                    : "대사 · 인물이 말함"}
-                </span>
-                <select
-                  value={line.type}
-                  aria-label={`${index + 1}컷 종류`}
-                  onChange={(event) =>
-                    onChangeLineType(
-                      line.id,
-                      event.target.value as StoryLine["type"],
-                    )
-                  }
-                >
-                  <option value="dialogue">대사</option>
-                  <option value="narration">해설</option>
-                </select>
-                {line.type === "dialogue" && (
-                  <>
-                    <select
-                      value={line.speaker}
-                      aria-label={`${index + 1}컷 화자 위치`}
-                      onChange={(event) =>
-                        onUpdateLine(line.id, {
-                          speaker: event.target
-                            .value as StoryLine["speaker"],
-                        })
-                      }
-                    >
-                      <option value="left">왼쪽</option>
-                      <option value="right">오른쪽</option>
-                    </select>
-                    <select
-                      ref={(node) => {
-                        if (speakerNameRefs?.current) {
-                          if (node) {
-                            speakerNameRefs.current.set(line.id, node);
-                          } else {
-                            speakerNameRefs.current.delete(line.id);
+              <div className="scene-control-row">
+                <div className={`scene-control-box ${line.type}`}>
+                  {line.type === "dialogue" ? (
+                    <>
+                      <div className="scene-control-sub-row">
+                        <select
+                          className="scene-control-type"
+                          value={line.type}
+                          aria-label={`${index + 1}컷 종류`}
+                          onChange={(event) =>
+                            onChangeLineType(
+                              line.id,
+                              event.target.value as StoryLine["type"],
+                            )
                           }
+                        >
+                          <option value="dialogue">대사</option>
+                          <option value="narration">해설</option>
+                        </select>
+                        <select
+                          className="scene-control-position"
+                          value={line.speaker}
+                          aria-label={`${index + 1}컷 화자 위치`}
+                          onChange={(event) =>
+                            onUpdateLine(line.id, {
+                              speaker: event.target.value as StoryLine["speaker"],
+                            })
+                          }
+                        >
+                          <option value="left">왼쪽</option>
+                          <option value="right">오른쪽</option>
+                        </select>
+                      </div>
+                      <select
+                        ref={(node) => {
+                          if (speakerNameRefs?.current) {
+                            if (node) {
+                              speakerNameRefs.current.set(line.id, node);
+                            } else {
+                              speakerNameRefs.current.delete(line.id);
+                            }
+                          }
+                        }}
+                        className={`scene-control-speaker ${
+                          highlightedApplyIssue?.field === "speaker" &&
+                          highlightedApplyIssue.lineId === line.id
+                            ? "issue-target-highlight"
+                            : ""
+                        }`}
+                        value={line.speakerName}
+                        aria-label={`${index + 1}컷 화자 이름`}
+                        onChange={(event) =>
+                          onUpdateLine(line.id, {
+                            speakerName: event.target.value,
+                          })
                         }
-                      }}
-                      className={
-                        highlightedApplyIssue?.field === "speaker" &&
-                        highlightedApplyIssue.lineId === line.id
-                          ? "issue-target-highlight"
-                          : undefined
-                      }
-                      value={line.speakerName}
-                      aria-label={`${index + 1}컷 화자 이름`}
-                      onChange={(event) =>
-                        onUpdateLine(line.id, {
-                          speakerName: event.target.value,
-                        })
-                      }
-                    >
-                      {unique([
-                        line.speakerName,
-                        ...selectedChapter.chapterSpeakerNames,
-                      ]).map((name) => (
-                        <option value={name} key={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </>
-                )}
-              </div>
-              <div className={`script-writing-line ${line.type}`}>
-                {line.type === "dialogue" && (
-                  <strong className="dialogue-speaker">
+                      >
+                        {unique([
+                          line.speakerName,
+                          ...draft.speakerNames,
+                          ...selectedChapter.chapterSpeakerNames,
+                        ]).map((name) => (
+                          <option value={name} key={name}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="scene-kind-badge sr-only">대사 · 인물이 말함</span>
+                    </>
+                  ) : (
+                    <>
+                      <select
+                        className="scene-control-type"
+                        value={line.type}
+                        aria-label={`${index + 1}컷 종류`}
+                        onChange={(event) =>
+                          onChangeLineType(
+                            line.id,
+                            event.target.value as StoryLine["type"],
+                          )
+                        }
+                      >
+                        <option value="dialogue">대사</option>
+                        <option value="narration">해설</option>
+                      </select>
+                      <span className="scene-kind-badge narration">
+                        해설 · 이야기 설명
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div className={`script-writing-line ${line.type}`}>
+                  <strong className="dialogue-speaker sr-only">
                     {line.speakerName || "화자 없음"}:
                   </strong>
-                )}
-                <textarea
-                  ref={(node) => {
-                    if (lineBodyRefs?.current) {
-                      if (node) lineBodyRefs.current.set(line.id, node);
-                      else lineBodyRefs.current.delete(line.id);
+                  <textarea
+                    ref={(node) => {
+                      if (lineBodyRefs?.current) {
+                        if (node) lineBodyRefs.current.set(line.id, node);
+                        else lineBodyRefs.current.delete(line.id);
+                      }
+                    }}
+                    className={
+                      highlightedApplyIssue?.field === "line-body" &&
+                      highlightedApplyIssue.lineId === line.id
+                        ? "issue-target-highlight"
+                        : undefined
                     }
-                  }}
-                  className={
-                    highlightedApplyIssue?.field === "line-body" &&
-                    highlightedApplyIssue.lineId === line.id
-                      ? "issue-target-highlight"
-                      : undefined
-                  }
-                  rows={3}
-                  value={line.text}
-                  placeholder={
-                    line.type === "narration"
-                      ? "시간·장소·상황을 괄호 없이 들려주세요."
-                      : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                  }
-                  onChange={(event) =>
-                    onUpdateLine(line.id, {
-                      text: event.target.value,
-                    })
-                  }
-                  aria-label={`${index + 1}컷 내용`}
-                />
+                    rows={3}
+                    value={line.text}
+                    placeholder={
+                      line.type === "narration"
+                        ? "시간·장소·상황을 괄호 없이 들려주세요."
+                        : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
+                    }
+                    onChange={(event) =>
+                      onUpdateLine(line.id, {
+                        text: event.target.value,
+                      })
+                    }
+                    aria-label={`${index + 1}컷 내용`}
+                    aria-describedby={`cut-length-${line.id}`}
+                    aria-invalid={countStoryCharacters(line.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
+                  />
+                </div>
+              </div>
+              <div className="scene-card-meta-bar">
+                <div className="scene-meta-left">
+                  <CutLengthGuide id={`cut-length-${line.id}`} text={line.text} onSplit={() => onSplitLine(line.id)} />
+                  <small className="scene-asset-summary">
+                    왼쪽{" "}
+                    {assetName(
+                      line.leftAssetId || selectedChapter.leftAssetId,
+                    ) || "없음"}
+                    {" · "}오른쪽{" "}
+                    {assetName(
+                      line.rightAssetId || selectedChapter.rightAssetId,
+                    ) || "없음"}
+                    {" · "}배경{" "}
+                    {assetName(
+                      line.backgroundId || selectedChapter.backgroundId,
+                    ) || "없음"}
+                  </small>
+                </div>
+                <div className="scene-card-actions">
+                  <button
+                    type="button"
+                    className="scene-add-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onAddLine(line.type, line.id);
+                    }}
+                    title="이 컷 바로 아래에 새 컷을 추가해요"
+                  >
+                    + 컷 추가
+                  </button>
+                  <button
+                    type="button"
+                    className="scene-merge-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (canMergeWithNext && nextLine) {
+                        onMergeLine(line.id, nextLine.id);
+                      } else if (canMergeWithPrev && prevLine) {
+                        onMergeLine(prevLine.id, line.id);
+                      }
+                    }}
+                    disabled={!canMerge}
+                    title={
+                      canMergeWithNext
+                        ? `다음 컷(${index + 2}컷)과 하나로 합치기`
+                        : canMergeWithPrev
+                          ? `이전 컷(${index}컷)과 하나로 합치기`
+                          : "대사·해설 종류와 인물이 같은 앞뒤 컷이 있을 때만 합칠 수 있어요"
+                    }
+                  >
+                    컷 합치기
+                  </button>
+                  <button
+                    type="button"
+                    className="scene-focus-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onOpenStoryEditorScene(line);
+                    }}
+                  >
+                    컷 꾸미기
+                  </button>
+                  <details className="scene-more-actions">
+                    <summary>더보기</summary>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onAddLine(line.type, line.id);
+                        }}
+                      >
+                        아래에 컷 추가
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (nextLine) onMergeLine(line.id, nextLine.id);
+                        }}
+                        disabled={!canMergeWithNext}
+                        title={
+                          !canMergeWithNext
+                            ? "다음 컷과 대사·해설 종류나 인물이 달라요"
+                            : "다음 컷과 하나로 합쳐요"
+                        }
+                      >
+                        다음 컷과 합치기
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (prevLine) onMergeLine(prevLine.id, line.id);
+                        }}
+                        disabled={!canMergeWithPrev}
+                        title={
+                          !canMergeWithPrev
+                            ? "이전 컷과 대사·해설 종류나 인물이 달라요"
+                            : "이전 컷과 하나로 합쳐요"
+                        }
+                      >
+                        이전 컷과 합치기
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onMoveLine(line.id, -1);
+                        }}
+                        disabled={index === 0}
+                      >
+                        위로
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onMoveLine(line.id, 1);
+                        }}
+                        disabled={
+                          index === selectedChapterLines.length - 1
+                        }
+                      >
+                        아래로
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onDuplicateLine(line.id);
+                        }}
+                      >
+                        복제
+                      </button>
+                      <button
+                        type="button"
+                        className="danger-link"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onRemoveLine(line.id);
+                        }}
+                        disabled={selectedChapterLines.length <= 1}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </details>
+                </div>
               </div>
               <small
                 className={`scene-writing-help ${
@@ -241,20 +537,6 @@ export function ScriptScreen({
                     : "해설은 괄호 없이 시간·장소·상황을 들려줘요."
                   : "속마음·표정·행동은 학생이 직접 (괄호 안에) 써요."}
               </small>
-              <small className="scene-asset-summary">
-                왼쪽{" "}
-                {assetName(
-                  line.leftAssetId || selectedChapter.leftAssetId,
-                ) || "없음"}
-                {" · "}오른쪽{" "}
-                {assetName(
-                  line.rightAssetId || selectedChapter.rightAssetId,
-                ) || "없음"}
-                {" · "}배경{" "}
-                {assetName(
-                  line.backgroundId || selectedChapter.backgroundId,
-                ) || "없음"}
-              </small>
             </div>
             {imageView === "small" && (
               <SceneThumbnail
@@ -262,66 +544,9 @@ export function ScriptScreen({
                 line={line}
               />
             )}
-            <div className="scene-card-actions">
-              <button
-                type="button"
-                className="scene-focus-button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onOpenStoryEditorScene(line);
-                }}
-              >
-                컷 꾸미기
-              </button>
-              <details className="scene-more-actions">
-                <summary>더보기</summary>
-                <div>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onMoveLine(line.id, -1);
-                    }}
-                    disabled={index === 0}
-                  >
-                    위로
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onMoveLine(line.id, 1);
-                    }}
-                    disabled={
-                      index === selectedChapterLines.length - 1
-                    }
-                  >
-                    아래로
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onDuplicateLine(line.id);
-                    }}
-                  >
-                    복제
-                  </button>
-                  <button
-                    type="button"
-                    className="danger-link"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onRemoveLine(line.id);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </div>
-              </details>
-            </div>
           </article>
-        ))}
+          );
+        })}
         {selectedChapterLines.length === 0 && (
           <div className="empty-script">
             <strong>아직 컷이 없어요.</strong>

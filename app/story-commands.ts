@@ -1,4 +1,5 @@
 import type { Chapter, StoryLine } from "./story-data";
+import { splitStoryText } from "./story-cut-length";
 
 export function moveStoryChapter({ chapters, chapterId, direction }: {
   chapters: Chapter[];
@@ -17,7 +18,8 @@ export function moveStoryChapter({ chapters, chapterId, direction }: {
 export type StoryLineCommandFailureCode =
   | "line-not-found"
   | "cannot-move"
-  | "duplicate-id";
+  | "duplicate-id"
+  | "cannot-merge";
 
 export type StoryLineCommandResult =
   | { ok: true; lines: StoryLine[]; selectedLineId?: string }
@@ -183,5 +185,92 @@ export function deleteStoryLine({
     ok: true,
     lines: replaceChapterLines(lines, source.chapterId, nextChapterLines),
     ...(selectedLineId === undefined ? {} : { selectedLineId }),
+  };
+}
+
+/** Original ID (including continuation pointer) stays on the first cut. */
+export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOptions): StoryLineCommandResult {
+  const source = lines.find(line => line.id === lineId);
+  if (!source) return { ok: false, code: "line-not-found" };
+  const chunks = splitStoryText(source.text);
+  if (chunks.length === 1) return { ok: true, lines, selectedLineId: lineId };
+  const ids = new Set(lines.map(line => line.id));
+  const splitLines: StoryLine[] = [{ ...source, text: chunks[0] }];
+  for (const text of chunks.slice(1)) {
+    const id = createId();
+    if (ids.has(id)) return { ok: false, code: "duplicate-id" };
+    ids.add(id);
+    splitLines.push({ ...source, id, text });
+  }
+  const chapterLines = orderedLines(lines, source.chapterId);
+  const next = chapterLines.flatMap(line => line.id === lineId ? splitLines : [line]);
+  return {
+    ok: true,
+    lines: replaceChapterLines(lines, source.chapterId, withContinuousOrder(next)),
+    selectedLineId: lineId,
+  };
+}
+
+export function canMergeStoryLines(first: StoryLine, second: StoryLine): boolean {
+  if (first.chapterId !== second.chapterId) return false;
+  if (first.type !== second.type) return false;
+  if (first.type === "narration") return true;
+  return (
+    first.speaker === second.speaker &&
+    first.speakerName.trim() === second.speakerName.trim()
+  );
+}
+
+export type MergeStoryLinesOptions = {
+  lines: StoryLine[];
+  sourceLineId: string;
+  targetLineId: string;
+};
+
+export function mergeStoryLines({
+  lines,
+  sourceLineId,
+  targetLineId,
+}: MergeStoryLinesOptions): StoryLineCommandResult {
+  const first = lines.find((line) => line.id === sourceLineId);
+  const second = lines.find((line) => line.id === targetLineId);
+  if (!first || !second) return { ok: false, code: "line-not-found" };
+  if (!canMergeStoryLines(first, second)) {
+    return { ok: false, code: "cannot-merge" };
+  }
+
+  const [earlier, later] = first.order < second.order ? [first, second] : [second, first];
+
+  const text1 = earlier.text.trim();
+  const text2 = later.text.trim();
+  const combinedText =
+    !text1 ? text2
+    : !text2 ? text1
+    : earlier.text.endsWith("\n") || earlier.text.endsWith(" ")
+      ? `${earlier.text}${later.text}`
+      : `${earlier.text} ${later.text}`;
+
+  const mergedLine: StoryLine = {
+    ...earlier,
+    text: combinedText,
+    leftAssetId: earlier.leftAssetId || later.leftAssetId,
+    rightAssetId: earlier.rightAssetId || later.rightAssetId,
+    backgroundId: earlier.backgroundId || later.backgroundId,
+    purposeNote: earlier.purposeNote || later.purposeNote,
+    emotionNote: earlier.emotionNote || later.emotionNote,
+    directionNote: earlier.directionNote || later.directionNote,
+  };
+
+  const chapterLines = orderedLines(lines, earlier.chapterId);
+  const next = chapterLines.flatMap((line) => {
+    if (line.id === earlier.id) return [mergedLine];
+    if (line.id === later.id) return [];
+    return [line];
+  });
+
+  return {
+    ok: true,
+    lines: replaceChapterLines(lines, earlier.chapterId, withContinuousOrder(next)),
+    selectedLineId: earlier.id,
   };
 }

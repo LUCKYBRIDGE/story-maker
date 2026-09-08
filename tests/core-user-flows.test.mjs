@@ -541,3 +541,98 @@ test("CF-12: 예시 왕복은 학생 저장본·위치를 보존하고 현재 �
   assert.equal(result.edit.view, "scene");
   assert.equal(result.deleted, null);
 });
+
+test("CF-13: 200컷 대규모 작품, 1000자 대사·해설, 줄바꿈, 긴 제목에서도 데이터와 위치가 유실 없이 보존된다", () => {
+  const result = runCoreUserFlows(`
+    const doc = await import('./app/story-project-document.ts');
+    const location = await import('./app/story-editor-location.ts');
+    const base = fixtures.createCurrentV1ProjectFixture();
+
+    const longSpeech = "토끼: (눈을 깜빡이며) " + "아주 긴 대사 문장입니다. ".repeat(70);
+    const longNarration = "바다 속 깊은 용궁에서는 신비로운 빛이 감돌고 있었다. ".repeat(35);
+    const multilineText = "첫 번째 줄\\n\\n두 번째 단락 줄바꿈\\n\\n세 번째 단락 줄바꿈";
+    const unbrokenText = "오류코드_" + "가나다라마바사_".repeat(25);
+
+    const lines = [];
+    for (let i = 0; i < 200; i++) {
+      let text = \`컷 내용 \${i + 1}\`;
+      let type = "dialogue";
+      let speaker = "left";
+      if (i === 0) {
+        text = longSpeech;
+      } else if (i === 1) {
+        text = longNarration;
+        type = "narration";
+        speaker = "narration";
+      } else if (i === 2) {
+        text = multilineText;
+      } else if (i === 3) {
+        text = unbrokenText;
+      }
+      lines.push({
+        ...base.lines[0],
+        id: \`line-stress-\${i.toString().padStart(3, "0")}\`,
+        order: i + 1,
+        text,
+        type,
+        speaker,
+      });
+    }
+
+    const bigProject = {
+      ...base,
+      title: "매우 긴 제목을 가진 200컷 스트레스 테스트 작품".repeat(3),
+      lines,
+      continuation: { ...base.continuation, lineId: lines[1].id },
+    };
+
+    const envelope = doc.createStoryDocument({
+      project: bigProject,
+      savedAt: "2026-09-07T00:00:00.000Z",
+      appVersion: "0.1.0",
+    });
+    const parsed = doc.parseStoryDocument(JSON.stringify(envelope));
+
+    let state = playerState.storyStudioPlayerReducer(
+      playerState.INITIAL_STORY_STUDIO_PLAYER_STATE,
+      { type: "open", index: 0, context: playerState.createStoryPlaybackContext("student", bigProject) }
+    );
+    const pos0 = selectors.selectStoryPlayerPosition(state.context.project, state.playIndex);
+
+    state = playerState.storyStudioPlayerReducer(state, { type: "change-index", index: 199 });
+    const pos199 = selectors.selectStoryPlayerPosition(state.context.project, state.playIndex);
+
+    const posClamped = selectors.selectStoryPlayerPosition(state.context.project, 999);
+
+    const editCut199 = location.resolvePlayedCutLocation(bigProject, {
+      projectId: bigProject.id,
+      lineId: pos199.line.id,
+    });
+
+    console.log(JSON.stringify({
+      parsedOk: parsed.ok,
+      totalLines: parsed.document.project.lines.length,
+      firstLineLength: parsed.document.project.lines[0].text.length,
+      secondLineType: parsed.document.project.lines[1].type,
+      thirdLineNewlines: parsed.document.project.lines[2].text.includes("\\n\\n"),
+      fourthLineHasUnbroken: parsed.document.project.lines[3].text.startsWith("오류코드_"),
+      pos0Id: pos0.line.id,
+      pos199Id: pos199.line.id,
+      posClampedId: posClamped.line.id,
+      editCut199LineId: editCut199.lineId,
+      editCut199View: editCut199.view,
+    }));
+  `);
+
+  assert.equal(result.parsedOk, true);
+  assert.equal(result.totalLines, 200);
+  assert.ok(result.firstLineLength >= 1000);
+  assert.equal(result.secondLineType, "narration");
+  assert.equal(result.thirdLineNewlines, true);
+  assert.equal(result.fourthLineHasUnbroken, true);
+  assert.equal(result.pos0Id, "line-stress-000");
+  assert.equal(result.pos199Id, "line-stress-199");
+  assert.equal(result.posClampedId, "line-stress-199");
+  assert.equal(result.editCut199LineId, "line-stress-199");
+  assert.equal(result.editCut199View, "scene");
+});
