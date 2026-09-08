@@ -54,6 +54,7 @@ export function StartScreen({
   const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("rabbit");
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [isFlipping, setIsFlipping] = useState(false);
+  const [isPageTurning, setIsPageTurning] = useState(false);
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
 
@@ -91,6 +92,15 @@ export function StartScreen({
     setTimeout(() => {
       setIsFlipping(false);
     }, 600);
+  };
+
+  const handleTabChange = (tab: "create" | "continue" | "example") => {
+    if (tab === activeTab) return;
+    setIsPageTurning(true);
+    setActiveTab(tab);
+    setTimeout(() => {
+      setIsPageTurning(false);
+    }, 450);
   };
 
   return (
@@ -221,6 +231,7 @@ export function StartScreen({
 
         {/* B. 펼쳐진 책 내부 (Book Inside Spread): 터치 후 3D 책장이 넘어가며 나타나는 화면 */}
         <div className={`book-inside-spread ${isBookOpen ? "is-visible" : "is-hidden"}`}>
+          <div className="book-ribbon" aria-hidden="true" />
           <div className="open-book-header">
             <div className="entry-brand">
               <span className="brand-mark large">놀퀴즈</span>
@@ -275,7 +286,7 @@ export function StartScreen({
             <button
               type="button"
               className={`band-action-btn action-continue ${activeTab === "continue" ? "active" : ""}`}
-              onClick={() => setActiveTab("continue")}
+              onClick={() => handleTabChange("continue")}
             >
               <span className="btn-icon" aria-hidden="true">📖</span>
               <div className="btn-content">
@@ -294,13 +305,13 @@ export function StartScreen({
               : event.key === "Home" ? 0 : event.key === "End" ? 2 : -1;
             if (next < 0) return;
             event.preventDefault();
-            setActiveTab(tabs[next]);
+            handleTabChange(tabs[next]);
             document.getElementById(`tab-${tabs[next]}`)?.focus();
           }}>
           <button
             type="button"
             className={`entry-tab-button ${activeTab === "create" ? "active" : ""}`}
-            onClick={() => setActiveTab("create")}
+            onClick={() => handleTabChange("create")}
             aria-selected={activeTab === "create"}
             tabIndex={activeTab === "create" ? 0 : -1}
             role="tab"
@@ -312,7 +323,7 @@ export function StartScreen({
           <button
             type="button"
             className={`entry-tab-button ${activeTab === "continue" ? "active" : ""}`}
-            onClick={() => setActiveTab("continue")}
+            onClick={() => handleTabChange("continue")}
             aria-selected={activeTab === "continue"}
             tabIndex={activeTab === "continue" ? 0 : -1}
             role="tab"
@@ -324,7 +335,7 @@ export function StartScreen({
           <button
             type="button"
             className={`entry-tab-button ${activeTab === "example" ? "active" : ""}`}
-            onClick={() => setActiveTab("example")}
+            onClick={() => handleTabChange("example")}
             aria-selected={activeTab === "example"}
             tabIndex={activeTab === "example" ? 0 : -1}
             role="tab"
@@ -335,7 +346,7 @@ export function StartScreen({
           </button>
         </nav>
 
-        <div className="entry-choice-grid">
+        <div className={`entry-choice-grid ${isPageTurning ? "page-turning-anim" : ""}`}>
           <section
             id="panel-create"
             role="tabpanel"
