@@ -137,111 +137,131 @@ export function ScriptScreen({
               </span>
             </div>
             <div className="scene-writing-fields">
-              <div className="scene-inline-controls">
-                <span className={`scene-kind-badge ${line.type}`}>
-                  {line.type === "narration"
-                    ? "해설 · 이야기 설명"
-                    : "대사 · 인물이 말함"}
-                </span>
-                <select
-                  value={line.type}
-                  aria-label={`${index + 1}컷 종류`}
-                  onChange={(event) =>
-                    onChangeLineType(
-                      line.id,
-                      event.target.value as StoryLine["type"],
-                    )
-                  }
-                >
-                  <option value="dialogue">대사</option>
-                  <option value="narration">해설</option>
-                </select>
-                {line.type === "dialogue" && (
-                  <>
-                    <select
-                      value={line.speaker}
-                      aria-label={`${index + 1}컷 화자 위치`}
-                      onChange={(event) =>
-                        onUpdateLine(line.id, {
-                          speaker: event.target
-                            .value as StoryLine["speaker"],
-                        })
-                      }
-                    >
-                      <option value="left">왼쪽</option>
-                      <option value="right">오른쪽</option>
-                    </select>
-                    <select
-                      ref={(node) => {
-                        if (speakerNameRefs?.current) {
-                          if (node) {
-                            speakerNameRefs.current.set(line.id, node);
-                          } else {
-                            speakerNameRefs.current.delete(line.id);
+              <div className="scene-control-row">
+                <div className={`scene-control-box ${line.type}`}>
+                  {line.type === "dialogue" ? (
+                    <>
+                      <div className="scene-control-sub-row">
+                        <select
+                          className="scene-control-type"
+                          value={line.type}
+                          aria-label={`${index + 1}컷 종류`}
+                          onChange={(event) =>
+                            onChangeLineType(
+                              line.id,
+                              event.target.value as StoryLine["type"],
+                            )
                           }
+                        >
+                          <option value="dialogue">대사</option>
+                          <option value="narration">해설</option>
+                        </select>
+                        <select
+                          className="scene-control-position"
+                          value={line.speaker}
+                          aria-label={`${index + 1}컷 화자 위치`}
+                          onChange={(event) =>
+                            onUpdateLine(line.id, {
+                              speaker: event.target
+                                .value as StoryLine["speaker"],
+                            })
+                          }
+                        >
+                          <option value="left">왼쪽</option>
+                          <option value="right">오른쪽</option>
+                        </select>
+                      </div>
+                      <select
+                        ref={(node) => {
+                          if (speakerNameRefs?.current) {
+                            if (node) {
+                              speakerNameRefs.current.set(line.id, node);
+                            } else {
+                              speakerNameRefs.current.delete(line.id);
+                            }
+                          }
+                        }}
+                        className={`scene-control-speaker ${
+                          highlightedApplyIssue?.field === "speaker" &&
+                          highlightedApplyIssue.lineId === line.id
+                            ? "issue-target-highlight"
+                            : ""
+                        }`}
+                        value={line.speakerName}
+                        aria-label={`${index + 1}컷 화자 이름`}
+                        onChange={(event) =>
+                          onUpdateLine(line.id, {
+                            speakerName: event.target.value,
+                          })
                         }
-                      }}
-                      className={
-                        highlightedApplyIssue?.field === "speaker" &&
-                        highlightedApplyIssue.lineId === line.id
-                          ? "issue-target-highlight"
-                          : undefined
-                      }
-                      value={line.speakerName}
-                      aria-label={`${index + 1}컷 화자 이름`}
-                      onChange={(event) =>
-                        onUpdateLine(line.id, {
-                          speakerName: event.target.value,
-                        })
-                      }
-                    >
-                      {unique([
-                        line.speakerName,
-                        ...selectedChapter.chapterSpeakerNames,
-                      ]).map((name) => (
-                        <option value={name} key={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </>
-                )}
-              </div>
-              <div className={`script-writing-line ${line.type}`}>
-                {line.type === "dialogue" && (
-                  <strong className="dialogue-speaker">
+                      >
+                        {unique([
+                          line.speakerName,
+                          ...selectedChapter.chapterSpeakerNames,
+                        ]).map((name) => (
+                          <option value={name} key={name}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="scene-kind-badge sr-only">대사 · 인물이 말함</span>
+                    </>
+                  ) : (
+                    <>
+                      <select
+                        className="scene-control-type"
+                        value={line.type}
+                        aria-label={`${index + 1}컷 종류`}
+                        onChange={(event) =>
+                          onChangeLineType(
+                            line.id,
+                            event.target.value as StoryLine["type"],
+                          )
+                        }
+                      >
+                        <option value="dialogue">대사</option>
+                        <option value="narration">해설</option>
+                      </select>
+                      <span className="scene-kind-badge narration">
+                        해설 · 이야기 설명
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div className={`script-writing-line ${line.type}`}>
+                  <strong className="dialogue-speaker sr-only">
                     {line.speakerName || "화자 없음"}:
                   </strong>
-                )}
-                <textarea
-                  ref={(node) => {
-                    if (lineBodyRefs?.current) {
-                      if (node) lineBodyRefs.current.set(line.id, node);
-                      else lineBodyRefs.current.delete(line.id);
+                  <textarea
+                    ref={(node) => {
+                      if (lineBodyRefs?.current) {
+                        if (node) lineBodyRefs.current.set(line.id, node);
+                        else lineBodyRefs.current.delete(line.id);
+                      }
+                    }}
+                    className={
+                      highlightedApplyIssue?.field === "line-body" &&
+                      highlightedApplyIssue.lineId === line.id
+                        ? "issue-target-highlight"
+                        : undefined
                     }
-                  }}
-                  className={
-                    highlightedApplyIssue?.field === "line-body" &&
-                    highlightedApplyIssue.lineId === line.id
-                      ? "issue-target-highlight"
-                      : undefined
-                  }
-                  rows={3}
-                  value={line.text}
-                  placeholder={
-                    line.type === "narration"
-                      ? "시간·장소·상황을 괄호 없이 들려주세요."
-                      : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-                  }
-                  onChange={(event) =>
-                    onUpdateLine(line.id, {
-                      text: event.target.value,
-                    })
-                  }
-                  aria-label={`${index + 1}컷 내용`}
-                  aria-describedby={`cut-length-${line.id}`}
-                  aria-invalid={countStoryCharacters(line.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
-                />
+                    rows={3}
+                    value={line.text}
+                    placeholder={
+                      line.type === "narration"
+                        ? "시간·장소·상황을 괄호 없이 들려주세요."
+                        : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
+                    }
+                    onChange={(event) =>
+                      onUpdateLine(line.id, {
+                        text: event.target.value,
+                      })
+                    }
+                    aria-label={`${index + 1}컷 내용`}
+                    aria-describedby={`cut-length-${line.id}`}
+                    aria-invalid={countStoryCharacters(line.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
+                  />
+                </div>
               </div>
               <div className="scene-card-meta-bar">
                 <div className="scene-meta-left">
