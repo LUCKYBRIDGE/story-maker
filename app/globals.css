@@ -6128,11 +6128,12 @@ img {
 .script-scene-card {
   display: grid;
   align-items: start;
-  padding: 10px;
-  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  border-bottom: 1.5px solid #e2e8f0;
   background: white;
-  grid-template-columns: 50px minmax(0, 1fr) auto;
-  gap: 9px;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 8px;
+  transition: background 0.15s ease;
 }
 
 .script-scene-card.active {
@@ -6155,17 +6156,20 @@ img {
 .scene-order {
   display: grid;
   justify-items: center;
-  gap: 5px;
+  gap: 3px;
+  padding-top: 2px;
 }
 
 .scene-order strong {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   place-items: center;
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--gold-soft);
   color: #6b4d18;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .scene-order span {
@@ -6177,21 +6181,21 @@ img {
 .scene-writing-fields {
   display: grid;
   min-width: 0;
-  gap: 7px;
+  gap: 5px;
 }
 
 .scene-inline-controls {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .scene-kind-badge {
   display: inline-flex;
-  min-height: 30px;
+  min-height: 26px;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
   border-radius: 999px;
   background: #dceee7;
   color: #1f6353;
@@ -6205,9 +6209,9 @@ img {
 }
 
 .scene-inline-controls select {
-  min-height: 38px;
-  padding: 0 9px;
-  border-radius: 9px;
+  min-height: 28px;
+  padding: 0 8px;
+  border-radius: 7px;
   font-size: 11px;
 }
 
@@ -6215,11 +6219,11 @@ img {
   display: flex;
   min-width: 0;
   align-items: flex-start;
-  padding: 9px 10px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   background: white;
-  gap: 5px;
+  gap: 6px;
 }
 
 .script-writing-line:focus-within {
@@ -6230,19 +6234,21 @@ img {
 .script-writing-line .dialogue-speaker {
   padding-top: 1px;
   color: var(--mint-strong);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  font-weight: 800;
+  line-height: 1.5;
 }
 
 .script-writing-line textarea {
   min-width: 0;
   width: 100%;
-  min-height: 68px;
+  min-height: 48px;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 13.5px;
   resize: vertical;
 }
 
@@ -6256,16 +6262,49 @@ img {
   scroll-margin-block: 112px;
 }
 
-.scene-writing-help {
-  color: var(--ink-soft);
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1.45;
+.scene-card-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.scene-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scene-card-meta-bar .cut-length-guide {
+  padding-top: 0;
+  font-size: 11px;
+  gap: 6px;
+}
+
+.scene-card-meta-bar .cut-length-guide button {
+  min-height: 26px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+.scene-card-meta-bar .scene-asset-summary {
+  font-size: 11px;
+  color: #718096;
+}
+
+.scene-writing-help:not(.warning) {
+  display: none;
 }
 
 .scene-writing-help.warning {
+  display: block;
   color: #a43d2f;
   font-weight: 900;
+  font-size: 10.5px;
+  margin-top: 2px;
 }
 
 .script-scene-card.narration .script-writing-line {
@@ -6337,20 +6376,23 @@ img {
 
 .scene-card-actions {
   display: flex;
-  grid-column: 2 / -1;
+  align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 5px;
 }
 
 .scene-card-actions button {
-  min-height: 34px;
-  padding: 0 9px;
+  min-height: 28px;
+  padding: 0 8px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 7px;
   background: var(--paper);
-  font-size: 10px;
-  font-weight: 900;
+  font-size: 10.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .scene-card-actions .scene-focus-button {
@@ -6364,16 +6406,19 @@ img {
 }
 
 .scene-more-actions summary {
-  min-height: 34px;
-  padding: 8px 10px;
+  min-height: 28px;
+  padding: 0 8px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 7px;
   background: var(--paper);
   color: var(--ink-soft);
   cursor: pointer;
-  font-size: 10px;
-  font-weight: 900;
+  font-size: 10.5px;
+  font-weight: 800;
   list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .scene-more-actions summary::-webkit-details-marker {
@@ -7507,13 +7552,12 @@ img {
   }
 
   .scene-card-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-    padding-left: 52px;
+    justify-content: flex-end;
+    padding-left: 0;
   }
 
   .scene-card-actions .scene-focus-button {
-    flex: 1 1 130px;
+    flex: initial;
   }
 
   .add-scene-row {
@@ -9572,8 +9616,6 @@ img {
 .creator-shell .view-setting select,
 .creator-shell .asset-open-button,
 .creator-shell .scene-inline-controls select,
-.creator-shell .scene-card-actions button,
-.creator-shell .scene-more-actions summary,
 .creator-shell .scene-focus-nav button,
 .creator-shell .scene-staging-copy-controls select,
 .creator-shell .scene-staging-copy-controls button,

@@ -243,7 +243,84 @@ export function ScriptScreen({
                   aria-invalid={countStoryCharacters(line.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
                 />
               </div>
-              <CutLengthGuide id={`cut-length-${line.id}`} text={line.text} onSplit={() => onSplitLine(line.id)} />
+              <div className="scene-card-meta-bar">
+                <div className="scene-meta-left">
+                  <CutLengthGuide id={`cut-length-${line.id}`} text={line.text} onSplit={() => onSplitLine(line.id)} />
+                  <small className="scene-asset-summary">
+                    왼쪽{" "}
+                    {assetName(
+                      line.leftAssetId || selectedChapter.leftAssetId,
+                    ) || "없음"}
+                    {" · "}오른쪽{" "}
+                    {assetName(
+                      line.rightAssetId || selectedChapter.rightAssetId,
+                    ) || "없음"}
+                    {" · "}배경{" "}
+                    {assetName(
+                      line.backgroundId || selectedChapter.backgroundId,
+                    ) || "없음"}
+                  </small>
+                </div>
+                <div className="scene-card-actions">
+                  <button
+                    type="button"
+                    className="scene-focus-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onOpenStoryEditorScene(line);
+                    }}
+                  >
+                    컷 꾸미기
+                  </button>
+                  <details className="scene-more-actions">
+                    <summary>더보기</summary>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onMoveLine(line.id, -1);
+                        }}
+                        disabled={index === 0}
+                      >
+                        위로
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onMoveLine(line.id, 1);
+                        }}
+                        disabled={
+                          index === selectedChapterLines.length - 1
+                        }
+                      >
+                        아래로
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onDuplicateLine(line.id);
+                        }}
+                      >
+                        복제
+                      </button>
+                      <button
+                        type="button"
+                        className="danger-link"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onRemoveLine(line.id);
+                        }}
+                        disabled={selectedChapterLines.length <= 1}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </details>
+                </div>
+              </div>
               <small
                 className={`scene-writing-help ${
                   line.type === "narration" && containsParentheses(line.text)
@@ -257,20 +334,6 @@ export function ScriptScreen({
                     : "해설은 괄호 없이 시간·장소·상황을 들려줘요."
                   : "속마음·표정·행동은 학생이 직접 (괄호 안에) 써요."}
               </small>
-              <small className="scene-asset-summary">
-                왼쪽{" "}
-                {assetName(
-                  line.leftAssetId || selectedChapter.leftAssetId,
-                ) || "없음"}
-                {" · "}오른쪽{" "}
-                {assetName(
-                  line.rightAssetId || selectedChapter.rightAssetId,
-                ) || "없음"}
-                {" · "}배경{" "}
-                {assetName(
-                  line.backgroundId || selectedChapter.backgroundId,
-                ) || "없음"}
-              </small>
             </div>
             {imageView === "small" && (
               <SceneThumbnail
@@ -278,64 +341,6 @@ export function ScriptScreen({
                 line={line}
               />
             )}
-            <div className="scene-card-actions">
-              <button
-                type="button"
-                className="scene-focus-button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onOpenStoryEditorScene(line);
-                }}
-              >
-                컷 꾸미기
-              </button>
-              <details className="scene-more-actions">
-                <summary>더보기</summary>
-                <div>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onMoveLine(line.id, -1);
-                    }}
-                    disabled={index === 0}
-                  >
-                    위로
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onMoveLine(line.id, 1);
-                    }}
-                    disabled={
-                      index === selectedChapterLines.length - 1
-                    }
-                  >
-                    아래로
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onDuplicateLine(line.id);
-                    }}
-                  >
-                    복제
-                  </button>
-                  <button
-                    type="button"
-                    className="danger-link"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onRemoveLine(line.id);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </div>
-              </details>
-            </div>
           </article>
         ))}
         {selectedChapterLines.length === 0 && (
