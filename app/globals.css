@@ -11050,3 +11050,20 @@ img {
 @media (prefers-reduced-motion: reduce) {
   .nolstory-studio-backdrop, .nolstory-studio-modal { transition: none; }
 }
+
+/* Choices and joins share the existing manuscript/cut editing surface. */
+.story-flow-editor, .story-flow-overview { min-width: 0; padding: 14px; margin: 12px 0; border: 1px solid #a7c5bb; border-radius: 14px; background: #f3f8f4; color: var(--ink); }
+.story-flow-editor summary, .story-flow-overview summary { min-height: 44px; cursor: pointer; font-weight: 800; padding: 10px 0; }
+.story-flow-editor p, .story-flow-overview p { font-size: 14px; line-height: 1.6; }
+.story-flow-editor select, .story-flow-editor input { width: 100%; min-width: 0; min-height: 44px; }
+.story-flow-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px; margin: 12px 0; }
+.story-flow-options fieldset { min-width: 0; border: 1px solid #bdd2c8; border-radius: 10px; padding: 12px; }
+.story-flow-editor button, .story-flow-overview button { min-height: 44px; padding: 10px 14px; border: 1px solid #b0c7bc; border-radius: 9px; background: white; overflow-wrap: anywhere; text-align: left; }
+.story-flow-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.story-flow-actions small, .story-flow-editor > small { display: block; width: 100%; margin-top: 8px; }
+.story-flow-warning { color: #9b391f; font-weight: 700; }
+.story-flow-overview li { margin: 8px 0; overflow-wrap: anywhere; }
+.player-choices { display: grid; gap: 10px; margin: 18px 0; }
+.player-choices button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 14px 18px; text-align: left; white-space: normal; overflow-wrap: anywhere; border: 2px solid #c9984b; border-radius: 12px; background: #fff3d4; color: #183331; font-weight: 750; }
+.player-choices button b { flex: 0 0 26px; }
+.player-choices button:focus-visible, .story-flow-editor button:focus-visible, .story-flow-overview button:focus-visible { outline: 3px solid #1678b1; outline-offset: 3px; }

@@ -1,5 +1,6 @@
 "use client";
 
+import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
 
 import { StorySceneFrame } from "./StoryStage";
@@ -439,6 +440,8 @@ export interface SceneFocusEditorProps {
   onMoveThroughStory: (delta: -1 | 1) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
+  onCreateBranches?: (lineId: string, count: 2 | 3, existingPlacement: import("../story-flow").ExistingStoryPlacement) => void;
+  onOpenLine?: (line: StoryLine) => void;
   onSplitLine: (lineId: string) => void;
   onAddSpeaker: (name: string, selectNew?: boolean) => void;
   onCopySceneStaging: (sourceLineId: string) => void;
@@ -467,6 +470,8 @@ export function SceneFocusEditor({
   onChangeLineType,
   onUpdateLine,
   onSplitLine,
+  onCreateBranches,
+  onOpenLine,
   onAddSpeaker,
   onCopySceneStaging,
   onSwitchStoryEditorView,
@@ -571,6 +576,8 @@ export function SceneFocusEditor({
         </button>
       </div>
 
+      <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
+      {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
       <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
 
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">

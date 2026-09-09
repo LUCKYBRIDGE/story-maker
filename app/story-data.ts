@@ -29,6 +29,7 @@ export type Chapter = {
 };
 
 export type StoryLine = {
+  flow?: import("./story-flow").StoryFlow;
   effect?: StorySceneEffect;
   id: string;
   chapterId: string;

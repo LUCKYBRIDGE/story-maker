@@ -1,3 +1,4 @@
+import { findStoryFlowIssues } from "./story-flow";
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
 import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "./story-cut-length";
 
@@ -9,7 +10,8 @@ export type StoryApplyIssueCode =
   | "empty-line"
   | "missing-speaker-name"
   | "narration-parentheses"
-  | "line-too-long";
+  | "line-too-long"
+  | "invalid-flow";
 
 export type StoryApplyIssueField =
   | "title"
@@ -139,6 +141,10 @@ export function findStoryApplyIssues(project: StoryProject): StoryApplyIssue[] {
         });
       }
     }
+  }
+  for (const [index, issue] of findStoryFlowIssues(project).entries()) {
+    const line = project.lines.find(line => line.id === issue.lineId);
+    issues.push({ id: `invalid-flow:${issue.lineId}:${index}`, code: "invalid-flow", field: "line-body", lineId: issue.lineId, chapterId: line?.chapterId, message: `${line?.order ?? ""}컷 선택·연결: ${issue.message}` });
   }
   return issues;
 }

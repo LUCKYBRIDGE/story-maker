@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-08
+- 기준일: 2026-09-09
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,30 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 요청: HS-01 첫 화면 공통 UI와 반응형
+## 현재 요청: BR-01 선택·분기·합류
+
+- 상태: `DONE` (2026-09-09 구현·로컬 검증 완료, PR 검토 전). 사용자 직접 지정, Work Lead · G/A/B.
+- branch: `codex/story-branching`, main `c24c90f`에서 시작, 기존 미커밋 변경 없음.
+- 주 책임: 데이터 신뢰성, 검토: 교육 UX·QA.
+- 범위: 컷 선택지 2/3개, 도착 컷·끝 연결, 갈래/합류 장 자동 준비,
+  실제 경로 이전 탐색, 저장/Excel/공개 시트 왕복, 삭제 후 연결 보호.
+- 인수: 2/3갈래 각각 재생·합류·다른 결말, 재선택, 이전 작품 회귀,
+  정적 검사·전체 검사·정적 빌드, 데스크톱/태블릿/모바일 브라우저 검증.
+- 기존 뒷이야기는 분기 생성 시 특정 선택지(1/2/3) 또는 공통 합류 뒤에 배정한다.
+  취소는 무변경, 원문·컷 ID·소속 장 보존, 이후 도착 컷을 바꾸어 재연결할 수 있다.
+- 자동 증거: `npm run check`, `npm test` 159/159 (기존 147 + 분기 12),
+  `npm run build:pages`, 공식 Excel 생성 통과. 기존 SSR·키보드 회귀 포함.
+- 브라우저: Chrome, 1365×900 / 820×1180 / 390×844. 세 갈래 작성·재생·합류,
+  실제 경로 이전/재선택·키보드 선택점 건너뛰기 방지·새로고침 보존 통과.
+  기존 두 컷 사이에 분기 삽입→취소→선택지 2로 뒷이야기 연결→각 결말 재생 통과.
+  선택 버튼 44px 이상·가로 넘침 없음·콘솔 오류 없음.
+- 모바일 글상자 초점 해제 시 높이 변화로 적용 클릭이 취소되는 문제도 수정했다.
+- 재현: 개발 서버 후 `QA_URL=http://localhost:3002 PLAYWRIGHT_MODULE=<기존 Playwright 경로>
+  node tests/browser/story-flow.mjs` 및 `tests/browser/story-flow-placement.mjs`.
+  결과와 캡처는 `/tmp/story-flow-qa`. 공개 배포·main 병합은 하지 않았다.
+- 물리 기기 IME, 무한 반복 스토리와 점수·조건부 선택은 범위 밖이다.
+
+## 이전 요청: HS-01 첫 화면 공통 UI와 반응형
 
 - 상태: `DONE` (2026-09-09 사용자 직접 지정). Work Lead · G/A/B. PR #7 병합 및 공개 배포 완료 (`67b4e26`).
 - 기준: 원격 main `19abbd9`, clean 상태에서 `codex/start-screen-responsive` 분기.

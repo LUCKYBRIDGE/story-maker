@@ -1,3 +1,4 @@
+import { disconnectStoryFlowTargets } from "./story-flow";
 import type { Chapter, StoryLine } from "./story-data";
 import { splitStoryText } from "./story-cut-length";
 
@@ -94,12 +95,13 @@ export function createStoryLine({
   const insertIndex = insertAfterIndex < 0 ? chapterLines.length : insertAfterIndex + 1;
   const created: StoryLine = {
     ...line,
+    ...(chapterLines[insertAfterIndex]?.flow ? { flow: structuredClone(chapterLines[insertAfterIndex].flow) } : {}),
     id,
     chapterId,
     order: insertIndex + 1,
   };
   const nextChapterLines = withContinuousOrder([
-    ...chapterLines.slice(0, insertIndex),
+    ...chapterLines.slice(0, insertIndex).map((item, index) => index === insertAfterIndex && item.flow ? { ...item, flow: undefined } : item),
     created,
     ...chapterLines.slice(insertIndex),
   ]);
@@ -151,14 +153,14 @@ export function duplicateStoryLine({
   if (hasId(lines, id)) return { ok: false, code: "duplicate-id" };
   const chapterLines = orderedLines(lines, source.chapterId);
   const index = chapterLines.findIndex((candidate) => candidate.id === lineId);
-  const copy = { ...source, id, order: index + 2 };
+  const copy = { ...structuredClone(source), id, order: index + 2 };
   return {
     ok: true,
     lines: replaceChapterLines(
       lines,
       source.chapterId,
       withContinuousOrder([
-        ...chapterLines.slice(0, index + 1),
+        ...chapterLines.slice(0, index + 1).map(item => item.id === lineId ? { ...item, flow: undefined } : item),
         copy,
         ...chapterLines.slice(index + 1),
       ]),
@@ -183,7 +185,7 @@ export function deleteStoryLine({
     nextChapterLines[index]?.id ?? nextChapterLines[index - 1]?.id;
   return {
     ok: true,
-    lines: replaceChapterLines(lines, source.chapterId, nextChapterLines),
+    lines: disconnectStoryFlowTargets(replaceChapterLines(lines, source.chapterId, nextChapterLines), new Set([lineId])),
     ...(selectedLineId === undefined ? {} : { selectedLineId }),
   };
 }
@@ -202,6 +204,7 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
     ids.add(id);
     splitLines.push({ ...source, id, text });
   }
+  splitLines.forEach((line, index) => { if (index < splitLines.length - 1) line.flow = undefined; });
   const chapterLines = orderedLines(lines, source.chapterId);
   const next = chapterLines.flatMap(line => line.id === lineId ? splitLines : [line]);
   return {
@@ -214,7 +217,7 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
 export function canMergeStoryLines(first: StoryLine, second: StoryLine): boolean {
   if (first.chapterId !== second.chapterId) return false;
   // Merging would move or discard the second cut’s timed effect.
-  if (first.effect || second.effect) return false;
+  if (first.effect || second.effect || first.flow || second.flow) return false;
   if (first.type !== second.type) return false;
   if (first.type === "narration") return true;
   return (
@@ -237,7 +240,10 @@ export function mergeStoryLines({
   const first = lines.find((line) => line.id === sourceLineId);
   const second = lines.find((line) => line.id === targetLineId);
   if (!first || !second) return { ok: false, code: "line-not-found" };
-  if (!canMergeStoryLines(first, second)) {
+  const incoming = lines.some(line => line.flow?.type === "choice"
+    ? line.flow.options.some(option => option.targetLineId === first.id || option.targetLineId === second.id)
+    : line.flow && (line.flow.targetLineId === first.id || line.flow.targetLineId === second.id));
+  if (incoming || !canMergeStoryLines(first, second)) {
     return { ok: false, code: "cannot-merge" };
   }
 

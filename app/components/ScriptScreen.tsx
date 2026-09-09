@@ -1,5 +1,6 @@
 "use client";
 
+import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
 
 import type { MutableRefObject } from "react";
@@ -41,6 +42,7 @@ export interface ScriptScreenProps {
   onSelectLine: (lineId: string) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
+  onCreateBranches?: (lineId: string, count: 2 | 3, existingPlacement: import("../story-flow").ExistingStoryPlacement) => void;
   onSplitLine: (lineId: string) => void;
   onOpenStoryEditorScene: (line: StoryLine) => void;
   onMoveLine: (lineId: string, delta: -1 | 1) => void;
@@ -71,6 +73,7 @@ export function ScriptScreen({
   onChangeLineType,
   onUpdateLine,
   onSplitLine,
+  onCreateBranches,
   onOpenStoryEditorScene,
   onMoveLine,
   onDuplicateLine,
@@ -97,6 +100,7 @@ export function ScriptScreen({
 
   return (
     <div className="chapter-script-editor">
+      <StoryFlowOverview project={draft} onOpenLine={onOpenStoryEditorScene} />
       <div className="script-editor-heading">
         <div>
           <strong>이 장 대본</strong>
@@ -395,6 +399,7 @@ export function ScriptScreen({
                   </small>
                 </div>
                 <div className="scene-card-actions">
+                  <StoryFlowEditor project={draft} line={line} onChange={flow => onUpdateLine(line.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(line.id, count, placement) : undefined} onOpenLine={onOpenStoryEditorScene} />
                   <SceneEffectEditor line={line} chapter={selectedChapter} onChange={effect => onUpdateLine(line.id, { effect })} />
                   <button
                     type="button"
