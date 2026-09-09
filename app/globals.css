@@ -10428,6 +10428,7 @@ img {
   }
 }
 
+.creative-memo-card > div > strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
 /* U2-02: one illustrated scene, shared by writing and playback.
    The dialogue stays in document flow; actors never sit beneath the text. */
 .entry-new-story-card > header { display: none; }
@@ -11120,3 +11121,58 @@ img {
   .nolstory-poster-viewport .blank-btn-text strong { font-size: 16px; }
   .nolstory-poster-viewport .blank-btn-arrow { grid-column: 2; justify-self: end; }
 }
+
+/* Lightweight reference notes stay open while the author writes. */
+.sticky-memo-launch { position: fixed; right: 20px; bottom: 18px; z-index: 65; min-height: 48px; padding: 12px 18px; border: 1px solid #c5a958; border-radius: 16px; background: #fff0ae; color: #493e21; box-shadow: 0 4px 18px #172c3226; font-weight: 700; }
+.sticky-memo-board { position: fixed; z-index: 70; right: 18px; top: 100px; width: 350px; max-height: calc(100dvh - 120px); display: flex; flex-direction: column; border: 1px solid #d2ba70; border-radius: 16px; background: #fff9dc; color: #473c22; box-shadow: 0 8px 32px #12272e33; overflow: hidden; }
+.sticky-memo-board.left { right: auto; left: 18px; }
+.sticky-memo-board > header, .sticky-single-heading { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #e0ce8c; }
+.sticky-memo-board header > div { display: flex; }
+.sticky-memo-board button, .sticky-single-editor button { min-height: 44px; padding: 8px 12px; border-radius: 8px; background: #fff8d6; }
+.sticky-memo-board button:focus-visible, .sticky-memo-board select:focus-visible, .sticky-memo-board textarea:focus-visible { outline: 2px solid #147e87; outline-offset: -2px; }
+.sticky-memo-tools { display: flex; gap: 8px; padding: 10px 12px; }
+.sticky-memo-tools select { min-width: 0; flex: 1; min-height: 44px; background: #fffdf2; border: 1px solid #d5c183; border-radius: 8px; padding: 8px; }
+.sticky-memo-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 12px; }
+.sticky-memo-card { background: #fff0ad; border: 1px solid #e4cd80; border-radius: 10px; margin-bottom: 12px; padding: 10px; }
+.sticky-memo-paper label, .sticky-single-field { display: block; }
+.sticky-memo-paper label > span { font-size: 13px; font-weight: 700; }
+.sticky-memo-paper textarea, .sticky-single-field textarea { display: block; width: 100%; resize: vertical; min-height: 140px; max-height: 360px; overflow-y: auto; border: 0; border-radius: 6px; background: transparent; color: #3c3525; padding: 8px; font-size: 16px; line-height: 1.7; }
+.sticky-memo-info { font-size: 13px; border-top: 1px solid #dbc77e; margin-top: 8px; }
+.sticky-memo-info summary { min-height: 44px; padding: 12px 0; cursor: pointer; }
+.sticky-memo-info label { display: grid; gap: 4px; margin: 8px 0; }
+.sticky-memo-info input, .sticky-memo-info select { min-width: 0; width: 100%; min-height: 44px; padding: 8px; background: #fffbee; border: 1px solid #d5c183; border-radius: 6px; }
+.sticky-memo-board > footer { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px; border-top: 1px solid #e0ce8c; font-size: 12px; }
+.creative-memo-editor-overlay:has(.sticky-single-editor) { background: none; backdrop-filter: none; pointer-events: none; display: block; }
+.creative-memo-editor.sticky-single-editor { pointer-events: auto; position: fixed; top: 100px; right: 18px; width: min(350px, calc(100vw - 24px)); height: auto; max-height: calc(100dvh - 120px); display: flex; flex-direction: column; padding: 0; border-radius: 14px; background: #fff0ad; color: #473c22; }
+.sticky-single-footer { padding: 10px 16px; }
+@media (min-width: 1100px) {
+  .making-workspace:has(.sticky-memo-board) { padding-right: 380px; }
+}
+@media (max-width: 1099px) {
+  .sticky-memo-board, .sticky-memo-board.left { inset: auto 10px 10px; width: auto; max-height: 43dvh; }
+  .sticky-memo-side { display: none; }
+  .making-workspace:has(.sticky-memo-board) { padding-bottom: 46dvh; }
+  .creative-memo-editor.sticky-single-editor { top: auto; bottom: 10px; max-height: 43dvh; }
+  .sticky-memo-launch { bottom: 12px; right: 12px; }
+}
+
+@media (min-width: 1100px) {
+  .making-workspace:has(.sticky-memo-board.left) { padding-right: 0; padding-left: 380px; }
+}
+@media (max-width: 1099px) {
+  .making-workspace:has(.sticky-memo-board) textarea:not(.sticky-memo-board textarea) { scroll-margin-bottom: 46dvh; }
+}
+/* Controls remain next to the stage and the text being edited. */
+.scene-nearby-navigation { display: flex; justify-content: space-between; pointer-events: none; position: absolute; inset-inline: 8px; z-index: 5; }
+.scene-nearby-navigation.preview { top: 110px; }
+.scene-nearby-navigation.writing { top: 50%; transform: translateY(-50%); inset-inline: 0; }
+.scene-nearby-navigation button { pointer-events: auto; width: 44px; height: 52px; border-radius: 10px; border: 1px solid #abb8c5; background: #15263aed; color: #fff; font: 32px/1 system-ui; }
+.scene-focus-editor .editable-stage-dialogue { padding-inline: 52px; }
+.scene-nearby-navigation button:disabled { opacity: .35; }
+@media (max-width: 620px) { .scene-focus-editor .editable-stage-dialogue { padding-inline: 46px; } }
+.memo-move-handle, .memo-resize-handle { touch-action: none; user-select: none; }
+.memo-move-handle { cursor: move; }
+.memo-resize-handle { cursor: nwse-resize; }
+.sticky-memo-board > header, .sticky-memo-board > footer, .sticky-memo-tools, .sticky-single-heading, .sticky-single-footer { flex-shrink: 0; }
+.sticky-single-footer { display: flex; justify-content: space-between; }
+.sticky-memo-board > header strong { white-space: nowrap; }

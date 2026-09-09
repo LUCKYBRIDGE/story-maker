@@ -439,26 +439,23 @@ export function StoryPlanScreen({
           <section className="planning-card creative-memo-library">
             <div className="creative-memo-library-heading">
               <div>
-                <span className="eyebrow">필요할 때 꺼내 보는 확장 자료</span>
+                <span className="eyebrow">글쓰며 펼쳐 두는 참고 메모</span>
                 <h2>창작 메모</h2>
                 <p>
-                  기본 이야기 구성은 그대로 두고, 더 자세히 생각하고 싶은
-                  인물·관계·장소·사건이나 자유로운 생각을 따로 남겨요.
+                  잊지 않고 참고할 생각을 가볍게 적어요. 작품 전체나 특정 장의 메모로 분류할 수 있어요.
                 </p>
               </div>
               <button
                 className="primary-button"
                 type="button"
-                onClick={() =>
-                  setCreativeMemoCreatorStep((current) =>
-                    current ? null : "choice",
-                  )
-                }
+                onClick={() => onAddCreativeMemo("free")}
               >
                 + 창작 메모
               </button>
             </div>
 
+            <details className="creative-memo-legacy-tools"><summary>항목이 있는 이전 메모 양식</summary>
+              <button type="button" onClick={() => setCreativeMemoCreatorStep("choice")}>양식 살펴보기</button>
             {creativeMemoCreatorStep === "choice" && (
               <section className="creative-memo-creator" aria-live="polite">
                 <header>
@@ -519,6 +516,7 @@ export function StoryPlanScreen({
               </section>
             )}
 
+            </details>
             {orderedCreativeMemos.length > 0 ? (
               <div className="creative-memo-list">
                 {orderedCreativeMemos.map((memo) => {

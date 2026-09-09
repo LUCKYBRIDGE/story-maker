@@ -26,7 +26,7 @@ export interface StartScreenProps {
   onStartRabbitTurtleContinuation: () => void;
   onStartOnggojibContinuation: () => void;
   onResumeSavedDraft: () => void;
-  onPlayExample: () => void;
+  onPlayExample: (theme: "rabbit" | "onggojib") => void;
   onAbortUpdate?: () => void;
 }
 
@@ -135,7 +135,7 @@ export function StartScreen({
             fetchPriority="high"
           />
         </div>
-        <button type="button" className="poster-button poster-read" onClick={onPlayExample} disabled={busy}
+        <button type="button" className="poster-button poster-read" onClick={() => onPlayExample(coverTheme)} disabled={busy}
           aria-label="놀스토리 작품 읽기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" /></svg><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
         </button>
@@ -485,7 +485,7 @@ export function StartScreen({
                   className="btn-play-example"
                   onClick={() => {
                     setIsStudioModalOpen(false);
-                    onPlayExample();
+                    onPlayExample(coverTheme);
                   }}
                   disabled={busy}
                 >

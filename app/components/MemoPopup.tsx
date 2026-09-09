@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { StickyMemoBoard } from "./StickyMemoBoard";
 import type { Chapter, StoryLine, StoryProject } from "../story-data";
 import type { StoryStructureOption } from "./StoryPlanScreen";
 import {
@@ -48,6 +50,9 @@ export function memoResultScope(result: MemoSearchResult): Exclude<MemoScope, "a
 }
 
 export interface MemoPopupProps {
+  onAddStickyMemo: () => void;
+  onChangeStickyMemo: (memo: CreativeMemo) => void;
+  onDeleteStickyMemo: (id: string) => void;
   draft: StoryProject;
   currentLocation: string;
   memoWindowSize: MemoWindowSize;
@@ -76,7 +81,13 @@ export interface MemoPopupProps {
   onSelectCreativeMemoId: (id: string) => void;
 }
 
-export function MemoPopup({
+export function MemoPopup(props: MemoPopupProps) {
+  const [referenceOpen, setReferenceOpen] = useState(false);
+  if (!referenceOpen) return <StickyMemoBoard project={props.draft} onAdd={props.onAddStickyMemo} onChange={props.onChangeStickyMemo} onDelete={props.onDeleteStickyMemo} onClose={props.onReturnFromMemoPopup} onReference={() => setReferenceOpen(true)} />;
+  return <MemoReference {...props} onReturnFromMemoPopup={() => setReferenceOpen(false)} />;
+}
+
+function MemoReference({
   draft,
   currentLocation,
   memoWindowSize,

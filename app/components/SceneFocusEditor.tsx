@@ -546,6 +546,12 @@ export function SceneFocusEditor({
     onUpdateLine(selectedLine.id, { [sceneAssetField(slot)]: assetId });
   }
 
+  function nearbyNavigation(area: string) {
+    return <nav className={`scene-nearby-navigation ${area === "미리보기" ? "preview" : "writing"}`} aria-label={`${area} 컷 이동`}>
+      <button type="button" aria-label={`${area} 이전 컷`} disabled={selectedStoryLineIndex <= 0} onPointerDown={event => event.preventDefault()} onClick={() => onMoveThroughStory(-1)}>‹</button>
+      <button type="button" aria-label={`${area} 다음 컷`} disabled={selectedStoryLineIndex >= orderedDraftLines.length - 1} onPointerDown={event => event.preventDefault()} onClick={() => onMoveThroughStory(1)}>›</button>
+    </nav>;
+  }
   return (
     <div className="scene-focus-editor" data-line-id={selectedLine.id}>
       <div className="scene-focus-nav">
@@ -618,7 +624,7 @@ export function SceneFocusEditor({
         ))}
       </div>
 
-      <StorySceneFrame stage={stage} variant="editor" speaker={selectedLine.speaker}
+      <StorySceneFrame stage={stage} variant="editor" speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
         heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
       {activeTab === "text" ? (
         <div
@@ -629,6 +635,7 @@ export function SceneFocusEditor({
           id="scene-panel-text"
           aria-labelledby="scene-tab-text"
         >
+          {nearbyNavigation("글상자")}
           {draft.continuation?.lineId === selectedLine.id && !selectedLine.text.trim() && selectedStoryLineIndex > 0 && (
             <div className="scene-continuation-context">
               <small>앞 장면 · 여기서부터 내 이야기</small>
