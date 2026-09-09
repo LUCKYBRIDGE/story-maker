@@ -9,9 +9,20 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 요청: ST-02 원작 도달 경로와 결말 검증
+## 현재 요청: ST-03 교실 모바일·시트 UI 검증
 
-- 상태: 로컬 검증 완료, PR CI 대기. 사용자 안정화 요청의 후속 독립 QA, Work Lead · G/A/B.
+- 상태: 로컬 자동 검증 완료, PR CI 대기. Work Lead · G/A/B, 사용자 안정화 요청.
+- 주 책임 QA·릴리스; 검토 관점 접근성·데이터 신뢰성.
+- `codex/stabilization-classroom-qa`, PR #17 기반 후속 독립 QA.
+- Chromium touch 이동/크기·회전/높이 축소·초점·reduced motion, 실제 Excel 생성 CSV의
+  UI 정상/optional 404/403/login 검사. 네트워크는 응답 주입, 실제 Google 검증 아님.
+- 로컬 qa:classroom 약 9초, check 통과. 확인 전 무변경·정상 가져오기 후 원본 checkpoint 보존,
+  권한/로그인 오류 시 draft/active 보존 통과.
+- 실기기/실제 공유 시트만 MANUAL VERIFICATION REQUIRED. A1-02 사람 승인 대기 유지.
+
+## 이전 요청: ST-02 원작 도달 경로와 결말 검증
+
+- 상태: `DONE` (미통합), PR #17 Linux CI 34350971983 성공, 172/172. 사용자 안정화 요청의 후속 독립 QA, Work Lead · G/A/B.
 - 주 책임 QA·릴리스, 검토 관점 데이터 신뢰성·아동문학 편집자.
 - PR #16 위 `codex/stabilization-example-paths`; 제품/생성 원문은 변경하지 않는다.
 - 토끼와 자라 136컷 도달/6경로/3결말, 옹고집전 345컷 도달/16경로/2결말.

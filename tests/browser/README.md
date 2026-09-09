@@ -41,3 +41,14 @@ See [Playwright CI guidance](https://playwright.dev/docs/ci).
 
 The smoke is DOM/interaction regression, not pixel-baseline comparison, narrative
 quality approval, physical iOS/Android, Korean IME or full accessibility certification.
+
+
+## Classroom checks
+
+`QA_OUTPUT=outputs/classroom npm run qa:classroom` reuses the static runner for
+mobile-input and sheet-import (also in CI verify). `QA_SUITES` can select a comma
+separated subset from the six known scripts. No arbitrary script paths are accepted.
+Mobile CDP touch is emulation; Korean text fill is not IME. Sheet responses come
+from an actual Excel-generated CSV fixture intercepted at the Google request boundary.
+Normal import, optional memo-tab 404, 403 and login HTML are verified in the UI;
+real Google permissions/transport remain a manual check with an approved public sheet.
