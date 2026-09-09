@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Print npm audit summary
+      - name: Capture npm audit report
         shell: bash
         run: |
           npm audit --json > npm-audit.json || true
@@ -52,5 +52,16 @@ jobs:
             effects: value.effects,
             fixAvailable: value.fixAvailable,
           }));
-          console.log(JSON.stringify({ metadata: report.metadata, vulnerabilities }, null, 2));
+          fs.writeFileSync('npm-audit-summary.json', JSON.stringify({ metadata: report.metadata, vulnerabilities }, null, 2));
+          console.log(JSON.stringify(report.metadata, null, 2));
           NODE
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: |
+            npm-audit.json
+            npm-audit-summary.json
+          if-no-files-found: error
+          retention-days: 1
