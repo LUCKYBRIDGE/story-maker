@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { STORY_ASSETS, type StoryAsset } from "../story-assets";
 import {
+  formatAssetDisplayName,
   groupStoryAssets,
   normalizeAssetSearch,
   sortStoryAssets,
@@ -289,7 +290,7 @@ export function AssetPickerButton({
                   </span>
                   <span>
                     <small>{currentLabel}</small>
-                    <strong>{selectedAsset.displayName}</strong>
+                    <strong>{formatAssetDisplayName(selectedAsset.displayName)}</strong>
                     <b>{selectedAsset.label}</b>
                   </span>
                 </div>
@@ -307,7 +308,7 @@ export function AssetPickerButton({
                     </span>
                     <span>
                       <small>{pendingAssetId ? "선택 미리보기" : defaultLabel}</small>
-                      <strong>{pendingAsset.displayName}</strong>
+                      <strong>{formatAssetDisplayName(pendingAsset.displayName)}</strong>
                       <b>{pendingAsset.label}</b>
                     </span>
                   </div>
@@ -477,8 +478,8 @@ export function AssetPickerButton({
                             onClick={() => onToggleFavorite(asset.id)}
                             aria-label={
                               favoriteIds.includes(asset.id)
-                                ? `${asset.displayName} 즐겨찾기 해제`
-                                : `${asset.displayName} 즐겨찾기`
+                                ? `${formatAssetDisplayName(asset.displayName)} 즐겨찾기 해제`
+                                : `${formatAssetDisplayName(asset.displayName)} 즐겨찾기`
                             }
                           >
                             {favoriteIds.includes(asset.id) ? "★" : "☆"}
@@ -504,7 +505,7 @@ export function AssetPickerButton({
                                 </b>
                               )}
                             </span>
-                            <strong>{asset.displayName}</strong>
+                            <strong>{formatAssetDisplayName(asset.displayName)}</strong>
                             <small>{asset.label}</small>
                             <span className="asset-tag-summary">
                               {asset.story}

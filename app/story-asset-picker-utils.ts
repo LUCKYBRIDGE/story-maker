@@ -28,6 +28,13 @@ export function normalizeAssetSearch(value: string) {
     .replace(/[·_\-\s]/g, "");
 }
 
+export function formatAssetDisplayName(name: string): string {
+  return name
+    .replace(/\.(png|webp|jpg)$/i, "")
+    .replace(/_v\d+$/i, "")
+    .replaceAll("_", " ");
+}
+
 function assetGroupLabel(asset: StoryAsset, type: StoryAsset["type"]) {
   return type === "character"
     ? `${asset.selectionTier} · ${asset.framing ?? "구도 미분류"}`
