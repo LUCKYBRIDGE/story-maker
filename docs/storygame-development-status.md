@@ -24,7 +24,11 @@
 - 재현: `QA_URL=<개발 서버> PLAYWRIGHT_MODULE=<기존 모듈> node tests/browser/start-screen.mjs`.
   `QA_VIEWPORTS`로 크기 배열 지정 가능. 캡처 `/tmp/adaptive-home-release`, 추가 가로 `/tmp/adaptive-home-landscape`.
 - 실제 iOS/Android·OS별 글꼴 및 브라우저 자체 200% 확대는 이번 작업에서 미검증.
-  좁은 창 재배치는 검증했다. main 병합·공개 배포는 하지 않았다.
+  좁은 창 재배치는 검증했다.
+- 배포: [PR #9](https://github.com/LUCKYBRIDGE/story-maker/pull/9) 및 [PR #10](https://github.com/LUCKYBRIDGE/story-maker/pull/10) main 병합 완료,
+  [GitHub Pages 배포 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34309277601),
+  [병합 후 CI 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34309277625), Cloudflare Pages 프로덕션 배포 완료.
+  [공개 화면](https://luckybridge.github.io/story-maker/)에서 첫 화면 고딕 선명도 개선, 가로/세로 적응형 레이아웃 및 이야기 분기 기능 정식 배포 확인.
 
 ## 이전 요청: BR-01 선택·분기·합류
 
@@ -46,7 +50,7 @@
 - 모바일 글상자 초점 해제 시 높이 변화로 적용 클릭이 취소되는 문제도 수정했다.
 - 재현: 개발 서버 후 `QA_URL=http://localhost:3002 PLAYWRIGHT_MODULE=<기존 Playwright 경로>
   node tests/browser/story-flow.mjs` 및 `tests/browser/story-flow-placement.mjs`.
-  결과와 캡처는 `/tmp/story-flow-qa`. 공개 배포·main 병합은 하지 않았다.
+  결과와 캡처는 `/tmp/story-flow-qa`. PR #9 및 PR #10으로 main 병합 및 정식 배포 완료.
 - 물리 기기 IME, 무한 반복 스토리와 점수·조건부 선택은 범위 밖이다.
 
 ## 이전 요청: HS-01 첫 화면 공통 UI와 반응형
