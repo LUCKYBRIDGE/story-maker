@@ -11,14 +11,15 @@
 | 항목 | 현재 사실 | 비고 |
 |---|---|---|
 | **공유 기준 브랜치** | `main` | GitHub `LUCKYBRIDGE/story-maker` |
-| **최신 제품 HEAD** | `67be51a` | `메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)` |
+| **현재 main HEAD** | `d545456` | 행정적 되돌림 커밋. Git tree는 제품 기준 `67be51a`와 동일 |
+| **최신 제품 커밋** | `67be51a` | `메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)` |
 | **PR #12** | 병합 완료 | 메모 조절·원작 전체 예시·근접 컷 이동 |
-| **최신 main CI** | 성공 | Actions run `34331728797`; 정적 검사·빌드·169/169 회귀 검사 |
-| **최신 GitHub Pages** | 성공 | Actions run `34331728819`; `67be51a` 정적 export 및 배포 |
-| **공개 주소** | `https://luckybridge.github.io/story-maker/` | Pages deployment version `67be51a` |
+| **최신 main CI** | 성공 | Actions run `34346214614`; 되돌림 후 동일 제품 tree에서 전체 CI 성공 |
+| **최신 GitHub Pages** | 성공 | Actions run `34346214609`; 동일 제품 tree 재배포 성공 |
+| **공개 주소** | `https://luckybridge.github.io/story-maker/` | 현재 배포 tree는 `67be51a` 제품 tree와 동일 |
 | **브라우저 최신 QA** | 통과 | Chrome 1365×900 / 820×1180 / 390×844 |
 | **실기기 QA** | 미완료 | iOS/Android 한글 IME·소프트 키보드·Safe Area·실터치 |
-| **의존성 감사 주의** | 재분석 필요 | 최신 Pages `npm ci` 로그에서 7 vulnerabilities(1 moderate, 6 high) 보고. 실제 production 영향은 별도 분석 전 단정하지 않음 |
+| **의존성 감사** | 조치 PR 준비 | 최신 registry 감사 8건(1 moderate, 7 high) → PR #14 최소 패치 후보에서 2 high로 감소; 남은 2건은 `vinext → image-size` upstream |
 
 ### 현재 구현된 주요 기능
 
@@ -38,7 +39,8 @@
 - 실제 공유 Google 시트 계정/권한을 이용한 종단 검증
 - 원작 예시의 모든 도달 가능한 결말에 대한 시각 재생 검수
 - A1-02 캐릭터 감정 세트의 사람 시각 승인 및 무대 검수
-- 최신 `npm ci`가 보고한 의존성 취약점 7건의 production/dev dependency 영향 분류
+- PR #14 보안 패치 main 반영 여부 결정
+- `vinext 0.0.50 → image-size 2.0.2`의 upstream stable 보안 수정 추적
 
 A1-02는 사람 승인 전 `BLOCKED`입니다. 승인·외부 조건이 해결되기 전에는 자동으로
 `READY` 작업을 열지 않습니다.
@@ -83,21 +85,13 @@ npm run status:check
 
 ## 3. 최신 검증 증거
 
-### PR #12 / main `67be51a`
+### 제품 기준 PR #12 / `67be51a`
 
 - `npm run check`: 통과
 - `npm test`: **169/169 통과**
 - `npm run build:pages`: PR 검증에서 통과
 - 병합 후 GitHub Actions CI run `34331728797`: 성공
-  - `npm ci`
-  - committed diff whitespace
-  - `npm run check`
-  - `npm test`
 - GitHub Pages run `34331728819`: 성공
-  - `npm ci`
-  - `npm run build:github`
-  - Pages artifact upload
-  - production deployment
 - Chrome 1365×900 / 820×1180 / 390×844:
   - 창작 메모 기본 닫힘
   - 메모 드래그·방향키 이동·크기 조절·초기화·작성/복원
@@ -108,6 +102,24 @@ npm run status:check
   - 연결/정규화 검사 통과
   - 두 작품의 첫 선택 경로에서 분기→결말 브라우저 재생
   - 예시 전후 사용자 저장본 불변 확인
+
+### 현재 main 복구 상태 / `d545456`
+
+- `d545456`의 Git tree는 `67be51a`와 동일하다.
+- main CI run `34346214614`: 성공.
+- GitHub Pages run `34346214609`: 성공.
+- 따라서 현재 공개 제품 파일은 PR #12 완료 제품 tree와 동일하다.
+
+### 의존성 보안 진단 / PR #14
+
+- 현재 registry 기준 원본 의존성 감사: **8건** — moderate 1, high 7.
+- 실제 원인 패키지: `sharp 0.35.3`, `fflate 0.7.4`, `image-size 2.0.2`와 상위 전파 경로.
+- 최소 패치 후보:
+  - `sharp 0.35.4`
+  - `fflate 0.7.5`
+- 후보 감사 결과: **2 high**만 남음. 둘 다 `vinext 0.0.50 → image-size 2.0.2` 경로다.
+- PR #14 최종 CI run `34347041043`: `npm ci`, whitespace, `npm run check`, `npm test` 모두 성공.
+- `image-size`의 현재 audit 자동 해결안은 Vinext 1.0 beta 계열의 semver-major 변경이므로 강제 적용하지 않았다.
 
 **아직 증명하지 않은 것**: 모든 원작 결말의 시각 재생, 실제 iOS/Android IME·터치,
 실제 공유 Google 계정 기반 시트 종단 동작.
@@ -126,10 +138,11 @@ npm run status:check
 | HS-01/02 | `DONE` | 첫 화면 공통 UI, 글자 선명도, 폭/방향별 반응형 |
 | MN-01 | `DONE` | 가벼운 포스트잇 메모와 Excel/시트 오류 보호 |
 | EX-01 | `DONE` | 메모 조절·원작 전체 예시·근접 컷 이동; PR #12로 main/Pages 반영 |
+| SEC-01 | `READY FOR MERGE` | PR #14: sharp/fflate 최소 보안 패치, audit 8→2, 전체 CI 성공 |
 | A1-02 | `BLOCKED` | 캐릭터 감정 세트의 사람 승인 필요 |
 
 과거 각 작업 시점의 테스트 수(109/109, 147/147, 159/159, 166/166 등)는 당시 완료
-증거로 유효하지만 **현재 기준선 검증 수는 169/169**입니다.
+증거로 유효하지만 **현재 제품 회귀 기준은 169/169**입니다.
 
 ---
 
