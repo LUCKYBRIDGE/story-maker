@@ -1,10 +1,11 @@
+import { launchBrowser } from './support/runtime.mjs';
 // Run with the existing Playwright installation and a running development server.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
-const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+
 const output = process.env.QA_OUTPUT || '/tmp/start-screen-qa';
 await mkdir(output, {recursive:true});
-const browser = await chromium.launch({channel:'chrome',headless:true});
+const browser = await launchBrowser(output);
 const results = [];
 try {
  const sizes=process.env.QA_VIEWPORTS ? JSON.parse(process.env.QA_VIEWPORTS) : [[320,740],[360,800],[390,844],[600,960],[768,1024],[820,1180],[960,720],[1024,768],[1440,900],[1920,1080],[720,450],[800,450]];
