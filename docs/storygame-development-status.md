@@ -11,7 +11,9 @@
 
 ## 현재 요청: ST-03 교실 모바일·시트 UI 검증
 
-- 상태: 로컬 자동 검증 완료, PR CI 대기. Work Lead · G/A/B, 사용자 안정화 요청.
+- 상태: `DONE` (로컬 자동화, 미통합), Work Lead · G/A/B, 사용자 안정화 요청.
+  기존 제품 Node 172/172는 PR #17 CI, 추가 QA는 로컬 check/qa:classroom 통과.
+  PR #18의 최신 Linux CI 결과는 PR checks 및 안정화 보고서에서 확인한다.
 - 주 책임 QA·릴리스; 검토 관점 접근성·데이터 신뢰성.
 - `codex/stabilization-classroom-qa`, PR #17 기반 후속 독립 QA.
 - Chromium touch 이동/크기·회전/높이 축소·초점·reduced motion, 실제 Excel 생성 CSV의
