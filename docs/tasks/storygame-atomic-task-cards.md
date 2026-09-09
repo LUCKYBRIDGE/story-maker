@@ -1362,3 +1362,20 @@ npm test
   npm run check; npm test (PR CI); git diff --check.
 - 중단: 원본 의미를 바꿔야 한다면 자동 수정하지 않고 Narrative Audit로 분리.
 - 되돌림: QA PR revert, 학생 데이터 영향 없음. 상태표는 통과 증거 후 DONE/미통합 구분.
+
+
+## ST-03 — 교실 모바일·시트 UI 자동 검증
+
+- 선행 ST-01 runner, ST-02 후속. Work Lead · G/A/B. 사용자 안정화 요청.
+- 가치: 휴대폰 메모 조작과 시트 가져오기에서 학생 원본을 지킨다.
+- 주 책임 QA·릴리스, 검토 관점 접근성·데이터 신뢰성.
+- 허용: browser QA/CI 명령, 기존 실기기 가이드, 상태표·작업 카드.
+- 금지: 제품 UI/저장 형식, Google OAuth/write, 실제 기기 완료 주장.
+- 사전: 기존 mock 500/CSV 회귀와 useFloatingMemo 최소높이 240px 확인.
+- 절차: 1) touch 이동/확대 2) 회전·높이 축소/초점 3) Excel 생성 CSV UI import
+  4) 정상/404 optional/403/login 5) 실패·원본 checkpoint 및 CI 증거.
+- 인수: (1) emulation 이동·크기 조절 (2) 회전·축소 넘침 없음 (3) 가져오기 확인 전
+  무변경, 확인 후 원문 checkpoint 보존 (4) 오류 시 draft/active 보존 (5) 실기기 표 분리.
+- 검증: npm run qa:classroom; npm run check; npm test (PR CI); git diff --check.
+- 중단: 실제 OS/Google 계정 없으면 그 부분만 MANUAL BLOCKER, 제품 확대하지 않음.
+- 되돌림: 이 QA PR revert. 상태표 자동 증거와 사람 미검증을 구분하여 갱신한다.

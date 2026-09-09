@@ -28,10 +28,13 @@ if (!url) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   url = `http://127.0.0.1:${server.address().port}${prefix}/`;
 }
+const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples'];
+const allowed = new Set(['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import']);
 const results = [];
 try {
   assert.equal((await fetch(url, { signal: AbortSignal.timeout(10_000) })).status, 200);
-  for (const suite of ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples']) {
+  for (const suite of suites) {
+    assert.ok(allowed.has(suite), `Unknown QA suite: ${suite}`);
     const suiteOutput = path.join(output, suite);
     await mkdir(suiteOutput, { recursive: true });
     const started = Date.now();

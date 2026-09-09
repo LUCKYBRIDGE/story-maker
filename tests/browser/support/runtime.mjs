@@ -22,15 +22,16 @@ export async function launchBrowser(output) {
     page.setDefaultNavigationTimeout(30_000);
     const context = page.context();
     await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
-    const entry = { context, id: ++index, errors: [] };
+    const entry = { context, id: ++index, errors: [], pageErrors: [] };
     pending.set(page, entry);
-    page.on('pageerror', error => entry.errors.push(error.stack));
+    page.on('pageerror', error => { entry.errors.push(error.stack); entry.pageErrors.push(error.message); });
     page.on('console', message => {
       if (message.type() === 'error') entry.errors.push(message.text());
     });
     page.on('requestfailed', request => entry.errors.push(`${request.url()}: ${request.failure()?.errorText}`));
     const pageClose = page.close.bind(page);
     page.close = async () => {
+      if (entry.pageErrors.length) throw new Error(`Browser runtime errors: ${entry.pageErrors.join("; ")}`);
       await context.tracing.stop();
       pending.delete(page);
       await pageClose();

@@ -725,7 +725,7 @@ export const RABBIT_TURTLE_CONTINUATION_TEMPLATE: StoryProject = {
     ...templateLines("palace-continuation-chapter-2", [
       originalScene({ id: "palace-continuation-line-7", ...rabbitCrisisStage,
         type: "dialogue", speaker: "left", speakerName: "토끼", text: "",
-        purposeNote: "위기에 처한 토끼의 다음 말이나 행동부터 이어 써 보세요. 화자를 바꾸거나 해설로 시작해도 괜찮아요." }),
+        purposeNote: "위기에 처한 토끼의 다음 말이나 행동부터 이어 써 보세요. 화자를 바꾸거나 해설로 시작해도 괜찮아요. (팁: 선택지가 없어도 하나의 완결된 멋진 이야기를 만들 수 있어요.)" }),
     ]),
   ],
 };
@@ -811,7 +811,7 @@ export const ONGGOJIB_CONTINUATION_TEMPLATE: StoryProject = {
     ...templateLines("onggojib-continuation", [
       originalScene({ id: "onggojib-continuation-line-1", ...onggojibCourtStage,
         type: "dialogue", speaker: "left", speakerName: "진짜 옹고집", text: "",
-        purposeNote: "처음 재판장에 끌려온 옹고집의 다음 말이나 행동부터 이어 써 보세요. 사또의 말이나 해설로 시작해도 괜찮아요." }),
+        purposeNote: "처음 재판장에 끌려온 옹고집의 다음 말이나 행동부터 이어 써 보세요. 사또의 말이나 해설로 시작해도 괜찮아요. (팁: 선택지가 없어도 하나의 완결된 멋진 이야기를 만들 수 있어요.)" }),
     ]),
   ],
 };

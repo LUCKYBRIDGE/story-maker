@@ -44,6 +44,47 @@ test("normalizeAssetSearch는 공백·확장자·특수문자·대소문자를 �
   ]);
 });
 
+test("formatAssetDisplayName는 확장자, 버전 접미사, 언더스코어를 깔끔하게 정리한다", () => {
+  const result = runAssetPickerUtils(`
+    const testCases = [
+      utils.formatAssetDisplayName("진짜_옹고집_화남.png"),
+      utils.formatAssetDisplayName("토끼_기본_v2.webp"),
+      utils.formatAssetDisplayName("사또_판결_v1.png"),
+      utils.formatAssetDisplayName("가짜_옹고집_뉘우침"),
+      utils.formatAssetDisplayName("배경_관아_재판장.jpg"),
+    ];
+    console.log(JSON.stringify(testCases));
+  `);
+
+  assert.deepEqual(result, [
+    "진짜 옹고집 화남",
+    "토끼 기본",
+    "사또 판결",
+    "가짜 옹고집 뉘우침",
+    "배경 관아 재판장",
+  ]);
+});
+
+test("story-asset-taxonomy는 옹고집전 용어(뉘우침, 다정, 호통, 판결)를 올바르게 분류한다", () => {
+  const result = runAssetPickerUtils(`
+    const taxonomy = await import("./app/story-asset-taxonomy.ts");
+    const testCases = [
+      taxonomy.classifyStoryAsset({ id: "t1", type: "character", group: "가짜 옹고집", pose: "뉘우침", tags: [] }),
+      taxonomy.classifyStoryAsset({ id: "t2", type: "character", group: "옹고집의 아내", pose: "다정", tags: [] }),
+      taxonomy.classifyStoryAsset({ id: "t3", type: "character", group: "사또", pose: "판결", tags: [] }),
+      taxonomy.classifyStoryAsset({ id: "t4", type: "character", group: "진짜 옹고집", pose: "호통", tags: [] }),
+    ];
+    console.log(JSON.stringify(testCases));
+  `);
+
+  assert.deepEqual(result, [
+    { character: "가짜 옹고집", expression: "후회" },
+    { character: "옹고집의 아내", expression: "온화" },
+    { character: "사또", expression: "결심", action: "명령" },
+    { character: "진짜 옹고집", expression: "화남", action: "명령" },
+  ]);
+});
+
 test("sortStoryAssets는 추천 등급·사용 목적·구도·작품 및 캐릭터 순서에 따라 정렬한다", () => {
   const result = runAssetPickerUtils(`
     const allAssets = assetsModule.STORY_ASSETS;

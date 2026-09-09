@@ -58,11 +58,16 @@ jobs:
       - name: Browser smoke regression
         run: npm run qa:smoke
 
+      - name: Classroom touch and sheet fixtures
+        run: QA_OUTPUT=outputs/classroom npm run qa:classroom
+
       - name: Browser evidence
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: browser-smoke
-          path: outputs/browser-smoke
+          path: |
+            outputs/browser-smoke
+            outputs/classroom
           retention-days: 7
           if-no-files-found: ignore
