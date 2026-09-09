@@ -6,6 +6,12 @@ const output=process.env.QA_OUTPUT || '/tmp/story-flow-qa';await mkdir(output,{r
 import {execFileSync} from 'node:child_process';
 const doc=execFileSync(process.execPath,['--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`import {DEFAULT_PROJECT,cloneProject} from './app/story-data.ts';import {createStoryDocument} from './app/story-project-document.ts';const p=cloneProject(DEFAULT_PROJECT);p.chapters=p.chapters.slice(0,1);p.lines=[{...p.lines[0],text:'갈림길 앞에 섰어요.'}];console.log(JSON.stringify(createStoryDocument({project:p,savedAt:new Date().toISOString(),appVersion:'test'})));`],{encoding:'utf8'}).trim();
 const browser=await launchBrowser(output);const results=[];try { for(const [width,height] of viewports()) { const page=await browser.newPage({viewport:{width,height}});console.log('viewport',width);const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await page.locator('.entry-template-options[open]').waitFor({state:'attached'});await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('tab',{name:/이어만들기/}).click();await page.getByText('이 기기에서 이어만들기 ➔').click();await page.locator('.story-flow-editor summary').click();await page.getByRole('button',{name:'세 갈래 만들기',exact:true}).click();
+const passcodeModal = page.getByRole('dialog', { name: '선생님 승인 코드 입력' });
+await passcodeModal.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
+if (await passcodeModal.isVisible()) {
+  await passcodeModal.getByPlaceholder('승인 코드').fill('WAN');
+  await passcodeModal.getByRole('button', { name: '승인하고 계속하기' }).click();
+}
 for(let i=1;i<=3;i++) await page.getByLabel(`선택지 ${i} 문구`,{exact:true}).fill(`길 ${i}로 가기`);
 await page.getByRole('button',{name:'갈래 1 쓰러 가기',exact:true}).click();
 await page.getByLabel('현재 컷 글상자',{exact:true}).fill('첫 번째 갈래입니다.');
