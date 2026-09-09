@@ -26,7 +26,10 @@ jobs:
           node-version: 22.13.0
           cache: npm
 
-      - name: Install dependencies
+      - name: Refresh candidate lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit
+
+      - name: Install candidate dependencies
         run: npm ci
 
       - name: Capture dependency security reports
@@ -57,11 +60,12 @@ jobs:
           console.log(JSON.stringify(report.metadata, null, 2));
           NODE
 
-      - name: Upload audit report
+      - name: Upload audit report and candidate lockfile
         uses: actions/upload-artifact@v4
         with:
           name: npm-audit-report
           path: |
+            package-lock.json
             npm-audit.json
             npm-audit-summary.json
             npm-ls.json
