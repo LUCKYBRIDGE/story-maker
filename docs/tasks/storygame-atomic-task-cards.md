@@ -1344,3 +1344,21 @@ npm test
   git diff --check. Linux PR CI에서 동일 게이트 확인.
 - 중단: 실제 제품 회귀 발견 시 숨기지 않고 분리 진단. 되돌림은 이 PR revert.
 - 상태: 실행 중 ST-01만 IN_PROGRESS. G/A/B 후 DONE, 통합 여부는 별도 표시.
+
+
+## ST-02 — 원작 전체 도달 경로·결말 회귀
+
+- 선행: EX-01, ST-01 QA harness. 사용자 다중 안정화 실행 요청, Work Lead G/A/B.
+- 학생 가치: 예시의 모든 도달 가능한 결말을 읽고도 학생 작품이 보존된다.
+- 주 책임 QA·릴리스; 검토 관점 데이터 신뢰성, 아동문학 편집자.
+- 허용: tests/story-examples, tests/helpers, tests/browser/pinky-examples, 관련 상태/원본 ADR.
+- 금지: 원문·생성본·학생 저장 형식 변경, 원본 저장소 수정, 이야기 품질 작업 혼합.
+- 사전: 원본 df00a622의 route graph 직접 대조; 기존 연결·순환 검사는 재사용.
+- 구현: 1) 독립 그래프 oracle 2) 도달/edge/합류/결말 단언 3) 원본 분리 경로 고정
+  4) 각 결말 대표 경로 UI 재생 5) 선택 이전/재선택 및 네 저장 키 전후 비교.
+- 인수: (1) 6/16경로와 3/2결말 (2) 신규 도달 불가·순환·깨진 연결 실패
+  (3) 5결말 브라우저 종료 (4) 학생 draft/active/backup/checkpoint 무변경.
+- 검증: node --test tests/story-examples.test.mjs; npm run qa:smoke;
+  npm run check; npm test (PR CI); git diff --check.
+- 중단: 원본 의미를 바꿔야 한다면 자동 수정하지 않고 Narrative Audit로 분리.
+- 되돌림: QA PR revert, 학생 데이터 영향 없음. 상태표는 통과 증거 후 DONE/미통합 구분.
