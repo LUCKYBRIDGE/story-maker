@@ -1,6 +1,6 @@
 # 2026-09-09 안정화 재검토와 실행 증거
 
-상태: 자동화 구현·로컬 검증 완료, PR #16/#17 CI 성공, #18 CI 확인 중. 사용자 요청에 따른 재검증 보고서이며 제품 사양을 대체하지 않는다.
+상태: 자동화 구현·로컬 검증 완료, PR #16/#17/#18 CI 성공 (PR #18 CI 34351709722, verify 3분42초). 사용자 요청에 따른 재검증 보고서이며 제품 사양을 대체하지 않는다.
 주 책임 QA·릴리스, 검토 관점 데이터 신뢰성·교육 UX. Work Lead, G/A/B 증거.
 
 ## 확인한 기준선
@@ -25,7 +25,7 @@
 |---|---|---|---|---|
 | P0 | 직접 push/실패 코드 배포 가능; 보호 없음 | 기존 운영 계약에 설정 안내, #15 문서 정합화 | API/PR diff/링크 확인; 실제 설정은 승인 후 | 관리자 정책, 승인 필요 |
 | ST-01 / P1 | 네 QA가 CI 밖, 개인 Chrome에 의존 | CI+browser harness 작은 독립 PR | 기존 169개 유지, check·static build·4 suites, Linux CI 성공과 실패 artifact | 실행시간/OS flaky; 한 프로세스씩, timeout |
-| ST-02 / P1 | 원작 결말 하나씩만 브라우저 검사 | 그래프·원작 QA 별도 PR, ST-01 기반 | 모든 컷/edge 도달·무순환, 모든 결말 대표 재생, 이전·재선택·저장 격리 | 긴 경로는 실행시간 측정 |
+| ST-02 / P1 | 원작 결말 하나씩만 브라우저 검사 | 그래프·원작 QA 별도 PR, ST-01 기반 | 신규 도달 불가 검출·모든 edge 검사·무순환, 모든 결말 대표 재생, 이전·재선택·저장 격리 | 긴 경로는 실행시간 측정 |
 | ST-03 / P2 | 모바일 emulation과 실제 입력 증거 혼동 | QA만 별도 PR 및 기존 실기기 가이드 | 터치 모사/회전/축소/초점 자동 검사; 실제 두 OS는 기록지 | IME·키보드·safe area는 사람 필요 |
 | P2 Sheet | CSV/parser 방어 풍부, 실제 공유 fixture 없음 | 기존 mock UI 확대; OAuth 추가 금지 | 정상/선택 탭 없음/권한·로그인 오류, 학생 draft 보존 | 실제 공유 시트만 MANUAL BLOCKER |
 | P2 배포 | Pages push 워크플로가 verify와 독립 | 별도 release 정책 카드 | 동일 SHA의 성공 CI artifact만 배포하는 계약·시험 | 공개 배포/환경 정책 승인 필요 |
@@ -50,6 +50,7 @@ P2 그래프 검사를 새로 만든다는 가정은 제거했다. 기존 findSt
 | 상태표 내부 서로 다른 최신 SHA·보안 수 | 3 × 4 / 1 | #15 보완 |
 | 500ms 저장 대기와 모바일 강제 종료 | 5 × 2 / 3 | pagehide flush 이미 있음; 실제 OS 종료/용량 검증은 남음. 재현 없는 저장 rewrite 제외 |
 | 큰 Studio/CSS | 3 × 2 / 4 | 당장 리팩터링보다 회귀 게이트 우선 |
+| 명시적 앱 error boundary 없음 | 4 × 2 / 2 | 렌더 예외 시 복구 안내가 부족; 안전한 재시도 화면을 별도 P2 카드로 검토 |
 
 ## 기존 방어 확인과 한계
 
@@ -59,6 +60,11 @@ P2 그래프 검사를 새로 만든다는 가정은 제거했다. 기존 findSt
   장 범위·분기·표지와 CSV 가져오기까지 비교한다.
 - Sheet: 500/403/network/login HTML/abort와 선택 메모 탭 404를 이미 검사한다.
   공유 가능한 실제 테스트 시트가 저장소에 없고 테스트 URL은 fixture다.
+- 오류 경계: app/error.tsx 또는 명시적 ErrorBoundary가 없다. QA는 pageerror를 실패 처리하지만
+  예기치 않은 렌더 예외에서 학생에게 복구 행동을 안내하는 제품 방어는 후속 범위다.
+  에러 화면에서 저장본을 덮어쓰지 않는 인수 조건이 필요하다.
+- 모바일 CSS: safe-area env와 dvh 규칙은 존재한다. useFloatingMemo는 innerHeight/resize로
+  맞추며 visualViewport를 직접 사용하지 않는다. 실제 soft keyboard 동작은 실기기 확인 대상이다.
 - 접근성: start screen의 모달 초점·Escape·탭 이동·44px, flow 선택지 키보드 검사가 있다.
   앱 전체 접근성 감사나 스크린리더 합격으로 확대 해석하지 않는다.
 - 성능: 원작은 StoryStudio에서 dynamic import한다. 큰 청크 경고는 존재;
@@ -96,9 +102,10 @@ P2 그래프 검사를 새로 만든다는 가정은 제거했다. 기존 findSt
    기존 169+신규 3=172/172, check, build, browser 성공. 전체 verify 3분15초,
    browser 약 85초. 다섯 결말 대표 경로의 종료·이전/재선택·학생 네 저장 키 보존.
 5. [PR #18](https://github.com/LUCKYBRIDGE/story-maker/pull/18): touch/Sheet QA·실기기 matrix.
+   [CI 34351709722](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34351709722)
+   172/172 pass, check, static build, smoke 4 suite(desktop/mobile), classroom 2 suite(mobile-input, sheet-import) 성공. 전체 verify 3분42초.
    로컬 qa:classroom 약 9초, check 성공. Google CSV 요청은 응답 주입이며 실제 계정 아님.
    정상 import 확인 전 무변경, 확인 후 원본 checkpoint 보존, 오류 시 draft/active 보존.
-   최신 Linux CI 결과는 PR checks를 함께 확인한다.
 6. 자산 자동 재감사: 등록 자산 참조 108개, 누락 0/중복 ID 0. 기존 이미지 audit를
    산출물 변경 없이 실행: 88파일(등록 70/후보 18), KEEP 15, MANUAL-REVIEW 71,
    NORMALIZE-TRANSLATE 1, LEGACY 1, REJECT 0. '후보 71개'가 아니라 전체 감사 중
@@ -112,7 +119,9 @@ P2 그래프 검사를 새로 만든다는 가정은 제거했다. 기존 findSt
 
 - #14/#15/#16은 main 기준. #17은 #16 기반, #18은 #17 기반의 작은 연속 PR.
   승인 후 #16→#17→#18 순으로 base를 main에 재지정하고 충돌·CI를 재확인한다.
-  #14 package/lock 및 #15 상태표는 QA PR과 일부 파일을 공유하므로 양 변경을 보존한다.
+  #14 package/lock 및 #15 상태표는 QA PR과 일부 파일을 공유한다. merge-tree 검사에서
+  #14와 QA 합성은 충돌 없음. #15의 요약 삽입 위치를 옮겨 QA 상태 기록과의
+  충돌도 해소했다. 이는 합성 가능성 검사이며 실제 main merge는 아니다.
 - 모든 PR은 main 미병합. 자동 Cloudflare preview check는 GitHub 통합에 의해 실행;
   이 작업이 production 배포를 요청한 것은 아니다.
 - main 보호 설정, Pages 성공 CI와 동일 SHA 배포 계약: 관리자 승인/후속 release 작업.

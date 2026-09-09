@@ -165,7 +165,7 @@
 - 최신 기준선 검증: `npm run check` 통과, `npm test` 169/169, PR 검증의 `npm run build:pages` 및 배포의 `npm run build:github` 통과.
 - PR #11의 선행 메모/시트 변경은 #12 squash 병합에 함께 포함되었으므로 #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
 - 현재 자동으로 진행할 `READY` 작업은 없다. A1-02는 사람의 후보 자산 시각 승인 전까지 `BLOCKED`다.
-- 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 모든 결말의 시각 재생은 아직 완료 증거가 아니다.
+- 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 전체 경로의 서사·연출 승인은 미완료다. 후속 PR #17에서 다섯 도달 결말 대표 자동 재생은 통과했다.
 - GitHub runner 최신 registry 감사는 8건(1 moderate, 7 high), PR #14 후보는 2 high다. 남은 경로는 vinext → image-size 개발/빌드 도구이며 정적 브라우저 실행과 구분한다. 설치 로그 숫자는 시점·플랫폼에 따라 다르므로 최신 감사와 혼동하지 않는다.
 
 ## 1. 현재 기준선
@@ -186,7 +186,7 @@
 | 캐릭터 정렬 | A1-01 자동 Audit 완료. A1-02는 사람의 후보 자산 승인 대기로 BLOCKED |
 | GitHub 기준선 | PR #12 main 병합 완료 (`67be51a`); PR #11은 superseded로 닫음 |
 | 최신 브라우저 QA | Chrome 1365×900 / 820×1180 / 390×844에서 EX-01 최신 흐름 통과 |
-| 남은 외부 검증 | 실기기 iOS/Android IME·Safe Area·실터치, 실제 공유 Google 시트 계정, 원작 모든 결말 시각 재생 |
+| 남은 외부 검증 | 실기기 iOS/Android IME·Safe Area·실터치, 실제 공유 Google 시트 계정, 원작 서사·연출 품질 검수 |
 
 실제 브라우저 상호작용의 검증 범위는 §4에 따로 기록한다. 정적·전체 검사 통과가
 네이티브 모바일 키보드, 저장 할당량, 긴 작품 성능의 검증을 뜻하지 않는다.

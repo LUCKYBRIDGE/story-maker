@@ -37,7 +37,7 @@
 
 - 실제 iOS Safari / Android Chrome에서 한글 IME·가상 키보드·Safe Area·실터치 확인
 - 실제 공유 Google 시트 계정/권한을 이용한 종단 검증
-- 원작 예시의 모든 도달 가능한 결말에 대한 시각 재생 검수
+- 원작의 전체 경로 서사·연출 품질 검수 (다섯 도달 결말의 대표 자동 재생은 PR #17 통과)
 - A1-02 캐릭터 감정 세트의 사람 시각 승인 및 무대 검수
 - PR #14 보안 패치 main 반영 여부 결정
 - `vinext 0.0.50 → image-size 2.0.2`의 upstream stable 보안 수정 추적
@@ -121,7 +121,7 @@ npm run status:check
 - PR #14 최종 CI run `34347041043`: `npm ci`, whitespace, `npm run check`, `npm test` 모두 성공.
 - `image-size`의 현재 audit 자동 해결안은 Vinext 1.0 beta 계열의 semver-major 변경이므로 강제 적용하지 않았다.
 
-**아직 증명하지 않은 것**: 모든 원작 결말의 시각 재생, 실제 iOS/Android IME·터치,
+**EX-01 당시 미증명** (후속 PR #17에서 다섯 결말 대표 자동 재생 통과): 모든 원작 결말의 시각 재생, 실제 iOS/Android IME·터치,
 실제 공유 Google 계정 기반 시트 종단 동작.
 
 ---
@@ -223,5 +223,5 @@ MN-01의 166/166은 각 작업 당시 검증 기록이며 현재 최신 테스�
 ## 안정화 QA 후속 검증 — 2026-09-09
 
 [안정화 재검토·실행 보고서](docs/qa/stabilization-2026-09-09.md)에 현재 PR의 자동 검증,
-원본 도달 불가 경로, 보안 재감사와 사람 검증 경계를 기록했다. PR #16/#17의
+원본 도달 불가 경로, 보안 재감사와 사람 검증 경계를 기록했다. PR #16/#17/#18의
 CI 성공은 main에 QA가 이미 통합됐다는 뜻이 아니다. main merge·보호 설정은 승인 대기다.
