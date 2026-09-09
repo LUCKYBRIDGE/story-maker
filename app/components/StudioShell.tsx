@@ -133,7 +133,8 @@ export function StudioApplyDock({ onApply }: { onApply: () => void }) {
           <small>편집 내용과 창작 메모는 기기에 자동 저장됐어요.</small>
         </div>
       </div>
-      <button type="button" onClick={onApply}>
+      {/* Keep the writing area from resizing between pointer down and click on mobile. */}
+      <button type="button" onPointerDown={event => event.preventDefault()} onClick={onApply}>
         플레이에 적용
       </button>
     </section>

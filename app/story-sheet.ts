@@ -1,3 +1,5 @@
+import { STORY_FLOW_COLUMNS, parseStoryFlowCells } from "./story-flow-sheet";
+import type { StoryFlow } from "./story-flow";
 import { COVER_FIELDS, DEFAULT_COVER, isStoryCover } from "./story-cover";
 import { isStorySceneEffect } from "./story-scene-effect";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
@@ -784,7 +786,11 @@ export function buildProjectFromSheet(
           "연출 효과 설정을 읽을 수 없어요.",
           "효과: shake/flash-red/fade-black/crack/spotlight, 강도: soft/strong, 시점: scene-enter/with-dialogue/after-delay, 지연: 0~10초로 입력해 주세요."));
       }
+      let flow: StoryFlow | undefined;
+      try { flow = parseStoryFlowCells(STORY_FLOW_COLUMNS.map(column => getRawValue(row, column)), lineId); }
+      catch (error) { issues.push(issueAt(snapshot.source, row, ["진행 방식"], getValue(row, "진행 방식"), error instanceof Error ? error.message : "선택·연결을 읽지 못했어요.", "선택 문구와 도착 컷 ID를 확인해 주세요. 끝내려면 도착 컷에 ‘끝’을 입력해요.")); }
       return {
+        ...(flow ? { flow } : {}),
         ...(isStorySceneEffect(effect) ? { effect } : {}),
         id: lineId,
         chapterId,
@@ -816,6 +822,14 @@ export function buildProjectFromSheet(
           chapters.findIndex((chapter) => chapter.id === b.chapterId),
     );
 
+  const flowIds = new Set(lines.map(line => line.id));
+  for (const line of lines) {
+    const targets = line.flow?.type === "choice" ? line.flow.options.map(option => option.targetLineId) : line.flow ? [line.flow.targetLineId] : [];
+    for (const target of targets) if (target && !flowIds.has(target)) {
+      const row = lineRows.find(row => getValue(row, "컷 ID", "장면 ID", "대사 ID", "line_id", "line_key", "컷", "장면", "대사") === line.id);
+      if (row) issues.push(issueAt(snapshot.source, row, ["진행 방식"], target, "연결할 도착 컷을 찾을 수 없어요.", "컷 대본에 있는 컷 ID를 입력하거나 ‘끝’을 입력해 주세요."));
+    }
+  }
   if (chapters.length === 0) {
     issues.push({
       severity: "error",

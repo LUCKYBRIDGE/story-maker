@@ -2,7 +2,8 @@
 
 import { StorySceneFrame } from "./StoryStage";
 
-import { useEffect, useRef } from "react";
+import { useEffectEvent, useEffect, useRef, useState } from "react";
+import { storyFlowTargets } from "../story-flow";
 import type { StoryProject } from "../story-data";
 import { resolveStoryStage } from "../story-stage-view";
 import { findFirstStoryLineIndexForChapter, selectStoryPlayerPosition } from "../story-studio-selectors";
@@ -74,8 +75,41 @@ export function StoryPlayer({
   onRevisionResponse,
 }: StoryPlayerProps) {
   const playerRef = useRef<HTMLElement>(null);
-  const { lines, index, line, chapter, playableChapters, number, total, canPrevious, canNext } =
+  const { lines, index, line, chapter, playableChapters, number, total } =
     selectStoryPlayerPosition(project, startIndex);
+  const [history, setHistory] = useState<string[]>([]);
+  const [choiceEnded, setChoiceEnded] = useState(false);
+  const pendingMove = useRef(false);
+  const branching = project.lines.some(line => line.flow);
+  const targets = storyFlowTargets(lines, index);
+  const nextTarget = line?.flow?.type === "choice" ? undefined : targets[0];
+  const nextIndex = typeof nextTarget === "string" ? lines.findIndex(line => line.id === nextTarget) : -1;
+  const canNext = !choiceEnded && nextIndex >= 0 && nextIndex !== index;
+  const canPrevious = choiceEnded || history.length > 0 || (!branching && index > 0);
+  const atStoryEnd = total > 0 && (choiceEnded || nextTarget === null);
+  const brokenLink = line?.flow?.type !== "choice" && nextTarget !== null && !canNext && total > 0;
+  useEffect(() => { pendingMove.current = false; }, [index]);
+  function goTo(targetId: string | null) {
+    if (pendingMove.current || !line) return;
+    if (targetId === null) { setChoiceEnded(true); return; }
+    const target = lines.findIndex(line => line.id === targetId);
+    if (target < 0 || target === index) return;
+    pendingMove.current = true;
+    setHistory(previous => [...previous, line.id]);
+    onIndexChange(target);
+    playerRef.current?.focus({ preventScroll: true });
+  }
+  function goPrevious() {
+    if (pendingMove.current) return;
+    if (choiceEnded) { setChoiceEnded(false); return; }
+    const previousId = history.at(-1);
+    const target = previousId ? lines.findIndex(line => line.id === previousId) : !branching ? index - 1 : -1;
+    if (target < 0) return;
+    pendingMove.current = true;
+    setHistory(previous => previous.slice(0, -1));
+    onIndexChange(target);
+    playerRef.current?.focus({ preventScroll: true });
+  }
   useEffect(() => {
     playerRef.current?.focus({ preventScroll: true });
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -84,7 +118,7 @@ export function StoryPlayer({
 
   // 다음 컷 자산 선로딩 (끊김 없는 플레이 보장)
   useEffect(() => {
-    const nextLine = lines[index + 1];
+    const nextLine = lines[nextIndex];
     if (!nextLine) return;
     const nextChapter = project.chapters.find(
       (candidate) => candidate.id === nextLine.chapterId,
@@ -109,11 +143,10 @@ export function StoryPlayer({
       const img = new Image();
       img.src = rightSrc;
     }
-  }, [lines, index, project.chapters]);
+  }, [lines, nextIndex, project.chapters]);
 
-  // 키보드 조작 (다음/이전 컷, 편집 복귀)
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+  // 키보드 조작은 선택지를 건너뛰지 않으며 최신 재생 경로를 사용한다.
+  const onPlayerKey = useEffectEvent((event: KeyboardEvent) => {
       if (!shouldHandleStoryPlayerKey(event) ||
         !(event.target instanceof Node) || !playerRef.current?.contains(event.target)) {
         return;
@@ -126,28 +159,29 @@ export function StoryPlayer({
       ) {
         event.preventDefault();
         if (canNext) {
-          onIndexChange(index + 1);
+          goTo(nextTarget!);
         }
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
         if (canPrevious) {
-          onIndexChange(index - 1);
+          goPrevious();
         }
       } else if (event.key === "Escape") {
         event.preventDefault();
         onBack();
       }
-    };
-
+  });
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => onPlayerKey(event);
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [canNext, canPrevious, onBack, onIndexChange, index]);
+  }, []);
 
   const playChapter = (chapterId: string) => {
     const index = findFirstStoryLineIndexForChapter({ lines, chapterId });
-    if (index >= 0) onIndexChange(index);
+    if (index >= 0) { setHistory([]); setChoiceEnded(false); pendingMove.current = false; onIndexChange(index); }
   };
-  const atStoryEnd = total > 0 && !canNext;
+
 
   return (
     <main className="player-shell" ref={playerRef} tabIndex={-1} aria-label={isExample ? "예시 스토리 플레이" : "스토리 플레이"}>
@@ -198,7 +232,7 @@ export function StoryPlayer({
               {chapter ? `${chapter.order}장. ${chapter.title}` : "플레이할 컷이 없어요"}
             </span>
             <span>
-              {number} / {total}
+              {branching ? `현재 컷 ${number} · 전체 ${total}컷` : `${number} / ${total}`}
             </span>
           </div>
           {line?.type === "narration" ? (
@@ -218,6 +252,14 @@ export function StoryPlayer({
               />
             </p>
           )}
+          {line?.flow?.type === "choice" && !choiceEnded && <section className="player-choices" aria-label="이야기 선택지">
+            <strong>어떻게 할까요?</strong>
+            {line.flow.options.map((option, optionIndex) => <button type="button" key={option.id}
+              disabled={option.targetLineId !== null && (!option.targetLineId || !lines.some(line => line.id === option.targetLineId))}
+              onClick={() => goTo(option.targetLineId)}><b aria-hidden="true">{optionIndex + 1}</b><span>{option.label || `선택 ${optionIndex + 1}`}</span></button>)}
+            <small>선택지를 골라야 이야기가 이어져요.</small>
+          </section>}
+          {brokenLink && <p role="alert">연결할 컷을 찾지 못했어요. 편집으로 돌아가 도착 컷을 확인해 주세요.</p>}
           <div className="player-controls">
             {atStoryEnd && onFinish && <button type="button" onClick={onFinish}>공연 마치기</button>}
             {!isExample && onEditCut && (
@@ -230,7 +272,7 @@ export function StoryPlayer({
               type="button"
               className="ghost-button"
               disabled={!canPrevious}
-              onClick={() => canPrevious && onIndexChange(index - 1)}
+              onClick={() => canPrevious && goPrevious()}
             >
               이전
             </button>
@@ -239,7 +281,7 @@ export function StoryPlayer({
               className="primary-button"
               disabled={!canNext}
               onClick={() =>
-                canNext && onIndexChange(index + 1)
+                canNext && goTo(nextTarget!)
               }
             >
               다음 컷

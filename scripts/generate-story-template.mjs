@@ -191,6 +191,7 @@ addSheet(
   { autoFilter: false },
 );
 
+// 선택·연결 열은 빈칸이면 이전처럼 순서대로 재생한다. 도착 컷은 컷:ID 또는 끝.
 const scenesSheet = addSheet(
   "컷 대본",
   [
@@ -209,6 +210,7 @@ const scenesSheet = addSheet(
       "감정 메모",
       "연출 메모",
       "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
+      "진행 방식", "다음 도착 컷", ...[1,2,3].flatMap(i => [`선택 ${i} ID`, `선택 ${i} 문구`, `선택 ${i} 도착 컷`]),
     ],
     [
       "scene-1",
@@ -226,7 +228,7 @@ const scenesSheet = addSheet(
       "",
     ],
   ],
-  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18],
+  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18, ...Array(11).fill(26)],
 );
 for (let row = 2; row <= 500; row += 1) {
   scenesSheet.getCell(row, 4).dataValidation = {

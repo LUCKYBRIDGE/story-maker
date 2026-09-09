@@ -30,6 +30,7 @@ import {
   type StageSuggestion,
 } from "./story-stages";
 import { StageCorrectionDialog } from "./components/StageCorrectionDialog";
+import { createStoryBranches, disconnectStoryFlowTargets } from "./story-flow";
 import { ScriptScreen } from "./components/ScriptScreen";
 import { unique } from "./components/SceneThumbnail";
 import { CreativeMemoEditor } from "./components/CreativeMemoEditor";
@@ -1178,6 +1179,15 @@ export function StoryStudio() {
     }
   }
 
+  function addBranches(lineId: string, count: 2 | 3, existingPlacement: import("./story-flow").ExistingStoryPlacement) {
+    if (!backupDraft("before-reset")) return;
+    try {
+      const next = createStoryBranches(draft, lineId, count, () => crypto.randomUUID(), existingPlacement);
+      setDraft(next);
+      setNotice(`${count}갈래와 합류할 장을 준비했어요. 선택지 문구와 각 갈래의 글을 써 주세요. ‘다음 도착 컷’에서 합류 지점을 바꿀 수 있어요.`);
+    } catch (error) { setNotice(error instanceof Error ? error.message : "갈래를 만들지 못했어요."); }
+  }
+
   function updateLine(lineId: string, changes: Partial<StoryLine>) {
     setDraft((project) => ({
       ...project,
@@ -1539,7 +1549,7 @@ export function StoryStudio() {
     setDraft((project) => ({
       ...project,
       chapters: project.chapters.filter((chapter) => chapter.id !== chapterId),
-      lines: project.lines.filter((line) => line.chapterId !== chapterId),
+      lines: disconnectStoryFlowTargets(project.lines.filter((line) => line.chapterId !== chapterId), new Set(project.lines.filter(line => line.chapterId === chapterId).map(line => line.id))),
     }));
     selectChapter(remaining[0]?.id ?? "");
     setNotice("장을 삭제했어요. 현재 플레이는 아직 그대로이고 바로 되돌릴 수 있어요.");
@@ -1552,7 +1562,7 @@ export function StoryStudio() {
         : code === "cannot-move"
           ? "더 이상 이 방향으로 컷을 옮길 수 없어요."
           : code === "cannot-merge"
-            ? "대사·해설 종류와 인물이 같을 때만 합칠 수 있어요."
+            ? "선택·연결이나 연출이 있는 컷은 합칠 수 없어요. 대사·해설 종류와 인물도 같아야 해요."
             : "바꾸려는 컷을 찾지 못했어요.",
     );
   }
@@ -3079,6 +3089,7 @@ export function StoryStudio() {
                     onOpenStoryEditorScene={(line) =>
                       openStoryEditorScene(line)
                     }
+                    onCreateBranches={addBranches}
                     onSplitLine={splitLine}
                     onMoveLine={(lineId, delta) =>
                       moveLine(lineId, delta)
@@ -3120,8 +3131,10 @@ export function StoryStudio() {
                     onMoveThroughStory={moveThroughStory}
                     onChangeLineType={changeLineType}
                     onUpdateLine={updateLine}
+                    onCreateBranches={addBranches}
                     onSplitLine={splitLine}
                     onAddSpeaker={addSpeaker}
+                    onOpenLine={openStoryEditorScene}
                     onCopySceneStaging={copySceneStaging}
                     onSwitchStoryEditorView={switchStoryEditorView}
                     onAddLine={addLine}

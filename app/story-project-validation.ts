@@ -1,3 +1,4 @@
+import { isStoryFlow } from "./story-flow";
 import { isStoryCover } from "./story-cover";
 import { isStorySceneEffect } from "./story-scene-effect";
 import { normalizeCreativeMemos } from "./creative-memos";
@@ -339,6 +340,9 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
     if (record.effect !== undefined && !isStorySceneEffect(record.effect)) {
       addIssue(issues, "invalid-value", `${path}.effect`, "Invalid scene effect settings.");
     }
+    if (record.flow !== undefined && !isStoryFlow(record.flow)) {
+      addIssue(issues, "invalid-value", `${path}.flow`, "선택지는 2개 또는 3개이며 문구와 도착 컷이 있어야 해요.");
+    }
     const type = record.type;
     const speaker = record.speaker;
     if (type !== "dialogue" && type !== "narration") {
@@ -364,6 +368,7 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       purposeNote: optionalString(record, "purposeNote", path, issues),
       emotionNote: optionalString(record, "emotionNote", path, issues),
       directionNote: optionalString(record, "directionNote", path, issues),
+      ...(isStoryFlow(record.flow) ? { flow: structuredClone(record.flow) } : {}),
       ...(isStorySceneEffect(record.effect) ? { effect: { ...record.effect } } : {}),
     };
   });
@@ -446,6 +451,12 @@ export function normalizeAndValidateStoryProject(value: unknown) {
         `$.project.lines[${index}].chapterId`,
         `line '${line.id}' references missing chapter '${line.chapterId}'.`,
       );
+    }
+  });
+  project.lines.forEach((line, index) => {
+    const targets = line.flow?.type === "choice" ? line.flow.options.map(option => option.targetLineId) : line.flow ? [line.flow.targetLineId] : [];
+    for (const target of targets) {
+      if (target && !linesById.has(target)) addIssue(issues, "broken-reference", `$.project.lines[${index}].flow`, "연결된 도착 컷을 찾을 수 없어요.");
     }
   });
   if (project.continuation) {
