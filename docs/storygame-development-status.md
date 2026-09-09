@@ -9,16 +9,6 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 공유 기준선 요약 — 2026-09-09
-
-- GitHub `main` HEAD: `d545456` (제품 tree 동일). 최신 제품 커밋: `67be51a` (`메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)`).
-- PR #12는 main에 squash 병합되었고, 병합 후 CI run `34331728797` 및 GitHub Pages run `34331728819`가 모두 성공했다.
-- 최신 기준선 검증: `npm run check` 통과, `npm test` 169/169, PR 검증의 `npm run build:pages` 및 배포의 `npm run build:github` 통과.
-- PR #11의 선행 메모/시트 변경은 #12 squash 병합에 함께 포함되었으므로 #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
-- 현재 자동으로 진행할 `READY` 작업은 없다. A1-02는 사람의 후보 자산 시각 승인 전까지 `BLOCKED`다.
-- 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 모든 결말의 시각 재생은 아직 완료 증거가 아니다.
-- GitHub runner 최신 registry 감사는 8건(1 moderate, 7 high), PR #14 후보는 2 high다. 남은 경로는 vinext → image-size 개발/빌드 도구이며 정적 브라우저 실행과 구분한다. 설치 로그 숫자는 시점·플랫폼에 따라 다르므로 최신 감사와 혼동하지 않는다.
-
 ## 현재 요청: EX-01 메모 조절·원작 체험·근접 컷 이동
 
 - 상태: `DONE` (2026-09-09 구현·검증·main 병합·GitHub Pages 배포 완료). 사용자 지정, Work Lead. 주 책임: 교육 UX, 검토: 데이터 신뢰성·QA.
@@ -167,6 +157,16 @@
   기본 URL은 localhost:3001, `QA_URL`/`QA_OUTPUT`으로 변경. 새 프로젝트 의존성 없음.
 - 캡처는 연출 진행 700ms에 정지해 외형 확인. 실제 타이밍·성능은 정지하지 않은 별도 실행으로 측정.
 - 한계: 로컬 Chrome의 모바일 폭·CPU 감속 검증이며 실제 iOS/Android 및 모든 저사양 기기의 60fps 보장은 아님.
+
+## 현재 공유 기준선 요약 — 2026-09-09
+
+- GitHub `main` HEAD: `d545456` (제품 tree 동일). 최신 제품 커밋: `67be51a` (`메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)`).
+- PR #12는 main에 squash 병합되었고, 병합 후 CI run `34331728797` 및 GitHub Pages run `34331728819`가 모두 성공했다.
+- 최신 기준선 검증: `npm run check` 통과, `npm test` 169/169, PR 검증의 `npm run build:pages` 및 배포의 `npm run build:github` 통과.
+- PR #11의 선행 메모/시트 변경은 #12 squash 병합에 함께 포함되었으므로 #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
+- 현재 자동으로 진행할 `READY` 작업은 없다. A1-02는 사람의 후보 자산 시각 승인 전까지 `BLOCKED`다.
+- 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 모든 결말의 시각 재생은 아직 완료 증거가 아니다.
+- GitHub runner 최신 registry 감사는 8건(1 moderate, 7 high), PR #14 후보는 2 high다. 남은 경로는 vinext → image-size 개발/빌드 도구이며 정적 브라우저 실행과 구분한다. 설치 로그 숫자는 시점·플랫폼에 따라 다르므로 최신 감사와 혼동하지 않는다.
 
 ## 1. 현재 기준선
 
