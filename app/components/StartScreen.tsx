@@ -104,27 +104,19 @@ export function StartScreen({
   return (
     <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
       <div className="nolstory-poster-frame" inert={isStudioModalOpen}>
-        <img
-          src={resolveAssetUrl(`/story-assets/${coverTheme === "rabbit" ? "rabbit-turtle" : "onggojib"}.poster.art.webp`)}
-          alt=""
-          width={coverTheme === "rabbit" ? 940 : 941}
-          height={1672}
-          className="nolstory-poster-img"
-          fetchPriority="high"
-        />
         <header className="poster-brand">
           <svg viewBox="0 0 48 36" aria-hidden="true"><path d="M24 7Q13 0 3 4v26q11-4 21 2 10-6 21-2V4Q35 0 24 7Z" fill="#123653" stroke="#c99239" strokeWidth="2"/><path d="M24 7v25" stroke="#e5b760" strokeWidth="2"/></svg>
           <strong>놀스토리</strong>
-          <p>이야기로 만나는<br />더 넓은 세상</p>
+          <p>이야기로 만나는 <br />더 넓은 세상</p>
         </header>
         <nav className="poster-menu" aria-label="놀스토리 메인 메뉴">
           <button type="button" className="poster-button poster-change" onClick={toggleCoverTheme}
             aria-label={`이야기 변경 (현재: ${coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"})`}>
-            <span aria-hidden="true">↻</span><span>이야기변경</span><span aria-hidden="true">›</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2 5M20 7v5" /></svg><span>이야기 변경</span><span aria-hidden="true">›</span>
           </button>
           <button type="button" className="poster-button poster-create" onClick={() => setIsStudioModalOpen(true)}
             aria-label="나만의 이야기 창작 공작소 열기">
-            <span aria-hidden="true">🖌</span><span>나만의 이야기</span><span aria-hidden="true">›</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m14 5 5 5M9 15 20 4a2 2 0 0 0-3-3L6 12M9 15c-1 5-4 6-7 6 2-2 0-4 3-7 1-1 3-1 4 1Z" /></svg><span>나만의 이야기</span><span aria-hidden="true">›</span>
           </button>
         </nav>
         <section className="poster-heading" aria-live="polite" aria-atomic="true">
@@ -133,10 +125,19 @@ export function StartScreen({
           <p className="poster-author"><span aria-hidden="true">✦</span> 이 이야기의 작가: 당신 <span aria-hidden="true">✦</span></p>
           <p className="poster-description">당신이 직접 만들어 가는 이야기</p>
         </section>
-        <div className="poster-scene-space" aria-hidden="true" />
+        <div className="poster-scene-space" aria-hidden="true">
+          <img
+            src={resolveAssetUrl(`/story-assets/${coverTheme === "rabbit" ? "rabbit-turtle" : "onggojib"}.poster.art.webp`)}
+            alt=""
+            width={coverTheme === "rabbit" ? 940 : 941}
+            height={1672}
+            className="nolstory-poster-img"
+            fetchPriority="high"
+          />
+        </div>
         <button type="button" className="poster-button poster-read" onClick={onPlayExample} disabled={busy}
           aria-label="놀스토리 작품 읽기">
-          <span aria-hidden="true">📖</span><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" /></svg><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
         </button>
         <footer className="poster-footer">기본 제공 이미지 © 놀퀴즈<span aria-hidden="true"> · </span><wbr />학생 스토리게임 제작에 자유롭게 사용</footer>
       </div>
@@ -170,7 +171,7 @@ export function StartScreen({
           {/* 상단 브랜딩 및 안내 헤더 */}
           <div className="modal-header-banner">
             <div className="entry-brand">
-              <span className="brand-mark">놀퀴즈 스토리 스튜디오</span>
+              <span className="modal-brand-name">놀퀴즈 스토리 스튜디오</span>
               <span className="brand-subtext">NOLQUIZ STORY STUDIO</span>
             </div>
             <h1 id="entry-title" className="modal-main-title">
