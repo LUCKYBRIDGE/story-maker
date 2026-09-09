@@ -1,9 +1,10 @@
+import { launchBrowser } from './support/runtime.mjs';
 import assert from 'node:assert/strict';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
-const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+
 const {projects}=JSON.parse(await readFile(new URL('../../app/story-examples.generated.json',import.meta.url),'utf8'));
-const output='/tmp/pinky-examples-qa';await mkdir(output,{recursive:true});
-const browser=await chromium.launch({channel:'chrome',headless:true});const results=[];
+const output=process.env.QA_OUTPUT || '/tmp/pinky-examples-qa';await mkdir(output,{recursive:true});
+const browser=await launchBrowser(output);const results=[];
 try {for(const [theme,index,width,height] of [['onggojib',1,1365,900],['rabbit',0,390,844]]){
  const project=projects[index];const page=await browser.newPage({viewport:{width,height}});const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto(process.env.QA_URL||'http://localhost:3002');await page.locator('.entry-template-options[open]').waitFor({state:'attached'});

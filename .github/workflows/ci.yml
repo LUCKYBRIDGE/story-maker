@@ -48,3 +48,21 @@ jobs:
 
       - name: Build and tests
         run: npm test
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build GitHub Pages artifact
+        run: npm run build:github
+
+      - name: Browser smoke regression
+        run: npm run qa:smoke
+
+      - name: Browser evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-smoke
+          path: outputs/browser-smoke
+          retention-days: 7
+          if-no-files-found: ignore

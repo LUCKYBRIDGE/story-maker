@@ -19,7 +19,8 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern '**/._*'",
     "check": "npm run lint && tsc --noEmit",
-    "status:check": "node scripts/quick-status.mjs"
+    "status:check": "node scripts/quick-status.mjs",
+    "qa:smoke": "node tests/browser/run-smoke.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
@@ -38,6 +39,7 @@
     "brace-expansion": "1.1.18",
     "eslint": "9.39.4",
     "eslint-config-next": "^16.3.4",
+    "playwright": "1.63.0",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",

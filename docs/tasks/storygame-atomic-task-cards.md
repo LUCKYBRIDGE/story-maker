@@ -1326,3 +1326,21 @@ npm test
 - 표지 테마에 해당하는 실제 원본 대본과 분기를 재생하고 사용자 편집본을 유지.
 - 미리보기·글상자 좌우에 컷 이동, 44px 이상, 끝 비활성·스크롤 유지.
 - 검증: 원본 대사 비교, 그래프/정규화, 실제 양 작품 결말과 모바일 편집, check/test/build:pages.
+
+
+## ST-01 — 정적 배포 브라우저 회귀 게이트
+
+- 선행: EX-01, 2026-09-09 사용자 안정화 요청. Work Lead, G/A/B.
+- 학생 가치: 시작·분기·메모·예시 격리 회귀를 PR에서 발견한다.
+- 주 책임: QA·릴리스; 검토 관점: 데이터 신뢰성, 학생 대변인.
+- 허용: package/lock, CI, tests/browser, 이 카드와 개발 상태표.
+- 금지: 제품 UI·저장 형식 변경, main 병합·공개 배포, 강제 보안 업그레이드.
+- 사전: main d545456, PR #14/#15 CI 성공, main 보호 없음, 기존 Node 169개.
+- 구현 순서: 1) 기존 네 QA 재사용 2) 고정 Playwright와 Chromium 3) 정적
+  /story-maker 서버·순차 실행·timeout 4) 실패 추적/로그 5) CI 연결.
+- 인수: (1) npm ci로 재현 (2) 기존 169개 보존 (3) desktop/mobile 네 suite 성공
+  (4) 실패 시 verify 실패 및 artifact 보존 (5) QA_URL 외부 서버 지원.
+- 검증: npm run check; npm test; npm run build:github; npm run qa:smoke;
+  git diff --check. Linux PR CI에서 동일 게이트 확인.
+- 중단: 실제 제품 회귀 발견 시 숨기지 않고 분리 진단. 되돌림은 이 PR revert.
+- 상태: 실행 중 ST-01만 IN_PROGRESS. G/A/B 후 DONE, 통합 여부는 별도 표시.
