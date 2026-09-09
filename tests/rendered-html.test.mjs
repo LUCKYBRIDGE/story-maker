@@ -330,10 +330,10 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(creativeMemo, /인물 알아보기/);
   assert.match(creativeMemo, /인물 관계/);
   assert.match(creativeMemo, /장소·세계/);
-  assert.match(creativeMemoEditor, /\+ 항목 추가/);
-  assert.match(creativeMemoEditor, /직접 항목 이름 붙이기/);
-  assert.match(creativeMemoEditor, /위로 이동/);
-  assert.match(creativeMemoEditor, /아래로 이동/);
+  assert.match(creativeMemoEditor, /메모 내용/);
+  assert.match(creativeMemoEditor, /추가 정보/);
+  assert.match(creativeMemoEditor, /memo.fields.map/);
+  assert.match(creativeMemoEditor, /aria-modal="false"/);
   assert.match(studio, /메모를 삭제할까요/);
   assert.match(studio, /memoSectionsOpen/);
   assert.match(studio, /closeAllMemoSections/);

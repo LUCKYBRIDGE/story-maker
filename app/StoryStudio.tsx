@@ -87,7 +87,6 @@ import {
   creativeMemoChapterTargets,
   creativeMemoLineTargets,
   resolveCreativeMemoLink,
-  resolveCreativeMemoReturnLocation,
   setCreativeMemoChapterLink,
   setCreativeMemoLineLink,
 } from "./creative-memo-commands";
@@ -534,33 +533,10 @@ export function StoryStudio() {
   useEffect(() => {
     if (!memoPopupOpen) return;
     function closeMemoPopup(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && event.target instanceof Element && event.target.closest(".sticky-memo-board, .memo-popup")) {
         setMemoPopupOpen(false);
         setMemoSearch("");
-        const origin = memoReturnOriginRef.current;
         memoReturnOriginRef.current = null;
-        if (!origin) return;
-        const resolved = resolveCreativeMemoReturnLocation({
-          chapters: draft.chapters,
-          lines: draft.lines,
-          location: origin.location,
-        });
-        setWorkspaceMode(origin.workspaceMode);
-        setPlanningView(origin.planningView);
-        setSelectedChapterId(resolved.location.chapterId);
-        setSelectedLineId(resolved.location.lineId);
-        setEditorMode(resolved.location.view);
-        if (origin.workspaceMode === "create") {
-          setEditorRestoreRequest({
-            location: resolved.location,
-            scrollY: resolved.usedFallback ? undefined : origin.scrollY,
-          });
-        }
-        setNotice(
-          resolved.usedFallback
-            ? "기록하던 컷이 바뀌어 가장 가까운 곳으로 돌아왔어요."
-            : "메모를 닫고 기록하던 컷으로 돌아왔어요.",
-        );
       }
     }
     window.addEventListener("keydown", closeMemoPopup);
@@ -1350,31 +1326,8 @@ export function StoryStudio() {
   function returnFromMemoPopup() {
     setMemoPopupOpen(false);
     setMemoSearch("");
-    const origin = memoReturnOriginRef.current;
     memoReturnOriginRef.current = null;
-    if (!origin) return;
-
-    const resolved = resolveCreativeMemoReturnLocation({
-      chapters: draft.chapters,
-      lines: draft.lines,
-      location: origin.location,
-    });
-    setWorkspaceMode(origin.workspaceMode);
-    setPlanningView(origin.planningView);
-    if (origin.workspaceMode === "create") {
-      requestStoryEditorRestore(resolved.location, {
-        scrollY: resolved.usedFallback ? undefined : origin.scrollY,
-      });
-    } else {
-      setSelectedChapterId(resolved.location.chapterId);
-      setSelectedLineId(resolved.location.lineId);
-      setEditorMode(resolved.location.view);
-    }
-    setNotice(
-      resolved.usedFallback
-        ? "기록하던 컷이 바뀌어 가장 가까운 곳으로 돌아왔어요."
-        : "메모를 닫고 기록하던 컷으로 돌아왔어요.",
-    );
+    window.requestAnimationFrame(() => document.querySelector<HTMLElement>(".sticky-memo-launch")?.focus({ preventScroll: true }));
   }
 
   function switchStoryEditorView(view: StoryEditorView) {
@@ -2818,21 +2771,7 @@ export function StoryStudio() {
                 <option value="small">작은 그림 함께 보기</option>
               </select>
             </label>
-            <button
-              className={`memo-popup-toggle ${
-                memoPopupOpen ? "active" : ""
-              }`}
-              aria-haspopup="dialog"
-              aria-expanded={memoPopupOpen}
-              onClick={() =>
-                memoPopupOpen ? returnFromMemoPopup() : openMemoPopup()
-              }
-            >
-              <strong>창작 메모</strong>
-              <small>
-                {filledMemoCount}개 · {memoPopupOpen ? "닫기" : "찾아보기"}
-              </small>
-            </button>
+
           </header>
 
           {selectedChapter ? (
@@ -3164,8 +3103,14 @@ export function StoryStudio() {
               </section>
               {memoPopupOpen && (
                 <MemoPopup
+                  onAddStickyMemo={() => {
+                    const memo = createCreativeMemo("free", draft.creativeMemos.length + 1);
+                    setDraft(project => ({...project, creativeMemos: [...project.creativeMemos, memo]}));
+                  }}
+                  onChangeStickyMemo={memo => updateCreativeMemo(memo.id, () => memo)}
+                  onDeleteStickyMemo={deleteCreativeMemo}
                   draft={draft}
-                  currentLocation={currentLocation}
+                  currentLocation={`${currentLocation} · 구성 기록 ${filledMemoCount}개`}
                   memoWindowSize={memoWindowSize}
                   onSetMemoWindowSize={setMemoWindowSize}
                   onReturnFromMemoPopup={returnFromMemoPopup}
@@ -3258,6 +3203,7 @@ export function StoryStudio() {
         onDismiss={handleDismissStageWarning}
       />
 
+      {workspaceMode === "create" && !memoPopupOpen && !selectedCreativeMemo && <button type="button" className="sticky-memo-launch" onClick={openMemoPopup}>창작 메모 펼치기 · {draft.creativeMemos.length}</button>}
       {hydrated &&
         selectedCreativeMemo &&
         createPortal(

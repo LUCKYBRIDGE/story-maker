@@ -240,6 +240,8 @@ function sheetCsvUrl(sheetId: string, tabName: string) {
   return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
 }
 
+class MissingStorySheetTab extends Error {}
+
 async function fetchSheetTab(
   sheetId: string,
   tabName: string,
@@ -249,9 +251,31 @@ async function fetchSheetTab(
     signal,
     cache: "no-store",
   });
-  if (!response.ok) throw new Error(`‘${tabName}’ 탭을 읽지 못했어요.`);
-  return response.text();
+  if (response.status === 400 || response.status === 404) throw new MissingStorySheetTab(`‘${tabName}’ 탭이 없어요.`);
+  if (!response.ok) throw new Error(`‘${tabName}’ 탭을 읽지 못했어요. 잠시 후 다시 시도해 주세요.`);
+  const text = await response.text();
+  if (signal.aborted) throw new DOMException("불러오기를 중지했어요.", "AbortError");
+  if (/^\s*(?:<!doctype html|<html)/i.test(text)) throw new Error(`‘${tabName}’ 탭 대신 로그인 페이지가 열렸어요. 공개 설정을 확인해 주세요.`);
+  return text;
 }
+
+
+function sheetAccessIssues(sheetId: string, tabNames: string[]) {
+  return ([
+    {
+      severity: "error",
+      source: "sheet",
+      sheet: tabNames.join(" 또는 "),
+      row: 1,
+      column: "공개 설정",
+      value: sheetId,
+      message: `‘${tabNames.join("’ 또는 ‘")}’ 탭을 읽지 못했어요.`,
+      fix: "Google 시트를 ‘링크가 있는 모든 사용자에게 공개’로 설정하고 탭 이름을 확인해 주세요. 계속 안 되면 Excel로 저장해 불러와 주세요.",
+    },
+  ] satisfies StoryImportIssue[]);
+}
+
+class MissingStorySheetGroup extends StoryImportError {}
 
 async function fetchFirstAvailableTab(
   sheetId: string,
@@ -263,20 +287,10 @@ async function fetchFirstAvailableTab(
       return { name: tabName, csv: await fetchSheetTab(sheetId, tabName, signal) };
     } catch (error) {
       if (signal.aborted) throw error;
+      if (!(error instanceof MissingStorySheetTab)) throw new StoryImportError(sheetAccessIssues(sheetId, tabNames));
     }
   }
-  throw new StoryImportError([
-    {
-      severity: "error",
-      source: "sheet",
-      sheet: tabNames.join(" 또는 "),
-      row: 1,
-      column: "공개 설정",
-      value: sheetId,
-      message: `‘${tabNames.join("’ 또는 ‘")}’ 탭을 읽지 못했어요.`,
-      fix: "Google 시트를 ‘링크가 있는 모든 사용자에게 공개’로 설정하고 탭 이름을 확인해 주세요. 계속 안 되면 Excel로 저장해 불러와 주세요.",
-    },
-  ]);
+  throw new MissingStorySheetGroup(sheetAccessIssues(sheetId, tabNames));
 }
 
 export async function fetchSheetSnapshot(
@@ -294,7 +308,8 @@ export async function fetchSheetSnapshot(
       ["장의 자료", "챕터 자료"],
       signal,
     );
-  } catch {
+  } catch (error) {
+    if (signal.aborted || !(error instanceof MissingStorySheetTab || error instanceof MissingStorySheetGroup)) throw error;
     // 이전 형식은 장/챕터 탭 안에 이미지와 화자 자료가 함께 있습니다.
   }
   let speakers = { name: "화자", csv: "" };
@@ -303,7 +318,8 @@ export async function fetchSheetSnapshot(
       name: "화자",
       csv: await fetchSheetTab(sheetId, "화자", signal),
     };
-  } catch {
+  } catch (error) {
+    if (signal.aborted || !(error instanceof MissingStorySheetTab)) throw error;
     // 이전 형식은 컷에 쓰인 화자 이름으로 목록을 복원합니다.
   }
   const lines = await fetchFirstAvailableTab(
@@ -317,7 +333,8 @@ export async function fetchSheetSnapshot(
       name: "창작 메모",
       csv: await fetchSheetTab(sheetId, "창작 메모", signal),
     };
-  } catch {
+  } catch (error) {
+    if (signal.aborted || !(error instanceof MissingStorySheetTab)) throw error;
     // 이전 양식에는 창작 메모 탭이 없습니다.
   }
   return createStoryImportSnapshot({
