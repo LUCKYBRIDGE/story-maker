@@ -281,3 +281,32 @@ iOS/Android 실제 keyboard, OS picker, Web Serial은 Work/실기기에 남긴�
 
 이 원칙 아래 일반 데이터/로직은 Chat 비중이 높아질 수 있고, 브라우저·로컬·하드웨어 작업은
 Work 비중이 높아질 수 있다. 둘 다 정상적인 최적 상태다.
+
+## 14. main 보호 설정안 — 2026-09-09 재확인
+
+API에서 main protected=false, rulesets=[]를 확인했다. 현재 CI는 실패를 보고하지만
+직접 push와 병합을 강제로 차단하지 않는다. 설정 변경은 §11에 따라 사용자 승인 대상이다.
+
+저장소 Settings → Branches → Add classic branch protection rule:
+
+1. Branch name pattern: `main`.
+2. Require a pull request before merging: 켬.
+3. Require status checks to pass before merging: 켬; `verify` (GitHub Actions) 선택.
+4. Require branches to be up to date before merging: 켬.
+5. Require conversation resolution before merging: 켬.
+6. Do not allow bypassing the above settings: 켬. PR bypass 예외를 추가하지 않는다.
+7. Allow force pushes / Allow deletions: 모두 끔.
+8. 독립 reviewer가 있으면 Require approvals=1, Dismiss stale approvals=켬.
+   PR 작성자와 병합자가 같은 단독 계정이면 자기 PR 승인이 불가능하므로 reviewer를
+   먼저 확보한다. 그 전에는 PR+CI 필수와 대화의 명시적 사용자 병합 승인을 적용한다.
+
+`verify` 안에 browser smoke가 포함되면 검사 이름은 그대로 유지한다. Cloudflare
+preview 성공을 유일한 필수 검사로 삼지 않는다. merge queue/linear history는 현재
+소규모 운영의 필수 조건으로 추가하지 않는다. 실제 설정 뒤 API와 별도 실패 PR로
+병합 차단을 확인한다. 이 문서는 설정 완료 증거가 아니다.
+
+Pages의 main push 배포는 현재 CI와 독립이다. 보호 적용과 별개로 같은 SHA의 성공
+검증/정적 artifact를 배포하도록 만드는 후속 release 카드가 필요하다. Cloudflare는
+main check 성공만으로 production alias SHA 일치를 단정하지 않는다.
+
+설정 항목 근거: [GitHub 공식 branch protection 안내](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule).

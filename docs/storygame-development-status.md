@@ -11,13 +11,13 @@
 
 ## 현재 공유 기준선 요약 — 2026-09-09
 
-- GitHub `main` 최신 제품 HEAD: `67be51a` (`메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)`).
+- GitHub `main` HEAD: `d545456` (제품 tree 동일). 최신 제품 커밋: `67be51a` (`메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)`).
 - PR #12는 main에 squash 병합되었고, 병합 후 CI run `34331728797` 및 GitHub Pages run `34331728819`가 모두 성공했다.
 - 최신 기준선 검증: `npm run check` 통과, `npm test` 169/169, PR 검증의 `npm run build:pages` 및 배포의 `npm run build:github` 통과.
 - PR #11의 선행 메모/시트 변경은 #12 squash 병합에 함께 포함되었으므로 #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
 - 현재 자동으로 진행할 `READY` 작업은 없다. A1-02는 사람의 후보 자산 시각 승인 전까지 `BLOCKED`다.
 - 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 모든 결말의 시각 재생은 아직 완료 증거가 아니다.
-- 최신 GitHub Pages `npm ci` 로그는 7 vulnerabilities(1 moderate, 6 high)를 보고했다. 과거의 `npm audit 0` 기록은 당시 증거로 보존하되 현재 의존성 상태로 재사용하지 않으며, production/dev 영향은 별도 분석 전 단정하지 않는다.
+- GitHub runner 최신 registry 감사는 8건(1 moderate, 7 high), PR #14 후보는 2 high다. 남은 경로는 vinext → image-size 개발/빌드 도구이며 정적 브라우저 실행과 구분한다. 설치 로그 숫자는 시점·플랫폼에 따라 다르므로 최신 감사와 혼동하지 않는다.
 
 ## 현재 요청: EX-01 메모 조절·원작 체험·근접 컷 이동
 
@@ -174,13 +174,13 @@
 
 | 항목 | 현재 사실 |
 |---|---|
-| 공유 기준선 | GitHub `main` (`67be51a`); 세션 시작 시 `STATUS.md` 또는 `npm run status:check`로 확인 |
+| 공유 기준선 | GitHub `main` (`d545456`, 제품 tree `67be51a`와 동일); 세션 시작 시 `STATUS.md` 또는 `npm run status:check`로 확인 |
 | 원격 저장소 | `LUCKYBRIDGE/story-maker`; 로컬에서는 `origin`으로 사용 |
 | 로컬 작업 트리 | Chat에서는 로컬 clean 여부를 주장하지 않음. Work/로컬에서 `npm run status:check`로 확인 |
 | `npm run check` | 2026-09-09 최신 main CI에서 TypeScript/ESLint 통과 |
 | `npm test` | 2026-09-09 최신 main CI에서 Vinext 빌드 및 169/169 전체 통과 |
-| GitHub Pages | `67be51a` 기준 `npm run build:github` 및 배포 성공 (run `34331728819`) |
-| 의존성 감사 | 최신 Pages `npm ci`에서 7 vulnerabilities(1 moderate, 6 high) 보고. production/dev 영향 별도 분석 필요 |
+| GitHub Pages | `d545456` 기준 `npm run build:github` 및 배포 성공 (run `34346214609`) |
+| 의존성 감사 | GitHub registry 감사 8건 → PR #14 후보 2 high. main 미반영; vinext → image-size upstream 잔여 |
 | 구현 기준 | U1/U2, 장면 연출, 표지·커튼, 선택·분기·합류, 반응형 첫 화면, 창작 메모, 원작 전체 예시까지 main 반영 |
 | 자산 구조 | taxonomy v1 adapter 구현, v2는 목표 아키텍처만 확정 |
 | 캐릭터 정렬 | A1-01 자동 Audit 완료. A1-02는 사람의 후보 자산 승인 대기로 BLOCKED |
