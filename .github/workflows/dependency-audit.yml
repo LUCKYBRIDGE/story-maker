@@ -29,10 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Capture npm audit report
+      - name: Capture dependency security reports
         shell: bash
         run: |
           npm audit --json > npm-audit.json || true
+          npm ls --all --json fflate image-size sharp @cloudflare/vite-plugin miniflare next vinext wrangler > npm-ls.json || true
           node <<'NODE'
           const fs = require('node:fs');
           const report = JSON.parse(fs.readFileSync('npm-audit.json', 'utf8'));
@@ -63,5 +64,6 @@ jobs:
           path: |
             npm-audit.json
             npm-audit-summary.json
+            npm-ls.json
           if-no-files-found: error
           retention-days: 1
