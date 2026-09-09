@@ -7,7 +7,8 @@ await mkdir(output, {recursive:true});
 const browser = await chromium.launch({channel:'chrome',headless:true});
 const results = [];
 try {
- for (const [width,height] of [[360,800],[390,844],[600,960],[768,1024],[820,1180],[1024,768],[1440,900],[1920,1080],[720,450]]) {
+ const sizes=process.env.QA_VIEWPORTS ? JSON.parse(process.env.QA_VIEWPORTS) : [[320,740],[360,800],[390,844],[600,960],[768,1024],[820,1180],[960,720],[1024,768],[1440,900],[1920,1080],[720,450],[800,450]];
+ for (const [width,height] of sizes) {
   const page = await browser.newPage({viewport:{width,height}});
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
   await page.goto(process.env.QA_URL || 'http://localhost:3001');
@@ -17,6 +18,15 @@ try {
   const measure=()=>page.evaluate(selectors=>selectors.map(s=>{const r=document.querySelector(s).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};}),selectors);
   await page.evaluate(()=>document.fonts.ready);
   const before=await measure();
+  const layout=await page.evaluate(()=>{
+   const box=s=>document.querySelector(s).getBoundingClientRect();
+   const frame=box('.nolstory-poster-frame'),footer=box('.poster-footer'),heading=box('.poster-heading'),art=box('.poster-scene-space');
+   return {contained:footer.bottom<=frame.bottom, separated:heading.bottom<=art.top || heading.right<=art.left,
+    font:parseFloat(getComputedStyle(document.querySelector('.poster-brand p')).fontSize)};
+  });
+  assert.ok(layout.contained,`footer outside frame at ${width}`);
+  assert.ok(layout.separated,`art overlaps heading at ${width}`);
+  assert.ok(layout.font>=15,`small branding at ${width}`);
   await page.screenshot({path:`${output}/onggojib-${width}.png`,fullPage:true});
   await page.getByRole('button',{name:/이야기 변경/}).click();
   await page.locator('.nolstory-poster-img').evaluate(img=>img.decode());
@@ -28,6 +38,11 @@ try {
   await page.screenshot({path:`${output}/rabbit-${width}.png`,fullPage:true});
   const open=page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'});await open.click();
   const close=page.getByRole('button',{name:'창작 공작소 닫기'});
+  await close.waitFor({state:"visible"});
+  assert.ok(await page.locator('.modal-brand-name').evaluate(el=>el.scrollHeight<=el.clientHeight && el.scrollWidth<=el.clientWidth),`studio name clipped at ${width}`);
+  await page.waitForTimeout(350);
+  await page.screenshot({path:`${output}/studio-${width}.png`,fullPage:true});
+  assert.ok(await page.locator('.nolstory-studio-modal').evaluate(el=>el.scrollWidth<=el.clientWidth),`modal overflow at ${width}`);
   await close.focus();await page.keyboard.press('Shift+Tab');
   assert.ok(await page.evaluate(()=>!!document.activeElement.closest('.nolstory-studio-modal')));
   await page.getByRole('tab',{name:'새 이야기 만들기'}).focus();await page.keyboard.press('ArrowRight');

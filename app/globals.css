@@ -215,13 +215,14 @@ img {
   width: 100%;
   max-width: 600px;
   min-height: 0;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: auto;
   padding: 4% 6% 5%;
   color: #103452;
   background: #fbf5e9;
   border-radius: 20px;
   box-shadow: 0 28px 80px #0009, -6px 0 0 #a98046, -9px 0 0 #493827, 0 0 100px #e8c17720;
-  font-family: "Nanum Myeongjo", "Batang", "Songti SC", serif;
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all;
 }
 .nolstory-poster-frame::after {
   content: "";
@@ -235,18 +236,18 @@ img {
 }
 .nolstory-poster-img {
   position: absolute;
-  z-index: -1;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 70%;
   border-radius: inherit;
   pointer-events: none;
 }
 .poster-brand { text-align: center; }
 .poster-brand svg { width: clamp(28px, 7cqi, 44px); height: auto; margin: auto; }
 .poster-brand strong { display: block; font-size: clamp(20px, 4.8cqi, 30px); font-weight: 900; line-height: 1.2; }
-.poster-brand p { margin: 8px 0 0; color: #78562e; font-size: clamp(12px, 2.9cqi, 18px); font-weight: 700; line-height: 1.5; }
+.poster-brand p { margin: 8px 0 0; color: #78562e; font-size: clamp(15px, 3cqi, 19px); font-weight: 500; line-height: 1.5; }
 .poster-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4%; width: 100%; margin-top: 3cqi; }
 .poster-button {
   display: flex;
@@ -260,39 +261,71 @@ img {
   border-radius: 999px;
   background: linear-gradient(120deg, #fffdf7, #f2e7d1);
   box-shadow: inset 0 0 0 2px #fff9, 0 4px 8px #71512433;
-  font-size: clamp(13px, 3.25cqi, 21px);
-  font-weight: 800;
+  font-size: clamp(14px, 3.25cqi, 21px);
+  font-weight: 700;
   line-height: 1.35;
 }
 .poster-button > span:nth-child(2) { white-space: nowrap; }
-.poster-button > span:first-child, .poster-button > span:last-child { font-size: 1.3em; }
+.poster-button > svg { width: 1.3em; height: 1.3em; flex: 0 0 auto; }
+.poster-button > span:last-child { font-size: 1.3em; }
 .poster-create { color: #fffaf0; border-color: #dfb455; background: linear-gradient(120deg, #194564, #10283e); box-shadow: inset 0 0 0 1px #ffffff40, 0 4px 8px #71512433; }
 .poster-button:hover { filter: brightness(1.06); }
 .poster-button:focus-visible { outline: 3px solid #1678b1; outline-offset: 4px; }
 .poster-heading { width: 100%; text-align: center; margin-top: 1.5cqi; }
 .poster-leaves { width: 7cqi; height: 8cqi; margin: auto; }
-.poster-heading h2 { margin: 0; font-size: clamp(38px, 11.5cqi, 72px); letter-spacing: -.07em; line-height: 1.25; font-weight: 900; white-space: nowrap; }
+.poster-heading h2 { margin: 0; font-size: clamp(38px, 11.5cqi, 72px); letter-spacing: -.045em; line-height: 1.25; font-weight: 900; white-space: nowrap; }
 .poster-heading h2 > span { color: #744a25; }
 .poster-author { display: flex; align-items: center; justify-content: center; gap: 2cqi; margin: 3cqi 0 0; font-size: clamp(15px, 3.8cqi, 24px); font-weight: 800; line-height: 1.5; }
 .poster-author > span { color: #b68a3f; font-size: .8em; }
-.poster-description { margin: 1.5cqi 0 0; color: #626562; font-size: clamp(13px, 3.2cqi, 20px); font-weight: 700; }
-.poster-scene-space { flex: 1; min-height: 60cqi; }
-.poster-read { width: 86%; justify-content: center; gap: 3cqi; padding: 3cqi 5cqi; font-size: clamp(18px, 4.5cqi, 28px); color: #251b0b; background: linear-gradient(115deg, #fff0a4, #ffcd58 55%, #dba740); border-color: #bc852e; box-shadow: inset 0 0 0 2px #fff2bf, 0 4px 0 #b38238, 0 8px 14px #72501f33; }
-.poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font: 500 clamp(10px, 2.2cqi, 14px)/1.6 sans-serif; }
+.poster-description { margin: 1.5cqi 0 0; color: #626562; font-size: clamp(14px, 3.2cqi, 20px); font-weight: 500; }
+.poster-scene-space { position: relative; flex: 1; width: 100%; min-height: 88cqi; margin-top: 12px; overflow: hidden; border-radius: 16px; }
+.poster-read { margin-top: 12px; width: 86%; justify-content: center; gap: 3cqi; padding: 3cqi 5cqi; font-size: clamp(18px, 4.5cqi, 28px); color: #251b0b; background: linear-gradient(115deg, #fff0a4, #ffcd58 55%, #dba740); border-color: #bc852e; box-shadow: inset 0 0 0 2px #fff2bf, 0 4px 0 #b38238, 0 8px 14px #72501f33; }
+.poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font-size: clamp(12px, 2.2cqi, 14px); font-weight: 400; line-height: 1.7; }
 
 @media (max-width: 600px) {
   .nolstory-poster-frame { padding: 4% 6% 5%; border-radius: 0; box-shadow: none; }
 }
 @media (min-width: 601px) {
-  .nolstory-poster-viewport { padding: 28px; }
-  .nolstory-poster-frame { width: clamp(420px, 66vw, 600px); padding: 30px 32px 28px; }
+  .nolstory-poster-viewport { padding: clamp(20px, 3vw, 48px); }
+  .nolstory-poster-frame { width: min(100%, 680px); max-width: 680px; padding: 28px 36px; }
 }
-@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
-  .nolstory-poster-frame { width: clamp(420px, 52vw, 540px); }
+/* A landscape spread uses the available width without shrinking the reading controls. */
+@media (min-width: 960px), (min-width: 740px) and (orientation: landscape) {
+  .nolstory-poster-viewport { background: radial-gradient(ellipse at 50% 22%, #455366 0%, transparent 65%), radial-gradient(ellipse at 50% 85%, #665039 0%, transparent 58%), #0a121e; }
+  .nolstory-poster-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto auto;
+    column-gap: clamp(24px, 4vw, 64px);
+    width: 100%; max-width: 1360px; aspect-ratio: auto;
+    min-height: clamp(600px, 80dvh, 820px);
+    padding: clamp(28px, 4vw, 56px);
+    overflow: hidden;
+  }
+  .nolstory-poster-img { object-position: center 75%; border-radius: 0; }
+
+  .nolstory-poster-frame::after { inset: 12px; border-radius: 16px; }
+  .poster-brand { grid-column: 1; text-align: left; display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: center; }
+  .poster-brand svg { width: 42px; grid-row: span 2; }
+  .poster-brand strong { font-size: 28px; line-height: 1.3; }
+  .poster-brand p { font-size: 16px; margin: 2px 0 0; }
+  .poster-brand p br { display: none; }
+  .poster-menu { grid-column: 1; gap: 12px; margin-top: 28px; }
+  .poster-button { padding: 14px 16px; font-size: clamp(15px, 1.5vw, 20px); min-height: 54px; }
+  .poster-heading { grid-column: 1; margin: 36px 0; }
+  .poster-leaves { width: 40px; height: 48px; }
+  .poster-heading h2 { font-size: clamp(44px, 5.2vw, 72px); }
+  .poster-author { font-size: clamp(16px, 1.8vw, 23px); gap: 12px; margin-top: 24px; }
+  .poster-description { font-size: clamp(15px, 1.6vw, 20px); margin-top: 10px; }
+  .poster-scene-space { grid-column: 2; grid-row: 1 / 6; min-height: 0; height: 100%; margin: 0; border-radius: 12px; }
+  .poster-read { grid-column: 1; width: 100%; font-size: clamp(18px, 1.9vw, 26px); padding: 18px; gap: 16px; }
+  .poster-footer { grid-column: 1; width: 100%; font-size: 12px; margin-top: 26px; padding-top: 16px; }
 }
-@media (min-width: 1025px) {
-  .nolstory-poster-viewport { padding: 40px; background: radial-gradient(ellipse at 50% 22%, #455366 0%, transparent 52%), radial-gradient(ellipse at 50% 85%, #665039 0%, transparent 48%), #0a121e; }
-  .nolstory-poster-frame { width: clamp(460px, 42vw, 640px); max-width: 640px; }
+@media (min-width: 740px) and (max-width: 959px) and (orientation: landscape) {
+  .nolstory-poster-frame { column-gap: 20px; padding: 28px; }
+  .poster-menu { grid-template-columns: 1fr; gap: 8px; margin-top: 18px; }
+  .poster-heading { margin: 24px 0; }
+  .poster-brand p { font-size: 15px; }
 }
 
 /* 저작권 푸터 */
@@ -351,7 +384,7 @@ img {
 }
 
 .nolstory-studio-backdrop.is-open .nolstory-studio-modal {
-  transform: translateY(0) scale(1);
+  transform: none;
 }
 
 @media (max-width: 600px) {
@@ -367,8 +400,15 @@ img {
     transform: translateY(100%);
   }
   .nolstory-studio-backdrop.is-open .nolstory-studio-modal {
-    transform: translateY(0);
+    transform: none;
   }
+}
+
+@media (min-width: 768px) {
+  .nolstory-poster-viewport .nolstory-studio-modal { max-width: 860px; padding: 32px; }
+}
+@media (min-width: 1200px) {
+  .nolstory-poster-viewport .nolstory-studio-modal { max-width: 960px; padding: 40px; }
 }
 
 .btn-modal-close {
@@ -402,7 +442,8 @@ img {
   padding: 8px 12px 16px 12px;
 }
 
-.modal-header-banner .brand-mark {
+.modal-header-banner .modal-brand-name {
+  font-family: inherit;
   font-size: 13px;
   font-weight: 800;
   color: #1e3a8a;
@@ -11067,3 +11108,15 @@ img {
 .player-choices button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 14px 18px; text-align: left; white-space: normal; overflow-wrap: anywhere; border: 2px solid #c9984b; border-radius: 12px; background: #fff3d4; color: #183331; font-weight: 750; }
 .player-choices button b { flex: 0 0 26px; }
 .player-choices button:focus-visible, .story-flow-editor button:focus-visible, .story-flow-overview button:focus-visible { outline: 3px solid #1678b1; outline-offset: 3px; }
+
+/* The full studio name is text, not the square brand icon used by the editor. */
+.modal-header-banner .entry-brand { justify-content: center; flex-wrap: wrap; gap: 6px 14px; padding-inline: 36px; }
+.modal-header-banner .modal-brand-name { display: block; color: #145c62; letter-spacing: 0; word-break: keep-all; }
+.nolstory-poster-viewport .modal-main-desc { font-size: 14px; line-height: 1.7; word-break: keep-all; }
+.nolstory-poster-viewport .blank-btn-text { min-width: 0; word-break: keep-all; }
+@media (max-width: 480px) {
+  .nolstory-poster-viewport .entry-blank-story-button { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; padding: 16px; }
+  .nolstory-poster-viewport .blank-btn-icon { width: 36px; height: 36px; }
+  .nolstory-poster-viewport .blank-btn-text strong { font-size: 16px; }
+  .nolstory-poster-viewport .blank-btn-arrow { grid-column: 2; justify-self: end; }
+}
