@@ -9,10 +9,20 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
+## 현재 공유 기준선 요약 — 2026-09-09
+
+- GitHub `main` 최신 제품 HEAD: `67be51a` (`메모 창 조절과 원본 예시 작품, 가까운 컷 이동 개선 (#12)`).
+- PR #12는 main에 squash 병합되었고, 병합 후 CI run `34331728797` 및 GitHub Pages run `34331728819`가 모두 성공했다.
+- 최신 기준선 검증: `npm run check` 통과, `npm test` 169/169, PR 검증의 `npm run build:pages` 및 배포의 `npm run build:github` 통과.
+- PR #11의 선행 메모/시트 변경은 #12 squash 병합에 함께 포함되었으므로 #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
+- 현재 자동으로 진행할 `READY` 작업은 없다. A1-02는 사람의 후보 자산 시각 승인 전까지 `BLOCKED`다.
+- 실제 iOS/Android IME·소프트 키보드·Safe Area·실터치, 실제 공유 Google 시트 계정 종단 검증, 원작 모든 결말의 시각 재생은 아직 완료 증거가 아니다.
+- 최신 GitHub Pages `npm ci` 로그는 7 vulnerabilities(1 moderate, 6 high)를 보고했다. 과거의 `npm audit 0` 기록은 당시 증거로 보존하되 현재 의존성 상태로 재사용하지 않으며, production/dev 영향은 별도 분석 전 단정하지 않는다.
+
 ## 현재 요청: EX-01 메모 조절·원작 체험·근접 컷 이동
 
-- 상태: `DONE` (2026-09-09 구현·로컬 검증 완료). 사용자 지정, Work Lead. 주 책임: 교육 UX, 검토: 데이터 신뢰성·QA.
-- 기준: PR #11 `5d39417`, clean → `codex/story-experience`. PR #11 위의 별도 변경.
+- 상태: `DONE` (2026-09-09 구현·검증·main 병합·GitHub Pages 배포 완료). 사용자 지정, Work Lead. 주 책임: 교육 UX, 검토: 데이터 신뢰성·QA.
+- 기준: PR #11 `5d39417` 위에서 `codex/story-experience`를 진행했고, PR #12가 선행 변경까지 포함해 main `67be51a`로 squash 병합되었다.
 - 메모는 직접 열기만 허용, 장 생성 자동 열기 제거. 닫기/드래그 이동/크기/방향키/화면 경계 지원.
 - 원본: pinky-ne-site-publish `df00a622848182c7d2ef0b0a4731b8b64d237082` stories.js.
   로컬의 무관한 변경은 읽거나 수정하지 않았다. 생성기에 원본 경로와 커밋을 기록한다.
@@ -26,11 +36,15 @@
   연결/정규화 검증 및 양 작품 첫 선택 경로에서 분기→결말까지 실제 브라우저 재생 통과.
   예시 체험 전후 사용자 저장본 동일. 모든 결말의 시각 재생과 실기기 IME는 미검증.
 - 재현: tests/browser/sticky-memos.mjs, tests/browser/pinky-examples.mjs (QA_URL 지정 가능).
-  생성 절차: docs/decisions/story-example-source-v1.md. main 병합·공개 배포 전 단계.
+  생성 절차: docs/decisions/story-example-source-v1.md.
+- 배포: [PR #12](https://github.com/LUCKYBRIDGE/story-maker/pull/12) main 병합 완료,
+  [병합 후 CI 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34331728797),
+  [GitHub Pages 배포 성공](https://github.com/LUCKYBRIDGE/story-maker/actions/runs/34331728819),
+  [공개 화면](https://luckybridge.github.io/story-maker/)에 `67be51a` 반영 완료.
 
 ## 이전 요청: MN-01 가벼운 참고 메모와 연동 신뢰성
 
-- 상태: `DONE` (2026-09-09 구현·로컬 검증 완료), 사용자 직접 지정. Work Lead · G/A/B.
+- 상태: `DONE` (2026-09-09 구현·검증 완료), 사용자 직접 지정. Work Lead · G/A/B.
 - 기준: main/origin main `bdecb4f`, clean, 열린 PR 없음 → `codex/sticky-memos`.
 - 주 책임: 교육 UX, 필수 검토 관점: 데이터 신뢰성·QA.
 - 계획: 포스트잇 내용 편집/스크롤 → 작품·장 범위 → 저장/Excel/시트 오류 경로 → 실제 브라우저 회귀.
@@ -47,11 +61,11 @@
   선택 메모 탭의 500/403/통신 오류/로그인 HTML/취소 중단, 이전 양식 탭 없음 호환.
 - 재현: `tests/browser/sticky-memos.mjs`, 결과 `/tmp/sticky-memos-qa`.
   Google 서버 응답은 재현 가능한 테스트로 대체했으며 실제 공유 시트 계정·실기기 IME는 미검증.
-  main 병합·공개 배포는 하지 않았다.
+- PR #11은 당시 별도 main 병합을 하지 않았으나, 그 선행 변경은 후속 PR #12 squash 병합 `67be51a`에 포함되었다. #11은 중복 병합 방지를 위해 `superseded by #12`로 닫았다.
 
 ## 이전 요청: HS-02 글자 선명도·화면별 첫 진입
 
-- 상태: `DONE` (2026-09-09 로컬 구현·검증, PR 검토 전). 사용자 직접 지정, Work Lead. 주 책임: 교육 UX, 검토 관점: 접근성·QA.
+- 상태: `DONE` (2026-09-09 구현·검증·main 병합·공개 배포 완료). 사용자 직접 지정, Work Lead. 주 책임: 교육 UX, 검토 관점: 접근성·QA.
 - branch: `codex/adaptive-home`, PR #9의 `6b54680` 위에 분리. main과 열린 PR 확인, 미커밋 변경 없음.
 - 범위: 첫 화면 고딕체·SVG 아이콘, 안내/삽화 영역 분리, 세로 카드·가로 펼침 배치,
   태블릿/웹 창작 공작소 폭 확대. 기존 분기·저장·모달 기능 보존.
@@ -72,7 +86,7 @@
 
 ## 이전 요청: BR-01 선택·분기·합류
 
-- 상태: `DONE` (2026-09-09 구현·로컬 검증 완료, PR 검토 전). 사용자 직접 지정, Work Lead · G/A/B.
+- 상태: `DONE` (2026-09-09 구현·검증·main 병합·정식 배포 완료). 사용자 직접 지정, Work Lead · G/A/B.
 - branch: `codex/story-branching`, main `c24c90f`에서 시작, 기존 미커밋 변경 없음.
 - 주 책임: 데이터 신뢰성, 검토: 교육 UX·QA.
 - 범위: 컷 선택지 2/3개, 도착 컷·끝 연결, 갈래/합류 장 자동 준비,
@@ -156,23 +170,23 @@
 
 ## 1. 현재 기준선
 
-> 💡 **빠른 확인**: 세션 시작 시 `STATUS.md` 또는 `npm run status:check`를 실행하면 1초 만에 저장소 동기화 상태를 파악할 수 있어 토큰을 크게 절약할 수 있습니다.
+> 💡 **빠른 확인**: 세션 시작 시 `STATUS.md` 또는 `npm run status:check`를 실행하면 저장소 동기화 상태를 빠르게 파악할 수 있습니다. 이 표의 `main` 사실과 현재 GitHub 상태가 다르면 실제 GitHub를 우선하고 같은 작업에서 문서를 갱신합니다.
 
 | 항목 | 현재 사실 |
 |---|---|
-| 공유 기준선 | GitHub `main` (`26c958b`); 세션 시작 시 `STATUS.md` 또는 `npm run status:check`로 확인 |
+| 공유 기준선 | GitHub `main` (`67be51a`); 세션 시작 시 `STATUS.md` 또는 `npm run status:check`로 확인 |
 | 원격 저장소 | `LUCKYBRIDGE/story-maker`; 로컬에서는 `origin`으로 사용 |
-| 로컬 작업 트리 | `26c958b` 기준 `main` 브랜치 완전 동기화 (Clean) |
-| `npm run check` | 2026-09-08 TypeScript 0 에러, ESLint 0 에러 통과 |
-| `npm test` | 2026-09-08 Vinext 빌드 및 134/134 전체 통과 |
-| 프로덕션 의존성 감사 | 2026-09-07 `npm audit --omit=dev` 0건 |
-| 알려진 경고 | 최소화 후 500KB 초과 청크, Vinext가 쓰는 `image-size` 개발 의존성 경고 2건 |
-| 구현 기준 | U1 전면 완료 및 PR #1 머지 완료, 시작화면 UI 재편, 3D 책넘김 제거, 단계 혼용 권고 다이얼로그 추가 |
+| 로컬 작업 트리 | Chat에서는 로컬 clean 여부를 주장하지 않음. Work/로컬에서 `npm run status:check`로 확인 |
+| `npm run check` | 2026-09-09 최신 main CI에서 TypeScript/ESLint 통과 |
+| `npm test` | 2026-09-09 최신 main CI에서 Vinext 빌드 및 169/169 전체 통과 |
+| GitHub Pages | `67be51a` 기준 `npm run build:github` 및 배포 성공 (run `34331728819`) |
+| 의존성 감사 | 최신 Pages `npm ci`에서 7 vulnerabilities(1 moderate, 6 high) 보고. production/dev 영향 별도 분석 필요 |
+| 구현 기준 | U1/U2, 장면 연출, 표지·커튼, 선택·분기·합류, 반응형 첫 화면, 창작 메모, 원작 전체 예시까지 main 반영 |
 | 자산 구조 | taxonomy v1 adapter 구현, v2는 목표 아키텍처만 확정 |
 | 캐릭터 정렬 | A1-01 자동 Audit 완료. A1-02는 사람의 후보 자산 승인 대기로 BLOCKED |
-| GitHub 기준선 | PR #1 머지 완료 (`26c958b`), 열린 PR 없음 |
-| 이번 좁은 검사 | UI 재편, 이야기 단계 비강제 수정 권고 다이얼로그, 컷 합치기/추가, 가독성 개선 |
-| 새 UI | 시작 화면 세그먼트 탭/이어만들기 3옵션 재편 완료, 즉시 화면 전환 효과 적용 완료 |
+| GitHub 기준선 | PR #12 main 병합 완료 (`67be51a`); PR #11은 superseded로 닫음 |
+| 최신 브라우저 QA | Chrome 1365×900 / 820×1180 / 390×844에서 EX-01 최신 흐름 통과 |
+| 남은 외부 검증 | 실기기 iOS/Android IME·Safe Area·실터치, 실제 공유 Google 시트 계정, 원작 모든 결말 시각 재생 |
 
 실제 브라우저 상호작용의 검증 범위는 §4에 따로 기록한다. 정적·전체 검사 통과가
 네이티브 모바일 키보드, 저장 할당량, 긴 작품 성능의 검증을 뜻하지 않는다.
@@ -248,8 +262,16 @@
 | 46 | U1-11 | `DONE` | U1-10 | 통합 호환·반응형 인수와 문서 마감 |
 | 47 | U2-01 | `DONE` | 사용자 시작점 결정 | 두 전래동화 위기부터 이어쓰기; 114/114 검사 통과 |
 | 48 | U2-02 | `DONE` | U2-01 및 사용자 이어작업 요청 | 공통 프레임·모바일 공개 수준·160자 안내/나누기, 120/120 통과 |
+| 49 | BR-01 | `DONE` | 사용자 직접 지정 | 선택지 2/3개·분기·합류·다른 결말·기존 뒷이야기 배치; PR #9 main 반영 |
+| 50 | HS-01/02 | `DONE` | 사용자 직접 지정 | 첫 화면 공통 UI·글자 선명도·화면별 반응형; PR #7/#10 main 반영 |
+| 51 | MN-01 | `DONE` | 사용자 직접 지정 | 포스트잇 메모·저장/시트 오류 보호; 후속 PR #12에 포함 |
+| 52 | EX-01 | `DONE` | MN-01 | 메모 조절·원작 전체 예시·근접 컷 이동; PR #12 `67be51a` main/Pages 반영 |
+
+현재 `READY`는 없다. 다음 자동 구현 작업을 임의로 열지 않는다.
 
 ## 4. 현재 실행 지시
+
+> 아래 항목은 각 작업이 수행되던 시점의 실행 기록을 보존한다. `로컬 미커밋`, `배포되지 않음`, 당시 테스트 수와 같은 문구는 역사적 증거이며 현재 공유 기준선은 문서 상단과 §1을 따른다.
 
 - U2-02 DONE — 2026-09-08 마감. 사용자 이어작업 요청에 따라 U2-01 다음 작업을 같은 대화에서 이어 실행했다.
   Work Lead, 교육 UX 주 책임 / 접근성·프런트엔드 검토. 태블릿 페이지 구조 유지,
@@ -297,7 +319,6 @@
   자산 로드 에러/빈 자산 대체 렌더링, 컷별 안정 ID 기반 편집 화면 복귀 및 옹고집전·토끼와 자라
   템플릿 재생을 실화면으로 검증했다. 실측 데이터(U1-10-capture-metrics.json) 및 캡처 13개를 보존했다.
   검증: `npm run check`, Vinext 빌드 포함 `npm test` 108/108 통과, PR #1 CI 통과. 다음 U1-11만 READY로 연다.
-
 
 - U1-09 완료 — 2026-09-05: 프런트엔드 아키텍트 주 책임, QA·릴리스·교육 UX 검토.
   main/origin과 기존 미커밋 변경을 확인하고 비교본을 `/tmp/u1-09-before`에
