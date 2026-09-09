@@ -1,5 +1,7 @@
 "use client";
 
+import {useRef} from "react";
+import {useFloatingMemo} from "./useFloatingMemo";
 import type { CreativeMemo, CreativeMemoFieldSource } from "../creative-memos";
 import type {
   CreativeMemoChapterTarget,
@@ -24,8 +26,10 @@ export interface CreativeMemoEditorProps {
 }
 
 export function CreativeMemoEditor({ memo, chapterTargets, linkResolution, onClose, onChapterLinkChange, onTitleChange, onFieldChange, onAddField, onDeleteMemo }: CreativeMemoEditorProps) {
-  return <section className="creative-memo-editor sticky-single-editor" role="dialog" aria-modal="false" aria-label="창작 메모 편집">
-    <header className="sticky-single-heading"><strong>창작 메모</strong><button type="button" onClick={onClose}>닫기</button></header>
+  const ref=useRef<HTMLElement>(null);
+  const floating=useFloatingMemo(ref);
+  return <section ref={ref} style={floating.style} className="creative-memo-editor sticky-single-editor" role="dialog" aria-modal="false" aria-label="창작 메모 편집">
+    <header className="sticky-single-heading"><strong>창작 메모</strong><button type="button" className="memo-move-handle" aria-label="메모 이동 (드래그 또는 방향키)" {...floating.move}>이동</button><button type="button" onClick={onClose}>닫기</button></header>
     <div className="sticky-memo-scroll">
       {memo.fields.map(field => <label className="sticky-single-field" key={field.id}>
         {memo.fields.length > 1 && <span>{field.label}</span>}
@@ -43,6 +47,6 @@ export function CreativeMemoEditor({ memo, chapterTargets, linkResolution, onClo
         <button type="button" className="danger-text-button" onClick={onDeleteMemo}>이 메모 삭제</button>
       </details>
     </div>
-    <small className="sticky-single-footer">글쓰기 참고용 · 플레이에 숨김</small>
+    <footer className="sticky-single-footer"><button type="button" onClick={floating.reset}>위치 초기화</button><button type="button" className="memo-resize-handle" aria-label="메모 크기 조절 (드래그 또는 방향키)" {...floating.resize}>크기 ↘</button></footer>
   </section>;
 }

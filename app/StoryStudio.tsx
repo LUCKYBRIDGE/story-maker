@@ -1425,7 +1425,7 @@ export function StoryStudio() {
 
   function moveThroughStory(direction: -1 | 1) {
     const nextLine = orderedDraftLines[selectedStoryLineIndex + direction];
-    if (nextLine) openStoryEditorScene(nextLine);
+    if (nextLine) requestStoryEditorRestore({chapterId: nextLine.chapterId, lineId: nextLine.id, view: "scene", focusTarget: "line-body"}, {scrollY: window.scrollY});
   }
 
   function editStoryFromBeginning() {
@@ -1481,7 +1481,6 @@ export function StoryStudio() {
     setPlanningView("chapters");
     setSelectedChapterId(id);
     setSelectedLineId("");
-    setMemoPopupOpen(true);
   }
 
   function removeChapter(chapterId: string) {
@@ -2281,9 +2280,9 @@ export function StoryStudio() {
     setNotice("만들던 이야기와 작업 위치를 이어서 엽니다.");
   }
 
-  function openPlay(index = 0, kind: "student" | "example" = "student") {
+  async function openPlay(index = 0, kind: "student" | "example" = "student", theme: "rabbit" | "onggojib" = "rabbit") {
     playerReturnLocationRef.current = captureStudioReturnOrigin();
-    const project = kind === "example" ? DEFAULT_PROJECT
+    const project = kind === "example" ? (await import("./story-examples")).getExampleProject(theme)
       : resolveActiveProjectForDraft({ draft, active }).project;
     dispatchPlayerUi({ type: "open", index,
       context: createStoryPlaybackContext(kind, project) });
@@ -2399,7 +2398,7 @@ export function StoryStudio() {
           onStartRabbitTurtleContinuation={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
           onStartOnggojibContinuation={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
           onResumeSavedDraft={resumeStudio}
-          onPlayExample={() => openPlay(0, "example")}
+          onPlayExample={theme => { void openPlay(0, "example", theme); }}
           onAbortUpdate={() => updateController.current?.abort()}
         />
         <StoryEntryDialog

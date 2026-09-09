@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useFloatingMemo } from "./useFloatingMemo";
 import type { StoryProject } from "../story-data";
 import { createCreativeMemoField, type CreativeMemo } from "../creative-memos";
 import { setCreativeMemoChapterLink } from "../creative-memo-commands";
@@ -40,10 +41,10 @@ export function StickyMemoBoard({ project, onAdd, onChange, onDelete, onClose, o
   const boardRef = useRef<HTMLElement>(null);
   useEffect(() => { boardRef.current?.querySelector<HTMLSelectElement>("select")?.focus(); }, []);
   const [scope, setScope] = useState("all");
-  const [side, setSide] = useState("right");
+  const floating = useFloatingMemo(boardRef);
   const memos = project.creativeMemos.filter(memo => scope === "all" || (scope === "story" ? !memo.linkedChapterId : memo.linkedChapterId === scope));
-  return <aside ref={boardRef} className={`sticky-memo-board ${side}`} aria-label="창작 메모" role="region">
-    <header><strong>창작 메모</strong><div><button type="button" className="sticky-memo-side" aria-label="메모 위치 바꾸기" onClick={() => setSide(side === "right" ? "left" : "right")}>↔</button><button type="button" aria-label="창작 메모 닫기" onClick={onClose}>닫기</button></div></header>
+  return <aside ref={boardRef} className="sticky-memo-board" style={floating.style} aria-label="창작 메모" role="region">
+    <header><strong>창작 메모</strong><div><button type="button" className="memo-move-handle" aria-label="메모 이동 (드래그 또는 방향키)" {...floating.move}>이동</button><button type="button" aria-label="창작 메모 닫기" onClick={onClose}>닫기</button></div></header>
     <div className="sticky-memo-tools"><select aria-label="보여줄 메모" value={scope} onChange={event => setScope(event.target.value)}>
       <option value="all">모든 메모</option><option value="story">작품 전체 메모</option>
       {project.chapters.map(chapter => <option key={chapter.id} value={chapter.id}>{chapter.order}장 · {chapter.title || "제목 없음"}</option>)}
@@ -52,6 +53,6 @@ export function StickyMemoBoard({ project, onAdd, onChange, onDelete, onClose, o
       {!memos.length && <p>참고할 생각을 적고, 글쓰는 동안 펼쳐 두세요.</p>}
       {memos.slice().sort((a,b) => b.order-a.order).map(memo => <StickyMemoCard key={memo.id} memo={memo} chapters={project.chapters} onChange={onChange} onDelete={() => onDelete(memo.id)} />)}
     </div>
-    <footer><span>글쓰기 참고용 · 플레이에 숨김</span><button type="button" onClick={onReference}>구성표 참고</button></footer>
+    <footer><button type="button" onClick={floating.reset}>위치 초기화</button><button type="button" className="memo-resize-handle" aria-label="메모 크기 조절 (드래그 또는 방향키)" {...floating.resize}>크기 ↘</button><button type="button" onClick={onReference}>구성표 참고</button></footer>
   </aside>;
 }

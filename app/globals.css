@@ -10428,6 +10428,7 @@ img {
   }
 }
 
+.creative-memo-card > div > strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
 /* U2-02: one illustrated scene, shared by writing and playback.
    The dialogue stays in document flow; actors never sit beneath the text. */
 .entry-new-story-card > header { display: none; }
@@ -11161,4 +11162,17 @@ img {
 @media (max-width: 1099px) {
   .making-workspace:has(.sticky-memo-board) textarea:not(.sticky-memo-board textarea) { scroll-margin-bottom: 46dvh; }
 }
-.creative-memo-card > div > strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+/* Controls remain next to the stage and the text being edited. */
+.scene-nearby-navigation { display: flex; justify-content: space-between; pointer-events: none; position: absolute; inset-inline: 8px; z-index: 5; }
+.scene-nearby-navigation.preview { top: 110px; }
+.scene-nearby-navigation.writing { top: 50%; transform: translateY(-50%); inset-inline: 0; }
+.scene-nearby-navigation button { pointer-events: auto; width: 44px; height: 52px; border-radius: 10px; border: 1px solid #abb8c5; background: #15263aed; color: #fff; font: 32px/1 system-ui; }
+.scene-focus-editor .editable-stage-dialogue { padding-inline: 52px; }
+.scene-nearby-navigation button:disabled { opacity: .35; }
+@media (max-width: 620px) { .scene-focus-editor .editable-stage-dialogue { padding-inline: 46px; } }
+.memo-move-handle, .memo-resize-handle { touch-action: none; user-select: none; }
+.memo-move-handle { cursor: move; }
+.memo-resize-handle { cursor: nwse-resize; }
+.sticky-memo-board > header, .sticky-memo-board > footer, .sticky-memo-tools, .sticky-single-heading, .sticky-single-footer { flex-shrink: 0; }
+.sticky-single-footer { display: flex; justify-content: space-between; }
+.sticky-memo-board > header strong { white-space: nowrap; }
