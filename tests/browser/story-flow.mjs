@@ -16,7 +16,21 @@ for(let i=1;i<=3;i++) await page.getByLabel(`선택지 ${i} 문구`,{exact:true}
 await page.getByRole('button',{name:'갈래 1 쓰러 가기',exact:true}).click();
 await page.getByLabel('현재 컷 글상자',{exact:true}).fill('첫 번째 갈래입니다.');
 for(const [name,text] of [['갈래 2','두 번째 갈래입니다.'],['갈래 3','세 번째 갈래입니다.'],['다시 만나는 이야기','함께 다시 만났어요.']]) {
- if(await page.locator('.story-flow-overview').getAttribute('open')===null) await page.locator('.story-flow-overview summary').click();await page.locator('.story-flow-overview').getByRole('button',{name:`${name} · 1컷`,exact:true}).click();await page.getByLabel('현재 컷 글상자',{exact:true}).fill(text);
+ const advanced = page.locator('.scene-advanced-settings');
+ if (!await advanced.evaluate(element => element.open)) {
+  await advanced.evaluate(element => {
+   element.open = true;
+   element.dispatchEvent(new Event('toggle'));
+  });
+  await page.locator('.scene-advanced-settings[open]').waitFor();
+ }
+ const overview = page.locator('.story-flow-overview');
+ if (!await overview.evaluate(element => element.open)) {
+  await overview.locator('summary').click();
+  await page.locator('.story-flow-overview[open]').waitFor();
+ }
+ await overview.getByRole('button',{name:`${name} · 1컷`,exact:true}).click();
+ await page.getByLabel('현재 컷 글상자',{exact:true}).fill(text);
 }
 await page.getByRole('button',{name:'플레이에 적용',exact:true}).click();
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].playback.project.lines.some(line=>line.flow?.type==='choice'),null,{timeout:10000}).catch(async error=>{console.log(await page.locator('body').innerText());await page.screenshot({path:`${output}/apply-failure-${width}.png`,timeout:5000});throw error;});if(!await page.locator('.creator-primary-nav button').nth(2).isVisible())await page.getByRole('button',{name:/편집 방법·이 장 정보/}).click();await page.locator('.creator-primary-nav button').nth(2).click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await page.locator('.player-choices').waitFor();console.log('playing',width);
@@ -32,7 +46,8 @@ for(const [i,text] of [[1,'첫 번째 갈래입니다.'],[2,'두 번째 갈래�
 }
 assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
 for(const button of await page.locator('.player-choices button').all()){const box=await button.boundingBox();assert.ok(box.height>=44);}
-await page.getByRole('button',{name:'편집으로 돌아가기',exact:true}).click();
+await page.getByRole('button',{name:'돌아가기',exact:true}).click();
+await page.getByRole('button',{name:'편집화면',exact:true}).click();
 await page.reload();await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
 await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
 const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project);
