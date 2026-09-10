@@ -99,6 +99,20 @@ export function createProjectCollectionRepository({ storage, now = () => new Dat
         return success({...c, selectedProjectId: project.id, projects: [...c.projects, {draft: parsed.document, playback: null}]});
       });
     },
+    importProject(entry: ProjectEntry, replace = false) {
+      const draft = parseStoryDocument(entry.draft);
+      const playback = entry.playback === null ? null : parseStoryDocument(entry.playback);
+      if (!draft.ok || (playback && !playback.ok) || (playback?.ok && playback.document.project.id !== draft.document.project.id)) return fail("invalid-data");
+      return mutate(c => {
+        const index = c.projects.findIndex(item => item.draft.project.id === draft.document.project.id);
+        if (index >= 0 && !replace) return fail("exists");
+        if (index < 0 && c.projects.length >= MAX_EDITABLE_PROJECTS) return fail("limit");
+        const imported = { draft: draft.document, playback: playback?.ok ? playback.document : null };
+        if (index < 0) c.projects.push(imported); else c.projects[index] = imported;
+        c.selectedProjectId = draft.document.project.id;
+        return success(c);
+      });
+    },
     // Saving addresses an existing ID; it never changes selection or creates a third project.
     saveProject(project: StoryProject) {
       const parsed = document(project); if (!parsed.ok) return fail("invalid-data");

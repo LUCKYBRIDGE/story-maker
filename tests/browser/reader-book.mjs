@@ -7,8 +7,10 @@ try {
   const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
   await page.goto(process.env.QA_URL || 'http://localhost:3002');
   await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-  if(width===1365) await page.getByRole('button',{name:/이야기 변경/}).click();
-  await page.getByRole('button',{name:'놀스토리 작품 읽기',exact:true}).click();
+  await page.getByRole('button',{name:/이야기 변경/}).click();
+  await page.getByRole('button',{name:`${width === 1365 ? '토끼와 자라' : '옹고집전'} · 기본 이야기`,exact:true}).click();
+  await page.getByRole('button',{name:'놀스토리 작품 보기',exact:true}).click();
+  await page.getByRole('button',{name:'기본 작품 읽기',exact:true}).click();
   await page.locator(".book-play-entry").waitFor();
   await page.screenshot({path:`${output}/cover-${width}.png`});
   const cover=await page.locator('.student-book').boundingBox();
@@ -40,8 +42,8 @@ try {
   await page.screenshot({path:`${output}/reader-${width}.png`});
   await page.getByRole('button',{name:'돌아가기',exact:true}).click();
   const back=page.getByRole('dialog',{name:'돌아갈 화면'});
-  await back.getByRole('button',{name:'메인화면',exact:true}).click();
-  await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
+  await back.getByRole('button',{name:'이야기 목록으로 돌아가기',exact:true}).click();
+  await page.getByRole('heading',{name:/이야기 목록/}).waitFor();
   console.log({width,cover:Math.round(cover.width),history:true,font:true,jump:true,return:true});
   await page.close();
  }

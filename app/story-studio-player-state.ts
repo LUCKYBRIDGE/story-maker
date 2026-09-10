@@ -1,7 +1,7 @@
 import type { StoryProject } from "./story-data";
 
 export type StoryPlaybackContext = {
-  kind: "student" | "example";
+  kind: "student" | "example" | "shared";
   project: StoryProject;
 };
 

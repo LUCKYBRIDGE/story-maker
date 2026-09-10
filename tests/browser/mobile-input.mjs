@@ -7,7 +7,7 @@ const browser = await launchBrowser(output);
 try {
  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
  await seed(page); await openResume(page);
- await page.getByText('이 기기에서 이어만들기 ➔').tap();
+ await page.getByRole('button',{name:'이어만들기',exact:true}).tap();
  await page.getByRole('button', { name: '컷 꾸미기', exact: true }).first().tap();
  await page.getByRole('button', { name: /창작 메모 펼치기/ }).tap();
  const board = page.getByRole('region', { name: '창작 메모', exact: true });

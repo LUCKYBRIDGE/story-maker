@@ -17,11 +17,10 @@ console.log(JSON.stringify({doc,tabs,title:p.title}));
 
 export async function seed(page) {
  await page.goto(process.env.QA_URL || 'http://localhost:3002');
- await page.evaluate(doc => { localStorage.setItem('storygame:draft:v1', doc); localStorage.setItem('storygame:active:v1', doc); }, doc);
+ await page.evaluate(doc => { localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1', doc); localStorage.setItem('storygame:active:v1', doc); }, doc);
  await page.reload();
  await page.locator('.entry-template-options[open]').waitFor({ state: 'attached' });
 }
 export async function openResume(page) {
  await page.getByRole('button', { name: '나만의 이야기 창작 공작소 열기' }).click();
- await page.getByRole('tab', { name: /이어만들기/ }).click();
 }

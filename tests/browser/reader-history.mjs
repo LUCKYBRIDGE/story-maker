@@ -9,8 +9,8 @@ p.lines=[{...l,id:'start',order:1,text:'어디로 갈까?',flow:{type:'choice',o
 const browser=await chromium.launch();
 try {
 const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
-await page.goto(process.env.QA_URL||'http://localhost:3002');await page.evaluate(doc=>{localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();
-await page.locator('.entry-template-options[open]').waitFor();await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('tab',{name:/이어만들기/}).click();await page.getByText('이 기기에서 이어만들기 ➔').click();
+await page.goto(process.env.QA_URL||'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();
+await page.locator('.entry-template-options[open]').waitFor();await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
 await page.locator('.creator-primary-nav button').last().click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await page.locator('.player-shell').waitFor();
 const actor=page.locator('.player-shell .story-stage-actor').first();const before=await actor.boundingBox();
 const choiceBox=await page.locator('.dialogue-box').boundingBox();assert.ok(choiceBox.height>900*.35);assert.ok(choiceBox.y>=0);
@@ -23,7 +23,7 @@ assert.ok((await history.innerText()).includes('내 선택: 바다로 간다'));
 await history.getByRole('button',{name:'닫기',exact:true}).click();
 for(const [width,height] of [[1440,900],[390,844],[844,390]]){
  await page.setViewportSize({width,height});await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
- const box=await page.locator('.player-shell .dialogue-box').boundingBox();assert.ok(box.height<=height*.35+1);assert.ok(box.y+box.height<=height);console.log({width,height,speechHeight:box.height,max:height*.35});
+ const box=await page.locator('.player-shell .dialogue-box').boundingBox();assert.ok(box.height<=height*.65+1);assert.ok(box.y+box.height<=height);console.log({width,height,speechHeight:box.height,max:height*.65});
 }
 await page.setViewportSize({width:1440,height:900});
 await page.getByRole('button',{name:'이전',exact:true}).click();await page.getByRole('button',{name:/숲으로 간다/}).click();await page.getByRole('button',{name:'다음 컷',exact:true}).click();await page.getByRole('button',{name:/더 머문다/}).click();

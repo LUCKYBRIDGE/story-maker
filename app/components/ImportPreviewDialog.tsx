@@ -109,6 +109,7 @@ export function ImportIssuesDialog({
 }
 
 export interface ImportConfirmationDialogProps {
+  error?: string;
   open: boolean;
   project: StoryProject | null;
   fileName?: string;
@@ -117,6 +118,7 @@ export interface ImportConfirmationDialogProps {
 }
 
 export function ImportConfirmationDialog({
+  error,
   open,
   project,
   fileName,
@@ -137,11 +139,12 @@ export function ImportConfirmationDialog({
         <h2>새 작품을 열까요?</h2>
         <p>
           {fileName ? `‘${fileName}’ 파일의 ` : ""}
-          작품 정보를 확인해 주세요. 편집본으로 열면 현재 작업 중인 내용이
-          교체됩니다.
+          작품 정보를 확인해 주세요. 새 작품은 빈 자리에 추가하고, 같은 작품은
+          한 번 더 확인한 뒤 편집본을 바꿔요.
         </p>
       </div>
 
+      {error && <p className="entry-error" role="alert">{error}</p>}
       <div className="import-preview-summary">
         <div className="import-preview-item">
           <span className="label">작품 제목</span>
@@ -162,8 +165,7 @@ export function ImportConfirmationDialog({
       </div>
 
       <p className="import-safety-note">
-        이전 작업은 언제든 화면 상단의 ‘방금 전으로 복구’ 버튼으로 되돌릴 수
-        있어요.
+        다른 작품은 그대로 보관해요. 같은 작품을 바꾸면 기존 편집본을 복구 기록에 남겨요.
       </p>
 
       <div className="import-dialog-actions">

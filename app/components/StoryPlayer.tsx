@@ -1,5 +1,6 @@
 "use client";
 
+import { speakerColor } from "../story-speaker-colors";
 import { ModalDialog } from "./ModalDialog";
 import { ReadingTranscript, type ReadingRecord } from "./ReadingTranscript";
 import { resolveAssetUrl } from "../story-asset-url";
@@ -40,21 +41,28 @@ export function DialogueText({ text }: { text: string }) {
 export function DialogueInline({
   speakerName,
   text,
+  paper,
+  speakerNames,
+  names,
 }: {
   speakerName: string;
   text: string;
+  paper?: boolean;
+  speakerNames?: string[];
+  names?: string[];
 }) {
   return (
     <>
-      <strong className="dialogue-speaker">
-        {speakerName || "화자 없음"}:
-      </strong>{" "}
+      {(names?.length ? names : [speakerName || "화자 없음"]).map((name,index) => <span key={name}>
+        {index > 0 && " · "}<strong className="dialogue-speaker" style={paper === undefined ? undefined : {color:speakerColor(name, paper, speakerNames)}}>{name}</strong>
+      </span>)}:{" "}
       <DialogueText text={text} />
     </>
   );
 }
 
 export interface StoryPlayerProps {
+  returnLabel?: string;
   project: StoryProject;
   startIndex: number;
   onIndexChange: (index: number) => void;
@@ -72,6 +80,7 @@ export function StoryPlayer({
   startIndex,
   onIndexChange,
   onBack,
+  returnLabel,
   onHome,
   onEditCut,
   onFinish,
@@ -256,8 +265,8 @@ export function StoryPlayer({
         <header><h2>{menu === "return" ? "어디로 돌아갈까요?" : "어느 장부터 읽을까요?"}</h2>
           <button type="button" onClick={() => setMenu(null)}>닫기</button></header>
         {menu === "return" ? <div className="reader-menu-options">
-          <button type="button" onClick={onHome ?? onBack}>메인화면</button>
-          {!isExample && <button type="button" onClick={onBack}>편집화면</button>}
+          {!returnLabel && <button type="button" onClick={onHome ?? onBack}>{isExample ? "메인화면" : "창작 관리"}</button>}
+          {(returnLabel || !isExample) && <button type="button" onClick={onBack}>{returnLabel ?? "편집화면"}</button>}
           {!isExample && onEditCut && line && <button type="button" onClick={() => onEditCut({projectId: project.id, lineId: line.id})}>이 컷 고치기</button>}
         </div> : <div className="reader-menu-options">
           <p>고른 장의 처음부터 읽어요. 지난 기록도 그 장부터 새로 시작해요.</p>

@@ -1,3 +1,4 @@
+import { lineSpeakerNames } from "./story-speakers";
 import type { StorySource } from "./story-source";
 import type { StoryCover } from "./story-cover";
 export type { StoryCover } from "./story-cover";
@@ -38,6 +39,7 @@ export type StoryLine = {
   type: "dialogue" | "narration";
   speaker: "left" | "right" | "narration";
   speakerName: string;
+  coSpeakerNames?: string[];
   text: string;
   leftAssetId: string;
   rightAssetId: string;
@@ -916,7 +918,7 @@ export function cloneProject(project: StoryProject): StoryProject {
     : [];
   const namesFromLines = cloned.lines
     .filter((line) => line.type === "dialogue")
-    .map((line) => line.speakerName.trim())
+    .flatMap(lineSpeakerNames)
     .filter(Boolean);
   cloned.speakerNames = Array.from(
     new Set([...(cloned.speakerNames ?? []), ...namesFromLines]),
@@ -948,7 +950,7 @@ export function cloneProject(project: StoryProject): StoryProject {
           ...(chapter.chapterSpeakerNames ?? []),
           ...chapterLines
             .filter((line) => line.type === "dialogue")
-            .map((line) => line.speakerName)
+            .flatMap(lineSpeakerNames)
             .filter(Boolean),
         ]),
       ),

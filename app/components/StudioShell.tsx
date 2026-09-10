@@ -50,7 +50,7 @@ export function StudioShell({
             onClick={onReturnHome}
             disabled={busy}
           >
-            메인으로
+            창작 관리
           </button>
           <span
             className={`save-state save-state-${saveStatus}`}

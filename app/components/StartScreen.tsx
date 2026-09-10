@@ -14,6 +14,10 @@ export type EntryLocalDraftStatus =
   | "failed";
 
 export interface StartScreenProps {
+  onOpenLibrary?: () => void;
+  onOpenReaderEntry?: () => void;
+  selectedTheme?: "rabbit" | "onggojib";
+  onOpenCreationHub?: () => void;
   savedProject?: StoryProject;
   entryBusy?: boolean;
   localDraftStatus?: EntryLocalDraftStatus;
@@ -38,6 +42,10 @@ const LOCAL_DRAFT_MESSAGES: Record<EntryLocalDraftStatus, string> = {
 };
 
 export function StartScreen({
+  onOpenLibrary,
+  onOpenReaderEntry,
+  selectedTheme,
+  onOpenCreationHub,
   savedProject,
   entryBusy = false,
   localDraftStatus = "checking",
@@ -56,7 +64,8 @@ export function StartScreen({
   const excelInputRef = useRef<HTMLInputElement>(null);
   const [sheetUrl, setSheetUrl] = useState("");
   const [activeTab, setActiveTab] = useState<"create" | "continue" | "example">("create");
-  const [coverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("onggojib");
+  const [localCoverTheme, setCoverTheme] = useState<"rabbit" | "onggojib">("onggojib");
+  const coverTheme = selectedTheme ?? localCoverTheme;
   const [isStudioModalOpen, setIsStudioModalOpen] = useState(false);
   const checking = localDraftStatus === "checking";
   const controlsBusy = entryBusy || busy || checking;
@@ -110,11 +119,11 @@ export function StartScreen({
           <p>이야기로 만나는 <br />더 넓은 세상</p>
         </header>
         <nav className="poster-menu" aria-label="놀스토리 메인 메뉴">
-          <button type="button" className="poster-button poster-change" onClick={toggleCoverTheme}
-            aria-label={`이야기 변경 (현재: ${coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"})`}>
+          <button type="button" className="poster-button poster-change" onClick={onOpenLibrary ?? toggleCoverTheme}
+            aria-label={`이야기 변경 · 서재 열기 (현재: ${coverTheme === "rabbit" ? "토끼와 자라" : "옹고집전"})`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2 5M20 7v5" /></svg><span>이야기 변경</span><span aria-hidden="true">›</span>
           </button>
-          <button type="button" className="poster-button poster-create" onClick={() => setIsStudioModalOpen(true)}
+          <button type="button" className="poster-button poster-create" onClick={() => onOpenCreationHub ? onOpenCreationHub() : setIsStudioModalOpen(true)}
             aria-label="나만의 이야기 창작 공작소 열기">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m14 5 5 5M9 15 20 4a2 2 0 0 0-3-3L6 12M9 15c-1 5-4 6-7 6 2-2 0-4 3-7 1-1 3-1 4 1Z" /></svg><span>나만의 이야기</span><span aria-hidden="true">›</span>
           </button>
@@ -135,7 +144,7 @@ export function StartScreen({
             fetchPriority="high"
           />
         </div>
-        <button type="button" className="poster-button poster-read" onClick={() => onPlayExample(coverTheme)} disabled={busy}
+        <button type="button" className="poster-button poster-read" onClick={() => onOpenReaderEntry ? onOpenReaderEntry() : onPlayExample(coverTheme)} disabled={busy}
           aria-label="놀스토리 작품 읽기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" /></svg><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
         </button>

@@ -9,26 +9,200 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 요청: 놀스토리 서비스 개편 — SP-A 체크포인트 (2026-09-10)
+## 현재 요청: 최신 서비스 구현 main 반영 (2026-09-10)
 
-- 저장소 `/Volumes/WAN2/apps/story-maker`, branch `codex/story-platform-foundation`.
-  시작 시 fetch 후 main/origin main `6bbc72a` 일치 확인. 기존 UI 체크포인트 `d552dc6` 위 작업.
-- SP-A DONE(독립 도메인), **SP-B READY**: Creation Hub/Studio 저장소 연결이 다음 한 작업이다.
-  사용자 요청 §63~64에 따라 긴 세션을 저장소 경계에서 분리한다. 전체 개편 완료가 아니다.
-- `app/story-project-collection.ts`: ID별 draft/playback·선택 ID, 최대 2개 중앙 정책,
-  생성/저장/적용/삭제. 선택 후 늦게 도착한 다른 작품 저장이 선택이나 작품을 덮어쓰지 않는다.
-  단일 draft/active를 최초 접근 시 복사하며 원래 키는 삭제하지 않는다. 실패 시 원본 보존.
-- `app/story-source.ts`, story-data/validation: 선택적 출처 계약과 문서 정규화 보존.
-  과거 출처는 추정하지 않는다. 아직 Excel source 왕복은 SP-C 구현 대상이다.
-- **Studio는 아직 기존 저장소를 사용한다.** 브라우저의 학생 데이터는 이번 단계에서 자동 이전되지 않는다.
-  2개 작품 관리 UI·서재·파일 입출력·출판/remix·복수 화자는 미구현. 세부 후속은 SP 카드 참조.
-- 증거: `npm run check` 1회 통과. 아래 Node 검사 1회 16/16 통과:
-  `node --test tests/story-project-collection.test.mjs tests/story-project-repository.test.mjs tests/story-project-document.test.mjs`.
-  이전·저장 실패·손상·두 작품 전환·중복/세 번째 차단·출처 왕복을 확인했다.
-- 브라우저 다중 작품 검증은 SP-B 연결 후 실행 가능하다. 아직 실행하지 않았으며 전체 빌드/회귀,
-  실제 장치·미구현 서버 흐름 검증도 수행하지 않았다. 기존 UI 브라우저 증거는 아래 이전 요청 참조.
-- 인수인계: 최신 원격과 PR을 재확인하고 SP-B부터 진행한다. 기존 instruction 문서 변경은 별도
-  로컬 작업으로 보존하며 이 체크포인트에 섞지 않는다. 커밋·푸시는 PR 기록, 배포는 하지 않는다.
+- 사용자 명시 요청으로 SP-A~F 구현을 PR #19에 올리고 CI 통과 후 main으로 병합한다.
+- 앱·관련 검사·상태표/작업 카드/파일 ADR만 반영한다. 별도 로컬 지침 정리·삭제는 보존한다.
+- 사전 검증: 빌드 포함 196/196, 정적 검사, 핵심 브라우저 흐름 통과. 원격 CI는 최신 커밋으로 확인한다.
+- 공개 배포의 실행 여부와 성공은 main 반영과 구분해 GitHub/호스팅 결과로 확인한다.
+
+## 이전 요청: SP-F 통합 검증·완료 대조 (2026-09-10)
+
+- **SP-F DONE (로컬 구현·검증, 미커밋)**. 2026-09-10 승인 서비스 개편 SP-A~E를
+  아래 계약별 증거로 확인했다. 현재 범위의 새 READY 없음. 기존 자산 사람 승인과
+  물리 기기 검증은 유예 상태를 유지하며 완료로 바꾸지 않는다.
+- 루트 `/Volumes/WAN2/apps/story-maker`, branch `codex/story-platform-foundation`.
+  최종 fetch 후 HEAD/origin 차이 0, PR #19 OPEN/DRAFT 확인. 이번 구현은 로컬 변경으로만 존재한다.
+  기존 지침·설계 변경의 numstat를 시작 기록과 대조해 보존했다. commit/push/merge/deploy 없음.
+- 초기 전체 검사 196개 중 5개 실패를 분석했다. 4개는 이전 문구/DOM을 찾는 검사여서
+  현재 복구 안내·창작 관리·공유 읽기 컴포넌트·실제 이미지 선로딩 경로로 갱신했다.
+  컷 꾸미기의 장 단계 라벨 누락은 기능 회귀로 판단해 복원했다. 요구를 삭제하지 않았다.
+- 최종 `npm test` 빌드 및 **196/196 통과**, `npm run check`, `git diff --check` 통과.
+  로그 `/tmp/story-platform-test-final.log`, `/tmp/story-platform-check.log`.
+
+| 승인 계약 | 현재 소스/증거 | 판정 |
+|---|---|---|
+| 로컬 우선, 로그인·네트워크 불필요 | collection/File API 경로, 자동 저장·파일 browser, 서버 신규 의존성 없음 | 충족 |
+| Home→서재→읽기 선택→작품 목록, 진입 복귀 | StartScreen/StoryDiscovery, story-discovery browser 1365/820/390 | 충족 |
+| 실제 책만 페이지 표시 5×2/3×3/2×3 | libraryPage 단위 검사 및 브라우저 capacity/columns/실제 목록 | 충족 |
+| 기본판 읽기 전용, 새 ID 도달 seed·원본 보존 | story-discovery 도메인 및 browser 원본 불변/양 작품 복제 | 충족 |
+| 두 작품 생성·편집·전환·재접속, 세 번째 차단 | project-collection browser 1365/390, Node collection | 충족 |
+| 편집/적용본/선택 분리, legacy bytes·실패 보호 | collection/repository/checkpoint 검사, 이전 실패·재시도·손상 저장 browser | 충족 |
+| project/shared 파일, 동일 ID 유지/교체, 자산/크기 검증 | story-file Node/browser, 실제 다운로드·교체·실패 복구·슬롯 없는 읽기 | 충족 |
+| 출처와 기존 Excel/공개 시트 경로 | 파일·실제 XLSX 왕복 Node, sheet-import 4개 mock 시나리오 | 충족 |
+| 불변 publication, 제출 상태·조회 조건, 허용 remix | story-publication 검사, 공유 목록→새 ID/출처 복제 browser | 충족 |
+| 미지원 원작 전체/서버/학교를 실제로 표시하지 않음 | Reader Entry 준비 상태, 공유 파일 세션 안내·온라인 준비 상태 소스 확인 | 충족 |
+| 화자 색상·복수 화자, 본문색·문서/Excel 호환 | reader-layout UI 적용/재접속/읽기 및 Node 문서/file/Excel | 충족 |
+| 가변 글상자, 고정 인물, 실제 방문·선택 기록·복귀 | reader-layout/reader-book/reader-history desktop/mobile/가로 회전 | 충족 |
+
+- 마지막 통합 browser: project-collection, story-discovery, story-file, sheet-import,
+  reader-layout 통과. SP-E의 reader-book/reader-history 성공 증거도 유지한다.
+  서버 종료로 접속 거부된 시도는 성공에 포함하지 않았다. 종료를 확인하고 dev 서버 재시작 후
+  같은 검사를 재실행해 통과했다. 현재 개발 화면 `http://localhost:3003/`.
+- 파일 shared 목록은 세션 전용, 원작 전체·온라인 공개·검수·학교 서비스는 승인 계약상 미지원이다.
+  실제 Google 서버·물리 기기 IME/OS 파일 선택창·자산 사람 승인은 이번 자동 검증 밖이다.
+  이전 A1-02 후보 자산은 변경/승인하지 않았다. 향후 공개 배포 승인과 혼동하지 않는다.
+- 최종 변경 검토: 제품 변경은 app/관련 tests와 기존 상태표·작업 카드·파일 ADR에 한정했다.
+  비밀정보·사용자 작품·불필요한 생성 산출물은 추가하지 않았다. 기존 지침 변경은 별도 보존한다.
+
+## 이전 요청: SP-E 읽기 개선 (2026-09-10)
+
+- **SP-E DONE (로컬 구현·검증, 미커밋)**. 당시 다음 작업은 SP-F였으며 후속 검증은 위 기록을 따른다.
+- 기존 로컬 변경 보존. 화자별 색상·단일/복수 화자·긴 글상자·종이 기록을 연결했다.
+  `coSpeakerNames`는 주 화자와 별도로 저장하고 문서·Excel·파일·fingerprint를 왕복한다.
+  컷 꾸미기에서 선택하며 대본/컷 미리보기와 읽기·기록에 함께 표시한다.
+- 화자 이름만 색을 바꾸고 본문색은 유지한다. 최대 6색을 충돌 회피 배정하고 이름은 항상 표시한다.
+  일반 긴 글상자는 최대 65dvh로 확대하되 무대 좌표는 기존 기준으로 고정한다.
+  기록은 중앙 종이 창이며 보조 조작의 터치 영역을 44px로 보완했다.
+- 변경: story-speakers/story-speaker-colors, StoryPlayer/ReadingTranscript,
+  SceneFocusEditor/ScriptScreen, story-data/document validation/workbook/sheet/publication,
+  CSS와 관련 검사. 파일 호환 계약은 기존 nolstory-file-v1 ADR에 기록했다.
+- `npm run check`, `git diff --check` 통과. 문서/file/publication 핵심 Node 검사 13/13 통과.
+- `QA_URL=http://localhost:3003 node tests/browser/reader-layout.mjs` 1365×900/390×844:
+  추가 화자 UI 선택·저장, 화자 색상 구분·이전 복귀 유지, 긴 글 35% 초과/65% 이하,
+  글씨 확대·기록 전후 인물 위치 고정, 기록 중앙 배치 통과. 모바일에서는 복수 화자
+  플레이 적용→재접속→현재 대사·지난 기록 이름 보존도 확인했다.
+- 같은 서버에서 reader-book.mjs desktop/mobile 표지·글씨·기록·장 이동·진입 복귀 통과.
+  reader-history.mjs 선택 경로·종료 선택·재선택·실제 기록·인물 고정 및 가로 회전 통과.
+  `/tmp/reader-layout-qa/history-390.png` 시각 확인. 실기기 OS/IME는 별도 미검증.
+- 전체 빌드/회귀는 SP-F에서 한 번 확인한다. 커밋·푸시·배포 없음.
+  루트 `/Volumes/WAN2/apps/story-maker`, branch `codex/story-platform-foundation` 유지.
+
+## 이전 요청: SP-D 공유본·고쳐쓰기 계약 (2026-09-10)
+
+- **SP-D DONE (로컬 구현·검증, 미커밋)**. 당시 다음 작업은 SP-E였다.
+- Work Lead · G/A/B. `/Volumes/WAN2/apps/story-maker`, `codex/story-platform-foundation`.
+  SP-C와 기존 지침·설계 변경을 보존했다. 공유 snapshot 불변성, SHA-256 읽기 내용
+  fingerprint, 제출 상태 전이·조회 조건, 허용 공유 파일의 새 ID 복제 도메인을 추가했다.
+- 파일 미리보기와 세션 공유 목록에서 고쳐쓰기 허용과 빈 슬롯을 확인하고 중앙 저장소로
+  새 편집본을 만든다. 원제·저자·원본 fingerprint 출처를 보존하며 공유 원본은 바꾸지 않는다.
+- 계약은 `docs/decisions/nolstory-file-v1.md`에 기록했다. 제출 상태와 snapshot을 분리하고
+  조회는 baseStoryId/schoolId/sourceKind AND 조건을 사용한다. 서버·학교·검수 서비스는 미지원이다.
+- 변경: `app/story-publication.ts`, StoryStudio/StoryFileDialog/StoryDiscovery,
+  `tests/story-publication.test.mjs`, 기존 파일 브라우저 검사, 카드/파일 ADR.
+- 증거: `npm run check`, `git diff --check` 통과.
+  `node --test tests/story-publication.test.mjs tests/story-file.test.mjs` 6/6 통과:
+  snapshot 동결·편집본 격리, ID/시간/메모 제외, 제목/표지/장/대본/연결/자산/효과 변경 판정,
+  허용 정책·새 ID·출처, 제출 전이와 조회, 파일/Excel 왕복 및 실패 보존.
+- `QA_URL=http://localhost:3003 node tests/browser/story-file.mjs` 통과:
+  파일 흐름 1365×900/390×844, 두 슬롯일 때 고쳐쓰기 차단, desktop 공유 읽기 후
+  공유 목록 재진입→고쳐쓰기→새 ID·출처 확인. 브라우저 런타임 오류 없음.
+- 전체 빌드/회귀·실기기는 이번 최소 검사에서 실행하지 않았다. 커밋·푸시·배포 없음.
+  다음은 SP-E 화자 표시·복수 화자/Excel 호환·가변 글상자·지난 기록 개선 및 최종 계획 검증이다.
+
+## 이전 요청: SP-C 파일 보관·가져오기 (2026-09-10)
+
+- **SP-C DONE (로컬 구현·검증, 미커밋)**. 당시 다음 작업은 SP-D였다.
+  후속 공유본·고쳐쓰기 결과는 위 현재 요청 기록을 따른다.
+- Work Lead · G/A/B. `/Volumes/WAN2/apps/story-maker`, `codex/story-platform-foundation`.
+  fetch 후 로컬/원격 HEAD 차이 0, PR #19 OPEN/DRAFT 확인. SP-B와 기존 지침·설계 변경 보존.
+- `.nolstory` 편집 백업은 작품 ID·출처·편집본·적용본을 보존한다. 같은 ID는 유지/교체를
+  명시 선택하며 교체 전 checkpoint를 남긴다. 두 작품이 찼을 때 새 편집본 추가는 차단한다.
+  공유 읽기는 슬롯을 소비하지 않고 창작 관리/서재/읽기 진입으로 돌아간다.
+- 공유 내보내기는 적용본을 사용하고 창작 메모·작업 노트·시트 주소를 제외한다.
+  고쳐쓰기 허용 값은 기본 false로 파일에 기록하며 실제 remix 동작은 SP-D에 남는다.
+  공유 파일 목록은 현재 세션만 유지하며 재접속 후 파일을 다시 열도록 안내한다.
+- 크기·MIME·schema·ID·내장 자산 참조를 검사한다. 커스텀 첨부는 지원하지 않는다.
+  Excel/시트의 선택 출처 행을 왕복하며 이전 양식의 출처 미상은 유지한다.
+  계약은 `docs/decisions/nolstory-file-v1.md`에 있다.
+- 변경: `app/story-file.ts`, StoryFileDialog, collection importProject, StoryStudio,
+  CreationHub/StoryDiscovery 파일 연결, workbook/sheet 출처 행, 관련 CSS와 검사.
+- 증거: `npm run check` 및 `git diff --check` 통과.
+  `node --test tests/story-file.test.mjs tests/story-project-collection.test.mjs` 11/11 통과:
+  편집/적용본·null/빈 적용본·출처 왕복, 비공개 메모 제외, 잘못된 파일 거부,
+  원자 교체 실패 보존, 슬롯 제한, legacy 보존, 실제 XLSX와 읽은 sheet snapshot 출처 왕복.
+- `QA_URL=http://localhost:3003 node tests/browser/story-file.mjs` Chromium
+  1365×900/390×844 통과: 두 파일 추가, 세 번째 차단, 동일 ID 유지/교체,
+  실제 다운로드 내용, 다른 작품 보존, 공유 읽기 무저장, 복귀·재접속,
+  44px 버튼·가로 넘침. desktop은 공유 내보내기 및 저장 실패 중 최신 편집본 파일 백업 확인.
+  교체 창 화면 `/tmp/story-file-qa/replace-1365.png`, `replace-390.png` 확인.
+- 전체 빌드/회귀·실기기·실제 Google 서버는 이번 최소 검사에서 실행하지 않았다.
+  커밋·푸시·PR 갱신·병합·배포 없음. 다음 세션은 현재 로컬 변경을 보존하고 SP-D부터 진행한다.
+
+## 이전 요청: SP-B.2 서재·읽기 선택·작품 목록 연결 (2026-09-10)
+
+- **SP-B.2 DONE (로컬 구현·검증, 미커밋)**. 당시 다음 독립 작업은 SP-C였으며,
+  후속 파일 입출력 결과는 위 현재 요청 기록을 따른다.
+- Work Lead · G/A/B. `/Volumes/WAN2/apps/story-maker`, `codex/story-platform-foundation`.
+  시작 시 fetch와 초안 PR #19 OPEN/DRAFT 확인, 로컬/원격 HEAD `98cc7f4` 일치.
+  SP-B.1 로컬 구현과 기존 지침·설계 변경을 보존했다.
+- 기존 포스터의 이야기 변경에서 서재를 열고, 선택 이야기 읽기는 읽기 종류와 작품 목록을 거친다.
+  화면 왕복 시 선택 이야기 유지. 서재는 기본 2개와 실제 로컬 작품만 HTML 제목/CSS 표지로 표시한다.
+  가로 5×2/태블릿 3×3/휴대폰 2×3 페이지 용량을 적용하며 가짜 책을 채우지 않는다.
+- Reader Entry는 고전 원작 전체 준비 상태와 놀스토리/공유 작품을 구분한다.
+  Story Hub는 기본/내 작품/공유 그룹을 제공한다. 공유 파일·서버는 미구현 빈 상태로 표시한다.
+  내 작품은 이 기기의 모든 작품이며 읽기는 각 적용본을 사용한다.
+- 기본 작품 읽기는 학생 저장을 바꾸지 않는다. 복제는 새 ID·출처와 도달 가능한 컷/장을 사용하고
+  원본 master는 그대로 보존한다. 토끼 136컷, 옹고집 345컷 seed, 기존 2개 정책을 공유한다.
+  플레이는 서재/작품 목록/창작 관리 등 실제 진입 화면으로 돌아간다.
+- 변경: `app/story-discovery.ts`, `app/components/StoryDiscovery.tsx`, StartScreen/StoryStudio/
+  StoryPlayer, 관련 CSS와 browser 진입 검사. 이전 세션 변경과 함께 아직 로컬에만 있다.
+- 증거: `npm run check` 통과. `node --test tests/story-discovery.test.mjs
+  tests/story-studio-state.test.mjs` 9/9 통과. 원본 불변·도달 경로/분기 보존·문서 유효성·중앙 슬롯
+  제한·페이지 분할 및 플레이 상태 격리를 확인했다.
+- `QA_URL=http://localhost:3003 node tests/browser/story-discovery.mjs` Chromium
+  1365×900/820×1180/390×844 통과: 서재 배치·선택/복귀·원작/공유 빈 상태,
+  기본판 읽기 전후 학생 저장 불변, 양 기본판 복제, 내 적용본 읽기·복귀, 2개 제한,
+  키보드 선택/초점·44px·가로 넘침. 실제 보유 수가 4개 이하이므로 여러 페이지는 단위 검사로 검증.
+- `QA_URL=http://localhost:3003 QA_VIEWPORTS='[[1365,900],[390,844]]'
+  node tests/browser/start-screen.mjs` 통과: 테마별 기존 포스터 배치 변화/가로 넘침 0,
+  창작 관리 및 새 읽기 진입. 캡처 `/tmp/story-discovery-qa/`.
+- 알려진 원문 조건: 토끼 master의 괄호 해설 2컷은 그대로 복제한다. 기존 해설 작성 규칙 때문에
+  수정본의 플레이 적용 전에 수정 안내가 나오며, browser 검사는 복제본에서 직접 수정 후 적용했다.
+  원문을 자동 수정하거나 적용 검사를 약화하지 않았다. 옹고집의 미도달 5개 장은 seed에서 제외한다.
+- 전체 빌드/회귀·실기기 검사는 최소 검증 요청에 따라 미실행. 커밋·푸시·PR 갱신·병합·배포 없음.
+  다음 세션은 이 로컬 변경 및 원격을 확인하고 SP-C부터 진행한다. 지침 변경을 구현 커밋에 섞지 않는다.
+
+## 이전 요청: SP-B.1 창작 관리·Studio 저장소 연결 (2026-09-10)
+
+- **SP-B.1 DONE (로컬 구현·검증, 미커밋)**. 사용자 지정 우선 범위인 창작 관리와
+  다중 작품 Studio 연결을 완료했다. 당시 Home/Library/Reader Entry/Story Hub를 SP-B.2로 인계했다.
+  후속 결과는 현재 요청의 SP-B.2 기록을 따른다.
+- Work Lead · G/A/B. 시작 시 origin fetch, 초안 PR #19 OPEN/DRAFT와
+  `codex/story-platform-foundation` 로컬/원격 HEAD `98cc7f4` 일치 확인.
+  저장소 `/Volumes/WAN2/apps/story-maker`. 기존 지침·설계 문서의 로컬 변경을 보존했다.
+- CreationHub는 작품별 목록/선택·빈 이야기/기본판 복제·읽기·확인 삭제를 제공한다.
+  Studio draft 자동 저장/적용본/선택 ID는 `storygame:projects:v1`에 연결했다.
+  생성은 새 ID와 출처를 사용하며, 최대 2개 정책을 생성·Excel/시트 가져오기에 적용한다.
+  같은 ID 가져오기는 명시 확인과 해당 작품 checkpoint를 거쳐 교체한다.
+- 전환·창작 관리 복귀 전 최신 편집본을 저장한다. 실패하면 현재 편집 화면을 유지하고
+  재시도로 저장할 수 있다. 다른 작품의 undo/복구 기록은 현재 작품에 적용하지 않는다.
+  최초 접근 시 기존 단일 draft/active를 이전하되 원래 bytes를 보존한다.
+- 검증: `npm run check` 통과. collection/repository/document/checkpoints Node 검사 19/19.
+  `QA_URL=http://localhost:3003 node tests/browser/project-collection.mjs` Chromium
+  1365×900 / 390×844에서 빈 작품·기본판 생성, 두 작품 편집/즉시 전환/재접속,
+  선택 ID 복원, 적용본 분리 읽기/창작 관리 복귀, 세 번째 생성 비활성,
+  저장 실패·재시도, 삭제 취소/확인/빈 슬롯 재사용, 44px·가로 넘침·초점 확인.
+  desktop에서는 실제 XLSX 세 번째 가져오기 차단과 작품 보존도 확인했다.
+  `QA_URL=http://localhost:3003 node tests/browser/sheet-import.mjs` 4개 시나리오 통과:
+  정상/선택 탭 없음/권한 거부/로그인 응답, 다른 ID 추가·같은 시트 확인 교체와 checkpoint 확인.
+  시트 응답은 fixture 주입이며 실제 Google 서버 검증이 아니다.
+  이전 저장본 bytes 보존·최초 이전 실패/재시도·손상 collection 비덮어쓰기도 브라우저 통과.
+  화면 캡처 `/tmp/story-collection-qa/hub-1365.png`, `hub-390.png`.
+- 현재 CI와 관련 브라우저 재현 스크립트의 진입·저장 단언을 새 창작 관리와 collection에 맞췄다.
+  전체 QA/빌드/회귀·실제 모바일 키보드/장치·실제 Google 서버는 요청한 최소 검증 범위 밖으로
+  실행하지 않았다. 기존 SP-A 출처 문서 정규화는 보존하며 Excel source 왕복은 SP-C에 남는다.
+- 커밋·푸시·PR 본문 갱신·main 병합·배포는 수행하지 않았다. PR #19에는 아직 이번 로컬 변경이 없다.
+  당시 다음 작업은 SP-B.2였다. `.nolstory`/publication/복수 화자는
+  각각 SP-C/D/E에 남아 있다. 기존 지침 변경을 구현 커밋에 섞지 않는다.
+
+## 이전 요청: SP-A 저장소 체크포인트 (2026-09-10)
+
+- `98cc7f4` / 초안 PR #19. ID별 draft/playback·선택 ID·최대 2개 중앙 정책과
+  최초 단일 키 이전, 저장 실패·손상·중복/세 번째 차단·늦은 자동저장 보호 구현.
+- 선택적 source 계약과 문서 정규화 보존. 당시 Studio는 미연결이었고 SP-B로 인계했다.
+- 당시 증거: `npm run check`, collection/repository/document Node 검사 16/16.
+  Studio 연결 후 현재 증거는 위 SP-B.1 항목을 따른다.
 
 ## 이전 요청: 책 표지·대본 읽기 화면 개선 (2026-09-10)
 

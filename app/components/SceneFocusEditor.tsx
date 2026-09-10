@@ -4,6 +4,8 @@ import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
 
 import { StorySceneFrame } from "./StoryStage";
+import { formatStoryStageLabels } from "../story-stages";
+import { lineSpeakerNames } from "../story-speakers";
 import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { CutLengthGuide } from "./CutLengthGuide";
 import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
@@ -548,6 +550,7 @@ export function SceneFocusEditor({
   }
   return (
     <div className="scene-focus-editor" data-line-id={selectedLine.id}>
+      <p className="script-stage-indicator">{formatStoryStageLabels(selectedChapter.storyStageKeys, draft.planning.structureMode)}</p>
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">
         {SCENE_FOCUS_TABS.map(([tab, label], index) => (
           <button
@@ -656,6 +659,12 @@ export function SceneFocusEditor({
                   </select>
                 </label>
                 <AddSpeaker onAdd={onAddSpeaker} />
+                <fieldset className="co-speaker-options"><legend>함께 말하는 화자</legend>
+                  <p>같은 말을 함께 하는 인물을 골라요. 화자 이름과 화면의 인물 이미지는 따로 정해요.</p>
+                  {unique([...selectedChapter.chapterSpeakerNames, ...(selectedLine.coSpeakerNames ?? [])]).filter(name => name && name !== selectedLine.speakerName).map(name =>
+                    <label key={name}><input type="checkbox" checked={selectedLine.coSpeakerNames?.includes(name) ?? false}
+                      onChange={event => onUpdateLine(selectedLine.id, {coSpeakerNames:event.target.checked ? [...(selectedLine.coSpeakerNames ?? []),name] : (selectedLine.coSpeakerNames ?? []).filter(item => item !== name)})} />{name}</label>)}
+                </fieldset>
               </>
             )}
           </div>
@@ -708,7 +717,7 @@ export function SceneFocusEditor({
           >
             {selectedLine.type === "dialogue" && (
               <b className="dialogue-speaker">
-                {selectedLine.speakerName || "화자 없음"}:
+                {lineSpeakerNames(selectedLine).join(" · ") || "화자 없음"}:
               </b>
             )}
             <textarea
@@ -757,7 +766,7 @@ export function SceneFocusEditor({
           <span className="dialogue-meta">이미지 미리보기 · 글은 그대로예요</span>
           <p>{selectedLine.type === "narration"
             ? <DialogueText text={selectedLine.text || "여기에 해설을 써 보세요."} />
-            : <DialogueInline speakerName={stage.speakerName} text={selectedLine.text || "여기에 다음 말을 써 보세요."} />}</p>
+            : <DialogueInline names={lineSpeakerNames(selectedLine)} speakerName={stage.speakerName} text={selectedLine.text || "여기에 다음 말을 써 보세요."} />}</p>
         </div>
       )}
       </StorySceneFrame>

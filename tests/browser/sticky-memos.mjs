@@ -6,10 +6,10 @@ import {execFileSync} from 'node:child_process';
 const output=process.env.QA_OUTPUT || '/tmp/sticky-memos-qa';await mkdir(output,{recursive:true});
 const doc=execFileSync(process.execPath,['--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`import {DEFAULT_PROJECT,cloneProject} from './app/story-data.ts';import {createStoryDocument} from './app/story-project-document.ts';const p=cloneProject(DEFAULT_PROJECT);p.chapters=p.chapters.slice(0,1);p.lines=[{...p.lines[0],text:'메모를 참고하며 글을 써요.'},{...p.lines[0],id:'second',order:2,text:'다음 컷'}];p.creativeMemos=[];console.log(JSON.stringify(createStoryDocument({project:p,savedAt:new Date().toISOString(),appVersion:'test'})));`],{encoding:'utf8'}).trim();
 const browser=await launchBrowser(output);const results=[];
-async function resume(page){await page.locator('.entry-template-options[open]').waitFor({state:'attached'});await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('tab',{name:/이어만들기/}).click();await page.getByText('이 기기에서 이어만들기 ➔').click();}
+async function resume(page){await page.locator('.entry-template-options[open]').waitFor({state:'attached'});await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();}
 try{for(const [width,height] of viewports()){
  console.log('viewport',width);const page=await browser.newPage({viewport:{width,height}});const errors=[];page.on('pageerror',error=>errors.push(error.message));
- await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await resume(page);
+ await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await resume(page);
  await page.getByRole('button',{name:'컷 꾸미기',exact:true}).first().click();
  assert.equal(await page.getByRole('region',{name:'창작 메모',exact:true}).count(),0);
  await page.getByRole('button',{name:/창작 메모 펼치기/}).click();
@@ -47,19 +47,18 @@ try{for(const [width,height] of viewports()){
  await page.getByRole('button',{name:'미리보기 다음 컷',exact:true}).click();
  assert.ok(await page.getByRole('button',{name:'글상자 다음 컷',exact:true}).isDisabled());
  await page.reload();await resume(page);await page.getByRole('button',{name:/창작 메모 펼치기/}).click();
- const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:draft:v1')).project);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project);
  assert.equal(saved.creativeMemos.length,2);assert.equal(saved.creativeMemos[0].fields[0].value,long);assert.equal(saved.creativeMemos[0].linkedChapterId,chapterId);
  assert.equal(saved.lines[0].text,'웃으면서 대답했다.');
- const active=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:active:v1')).project);assert.equal(active.creativeMemos.length,0);
+ const active=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].playback.project);assert.equal(active.creativeMemos.length,0);
  await board.getByRole('button',{name:'창작 메모 닫기'}).click();
- await page.getByRole('button',{name:'메인으로',exact:true}).click();
- await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
- await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('tab',{name:/이어만들기/}).click();
+ await page.getByRole('button',{name:'창작 관리',exact:true}).click();
+ await page.getByRole('heading',{name:'창작 관리',exact:true}).waitFor();
  await page.route('https://docs.google.com/spreadsheets/**',route=>route.fulfill({status:500,body:'temporary server failure'}));
- await page.getByLabel('공개 Google 시트',{exact:true}).fill('https://docs.google.com/spreadsheets/d/test_sheet_12345/edit');
+ await page.getByLabel('공개 Google 시트 주소',{exact:true}).fill('https://docs.google.com/spreadsheets/d/test_sheet_12345/edit');
  await page.getByRole('button',{name:'시트에서 이어만들기',exact:true}).click();
  await page.getByRole('button',{name:'확인하고 닫기',exact:true}).click();
- const afterFailedImport=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:draft:v1')).project);
+ const afterFailedImport=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project);
  assert.deepEqual(afterFailedImport,saved);
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
  results.push({width,height,writeBesideMemo:true,scope:true,longScroll:true,reload:true,activeSeparate:true,failedImportPreservesDraft:true,currentCutPreserved:true});await page.close();

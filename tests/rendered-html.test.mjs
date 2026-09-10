@@ -274,7 +274,8 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(importPreviewDialog, /import-issue-card/);
   assert.match(importPreviewDialog, /고치는 법/);
   assert.match(importPreviewDialog, /Google 시트 안내/);
-  assert.match(importPreviewDialog, /방금 전으로 복구/);
+  assert.match(importPreviewDialog, /기존 편집본을 복구 기록에 남겨요/);
+  assert.match(studio, /방금 전으로 복구/);
   assert.match(globals, /\.import-issues-dialog/);
   assert.match(globals, /\.import-confirm-dialog/);
   assert.match(globals, /\.import-issue-card\.error/);
@@ -442,11 +443,13 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /처음부터 읽고 고치기/);
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
-  assert.match(sceneFocusEditor, /화자·이미지·컷 설정/);
+  assert.match(sceneFocusEditor, /aria-label="현재 컷 편집"/);
+  assert.match(sceneFocusEditor, /화자 이름/);
+  assert.match(sceneFocusEditor, /현재 컷 이미지와 표정/);
   assert.match(scriptScreen, /해설 · 이야기 설명/);
   assert.match(scriptScreen, /대사 · 인물이 말함/);
   assert.match(sceneFocusEditor, /상황과 배경을 들려주는 글/);
-  assert.match(storyPlayer, /narration-heading/);
+  assert.match(storyPlayer, /<ReadingTranscript/);
   assert.match(storyPlayer, /function DialogueText/);
   assert.match(storyPlayer, /function DialogueInline/);
   assert.match(storyPlayer, /className="dialogue-speaker"/);
@@ -739,7 +742,8 @@ test("G4-02: 이미지 지연 로딩, 비동기 디코딩 및 플레이어 선�
   assert.match(assetPickerSource, /decoding="async"/);
 
   // StoryPlayer 다음 컷 선로딩 및 즉시 렌더링 검증
-  assert.match(storyPlayerSource, /다음 컷 자산 선로딩/);
+  assert.match(storyPlayerSource, /new Image\(\)/);
+  assert.match(storyPlayerSource, /image.src = resolveAssetUrl\(src\)/);
   assert.match(storyPlayerSource, /<StorySceneFrame stage=\{stage\} variant="player"/);
 });
 
@@ -782,7 +786,7 @@ test("U1-03: 공통 셸은 세 단계·저장 상태·적용 행동과 접근성
   assert.match(primaryNav, /이야기 구성/);
   assert.match(primaryNav, /대본·컷 쓰기/);
   assert.match(primaryNav, /마지막으로 적용한 버전을 확인해요/);
-  assert.match(studioShell, /메인으로/);
+  assert.match(studioShell, /창작 관리/);
   assert.match(studioShell, /aria-live="polite"/);
   assert.match(studioShell, /save-state-\$\{saveStatus\}/);
   assert.match(studioShell, /aria-controls="studio-project-tools"/);
@@ -953,10 +957,12 @@ test("U1-10: 플레이 긴 글·줄바꿈·모바일 조작을 고정 높이 없
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(storyPlayerSource, /className="player-title-block"/);
-  assert.match(storyPlayerSource, /className="player-story-title"/);
-  assert.match(storyPlayerSource, /className="narration-copy" aria-live="polite"/);
-  assert.match(storyPlayerSource, /className="dialogue-copy" aria-live="polite"/);
+  const transcript = await readFile(new URL("../app/components/ReadingTranscript.tsx", import.meta.url), "utf8");
+  assert.match(storyPlayerSource, /reader-story-info/);
+  assert.match(storyPlayerSource, /<ReadingTranscript/);
+  assert.match(transcript, /aria-live=\{current \? "polite"/);
+  assert.match(transcript, /aria-label="현재 대사"/);
+  assert.match(transcript, /reading-history-script/);
   assert.doesNotMatch(storyPlayerSource, /player-top-actions" style=/);
   assert.doesNotMatch(storyPlayerSource, /player-controls" style=/);
 
@@ -968,5 +974,5 @@ test("U1-10: 플레이 긴 글·줄바꿈·모바일 조작을 고정 높이 없
   const u110 = globalsSource.split("/* U1-10: readable linear player.")[1];
   assert.ok(u110, "U1-10 player CSS block must exist");
   assert.doesNotMatch(u110, /max-height:\s*78px/);
-  assert.doesNotMatch(u110, /min-height:\s*34px/);
+  assert.match(globalsSource, /max-height: min\(65dvh/);
 });

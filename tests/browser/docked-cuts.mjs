@@ -8,12 +8,12 @@ const browser=await launchBrowser(output);
 try { for (const [width,height] of JSON.parse(process.env.QA_VIEWPORTS || "[[1365,900],[820,1180],[390,844]]")) {
  const page=await browser.newPage({viewport:{width,height}});
  await page.goto(process.env.QA_URL || 'http://localhost:3002');
- await page.evaluate(doc=>{localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);
+ await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);
  await page.reload();
  await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
  await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();
- await page.getByRole('tab',{name:/이어만들기/}).click();
- await page.getByText('이 기기에서 이어만들기 ➔').click();
+
+ await page.getByRole('button',{name:'이어만들기',exact:true}).click();
  await page.getByRole('button',{name:'컷 꾸미기',exact:true}).first().click();
  const input=page.getByLabel('현재 컷 글상자',{exact:true});
  const dock=page.getByRole('navigation',{name:'항상 보이는 컷 이동'});
@@ -32,7 +32,7 @@ try { for (const [width,height] of JSON.parse(process.env.QA_VIEWPORTS || "[[136
  const box=await dock.boundingBox(); assert.ok(box.y>=0 && box.y+box.height<=height+1);
  for(const button of await dock.locator('button').all()) assert.ok((await button.boundingBox()).height>=44);
  await dock.getByRole('button',{name:'+ 컷 추가',exact:true}).click();
- await page.waitForFunction(()=>JSON.parse(localStorage.getItem('storygame:draft:v1')).project.lines.length===3);
+ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project.lines.length===3);
  assert.equal(await input.inputValue(),'');
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await input.scrollIntoViewIfNeeded();

@@ -362,6 +362,7 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
           ? speaker
           : "narration",
       speakerName: requiredString(record, "speakerName", path, issues),
+      ...(record.coSpeakerNames !== undefined ? {coSpeakerNames: optionalStringArray(record, "coSpeakerNames", path, issues)} : {}),
       text: requiredString(record, "text", path, issues),
       leftAssetId: requiredString(record, "leftAssetId", path, issues),
       rightAssetId: requiredString(record, "rightAssetId", path, issues),

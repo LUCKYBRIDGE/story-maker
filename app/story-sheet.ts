@@ -1,3 +1,4 @@
+import { isStorySource, type StorySource } from "./story-source";
 import { STORY_FLOW_COLUMNS, parseStoryFlowCells } from "./story-flow-sheet";
 import type { StoryFlow } from "./story-flow";
 import { COVER_FIELDS, DEFAULT_COVER, isStoryCover } from "./story-cover";
@@ -803,11 +804,22 @@ export function buildProjectFromSheet(
           "연출 효과 설정을 읽을 수 없어요.",
           "효과: shake/flash-red/fade-black/crack/spotlight, 강도: soft/strong, 시점: scene-enter/with-dialogue/after-delay, 지연: 0~10초로 입력해 주세요."));
       }
+      let coSpeakerNames: string[] | undefined;
+      const coSpeakers = getRawValue(row, "함께 말하는 화자");
+      if (coSpeakers.trim()) {
+        try {
+          const parsed: unknown = JSON.parse(coSpeakers);
+          if (!Array.isArray(parsed) || parsed.some(name => typeof name !== "string" || !name.trim())) throw new Error();
+          coSpeakerNames = [...new Set(parsed.map(name => name.trim()))];
+        } catch { issues.push(issueAt(snapshot.source, row, ["함께 말하는 화자"], coSpeakers,
+          "함께 말하는 화자 목록을 읽지 못했어요.", '웹에서 화자를 선택해 다시 보관하거나 ["토끼","자라"] 형식으로 적어 주세요.')); }
+      }
       let flow: StoryFlow | undefined;
       try { flow = parseStoryFlowCells(STORY_FLOW_COLUMNS.map(column => getRawValue(row, column)), lineId); }
       catch (error) { issues.push(issueAt(snapshot.source, row, ["진행 방식"], getValue(row, "진행 방식"), error instanceof Error ? error.message : "선택·연결을 읽지 못했어요.", "선택 문구와 도착 컷 ID를 확인해 주세요. 끝내려면 도착 컷에 ‘끝’을 입력해요.")); }
       return {
         ...(flow ? { flow } : {}),
+        ...(coSpeakerNames ? {coSpeakerNames} : {}),
         ...(isStorySceneEffect(effect) ? { effect } : {}),
         id: lineId,
         chapterId,
@@ -923,7 +935,15 @@ export function buildProjectFromSheet(
     throw new StoryImportError([issueAt(snapshot.source, projectRow, [label], getRawValue(projectRow,label),
       "표지 설정을 읽을 수 없어요.", "표지 제목 크기는 24~52, 제목 색은 #RRGGBB 형식으로 입력하고, 배치·위치는 웹에서 내보낸 값을 유지해 주세요.")]);
   }
+  let source: StorySource | undefined;
+  const sourceJson = getRawValue(projectRow, "작품 출처 정보");
+  if (sourceJson) {
+    try { const parsed: unknown = JSON.parse(sourceJson); if (!isStorySource(parsed)) throw new Error(); source = parsed; }
+    catch { throw new StoryImportError([issueAt(snapshot.source, projectRow, ["작품 출처 정보"], sourceJson,
+      "작품 출처 형식을 읽지 못했어요.", "원래 파일의 출처 정보를 유지하거나, 모르는 출처라면 비워 주세요.")]); }
+  }
   return cloneProject({
+    ...(source ? {source} : {}),
     ...(hasCover && isStoryCover(cover) ? {cover} : {}),
     id: extractSheetId(sheetUrl)
       ? `sheet-${extractSheetId(sheetUrl)}`

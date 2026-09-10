@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { lineSpeakerNames } from "../story-speakers";
 import type { StoryLine, StoryProject } from "../story-data";
 import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { createPortal } from "react-dom";
@@ -29,7 +30,7 @@ export function ReadingTranscript({ project, lines, history, currentLine, ending
     const chapter = project.chapters.find(chapter => chapter.id === entry.chapterId);
     return <p className={`reading-paragraph ${entry.type} ${current ? "current-reading" : ""}`} aria-live={current ? "polite" : undefined}>
       {entry.type === "narration" ? <DialogueText text={entry.text || "이 장에는 아직 글이 없어요."} />
-        : <DialogueInline speakerName={resolveStoryStage(chapter, entry).speakerName} text={entry.text || "이 장에는 아직 글이 없어요."} />}
+        : <DialogueInline names={lineSpeakerNames(entry)} speakerNames={lines.flatMap(lineSpeakerNames)} paper={!current} speakerName={resolveStoryStage(chapter, entry).speakerName} text={entry.text || "이 장에는 아직 글이 없어요."} />}
     </p>;
   };
   const fontControls = <div role="group" aria-label="글씨 크기">

@@ -1388,15 +1388,75 @@ npm test
 
 - SP-A: 다중 작품 repository와 출처 계약. 기존 단일 draft/active bytes 보존, 작품별 적용본,
   선택 ID, 최대 2개, 저장 실패·중복 ID·늦은 자동저장 검증. UI 전환은 SP-B에서 한다.
-- SP-B (다음): Creation Hub와 Studio를 새 repository에 연결한다. 빈/기본판 복제, 두 작품
-  편집·읽기·명시 삭제·전환·새로고침·세 번째 생성 차단과 오류 복구를 완결한다. 이어서
-  Home/Library/Reader Entry/Story Hub를 작은 단위로 연결한다. master를 학생 저장으로 취급하지 않는다.
+- SP-B.1: Creation Hub와 Studio를 새 repository에 연결한다. 빈/기본판 복제, 두 작품
+  편집·읽기·명시 삭제·전환·새로고침·세 번째 생성 차단과 오류 복구를 완결한다.
+  2026-09-10 사용자의 우선 범위로 분리한 단위다. 허용: Studio/진입·가져오기·읽기 복귀 UI,
+  collection 연결, 관련 browser QA, 이 카드와 상태표. 기존 지침·설계의 로컬 변경은 보존한다.
+  순서: 1) PR #19/branch/기존 저장 경로 확인 2) ID별 저장과 전환 전 저장 연결
+  3) 독립 창작 관리 및 중앙 슬롯 정책 4) 핵심 자동/브라우저 검사 5) 상태표에 증거 기록.
+  인수: (1) 두 작품 생성·편집·전환·재접속 (2) 적용본 분리 읽기와 복귀
+  (3) 세 번째 생성/가져오기 차단 (4) 확인 삭제와 남은 작품 보존
+  (5) 저장·이전 실패 시 보존/재시도 (6) 이전 키 bytes 및 master 보존.
+  검증: `npm run check`; `node --test tests/story-project-collection.test.mjs
+  tests/story-project-repository.test.mjs tests/story-project-document.test.mjs
+  tests/story-project-checkpoints.test.mjs`; 개발 서버 후
+  `QA_URL=http://localhost:3003 node tests/browser/project-collection.mjs`; `git diff --check`.
+  desktop 1365×900/mobile 390×844. 데이터 손실 또는 기존 로컬 변경과 충돌 시 중단한다.
+  되돌림 시 collection/legacy 데이터는 지우지 않고 코드 연결만 되돌린다.
+  상태표에서 SP-B.1의 증거를 기록한 뒤 SP-B.2를 다음 READY로 둔다.
+- SP-B.2: SP-B.1 이후 Home/Library/Reader Entry/Story Hub를 작은 단위로 연결한다.
+  master를 학생 저장으로 취급하지 않는다. SP-B.1 세션에서 이어서 구현하지 않는다.
+  Work Lead · G/A/B. 허용: 진입/서재/작품 목록·읽기 복귀 UI, 기본판 seed 복제와 관련 검사,
+  이 카드/상태표. 기존 로컬 SP-B.1과 지침 변경을 보존하고 파일 형식·서버 기능은 추가하지 않는다.
+  순서: 1) 실제 제공 작품/진입 경로 확인 2) 서재·읽기 종류·작품 목록 연결
+  3) 진입 맥락 복귀 및 기본판 새 ID 복제 4) 핵심 자동/브라우저 검사와 상태표 갱신.
+  인수: (1) 메인 선택 이야기 유지·서재 왕복 (2) 보유 책만 5×2/3×3/2×3 단위로 표시
+  (3) 원작 준비 중·공유 빈 상태를 실제 제공과 구분 (4) 기본판 읽기가 학생 저장을 바꾸지 않음
+  (5) 내 적용본 읽기·진입 화면 복귀 (6) master 보존·도달 seed 새 ID 복제 및 2개 제한.
+  검증: `npm run check`; `node --test tests/story-discovery.test.mjs tests/story-studio-state.test.mjs`;
+  `QA_URL=http://localhost:3003 node tests/browser/story-discovery.mjs`; `git diff --check`.
+  대표 1365×900/820×1180/390×844. 작품 손실/기존 변경 충돌이면 중단하며,
+  되돌림은 새 화면 연결만 제거하고 학생 저장/원본 자산은 보존한다. 증거 후 DONE 및 SP-C READY.
 - SP-C: `.nolstory` project/shared 로컬 입출력, 동일 ID 유지/교체, 슬롯 정책, 자산 검증,
   source 왕복 및 기존 Excel/시트 경로 호환. 파일 reader는 슬롯을 소비하지 않는다.
+  Work Lead · G/A/B. 허용: 파일 parser/다운로드·미리보기, collection 원자 가져오기,
+  창작 관리/서재/편집기의 파일 연결, Excel source 행, 관련 검사와 파일 형식 ADR.
+  서버·계정·publication·remix 실행은 포함하지 않는다.
+  인수: (1) ID/출처/편집본/적용본 왕복 (2) 동일 ID 유지와 명시 교체·checkpoint
+  (3) 세 번째 편집본 차단 및 저장 실패 보존 (4) 슬롯 없는 공유 읽기·진입 화면 복귀
+  (5) schema/크기/MIME/자산 검증 (6) 메모 제외 공유 및 저장 실패 시 최신 파일 백업.
+  검증: `npm run check`; `node --test tests/story-file.test.mjs
+  tests/story-project-collection.test.mjs`; `QA_URL=http://localhost:3003
+  node tests/browser/story-file.mjs`; `git diff --check`. 대표 1365×900/390×844.
+  기존 데이터 손실 또는 출처 손실 시 중단. 되돌림 시 저장 데이터와 사용자 파일을 지우지 않는다.
+  형식 계약: `docs/decisions/nolstory-file-v1.md`. 증거 기록 후 SP-D를 다음 READY로 둔다.
 - SP-D: publication snapshot/제출 상태/query/동일본 fingerprint/허용 remix 계약과 빈 상태.
   서버·인증·학교 관리·실제 제출 처리는 구현하지 않는다.
+  Work Lead · G/A/B. 허용: publication 도메인, 공유 파일 미리보기/목록 고쳐쓰기 연결,
+  해당 자동·브라우저 검사와 기존 파일 ADR/상태표. snapshot은 적용본의 독립 복제다.
+  인수: (1) snapshot 불변·편집본 격리 (2) ID/시간/메모 제외 및 읽기 내용 포함 fingerprint
+  (3) 제출 상태 전이·AND 조회 조건 (4) allowRemix 도메인 검사·새 ID·출처 보존
+  (5) 두 슬롯 제한과 원본 보존 (6) 미지원 제출/학교 서비스를 실제처럼 표시하지 않음.
+  검증: `npm run check`; `node --test tests/story-publication.test.mjs tests/story-file.test.mjs`;
+  `QA_URL=http://localhost:3003 node tests/browser/story-file.mjs`; `git diff --check`.
+  기존 파일 흐름은 1365×900/390×844, 공유 목록 고쳐쓰기는 desktop에서 확인한다.
+  증거 후 SP-E READY. 되돌릴 때 학생 데이터와 보관 파일은 삭제하지 않는다.
 - SP-E: 화자 색상·복수 화자 호환, 35% 목표를 넘는 가변 글상자, 종이 느낌 기록,
   작은 보조 조작과 진입 화면 복귀. 인물 좌표는 글상자 확대에 영향을 받지 않는다.
+  Work Lead · A/B. 허용: 화자 표시/선택·문서/Excel 정규화·fingerprint, 읽기 CSS,
+  기존 편집 미리보기와 관련 검사·계약. 자산 생성·서버 기능은 추가하지 않는다.
+  인수: (1) 화자 이름 구분·본문색 유지 (2) 단일/복수 화자 저장·Excel·파일 호환
+  (3) UI 선택·적용·재접속·읽기 (4) 긴 글상자 확대와 인물 위치 고정
+  (5) 실제 방문 컷·선택 기록·장 이동·복귀 (6) 모바일 글씨/터치/가로 넘침 확인.
+  검증: `npm run check`; `node --test tests/story-file.test.mjs
+  tests/story-project-document.test.mjs tests/story-publication.test.mjs`;
+  `QA_URL=http://localhost:3003 node tests/browser/reader-layout.mjs`, reader-book.mjs,
+  reader-history.mjs. 대표 desktop/mobile, 분기 기록은 가로 회전 포함.
+- SP-F: 사용자 전체 완성 목표에 따른 최종 계약 대조와 통합 검증.
+  기존 SP-A~E 결과와 전체 계획의 완료·유예 조건을 현재 소스/실행으로 대조한다.
+  필요한 범위에서 통합 회귀·빌드와 핵심 사용자 흐름을 한 번 실행하고 실제 실패만 수정한다.
+  자산 승인·실기기·서버 등 미지원/유예 조건을 완료로 바꾸지 않는다. 범위 밖 배포는 하지 않는다.
+  결과는 기존 상태표에 기록하며 중복 완료 보고서를 만들지 않는다.
 
 검증은 실행 가능한 단계에 한정한다. 해당 핵심 Node 검사와 `npm run check` 1회;
 화면 연결 후 대표 desktop/mobile에서 실제 생성·전환·읽기·복귀를 확인한다.
