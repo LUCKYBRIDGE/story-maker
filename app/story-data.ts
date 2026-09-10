@@ -1,3 +1,4 @@
+import type { StorySource } from "./story-source";
 import type { StoryCover } from "./story-cover";
 export type { StoryCover } from "./story-cover";
 import type { StorySceneEffect } from "./story-scene-effect";
@@ -69,6 +70,7 @@ export type StoryPlanning = {
 };
 
 export type StoryProject = {
+  source?: StorySource;
   cover?: StoryCover;
   id: string;
   title: string;

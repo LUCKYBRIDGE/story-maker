@@ -1,3 +1,4 @@
+import { isStorySource } from "./story-source";
 import { isStoryFlow } from "./story-flow";
 import { isStoryCover } from "./story-cover";
 import { isStorySceneEffect } from "./story-scene-effect";
@@ -418,7 +419,11 @@ export function normalizeAndValidateStoryProject(value: unknown) {
   if (record.cover !== undefined && !isStoryCover(record.cover)) {
     addIssue(issues, "invalid-value", "$.project.cover", "표지 설정을 읽을 수 없어요. 원본을 보관하고 표지 설정을 확인해 주세요.");
   }
+  if (record.source !== undefined && !isStorySource(record.source)) {
+    addIssue(issues, "invalid-value", "$.project.source", "작품 출처 정보를 읽을 수 없어요.");
+  }
   const project: StoryProject = {
+    ...(isStorySource(record.source) ? { source: structuredClone(record.source) } : {}),
     ...(isStoryCover(record.cover) ? { cover: {...record.cover} } : {}),
     id: requiredString(record, "id", "$.project", issues),
     title: requiredString(record, "title", "$.project", issues),

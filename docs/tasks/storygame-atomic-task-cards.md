@@ -1379,3 +1379,25 @@ npm test
 - 검증: npm run qa:classroom; npm run check; npm test (PR CI); git diff --check.
 - 중단: 실제 OS/Google 계정 없으면 그 부분만 MANUAL BLOCKER, 제품 확대하지 않음.
 - 되돌림: 이 QA PR revert. 상태표 자동 증거와 사람 미검증을 구분하여 갱신한다.
+
+
+## SP — 놀스토리 서비스 개편 (2026-09-10 사용자 직접 지정)
+
+제품 계약: 상세 설계의 「2026-09-10 사용자 확정」 절. Work Lead, 데이터 보존과 교육 UX
+관점으로 진행한다. 기존 A1 자산 승인·실기기 미검증은 그대로 유예한다. 한 번에 작은 단위만 연결한다.
+
+- SP-A: 다중 작품 repository와 출처 계약. 기존 단일 draft/active bytes 보존, 작품별 적용본,
+  선택 ID, 최대 2개, 저장 실패·중복 ID·늦은 자동저장 검증. UI 전환은 SP-B에서 한다.
+- SP-B (다음): Creation Hub와 Studio를 새 repository에 연결한다. 빈/기본판 복제, 두 작품
+  편집·읽기·명시 삭제·전환·새로고침·세 번째 생성 차단과 오류 복구를 완결한다. 이어서
+  Home/Library/Reader Entry/Story Hub를 작은 단위로 연결한다. master를 학생 저장으로 취급하지 않는다.
+- SP-C: `.nolstory` project/shared 로컬 입출력, 동일 ID 유지/교체, 슬롯 정책, 자산 검증,
+  source 왕복 및 기존 Excel/시트 경로 호환. 파일 reader는 슬롯을 소비하지 않는다.
+- SP-D: publication snapshot/제출 상태/query/동일본 fingerprint/허용 remix 계약과 빈 상태.
+  서버·인증·학교 관리·실제 제출 처리는 구현하지 않는다.
+- SP-E: 화자 색상·복수 화자 호환, 35% 목표를 넘는 가변 글상자, 종이 느낌 기록,
+  작은 보조 조작과 진입 화면 복귀. 인물 좌표는 글상자 확대에 영향을 받지 않는다.
+
+검증은 실행 가능한 단계에 한정한다. 해당 핵심 Node 검사와 `npm run check` 1회;
+화면 연결 후 대표 desktop/mobile에서 실제 생성·전환·읽기·복귀를 확인한다.
+미구현 파일/서버 흐름을 현재 E2E로 만들지 않는다. 전체 빌드·회귀를 사소한 수정마다 반복하지 않는다.

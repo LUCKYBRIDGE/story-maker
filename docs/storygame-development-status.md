@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-09
+- 기준일: 2026-09-10
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,64 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 요청: ST-03 교실 모바일·시트 UI 검증
+## 현재 요청: 놀스토리 서비스 개편 — SP-A 체크포인트 (2026-09-10)
+
+- 저장소 `/Volumes/WAN2/apps/story-maker`, branch `codex/story-platform-foundation`.
+  시작 시 fetch 후 main/origin main `6bbc72a` 일치 확인. 기존 UI 체크포인트 `d552dc6` 위 작업.
+- SP-A DONE(독립 도메인), **SP-B READY**: Creation Hub/Studio 저장소 연결이 다음 한 작업이다.
+  사용자 요청 §63~64에 따라 긴 세션을 저장소 경계에서 분리한다. 전체 개편 완료가 아니다.
+- `app/story-project-collection.ts`: ID별 draft/playback·선택 ID, 최대 2개 중앙 정책,
+  생성/저장/적용/삭제. 선택 후 늦게 도착한 다른 작품 저장이 선택이나 작품을 덮어쓰지 않는다.
+  단일 draft/active를 최초 접근 시 복사하며 원래 키는 삭제하지 않는다. 실패 시 원본 보존.
+- `app/story-source.ts`, story-data/validation: 선택적 출처 계약과 문서 정규화 보존.
+  과거 출처는 추정하지 않는다. 아직 Excel source 왕복은 SP-C 구현 대상이다.
+- **Studio는 아직 기존 저장소를 사용한다.** 브라우저의 학생 데이터는 이번 단계에서 자동 이전되지 않는다.
+  2개 작품 관리 UI·서재·파일 입출력·출판/remix·복수 화자는 미구현. 세부 후속은 SP 카드 참조.
+- 증거: `npm run check` 1회 통과. 아래 Node 검사 1회 16/16 통과:
+  `node --test tests/story-project-collection.test.mjs tests/story-project-repository.test.mjs tests/story-project-document.test.mjs`.
+  이전·저장 실패·손상·두 작품 전환·중복/세 번째 차단·출처 왕복을 확인했다.
+- 브라우저 다중 작품 검증은 SP-B 연결 후 실행 가능하다. 아직 실행하지 않았으며 전체 빌드/회귀,
+  실제 장치·미구현 서버 흐름 검증도 수행하지 않았다. 기존 UI 브라우저 증거는 아래 이전 요청 참조.
+- 인수인계: 최신 원격과 PR을 재확인하고 SP-B부터 진행한다. 기존 instruction 문서 변경은 별도
+  로컬 작업으로 보존하며 이 체크포인트에 섞지 않는다. 커밋·푸시는 PR 기록, 배포는 하지 않는다.
+
+## 이전 요청: 책 표지·대본 읽기 화면 개선 (2026-09-10)
+
+- 사용자 직접 지정, 로컬 구현 완료. 기존 UI 변경은 `d552dc6`에 체크포인트, 미배포.
+- 책등·종이 단면·금박 장식, 넓은 화면 최대 560px. 원작 및 학생 작품의 공통 표지 사용.
+- 후속 조정: 현재 컷만 표시하는 하단 글상자는 내용에 맞춰 축소, 최대 35dvh.
+  정보 펼침과 무대 배치를 분리해 인물 크기 고정. 지난 기록·글씨 조절은 하단 구석에 축소 배치.
+- 별도 지난 기록 창에 실제 방문 대본과 선택 문구(같은 도착점/종료 선택 포함)를 표시.
+  이전 이동은 이후 기록 제거, 장 이동은 기록 초기화. 작품·장 정보 기본 접힘.
+- 돌아가기 메뉴에서 메인/편집(학생 작품), 이동 메뉴에서 현재/다른 장의 첫 컷만 선택.
+- `npm run check` 통과, 관련 표지·플레이 상태·분기 테스트 25/25 통과 (각 1회).
+  Chromium 1365×1000/390×844에서 글씨·기록·이전·장 처음·메인 복귀 확인.
+  모바일 현재 문장 위치 계산 수정 후 해당 화면만 재확인. 두 원작 표지 시각 확인.
+- 재현: `QA_URL=http://localhost:3002 node tests/browser/reader-book.mjs`.
+  전체 빌드/회귀·실제 장치 검증은 사용자 제한에 따라 생략.
+
+## 이전 요청: 고정 컷 이동·원작 연출 개선 (2026-09-10)
+
+- 사용자 직접 지정, Work Lead. 주 책임 교육 UX; 검토 관점 접근성·데이터 보존.
+- 최신 main `6bbc72a`에서 `codex/docked-cut-editor`로 분기. 로컬 구현 완료, `d552dc6`에 체크포인트, 미배포.
+- 대본/컷 공통 하단 고정 이동·추가, Alt+방향키와 IME 보호, 입력 초점/내용 보존.
+  화자·종류·이미지 선택을 글쓰기 앞에 모으고 연결·특수 연출·배치 복사는 보조 설정으로 이동.
+- 이어쓰기 첫 컷의 앞 문장과 반응 질문을 입력 후에도 유지. 원문/저장 스키마 변경 없음.
+  플레이 화자 밝기 전환·짧은 글 표시 전환·분기 도착 이미지 선로딩, 편집 미리보기 효과 연결.
+- `npm run check` 1회 통과. 관련 Node 테스트 23/23 1회 통과
+  (story-scene-frame, story-continuation, story-examples, story-stage-view, story-scene-effect).
+- Chromium 1365×900, 820×1180, 390×844에서 고정 이동/추가·입력 보존·조합 키 보호·44px 확인.
+  기존 적용/메모 고정 영역과의 겹침 수정. 모바일 대본 전환은 키보드로 확인;
+  자동 포인터 전환은 스크롤 간섭으로 미확인. 실제 모바일 키보드/장치 미검증.
+  재현: `QA_URL=http://localhost:3002 node tests/browser/docked-cuts.mjs`.
+- 자산 실측: 배경 38개 1599×900, 캐릭터 70개 투명 800×1200, 캔버스 가장자리 알파 잘림 없음.
+  발선 예외: 옹고집 real-borrowed/real-resolve/second-child 1143,
+  real-exiled/youngest-child 1141 (각 카탈로그 ID 접미사 생략). 나머지 65개는 1149±3.
+  몸통 시각 중심 x=400과 신체 비율의 사람 검수는 수행하지 않음. 원본 이미지 보정 없음.
+- 원작 기준 커밋 `df00a622`의 토끼 133/옹고집 450개 beat 문장과 생성본 일치.
+  전체 분기 연출 재생·실기기·전체 빌드는 사용자 검증 제한에 따라 이번에 실행하지 않음.
+
+## 이전 요청: ST-03 교실 모바일·시트 UI 검증
 
 - 상태: `DONE` (로컬 자동화, 미통합), Work Lead · G/A/B, 사용자 안정화 요청.
   기존 제품 Node 172/172는 PR #17 CI, 추가 QA는 로컬 check/qa:classroom 통과.
