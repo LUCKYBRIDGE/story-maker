@@ -14,8 +14,19 @@ function CoverImage({ id, kind }: { id: string; kind: "background" | "character"
 }
 export function BookCover({ project, back = false }: { project: StoryProject; back?: boolean }) {
   const cover = resolveStoryCover(project);
+  // The built-in rabbit edition introduces its title character, rather than the opening speaker.
+  if (!project.cover && project.id === "pinky-review-main-002") {
+    const scene = project.lines.find(line => [line.leftAssetId, line.rightAssetId]
+      .some(id => ASSET_BY_ID.get(id)?.group === "토끼"));
+    const characterId = scene && [scene.leftAssetId, scene.rightAssetId]
+      .find(id => ASSET_BY_ID.get(id)?.group === "토끼");
+    if (scene && characterId) {
+      cover.characterId = characterId;
+      cover.backgroundId = scene.backgroundId || project.chapters.find(chapter => chapter.id === scene.chapterId)?.backgroundId || cover.backgroundId;
+    }
+  }
   const theme = COVER_THEMES[cover.theme];
-  const ink = cover.titleColor || theme.ink;
+  const ink = cover.titleColor || (cover.layout === "classic" ? theme.accent : theme.ink);
   return <div className="student-book" data-layout={cover.layout} data-title-position={cover.titlePosition}
     data-author-position={cover.authorPosition} data-character-position={cover.characterPosition}
     data-font={cover.font} data-back={back || undefined} style={{

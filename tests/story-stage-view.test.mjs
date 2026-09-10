@@ -50,3 +50,12 @@ test("빈 무대·없는 인물·좌우 방향을 안전하고 일관되게 해�
   assert.equal(result.right,false);
   assert.equal(result.unknown,false);
 });
+
+test("어린 자라의 기본·회상은 같은 작은 키를 쓰고 성인 자라는 유지한다", () => {
+  const result=run(`
+    const p=createCurrentV1ProjectFixture();
+    const ids=['rabbit-turtle.character.turtle-child-unified-720x900','rabbit-turtle.character.turtle-child-flashback','rabbit-turtle.character.turtle-unified-720x900'];
+    console.log(JSON.stringify(ids.map(id=>resolveStoryStage(p.chapters[0],{...p.lines[0],leftAssetId:id}).left.scale)));
+  `);
+  assert.deepEqual(result,[0.72,0.72,1]);
+});

@@ -16,19 +16,33 @@ try {
    const body = scenario === 'missing-optional' && name === '창작 메모' ? undefined : tabs[name];
    return route.fulfill({ status: body === undefined ? 404 : 200, contentType: 'text/csv', body: body ?? '' });
   });
-  await page.getByLabel('공개 Google 시트', { exact: true }).fill('https://docs.google.com/spreadsheets/d/classroom_fixture_20260909/edit');
+  await page.getByLabel('공개 Google 시트 주소', { exact: true }).fill('https://docs.google.com/spreadsheets/d/classroom_fixture_20260909/edit');
   await page.getByRole('button', { name: '시트에서 이어만들기', exact: true }).click();
   if (['normal', 'missing-optional'].includes(scenario)) {
    const confirm = page.getByRole('button', { name: '편집본으로 열기', exact: true });
    await confirm.waitFor();
    assert.equal(await page.evaluate(() => localStorage.getItem('storygame:draft:v1')), doc, 'preview must not overwrite');
    await confirm.click();
-   await page.waitForFunction(title => JSON.parse(localStorage.getItem('storygame:draft:v1')).project.title === title, title);
-   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:draft:v1')).project);
+   await page.waitForFunction(title => { const c = JSON.parse(localStorage.getItem('storygame:projects:v1')); return c.projects.find(e => e.draft.project.id === c.selectedProjectId)?.draft.project.title === title; }, title);
+   const collection = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:projects:v1')));
+   const saved = collection.projects.find(e => e.draft.project.id === collection.selectedProjectId).draft.project;
    assert.equal(saved.lines[0].text, '시트에서 가져온 문장');
    assert.equal(saved.creativeMemos.length, 0);
-   const checkpoints = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:checkpoints:v1')));
-   assert.ok(checkpoints.some(checkpoint => checkpoint.reason === 'before-import' && checkpoint.document.project.lines[0].text === '학생이 직접 쓴 문장'), 'original retained in checkpoint');
+   assert.equal(collection.projects.length,2);
+   assert.equal(collection.projects[0].draft.project.lines[0].text,'학생이 직접 쓴 문장','different-ID import preserves the original project');
+   if (scenario === 'normal') {
+    await page.getByRole('button',{name:'창작 관리',exact:true}).click();
+    await page.getByLabel('공개 Google 시트 주소',{exact:true}).fill('https://docs.google.com/spreadsheets/d/classroom_fixture_20260909/edit');
+    await page.getByRole('button',{name:'시트에서 이어만들기',exact:true}).click();
+    page.once('dialog',dialog => dialog.accept());
+    await page.getByRole('button',{name:'편집본으로 열기',exact:true}).click();
+    await page.locator('.creator-shell').waitFor();
+    const updated = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:projects:v1')));
+    assert.equal(updated.projects.length,2,'same-ID import uses the existing slot');
+    assert.deepEqual(updated.projects[0].draft.project,collection.projects[0].draft.project);
+    const checkpoints = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:checkpoints:v1')));
+    assert.ok(checkpoints.some(item => item.reason === 'before-import' && item.document.project.id === saved.id),'same-ID replacement backs up that work');
+   }
    assert.ok(requested.includes('창작 메모'));
   } else {
    await page.getByRole('dialog', { name: '가져오기 검사 결과' }).waitFor();

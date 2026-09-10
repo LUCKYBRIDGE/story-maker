@@ -1,4 +1,5 @@
 "use client";
+import { remixSharedFile } from "./story-publication";
 
 import {
   useEffect,
@@ -7,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { CutNavigation } from "./components/CutNavigation";
 import { createPortal } from "react-dom";
 import { ModalDialog } from "./components/ModalDialog";
 import {
@@ -15,6 +17,14 @@ import {
   StudioShell,
   type StudioWorkspaceMode,
 } from "./components/StudioShell";
+import { createStoryDocument } from "./story-project-document";
+import { STORY_PROJECT_APP_VERSION } from "./story-project-repository";
+import { StoryFileDialog } from "./components/StoryFileDialog";
+import { createNolstoryProject, createNolstoryShared, downloadNolstoryFile, readNolstoryFile, type NolstoryFile, type NolstorySharedFile } from "./story-file";
+import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery";
+import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
+import { CreationHub } from "./components/CreationHub";
+import { createProjectCollectionRepository, type ProjectCollectionRepository, type ProjectCollection, type CollectionResult } from "./story-project-collection";
 import { StartScreen, type EntryLocalDraftStatus } from "./components/StartScreen";
 import { StoryEntryDialog } from "./components/StoryEntryDialog";
 import {
@@ -91,9 +101,7 @@ import {
   setCreativeMemoLineLink,
 } from "./creative-memo-commands";
 import {
-  createLocalStoryProjectRepository,
   createStoryProjectSaveQueue,
-  type StoryProjectRepository,
   type StoryProjectSaveQueue,
   type StoryProjectSaveResult,
   type StoryProjectSaveStatus,
@@ -225,6 +233,18 @@ export function StoryStudio() {
   const [active, setActive] = useState<StoryProject>(() =>
     cloneProject(DEFAULT_PROJECT),
   );
+  const [filePreview, setFilePreview] = useState<NolstoryFile | null>(null);
+  const [fileError, setFileError] = useState("");
+  const [sharedFiles, setSharedFiles] = useState<NolstorySharedFile[]>([]);
+  const [allowFileRemix, setAllowFileRemix] = useState(false);
+  const storyFileInputRef = useRef<HTMLInputElement>(null);
+  const [importError, setImportError] = useState("");
+  const [discoveryScreen, setDiscoveryScreen] = useState<DiscoveryScreen>("home");
+  const [selectedStoryTheme, setSelectedStoryTheme] = useState<StoryTheme>("onggojib");
+  const [readerEntryFrom, setReaderEntryFrom] = useState<"home" | "library">("home");
+  const [storyHubGroup, setStoryHubGroup] = useState<StoryHubGroup>("base");
+  const [creationHubOpen, setCreationHubOpen] = useState(false);
+  const [collection, setCollection] = useState<ProjectCollection>({ version: 1, selectedProjectId: null, projects: [] });
   const [creatorAccess, setCreatorAccess] = useState<CreatorAccess>("none");
   const [playerUi, dispatchPlayerUi] = useReducer(
     storyStudioPlayerReducer,
@@ -318,7 +338,7 @@ export function StoryStudio() {
     useState<StoryRevisionResponses>({});
   const updateController = useRef<AbortController | null>(null);
   const excelInputRef = useRef<HTMLInputElement | null>(null);
-  const projectRepositoryRef = useRef<StoryProjectRepository | null>(null);
+  const projectRepositoryRef = useRef<ProjectCollectionRepository | null>(null);
   const checkpointRepositoryRef =
     useRef<StoryProjectCheckpointRepository | null>(null);
   const saveQueueRef = useRef<StoryProjectSaveQueue | null>(null);
@@ -340,7 +360,7 @@ export function StoryStudio() {
 
   function projectRepository() {
     if (!projectRepositoryRef.current) {
-      projectRepositoryRef.current = createLocalStoryProjectRepository({
+      projectRepositoryRef.current = createProjectCollectionRepository({
         storage: {
           getItem: (key) => window.localStorage.getItem(key),
           setItem: (key, value) => window.localStorage.setItem(key, value),
@@ -351,7 +371,221 @@ export function StoryStudio() {
   }
 
   function saveActiveProject(project: StoryProject): StoryProjectSaveResult {
-    return projectRepository().saveActive(project);
+    return collectionSaveResult(projectRepository().savePlayback(project));
+  }
+
+  function collectionSaveResult(result: CollectionResult<ProjectCollection>): StoryProjectSaveResult {
+    if (!result.ok) return result;
+    if (mountedRef.current) setCollection(result.value);
+    return { ok: true, savedAt: new Date().toISOString() };
+  }
+
+  function showCollectionError(message: string) {
+    setNotice(message);
+    setEntryNotice(message);
+  }
+
+  // Persist the current in-memory draft before any operation that could replace it.
+  // Retrying saves the draft again even if the debounce already failed and cleared its queue.
+  function preserveCurrentDraft() {
+    if (localDraftStatus !== "available") return true;
+    saveQueueRef.current?.dispose();
+    const result = collectionSaveResult(projectRepository().saveProject(draft));
+    setSaveStatus(result.ok ? "saved" : "failed");
+    if (!result.ok) showCollectionError(result.message);
+    return result.ok;
+  }
+
+  function resetProjectTools() {
+    setAllowFileRemix(false);
+    setUndoDelete(null);
+    setSplitUndo(null);
+    setMemoPopupOpen(false);
+    setSelectedCreativeMemoId(null);
+    setStageWarningModal(null);
+    setDismissedStageSignature(null);
+    setApplyIssuesVisible(false);
+    setEditorRestoreRequest(null);
+    setMobileProjectOpen(false);
+    setMobileEditorToolsOpen(false);
+    setSceneSettingsOpen(false);
+    setChapterResourcesOpen(false);
+    homeReturnOriginRef.current = null;
+    playerReturnLocationRef.current = null;
+    memoReturnOriginRef.current = null;
+  }
+
+  function openCollectionProject(id: string, read = false) {
+    if (busy || !preserveCurrentDraft()) return;
+    const result = projectRepository().setActiveProject(id);
+    if (!result.ok) { showCollectionError(result.message); return; }
+    const entry = result.value.projects.find(item => item.draft.project.id === id)!;
+    const project = cloneProject(entry.draft.project);
+    setCollection(result.value);
+    setDraft(project);
+    setActive(resolveActiveProjectForDraft({ draft: project, active: entry.playback?.project ?? null }).project);
+    setLocalDraftStatus("available");
+    resetProjectTools();
+    const session = resolveStudioUiSession(project, loadStudioUiSession(() => window.localStorage));
+    setWorkspaceMode(session.workspaceMode);
+    setPlanningView(session.planningView);
+    setSelectedChapterId(session.location.chapterId);
+    setSelectedLineId(session.location.lineId);
+    setEditorMode(session.location.view);
+    setEntryNotice("");
+    if (read && entry.playback) {
+      setCreatorAccess("none");
+      dispatchPlayerUi({ type: "open", index: 0, context: createStoryPlaybackContext("student", entry.playback.project) });
+    } else {
+      setCreatorAccess("local");
+      setNotice("선택한 작품을 열었어요.");
+    }
+  }
+
+  function createCollectionProject(project: StoryProject) {
+    if (!hydrated || busy || !preserveCurrentDraft()) return false;
+    const result = projectRepository().createProject(project);
+    if (!result.ok) { showCollectionError(result.message); return false; }
+    setCollection(result.value);
+    resetProjectTools();
+    setEntryNotice("");
+    return true;
+  }
+
+  function deleteCollectionProject(id: string) {
+    if (busy || !preserveCurrentDraft()) return;
+    const project = collection.projects.find(item => item.draft.project.id === id)?.draft.project;
+    if (!project || !window.confirm(`‘${project.title || "제목 없는 이야기"}’을 이 기기에서 삭제할까요? 편집본과 플레이 버전이 삭제돼요. 필요한 작품은 먼저 Excel로 보관해 주세요.`)) return;
+    const result = projectRepository().deleteProject(id);
+    if (!result.ok) { showCollectionError(result.message); return; }
+    setCollection(result.value);
+    if (draft.id === id) {
+      const next = result.value.projects.find(item => item.draft.project.id === result.value.selectedProjectId);
+      const project = next?.draft.project ?? createBlankProject();
+      setDraft(cloneProject(project));
+      setActive(resolveActiveProjectForDraft({ draft: project, active: next?.playback?.project ?? null }).project);
+      setLocalDraftStatus(next ? "available" : "missing");
+      resetProjectTools();
+    }
+    setEntryNotice("선택한 작품을 삭제했어요. 다른 작품은 그대로 있어요.");
+  }
+
+  function retryCollection() {
+    const result = projectRepository().listProjects();
+    if (!result.ok) { showCollectionError(result.message); return; }
+    setCollection(result.value);
+    const entry = result.value.projects.find(item => item.draft.project.id === result.value.selectedProjectId);
+    if (localDraftStatus !== "available" && entry) {
+      setDraft(cloneProject(entry.draft.project));
+      setActive(resolveActiveProjectForDraft({ draft: entry.draft.project, active: entry.playback?.project ?? null }).project);
+    }
+    setLocalDraftStatus(result.value.projects.length ? "available" : "missing");
+    setEntryNotice("");
+  }
+
+  async function openStoryFile(file?: File) {
+    if (!file || busy || entryBusy) return;
+    setEntryBusy(true);
+    const result = await readNolstoryFile(file);
+    setEntryBusy(false);
+    if (!result.ok) { showCollectionError(result.message); return; }
+    setFileError("");
+    setFilePreview(result.file);
+  }
+
+  function importStoryFile(replace: boolean) {
+    if (!filePreview || !("draft" in filePreview)) return;
+    if (!preserveCurrentDraft()) { setFileError("지금 작품을 저장하지 못했어요. 먼저 파일로 보관해 주세요."); return; }
+    const existing = projectRepository().getProject(filePreview.draft.project.id);
+    if (existing.ok && replace) {
+      const backup = checkpointRepository().create("before-import", existing.value.draft.project);
+      if (!backup.ok) { setFileError(backup.message); return; }
+      setCheckpoints(backup.checkpoints);
+    }
+    const result = projectRepository().importProject({draft:filePreview.draft, playback:filePreview.playback}, replace);
+    if (!result.ok) { setFileError(result.message); return; }
+    // Selection and both versions have committed atomically; load without resaving the old draft.
+    saveQueueRef.current?.dispose();
+    setCollection(result.value);
+    const project = cloneProject(filePreview.draft.project);
+    setDraft(project);
+    setActive(resolveActiveProjectForDraft({draft:project, active:filePreview.playback?.project ?? null}).project);
+    setLocalDraftStatus("available");
+    resetProjectTools();
+    const session = resolveStudioUiSession(project, null);
+    setWorkspaceMode(session.workspaceMode); setPlanningView(session.planningView);
+    setSelectedChapterId(session.location.chapterId); setSelectedLineId(session.location.lineId); setEditorMode(session.location.view);
+    setCreatorAccess("local"); setFilePreview(null); setEntryNotice("");
+    setNotice("파일의 편집본과 플레이 버전을 열었어요. 다른 작품은 그대로예요.");
+  }
+
+  async function remixFile(file: NolstorySharedFile) {
+    if (busy || entryBusy) return;
+    setEntryBusy(true);
+    try {
+      const project = await remixSharedFile(file, `story-${crypto.randomUUID()}`);
+      if (!createCollectionProject(project)) { setFileError("새 작품을 보관하지 못했어요. 창작 관리의 두 작품과 저장 상태를 확인해 주세요."); return; }
+      setFilePreview(null);
+      openCollectionProject(project.id);
+    } catch (error) { setFileError(error instanceof Error ? error.message : "고쳐 쓸 작품을 만들지 못했어요."); }
+    finally { setEntryBusy(false); }
+  }
+
+  function readFilePreview() {
+    if (!filePreview) return;
+    const document = "story" in filePreview ? filePreview.story : filePreview.playback;
+    if (!document) return;
+    playerReturnLocationRef.current = captureStudioReturnOrigin();
+    if ("story" in filePreview) {
+      const shared = filePreview;
+      setSharedFiles(files => [...files.filter(file => file.story.project.id !== shared.story.project.id), shared]);
+    }
+    dispatchPlayerUi({type:"open", index:0, context:createStoryPlaybackContext("shared", document.project)});
+    setFilePreview(null);
+  }
+
+  function saveStoryFile(shared = false, projectId = draft.id) {
+    try {
+      // A failed autosave must not prevent downloading the in-memory draft.
+      const current = projectId === draft.id;
+      const loaded = current ? null : projectRepository().getProject(projectId);
+      if (loaded && !loaded.ok) { showCollectionError(loaded.message); return; }
+      const metadata = {savedAt:new Date().toISOString(), appVersion:STORY_PROJECT_APP_VERSION};
+      const entry = current ? {
+        draft:createStoryDocument({project:draft, ...metadata}),
+        playback:collection.projects.find(item => item.draft.project.id === projectId)?.playback ?? null,
+      } : loaded?.ok ? loaded.value : null;
+      if (!entry) return;
+      const project = entry.draft.project;
+      if (shared) {
+        const playback = entry.playback?.project;
+        if (!playback?.lines.length) { showCollectionError("먼저 플레이에 적용한 뒤 공유 파일로 보관해 주세요."); return; }
+        downloadNolstoryFile(createNolstoryShared(playback, allowFileRemix), playback.title);
+      } else {
+        downloadNolstoryFile(createNolstoryProject(entry), project.title);
+      }
+      setNotice(shared ? "적용한 버전을 공유 파일로 보관했어요. 창작 메모는 제외했어요." : "편집본과 플레이 버전을 .nolstory 파일로 보관했어요.");
+    } catch (error) { showCollectionError(error instanceof Error ? error.message : "파일로 보관하지 못했어요."); }
+  }
+
+  async function copyBaseEdition() {
+    if (busy || entryBusy || !hydrated) return;
+    setEntryBusy(true);
+    try {
+      const { getExampleProject } = await import("./story-examples");
+      const master = getExampleProject(selectedStoryTheme);
+      const project = createBaseEditionDraft(master, selectedStoryTheme, `story-${crypto.randomUUID()}`);
+      if (!createCollectionProject(project)) return;
+      openCollectionProject(project.id);
+    } catch (error) {
+      showCollectionError(error instanceof Error ? error.message : "기본 작품을 복제하지 못했어요.");
+    } finally { setEntryBusy(false); }
+  }
+
+  function showDiscovery(screen: DiscoveryScreen) {
+    setCreationHubOpen(false);
+    setDiscoveryScreen(screen);
+    setEntryNotice("");
   }
 
   function checkpointRepository() {
@@ -390,71 +624,27 @@ export function StoryStudio() {
       try {
         const repository = projectRepository();
         const savedCheckpoints = checkpointRepository().list();
-        const savedDraft = repository.loadDraft();
-        const savedActive = repository.loadActive();
-        if (savedCheckpoints.ok) {
-          setCheckpoints(savedCheckpoints.checkpoints);
-        } else {
-          setNotice(savedCheckpoints.message);
-        }
-        const savedDraftProject = savedDraft.ok && savedDraft.project
-          ? cloneProject(savedDraft.project)
-          : null;
-        const savedActiveProject = savedActive.ok && savedActive.project
-          ? cloneProject(savedActive.project)
-          : null;
-        if (savedDraftProject) {
-          setDraft(savedDraftProject);
-          setLocalDraftStatus("available");
-          const session = resolveStudioUiSession(
-            savedDraftProject, loadStudioUiSession(() => window.localStorage),
-          );
-          setWorkspaceMode(session.workspaceMode);
-          setPlanningView(session.planningView);
-          setSelectedChapterId(session.location.chapterId);
-          setSelectedLineId(session.location.lineId);
-          setEditorMode(session.location.view);
-          if (
-            savedDraft.ok &&
-            savedDraft.project &&
-            savedDraft.migrationError
-          ) {
-            setNotice(savedDraft.migrationError);
-          }
-        } else if (!savedDraft.ok) {
-          setNotice(savedDraft.message);
-          setEntryNotice(savedDraft.message);
+        const loaded = repository.listProjects();
+        if (savedCheckpoints.ok) setCheckpoints(savedCheckpoints.checkpoints);
+        else setNotice(savedCheckpoints.message);
+        if (!loaded.ok) {
+          showCollectionError(loaded.message);
           setLocalDraftStatus("failed");
         } else {
-          setLocalDraftStatus("missing");
-        }
-        if (savedDraftProject) {
-          const activeResolution = resolveActiveProjectForDraft({
-            draft: savedDraftProject,
-            active: savedActiveProject,
-          });
-          setActive(activeResolution.project);
-          if (activeResolution.usedFallback) {
-            const activeSave = repository.saveActive(activeResolution.project);
-            if (savedActiveProject || !activeSave.ok) {
-              setNotice(
-                activeSave.ok
-                  ? "다른 작품의 플레이 버전은 열지 않았어요. 이 작품을 적용한 뒤 플레이하세요."
-                  : activeSave.message,
-              );
-            }
-          }
-        } else if (savedActiveProject) {
-          setActive(savedActiveProject);
-          if (
-            savedActive.ok &&
-            savedActive.project &&
-            savedActive.migrationError
-          ) {
-            setNotice(savedActive.migrationError);
-          }
-        } else if (!savedActive.ok) {
-          setNotice(savedActive.message);
+          setCollection(loaded.value);
+          const entry = loaded.value.projects.find(item => item.draft.project.id === loaded.value.selectedProjectId);
+          if (entry) {
+            const project = cloneProject(entry.draft.project);
+            setDraft(project);
+            setActive(resolveActiveProjectForDraft({ draft: project, active: entry.playback?.project ?? null }).project);
+            setLocalDraftStatus("available");
+            const session = resolveStudioUiSession(project, loadStudioUiSession(() => window.localStorage));
+            setWorkspaceMode(session.workspaceMode);
+            setPlanningView(session.planningView);
+            setSelectedChapterId(session.location.chapterId);
+            setSelectedLineId(session.location.lineId);
+            setEditorMode(session.location.view);
+          } else setLocalDraftStatus("missing");
         }
         setBackupFound(Boolean(localStorage.getItem(BACKUP_KEY)));
         setFavoriteAssets(
@@ -483,7 +673,7 @@ export function StoryStudio() {
     if (!hydrated || creatorAccess !== "local") return;
     if (!saveQueueRef.current) {
       saveQueueRef.current = createStoryProjectSaveQueue({
-        repository: projectRepository(),
+        repository: { saveDraft: project => collectionSaveResult(projectRepository().saveProject(project)) },
         onStatusChange: (status) => {
           if (!mountedRef.current) return;
           setSaveStatus(status);
@@ -1425,7 +1615,7 @@ export function StoryStudio() {
 
   function moveThroughStory(direction: -1 | 1) {
     const nextLine = orderedDraftLines[selectedStoryLineIndex + direction];
-    if (nextLine) requestStoryEditorRestore({chapterId: nextLine.chapterId, lineId: nextLine.id, view: "scene", focusTarget: "line-body"}, {scrollY: window.scrollY});
+    if (nextLine) requestStoryEditorRestore({chapterId: nextLine.chapterId, lineId: nextLine.id, view: editorMode, focusTarget: "line-body"}, editorMode === "scene" ? {scrollY: window.scrollY} : undefined);
   }
 
   function editStoryFromBeginning() {
@@ -1814,13 +2004,14 @@ export function StoryStudio() {
   }
 
   function applyRestoredDraft(project: StoryProject) {
+    if (project.id !== draft.id) { setNotice("다른 작품의 복구 기록은 이 작품에 덮어쓰지 않아요."); return; }
     setDraft(cloneProject(project));
     setSelectedChapterId(project.chapters[0]?.id ?? "");
     setSelectedLineId(project.lines[0]?.id ?? "");
   }
 
   function restoreBackup() {
-    const latestCheckpoint = checkpoints[0];
+    const latestCheckpoint = checkpoints.find(item => item.document.project.id === draft.id);
     if (latestCheckpoint) {
       if (
         !window.confirm(
@@ -1846,8 +2037,10 @@ export function StoryStudio() {
         setNotice("복구할 직전 편집본이 없어요.");
         return;
       }
+      const restored = JSON.parse(saved) as StoryProject;
+      if (restored.id !== draft.id) { setNotice("이 작품의 복구 기록이 없어요. 다른 작품은 덮어쓰지 않았어요."); return; }
       if (!backupDraft("before-reset")) return;
-      applyRestoredDraft(JSON.parse(saved) as StoryProject);
+      applyRestoredDraft(restored);
       setUndoDelete(null);
       setNotice("이전 직전 편집본으로 복구했어요. 방금 편집한 내용도 복구 기록에 남아 있어요.");
     } catch {
@@ -1902,8 +2095,8 @@ export function StoryStudio() {
           minute: "2-digit",
         }).format(new Date()),
       });
-      setActive(updated);
       const activeSave = saveActiveProject(updated);
+      if (activeSave.ok) setActive(updated);
       setApplyIssuesVisible(false);
       setNotice(
         activeSave.ok
@@ -1930,12 +2123,25 @@ export function StoryStudio() {
   function confirmImport() {
     const imported = importConfirmation.project;
     if (!imported) return;
-    if (!backupDraft("before-import")) return;
-    const activeResolution = resolveActiveProjectForDraft({ draft: imported, active });
-    const activeSave = activeResolution.usedFallback
-      ? projectRepository().saveActive(activeResolution.project)
-      : null;
-    setActive(activeResolution.project);
+    setImportError("");
+    const failImport = (message: string) => { showCollectionError(message); setImportError(message); };
+    if (!preserveCurrentDraft()) { setImportError("기기에 저장하지 못했어요. 현재 작품을 Excel로 보관한 뒤 다시 시도해 주세요."); return; }
+    const existing = projectRepository().getProject(imported.id);
+    if (!existing.ok && existing.code !== "not-found") { failImport(existing.message); return; }
+    if (existing.ok) {
+      if (!window.confirm("같은 작품이 있어요. 기기에 보관한 편집본을 가져온 파일로 바꿀까요? 기존 편집본은 복구 기록에 남아요.")) return;
+      const backup = checkpointRepository().create("before-import", existing.value.draft.project);
+      if (!backup.ok) { failImport(backup.message); return; }
+      setCheckpoints(backup.checkpoints);
+    }
+    const saved = existing.ok ? projectRepository().saveProject(imported) : projectRepository().createProject(imported);
+    if (!saved.ok) { failImport(saved.message); return; }
+    // Read the entry's own playback; never reuse a different work's snapshot.
+    const selected = projectRepository().setActiveProject(imported.id);
+    if (!selected.ok) { failImport(selected.message); return; }
+    setCollection(selected.value);
+    resetProjectTools();
+    setActive(resolveActiveProjectForDraft({ draft: imported, active: existing.ok ? existing.value.playback?.project ?? null : null }).project);
     setDraft(imported);
     setLocalDraftStatus("available");
     setSelectedChapterId(imported.chapters[0]?.id ?? "");
@@ -1944,9 +2150,7 @@ export function StoryStudio() {
     setWorkspaceMode("create");
     setEntryNotice("");
     setNotice(
-      activeSave && !activeSave.ok
-        ? activeSave.message
-        : importConfirmation.fileName
+      importConfirmation.fileName
         ? `‘${importConfirmation.fileName}’을 편집본으로 열었어요.`
         : "작품을 편집본으로 열었어요.",
     );
@@ -2112,9 +2316,10 @@ export function StoryStudio() {
   }
 
   function startBlankProject() {
-    const blank = createBlankProject();
+    const blank = { ...createBlankProject(), id: `story-${crypto.randomUUID()}`, source: { kind: "blank" as const } };
+    setBlankConfirmOpen(false);
+    if (!createCollectionProject(blank)) return;
     const blankActive = cloneProject(blank);
-    if (!backupDraft("before-reset")) return;
     setDraft(blank);
     setLocalDraftStatus("available");
     setActive(blankActive);
@@ -2143,8 +2348,10 @@ export function StoryStudio() {
     message: string,
   ) {
     const template = cloneProject(source);
+    template.id = `story-${crypto.randomUUID()}`;
+    template.source = { kind: "baseEdition", baseStoryId: source.id, baseEditionId: source.id };
+    if (!createCollectionProject(template)) return;
     const playableStart = createContinuationPreview(template);
-    if (!backupDraft("before-template")) return;
     setDraft(template);
     setLocalDraftStatus("available");
     setActive(playableStart);
@@ -2255,16 +2462,13 @@ export function StoryStudio() {
   }
 
   function returnHome() {
-    if (busy) return;
+    if (busy || !preserveCurrentDraft()) return;
     const origin = captureStudioReturnOrigin();
     homeReturnOriginRef.current = origin;
     saveStudioUiSession(() => window.localStorage, origin.session);
-    saveQueueRef.current?.schedule(draft);
-    const saved = saveQueueRef.current?.flush();
     setLocalDraftStatus("available");
-    setEntryNotice(saved && !saved.ok
-      ? "기기에 저장하지 못했어요. 이 창에서는 이어할 수 있지만, 닫기 전에 Excel로 보관해 주세요."
-      : "만들던 이야기는 그대로 있어요. 이어만들기로 돌아갈 수 있어요.");
+    setCreationHubOpen(true);
+    setEntryNotice("");
     setProjectToolsOpen(false);
     setMemoPopupOpen(false);
     setSelectedCreativeMemoId(null);
@@ -2335,6 +2539,7 @@ export function StoryStudio() {
     const location = context.project.id === cut.projectId && playing.line?.id === cut.lineId
       ? resolvePlayedCutLocation(draft, cut) : null;
     dispatchPlayerUi({ type: "close" });
+    setCreatorAccess("local");
     playerReturnLocationRef.current = null;
     if (!location) {
       showSafePlayerReturn(draft.id !== cut.projectId
@@ -2362,17 +2567,34 @@ export function StoryStudio() {
     openPlay(index);
   }
 
+  const fileDialog = filePreview && <StoryFileDialog file={filePreview}
+    onRemix={() => { if ("story" in filePreview) void remixFile(filePreview); }}
+    remixDisabled={entryBusy || collection.projects.length >= 2 || localDraftStatus === "failed"}
+    exists={"draft" in filePreview && collection.projects.some(entry => entry.draft.project.id === filePreview.draft.project.id)}
+    error={fileError} onCancel={() => setFilePreview(null)} onImport={importStoryFile} onRead={readFilePreview} />;
+
   if (view === "play" && playerUi.context) {
     const context = playerUi.context;
+    const discoveryReturnLabel = creationHubOpen ? "창작 관리로 돌아가기" : {
+      home: "메인으로 돌아가기", library: "서재로 돌아가기",
+      "reader-entry": "읽기 선택으로 돌아가기", "story-hub": "이야기 목록으로 돌아가기",
+    }[discoveryScreen];
     return (
       <StoryBookPlayback
+        returnLabel={creatorAccess === "none" ? discoveryReturnLabel : context.kind === "shared" ? "편집으로 돌아가기" : undefined}
         project={context.project}
         startIndex={playIndex}
-        isExample={context.kind === "example"}
+        isExample={context.kind !== "student"}
         onEditCut={context.kind === "student" ? editPlayedCut : undefined}
         onIndexChange={(index) =>
           dispatchPlayerUi({ type: "change-index", index })
         }
+        onHome={() => {
+          dispatchPlayerUi({ type: "close" });
+          playerReturnLocationRef.current = null;
+          if (context.kind === "student") returnHome();
+          else setCreatorAccess("none");
+        }}
         onBack={returnFromPlayer}
         revisionResponses={revisionResponses}
         onRevisionResponse={(promptId, response) =>
@@ -2385,7 +2607,47 @@ export function StoryStudio() {
   if (creatorAccess === "none") {
     return (
       <>
-        <StartScreen
+        {creationHubOpen ? <CreationHub
+          collection={collection}
+          busy={Boolean(busy) || entryBusy || !hydrated}
+          failed={localDraftStatus === "failed"}
+          notice={entryNotice}
+          onHome={() => showDiscovery("home")}
+          onRetry={retryCollection}
+          onOpen={openCollectionProject}
+          onDelete={deleteCollectionProject}
+          onBlank={startBlankProject}
+          onRabbit={startRabbitTurtleContinuation}
+          onOnggojib={startOnggojibContinuation}
+          onStoryFile={openStoryFile}
+          onBackup={id => saveStoryFile(false, id)}
+          onExcel={openExcelFile}
+          onSheet={updateFromSheet}
+        /> : discoveryScreen !== "home" ? <StoryDiscovery
+          onStoryFile={openStoryFile}
+          sharedFiles={sharedFiles}
+          onRemixShared={file => { setFileError(""); setFilePreview(file); }}
+          onReadShared={file => { playerReturnLocationRef.current = captureStudioReturnOrigin(); dispatchPlayerUi({type:"open", index:0, context:createStoryPlaybackContext("shared", file.story.project)}); }}
+          screen={discoveryScreen}
+          theme={selectedStoryTheme}
+          group={storyHubGroup}
+          collection={collection}
+          busy={Boolean(busy) || entryBusy || !hydrated}
+          failed={localDraftStatus === "failed"}
+          notice={entryNotice}
+          onBack={() => showDiscovery(discoveryScreen === "story-hub" ? "reader-entry" : discoveryScreen === "reader-entry" ? readerEntryFrom : "home")}
+          onCreation={() => setCreationHubOpen(true)}
+          onSelectStory={theme => { setSelectedStoryTheme(theme); setReaderEntryFrom("library"); showDiscovery("reader-entry"); }}
+          onGroup={group => { setStoryHubGroup(group); showDiscovery("story-hub"); }}
+          onReadBase={() => { void openPlay(0, "example", selectedStoryTheme); }}
+          onReadLocal={id => openCollectionProject(id, true)}
+          onEditLocal={id => openCollectionProject(id)}
+          onCopyBase={() => { void copyBaseEdition(); }}
+        /> : <StartScreen
+          selectedTheme={selectedStoryTheme}
+          onOpenLibrary={() => showDiscovery("library")}
+          onOpenReaderEntry={() => { setReaderEntryFrom("home"); showDiscovery("reader-entry"); }}
+          onOpenCreationHub={() => setCreationHubOpen(true)}
           savedProject={localDraftStatus === "available" ? draft : undefined}
           entryBusy={entryBusy}
           localDraftStatus={localDraftStatus}
@@ -2400,7 +2662,8 @@ export function StoryStudio() {
           onResumeSavedDraft={resumeStudio}
           onPlayExample={theme => { void openPlay(0, "example", theme); }}
           onAbortUpdate={() => updateController.current?.abort()}
-        />
+        />}
+        {fileDialog}
         <StoryEntryDialog
           open={Boolean(entryChoiceLabel)}
           choiceLabel={entryChoiceLabel}
@@ -2419,11 +2682,12 @@ export function StoryStudio() {
           onClose={() => setImportIssues({ open: false, issues: [] })}
         />
         <ImportConfirmationDialog
+          error={importError}
           open={importConfirmation.open}
           project={importConfirmation.project}
           fileName={importConfirmation.fileName}
           onConfirm={confirmImport}
-          onCancel={() => setImportConfirmation({ open: false, project: null })}
+          onCancel={() => { setImportError(""); setImportConfirmation({ open: false, project: null }); }}
         />
       </>
     );
@@ -2525,6 +2789,9 @@ export function StoryStudio() {
             <p>평소에는 닫아 두고 이야기 쓰기에 집중할 수 있어요.</p>
           </div>
           <div className="project-tool-actions">
+            <button onClick={() => storyFileInputRef.current?.click()}>.nolstory 파일 열기</button>
+            <button onClick={() => saveStoryFile()}>.nolstory 편집 백업</button>
+            <button onClick={() => saveStoryFile(true)} disabled={!active.lines.length}>공유 파일로 보관</button>
             <button onClick={() => excelInputRef.current?.click()}>
               Excel에서 불러오기
             </button>
@@ -2542,6 +2809,8 @@ export function StoryStudio() {
               새 작품 시작
             </button>
           </div>
+          <label className="file-remix-option"><input type="checkbox" checked={allowFileRemix} onChange={event => setAllowFileRemix(event.target.checked)} />공유 파일을 받은 사람이 고쳐 쓰도록 허용</label>
+          <input ref={storyFileInputRef} hidden type="file" accept=".nolstory" onChange={event => { const file=event.currentTarget.files?.[0]; event.currentTarget.value=""; void openStoryFile(file); }} />
           <div className="google-tool-row">
             <input
               type="url"
@@ -3004,6 +3273,7 @@ export function StoryStudio() {
                   </section>
                 )}
 
+                {selectedLine && <CutNavigation index={selectedStoryLineIndex} total={orderedDraftLines.length} onMove={moveThroughStory} onAdd={() => addLine("dialogue", true, selectedLine.id)} />}
                 {editorMode === "chapter" ? (
                   <ScriptScreen
                     draft={draft}
@@ -3180,7 +3450,7 @@ export function StoryStudio() {
         >
           <span className="blank-confirm-mark">새 작품</span>
           <h2>완전히 빈 작품을 시작할까요?</h2>
-          <p>현재 편집본은 직전 편집본으로 백업한 뒤 새 작품을 엽니다.</p>
+          <p>현재 작품은 그대로 보관하고 새 작품을 추가해요. 최대 두 작품까지 만들 수 있어요.</p>
           <div>
             <button
               className="ghost-button"
@@ -3295,12 +3565,14 @@ export function StoryStudio() {
         source={importIssues.source}
         onClose={() => setImportIssues({ open: false, issues: [] })}
       />
+      {fileDialog}
       <ImportConfirmationDialog
+          error={importError}
         open={importConfirmation.open}
         project={importConfirmation.project}
         fileName={importConfirmation.fileName}
         onConfirm={confirmImport}
-        onCancel={() => setImportConfirmation({ open: false, project: null })}
+        onCancel={() => { setImportError(""); setImportConfirmation({ open: false, project: null }); }}
       />
     </StudioShell>
   );

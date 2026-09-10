@@ -21,6 +21,7 @@ import { assetName } from "./ResourceWidgets";
 import { SceneThumbnail, containsParentheses, unique } from "./SceneThumbnail";
 import { StoryRevisionCheck } from "./StoryRevisionCheck";
 import { StorySceneFrame } from "./StoryStage";
+import { lineSpeakerNames } from "../story-speakers";
 import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { resolveStoryStage } from "../story-stage-view";
 import { CutLengthGuide } from "./CutLengthGuide";
@@ -211,11 +212,11 @@ export function ScriptScreen({
               이 컷 꾸미기
             </button>
           </header>
-          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" speaker={selectedLine.speaker}>
+          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker}>
             <div className="dialogue-box">
               <p>{selectedLine.type === "narration"
                 ? <DialogueText text={selectedLine.text || "아래 글상자에 해설을 써 보세요."} />
-                : <DialogueInline speakerName={selectedLine.speakerName} text={selectedLine.text || "아래 글상자에 대사를 써 보세요."} />}</p>
+                : <DialogueInline names={lineSpeakerNames(selectedLine)} speakerName={selectedLine.speakerName} text={selectedLine.text || "아래 글상자에 대사를 써 보세요."} />}</p>
             </div>
           </StorySceneFrame>
         </section>
@@ -347,7 +348,7 @@ export function ScriptScreen({
                 </div>
                 <div className={`script-writing-line ${line.type}`}>
                   <strong className="dialogue-speaker sr-only">
-                    {line.speakerName || "화자 없음"}:
+                    {lineSpeakerNames(line).join(" · ") || "화자 없음"}:
                   </strong>
                   <textarea
                     ref={(node) => {

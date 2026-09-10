@@ -28,13 +28,15 @@ try {
    const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
    const errors = []; page.on('pageerror', error => errors.push(error.message));
    await page.goto(process.env.QA_URL || 'http://localhost:3002');
-   await page.evaluate(storage => { for (const [key, value] of Object.entries(storage)) localStorage.setItem(key, value); }, storage);
+   await page.evaluate(storage => { localStorage.removeItem('storygame:projects:v1'); for (const [key, value] of Object.entries(storage)) localStorage.setItem(key, value); }, storage);
    await page.reload();
    await page.locator('.entry-template-options[open]').waitFor({ state: 'attached' });
    const snapshot = () => page.evaluate(keys => Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)])), Object.keys(storage));
    assert.deepEqual(await snapshot(), storage);
-   if (index === 0) await page.getByRole('button', { name: /이야기 변경/ }).click();
-   await page.getByRole('button', { name: '놀스토리 작품 읽기', exact: true }).click();
+   await page.getByRole('button', { name: /이야기 변경/ }).click();
+   await page.getByRole('button', { name: `${index === 0 ? '토끼와 자라' : '옹고집전'} · 기본 이야기`, exact: true }).click();
+   await page.getByRole('button', { name: '놀스토리 작품 보기', exact: true }).click();
+   await page.getByRole('button', { name: '기본 작품 읽기', exact: true }).click();
    await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
    await page.locator('.player-shell').waitFor();
    let choices = 0;

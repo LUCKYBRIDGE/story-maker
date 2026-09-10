@@ -22,7 +22,7 @@ export function StoryBookPlayback(props: StoryPlayerProps) {
   return <main className="book-play-entry" aria-label={phase === "back" ? "이야기 뒤표지" : "이야기 앞표지"}>
     <span className="book-entry-label">{phase === "back" ? "나의 이야기, 한 권을 마치며" : "책을 펼치면 무대가 시작돼요"}</span>
     <BookCover project={props.project} back={phase === "back"} />
-    <div className="book-entry-actions"><button type="button" onClick={props.onBack}>{props.isExample ? "예시 닫기" : "편집으로 돌아가기"}</button>
+    <div className="book-entry-actions"><button type="button" onClick={props.onBack}>{props.returnLabel ?? (props.isExample ? "예시 닫기" : "편집으로 돌아가기")}</button>
       <button ref={openerRef} type="button" className="primary-button" onClick={() => {
         props.onIndexChange(0); setPhase(phase === "back" ? "cover" : "opening");
       }}>{phase === "back" ? "앞표지로" : "이야기 펼치기"}</button></div>

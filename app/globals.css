@@ -11176,3 +11176,322 @@ img {
 .sticky-memo-board > header, .sticky-memo-board > footer, .sticky-memo-tools, .sticky-single-heading, .sticky-single-footer { flex-shrink: 0; }
 .sticky-single-footer { display: flex; justify-content: space-between; }
 .sticky-memo-board > header strong { white-space: nowrap; }
+
+/* Persistent cut navigation: shared by both writing views. */
+.making-workspace:has(.cut-navigation-dock) { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+.cut-navigation-dock {
+  position: fixed; z-index: 35; bottom: 0; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: min(100%, 760px); padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  border: 1px solid var(--line); border-radius: 16px 16px 0 0;
+  background: #fff; box-shadow: 0 -4px 20px rgb(15 23 42 / 14%);
+}
+.cut-navigation-dock button { min-height: 44px; padding: 8px 12px; white-space: nowrap; }
+.cut-navigation-dock strong { font-size: 14px; white-space: nowrap; }
+.cut-navigation-dock small { color: var(--ink-soft); white-space: nowrap; }
+.scene-focus-editor { gap: 10px; }
+.scene-focus-editor > .scene-setting-grid { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.scene-focus-editor > .scene-setting-grid .field { flex: 1 1 100px; min-width: 0; gap: 4px; }
+.scene-essential-assets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.scene-essential-assets button { min-height: 44px; width: 100%; padding: 8px; white-space: normal; overflow-wrap: anywhere; }
+.scene-advanced-settings { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.scene-advanced-settings > summary { min-height: 44px; padding-block: 12px; cursor: pointer; font-weight: 700; }
+.scene-focus-editor .story-scene-frame > .story-stage-canvas { height: clamp(140px, 23vw, 260px); flex: 0 0 auto; }
+.scene-focus-editor .scene-continuation-context { padding-bottom: 6px; }
+.scene-focus-editor .scene-continuation-context p { margin-block: 4px; font-size: 14px; }
+/* Emphasis changes brightness only, keeping the canvas floor and body scale stable. */
+.story-scene-frame .story-stage-actor { transition: filter 180ms ease; }
+.cut-reading-enter { animation: cut-reading-enter 160ms ease-out; }
+.narration-copy.cut-reading-enter { animation-duration: 260ms; }
+@keyframes cut-reading-enter { from { opacity: .35; } to { opacity: 1; } }
+@media (max-width: 620px) {
+  .cut-navigation-dock { gap: 4px; padding-inline: 6px; }
+  .cut-navigation-dock button { padding-inline: 7px; font-size: 13px; }
+  .cut-navigation-dock strong { font-size: 12px; }
+  .cut-navigation-dock small { display: none; }
+  .scene-essential-assets button { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-scene-frame .story-stage-actor { transition: none; }
+  .cut-reading-enter { animation: none; }
+}
+/* Keep the apply action in document flow while the cut dock owns the screen edge. */
+.creator-shell:has(.cut-navigation-dock) .creator-apply-dock {
+  position: relative; inset: auto; z-index: auto;
+  margin: 16px auto calc(88px + env(safe-area-inset-bottom));
+  width: calc(100% - 24px);
+}
+.creator-shell:has(.cut-navigation-dock) .sticky-memo-launch {
+  bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+/* Clothbound books: the original artwork sits inside a gilt cover, not edge-to-edge. */
+.book-play-entry { gap: clamp(20px, 3dvh, 36px); padding: 32px 28px 40px; }
+.book-play-entry .student-book { width: min(560px, 78vw, max(300px, calc((100dvh - 175px) / 1.36))); max-width: 560px; }
+.student-book {
+  border-radius: 16px 12px 12px 16px;
+  background-image: repeating-linear-gradient(28deg, #ffffff08 0 1px, #0002 1px 2px, transparent 2px 5px), linear-gradient(110deg,#ffffff0a,#0003);
+  box-shadow: 2px 1px 0 var(--book-accent), 9px 5px 0 #d1bd8d, 13px 10px 0 #877a5b, 18px 18px 0 #10251f, 22px 30px 40px #0008;
+}
+.student-book::before {
+  content: ""; position: absolute; inset: 2% -12px -10px 7%; border-radius: 4px 8px 8px 4px;
+  background: repeating-linear-gradient(0deg,#c7b990 0 1px,#e1d5b4 1px 3px,#a99c79 3px 4px);
+  z-index: -1; box-shadow: inset -4px 0 6px #0004;
+}
+.student-book::after {
+  width: 7%; border-radius: 16px 0 0 16px; border-right: 2px solid #0005;
+  background: linear-gradient(90deg,#0008,#fff2 36%,#0006 88%,#fff2),
+    linear-gradient(0deg,transparent 8%,var(--book-accent) 8% 8.5%,transparent 8.5% 12%,var(--book-accent) 12% 12.5%,transparent 12.5% 87%,var(--book-accent) 87% 87.5%,transparent 87.5% 91%,var(--book-accent) 91% 91.5%,transparent 91.5%);
+}
+.student-book-face { padding-left: 12%; }
+.student-book-face::after { inset: 3% 4% 4% 9%; border: 3px double var(--book-accent); opacity: .85; border-radius: 12px 10px 10px 12px; }
+.student-book[data-layout="classic"] .book-title-group { background: transparent; padding: 2% 0; }
+.student-book[data-layout="classic"] .student-book-title { text-shadow: 0 2px 1px #0006; }
+.student-book[data-layout="classic"] .book-art { inset: 40% 9% 17% 14%; border: 2px solid var(--book-accent); box-shadow: 0 3px 12px #0007, inset 0 0 12px #0006; }
+.student-book[data-layout="classic"] .book-author-bottom,
+.student-book[data-layout="classic"] .student-book-edition { background: transparent; }
+.student-book[data-layout="classic"] .student-book-edition::after,
+.student-book[data-layout="classic"] .book-author-bottom::before { content: "─ ◇ ─"; display: block; color: var(--book-accent); letter-spacing: .15em; margin-block: 2cqw; }
+.book-art-background { opacity: 1; }
+
+/* A quiet stage toolbar, with navigation revealed only on request. */
+.reader-topbar { position: relative; display: flex; align-items: start; justify-content: space-between; gap: 10px; padding: 12px 16px; }
+.reader-story-info { max-width: min(65%, 600px); border-radius: 10px; background: #132333dc; padding: 0 12px; }
+.reader-story-info summary { min-height: 44px; padding-block: 12px; cursor: pointer; }
+.reader-story-info strong, .reader-story-info span, .reader-story-info small { display: block; padding-bottom: 10px; overflow-wrap: anywhere; }
+.reader-top-actions { display: flex; gap: 8px; margin-left: auto; }
+.reader-top-actions button { min-height: 44px; padding: 8px 16px; background: #142a32e8; color: #fff4d8; border: 1px solid #a6b2a4; border-radius: 10px; }
+.reader-menu-backdrop { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 20px; background: #07151dc9; }
+.reader-menu-dialog { width: min(520px,100%); max-height: 85dvh; overflow-y: auto; padding: 20px; border-radius: 18px; background: #faf5e8; color: #21342e; box-shadow: 0 20px 70px #0006; }
+.reader-menu-dialog header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.reader-menu-dialog h2 { font-size: 20px; }
+.reader-menu-dialog button { min-height: 44px; padding: 10px 16px; border: 1px solid #b4bcae; border-radius: 8px; color: #21342e; background: #fffdf7; }
+.reader-menu-options { display: grid; gap: 10px; margin-top: 16px; }
+.reader-menu-options button { text-align: left; }
+.reader-menu-options [aria-current] { background: #e0ebe3; border-color: #376f58; }
+.reading-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #cbd5d4; }
+.reading-tools > small { font-size: 12px; }
+.reading-tools [role="group"] { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.reading-tools button { min-width: 44px; min-height: 44px; border: 1px solid #778886; border-radius: 8px; background: #22383e; color: #fff6dd; font-size: 18px; }
+.reading-tools output { min-width: 2ch; text-align: center; font-size: 14px; }
+.reading-scroll { position: relative; max-height: 40dvh; min-height: 120px; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 16px; padding: 12px 10px 16px 0; scrollbar-gutter: stable; }
+.player-shell .story-scene-frame .dialogue-box .reading-paragraph { margin: 0 0 .9em; font-size: var(--reading-font-size); line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; color: #d8dfdf; font-family: "Noto Serif KR", "Batang", serif; }
+.player-shell .story-scene-frame .dialogue-box .reading-paragraph.current-reading { color: #fff9e9; margin-bottom: 0; }
+.reading-paragraph .dialogue-speaker { margin-right: .35em; }
+.reading-paragraph.narration { padding-inline: .5em; }
+.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(160px, 33dvh, 410px); flex: 0 0 auto; }
+.player-shell .story-scene-frame { justify-content: flex-start; }
+@media (max-width: 620px) {
+  .book-play-entry .student-book { width: min(82vw, 430px); max-width: 430px; }
+  .book-play-entry { justify-content: center; padding: 28px 24px 36px; }
+  .reader-topbar { padding: 8px; }
+  .reader-top-actions button { padding-inline: 12px; }
+  .reading-tools { gap: 6px; }
+  .reading-tools > small { max-width: 45%; }
+  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(150px, 29dvh, 290px); }
+  .reading-scroll { max-height: 42dvh; }
+}
+
+/* The player fills the viewport: stage above, reading dock at its bottom edge. */
+.player-shell > .story-stage { min-height: 0; }
+.player-shell .story-scene-frame {
+  height: calc(100dvh - 34px); min-height: 0;
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
+  justify-content: stretch;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.player-shell .story-scene-frame > .story-scene-heading { grid-row: 1; }
+.player-shell .story-scene-frame > .story-stage-canvas {
+  grid-row: 2; height: 100%; min-height: 0; max-width: 1440px;
+  align-self: stretch;
+}
+.player-shell .story-scene-frame > .dialogue-box {
+  grid-row: 3; align-self: end; margin: 0 auto;
+  height: clamp(200px, 44dvh, 460px); max-height: 62dvh;
+  display: flex; flex-direction: column; min-height: 0;
+}
+.player-shell .reading-transcript { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.player-shell .reading-tools, .player-shell .player-controls { flex: 0 0 auto; }
+.player-shell .reading-scroll { flex: 1 1 auto; min-height: 0; max-height: none; }
+.player-shell .player-choices { flex: 0 1 auto; overflow-y: auto; max-height: 24dvh; }
+.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
+  height: 100%; width: 44%; bottom: 0; object-fit: contain; object-position: center bottom;
+}
+.player-shell > .copyright-bar { min-height: 34px; padding-block: 6px; }
+@media (max-height: 500px) {
+  .player-shell .story-scene-frame > .dialogue-box { padding: 6px 12px; height: 54dvh; }
+  .player-shell .player-controls { padding-top: 4px; }
+  .player-shell .reading-scroll { padding-block: 4px; }
+  .reader-topbar { padding-block: 4px; }
+}
+
+/* Stable actors: neither an open information panel nor speech length resizes the stage. */
+.player-shell .story-scene-frame {
+  display: block;
+  --speech-limit: 35dvh;
+}
+.player-shell .story-scene-frame > .story-scene-heading {
+  position: absolute; inset: 0 0 auto; z-index: 4;
+}
+.player-shell .reader-topbar { align-items: flex-start; }
+.player-shell .reader-story-info { max-height: min(65dvh, 360px); overflow-y: auto; }
+.player-shell .story-scene-frame > .story-stage-canvas {
+  position: absolute; top: 64px; bottom: var(--speech-limit);
+  left: 0; right: 0; width: 100%; height: auto; margin-inline: auto;
+}
+.player-shell .story-scene-frame > .dialogue-box {
+  position: absolute; bottom: env(safe-area-inset-bottom); left: 0; right: 0; top: auto;
+  height: auto; max-height: var(--speech-limit); margin-inline: auto;
+}
+.player-shell .reading-transcript { flex: 0 1 auto; overflow: hidden; }
+.player-shell .reading-scroll { flex: 0 1 auto; min-height: 0; padding-block: 10px; }
+.reading-history-dialog { display: flex; flex-direction: column; width: min(880px, 100%); overflow: hidden; }
+.reading-history-dialog > header, .reading-history-dialog > .reading-tools { flex-shrink: 0; }
+.reading-history-dialog .reading-tools { justify-content: flex-end; margin-bottom: 12px; }
+.reading-history-script { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; }
+.reading-history-script .reading-paragraph {
+  color: #263a34; font-family: "Noto Serif KR", "Batang", serif;
+  font-size: var(--reading-font-size); line-height: 1.85; white-space: pre-wrap; margin: 0 0 1em;
+}
+.reading-history-script .dialogue-speaker { color: #765014; }
+.reading-choice-record { color: #315e4e; background: #e5ede2; border-left: 3px solid #8a7044; padding: 8px 12px; margin: 0 0 1.2em; font-size: var(--reading-font-size); }
+@media (max-height: 500px) {
+  .player-shell .story-scene-frame > .story-stage-canvas { top: 52px; }
+}
+
+/* Quiet reading tools share the bottom control row instead of occupying a text row. */
+.player-shell .dialogue-box > .reading-transcript > .reading-tools {
+  position: absolute; left: 16px; bottom: 12px; z-index: 2;
+  justify-content: flex-start; gap: 4px; height: 36px;
+}
+.player-shell .dialogue-box > .reading-transcript > .reading-tools button {
+  min-width: 32px; min-height: 36px; padding: 4px 6px;
+  border: 0; border-radius: 5px; background: transparent; color: #b9c8cc;
+  font-size: 14px; line-height: 1;
+}
+.player-shell .dialogue-box > .reading-transcript > .reading-tools > button { font-size: 12px; }
+.player-shell .dialogue-box > .reading-transcript > .reading-tools [role="group"] { gap: 0; }
+.player-shell .dialogue-box > .reading-transcript > .reading-tools output { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.player-shell .dialogue-box > .reading-transcript > .reading-tools button:hover { color: #fff4d8; background: #ffffff0d; }
+.player-shell .dialogue-box > .reading-transcript > .reading-tools button:focus-visible { outline: 2px solid #e3c686; outline-offset: 1px; }
+.player-shell .dialogue-box > .player-controls {
+  display: flex; justify-content: flex-end; flex-wrap: wrap;
+  gap: 6px; padding-left: 150px; min-height: 48px;
+}
+@media (max-width: 620px), (max-height: 500px) {
+  .player-shell .dialogue-box > .reading-transcript > .reading-tools { left: 10px; bottom: 8px; }
+  .player-shell .dialogue-box > .player-controls { padding-left: 132px; }
+  .player-shell .dialogue-box > .player-controls > button { width: auto; padding: 6px 9px; font-size: 13px; }
+}
+
+/* Age-specific stature uses uniform scaling around the feet, including mirrored poses. */
+.story-stage-canvas > .story-stage-actor.story-stage-actor[data-stature="child"] {
+  transform: scale(var(--actor-scale)) scaleX(var(--actor-facing));
+}
+
+/* Transcript belongs to the viewport, independent of the stage and speech dock. */
+.reading-history-backdrop { padding: 3dvh 3vw; }
+.reading-history-dialog {
+  width: min(1200px, 94vw); height: 90dvh; max-height: 90dvh;
+  padding: clamp(16px, 3vw, 36px);
+}
+.reading-history-script { flex: 1 1 auto; }
+
+/* Choice sheets can cover the stage; its coordinate system never changes. */
+.player-shell .story-scene-frame > .dialogue-box[data-has-choices] {
+  max-height: calc(100% - env(safe-area-inset-bottom));
+  z-index: 5;
+}
+.player-shell .dialogue-box[data-has-choices] > .reading-transcript {
+  flex: 0 0 auto; max-height: 28dvh;
+}
+.player-shell .dialogue-box[data-has-choices] > .player-choices {
+  flex: 0 1 auto; min-height: 0; max-height: none;
+  overflow-y: auto; overscroll-behavior: contain;
+}
+
+/* Local project management shares the Studio's controls and book covers. */
+.creation-hub { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; }
+.creation-hub-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.creation-hub h1 { font-size: 2rem; margin: 4px 0 12px; }
+.creation-hub h2 { font-size: 1.2rem; margin: 0 0 16px; }
+.creation-hub h3 { overflow-wrap: anywhere; margin: 16px 0 8px; }
+.creation-hub p, .creation-hub small { line-height: 1.6; }
+.creation-hub button { min-height: 44px; padding: 10px 16px; border: 1px solid var(--border, #d7cbb8); border-radius: 10px; }
+.creation-hub button:focus-visible { outline: 3px solid #24738e; outline-offset: 3px; }
+.creation-hub button:disabled { opacity: .5; cursor: not-allowed; }
+.creation-hub-header > button { flex-shrink: 0; }
+.creation-projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.creation-project-card, .creation-hub-panel { padding: 24px; border: 1px solid var(--border, #d7cbb8); border-radius: 16px; background: var(--surface, #fffdf8); }
+.creation-project-cover { max-width: 190px; margin: 0 auto; }
+.creation-project-actions, .creation-new-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.creation-project-card small { display: block; margin-top: 12px; }
+.creation-hub-panel { margin-top: 24px; }
+.creation-hub-panel .field { margin: 20px 0 12px; }
+@media (max-width: 600px) {
+  .creation-hub { padding: 20px 16px 40px; }
+  .creation-hub-header { gap: 12px; }
+  .creation-projects { grid-template-columns: 1fr; }
+  .creation-project-card, .creation-hub-panel { padding: 18px; }
+  .creation-new-actions { flex-direction: column; }
+}
+
+.story-discovery { max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
+.discovery-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; }
+.discovery-header h1 { font-size: clamp(24px, 3vw, 36px); margin: 6px 0; overflow-wrap: anywhere; }
+.discovery-header nav, .discovery-groups, .discovery-actions, .library-pages { display: flex; flex-wrap: wrap; gap: 12px; }
+.story-discovery button { min-height: 44px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border, #d7cbb8); background: var(--surface, #fffdf8); }
+.story-discovery button:focus-visible { outline: 3px solid #24738e; outline-offset: 4px; }
+.story-discovery button:disabled { opacity: .5; cursor: not-allowed; }
+.story-discovery p { line-height: 1.7; }
+.discovery-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,270px),1fr)); gap: 20px; }
+.discovery-card { border: 1px solid var(--border, #d7cbb8); border-radius: 16px; padding: 24px; background: var(--surface, #fffdf8); }
+.discovery-card h2 { margin: 0 0 12px; font-size: 20px; font-weight: 700; overflow-wrap: anywhere; }
+.discovery-card p { margin: 12px 0; }
+.discovery-groups { margin-bottom: 24px; }
+.discovery-groups button[aria-pressed="true"] { background: #173b3d; color: white; }
+.library-shelf { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px 18px; margin: 28px 0; }
+.library-item { min-width: 0; }
+.library-item p { font-size: 14px; }
+.story-discovery .library-book { display: flex; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; min-height: 230px; gap: 20px; padding: 24px 16px; color: #ffecb9; background: linear-gradient(110deg,#173b3d,#245457); border: 5px double #bfa26b; border-left: 12px solid #163332; border-radius: 5px 14px 14px 5px; box-shadow: 5px 7px 0 #dacdb4, 7px 10px 0 #6b715c; }
+.story-discovery .library-book-onggojib { background: linear-gradient(110deg,#473343,#714a57); border-left-color:#382536; }
+.story-discovery .library-book-local { background: linear-gradient(110deg,#233f60,#3f6480); border-left-color:#19354d; }
+.library-book-title { font-size: clamp(18px,2.2vw,27px); font-weight: 800; overflow-wrap: anywhere; }
+.library-book-kind { font-size: 13px; }
+.library-book-mark { font-size: 26px; }
+.library-pages { align-items: center; justify-content: center; margin: 32px 0; }
+@media (min-width:600px) { .library-shelf { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (min-width:1000px) and (orientation:landscape) { .library-shelf { grid-template-columns:repeat(5,minmax(0,1fr)); } }
+@media (max-width:599px) {
+  .story-discovery { padding:20px 16px 40px; }
+  .discovery-header { flex-direction:column; gap:12px; }
+  .discovery-card { padding:20px; }
+  .library-shelf { gap:24px 16px; }
+  .story-discovery .library-book { min-height:220px; padding:20px 12px; }
+}
+.discovery-file-open { margin: 0 0 24px; }
+.file-remix-option { display:flex; align-items:center; gap:10px; min-height:44px; margin:12px 0; }
+.file-remix-option input { width:20px; height:20px; }
+
+.story-file-dialog .import-dialog-actions { flex-wrap: wrap; }
+.story-file-dialog button { min-height: 44px; }
+
+/* Long passages grow over the stage without changing its actor coordinates. */
+.player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) {
+  max-height: min(65dvh, calc(100% - 64px));
+}
+.reading-history-dialog { background: #f7f0df; color: #263a34; border: 1px solid #cdbb98;
+  box-shadow: 0 18px 60px #0006, inset 0 0 60px #dacbad45; }
+.player-shell .dialogue-box > .reading-transcript > .reading-tools {
+  height: 44px;
+}
+.player-shell .dialogue-box > .reading-transcript > .reading-tools button {
+  min-height: 44px; min-width: 44px;
+}
+
+.player-shell .dialogue-box > .player-controls { padding-left: 158px; }
+.reading-paragraph .dialogue-speaker { transition: none; }
+
+.co-speaker-options { grid-column: 1 / -1; border: 1px solid #c9d2ce; border-radius: 10px; padding: 12px; }
+.co-speaker-options label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-right: 16px; }
+.co-speaker-options input { width: 20px; height: 20px; }

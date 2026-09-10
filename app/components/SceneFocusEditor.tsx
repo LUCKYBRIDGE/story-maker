@@ -4,6 +4,8 @@ import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
 
 import { StorySceneFrame } from "./StoryStage";
+import { formatStoryStageLabels } from "../story-stages";
+import { lineSpeakerNames } from "../story-speakers";
 import { DialogueInline, DialogueText } from "./StoryPlayer";
 import { CutLengthGuide } from "./CutLengthGuide";
 import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-length";
@@ -22,10 +24,6 @@ import {
 } from "./SceneThumbnail";
 import { AddSpeaker, assetName } from "./ResourceWidgets";
 import { groupStoryAssets, sortStoryAssets } from "../story-asset-picker-utils";
-import {
-  canonicalizeStoryStageKeys,
-  formatStoryStageLabels,
-} from "../story-stages";
 
 export interface ImageFieldProps {
   label: string;
@@ -454,9 +452,7 @@ export interface SceneFocusEditorProps {
 export function SceneFocusEditor({
   draft,
   selectedChapter,
-  selectedChapterLines,
   selectedLine,
-  selectedLineIndex,
   selectedStoryLineIndex,
   orderedDraftLines,
   sceneSettingsOpen,
@@ -554,38 +550,7 @@ export function SceneFocusEditor({
   }
   return (
     <div className="scene-focus-editor" data-line-id={selectedLine.id}>
-      <div className="scene-focus-nav">
-        <button
-          type="button"
-          disabled={selectedStoryLineIndex <= 0}
-          onClick={() => onMoveThroughStory(-1)}
-        >
-          ← 이전 컷
-        </button>
-        <strong>
-          전체 컷 {selectedStoryLineIndex + 1}/
-          {orderedDraftLines.length}
-          <small>
-            {selectedChapter.order}장
-            {selectedChapter.storyStageKeys && selectedChapter.storyStageKeys.length > 0
-              ? ` (${formatStoryStageLabels(canonicalizeStoryStageKeys(selectedChapter.storyStageKeys), draft.planning.structureMode)})`
-              : ""} · 이 장{" "}
-            {selectedLineIndex + 1}/{selectedChapterLines.length}
-          </small>
-        </strong>
-        <button
-          type="button"
-          disabled={selectedStoryLineIndex >= orderedDraftLines.length - 1}
-          onClick={() => onMoveThroughStory(1)}
-        >
-          다음 컷 →
-        </button>
-      </div>
-
-      <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
-      {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
-      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
-
+      <p className="script-stage-indicator">{formatStoryStageLabels(selectedChapter.storyStageKeys, draft.planning.structureMode)}</p>
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">
         {SCENE_FOCUS_TABS.map(([tab, label], index) => (
           <button
@@ -598,6 +563,7 @@ export function SceneFocusEditor({
             className={activeTab === tab ? "active" : ""}
             onClick={() => setActiveTab(tab)}
             onKeyDown={(event) => {
+              if (event.altKey || event.ctrlKey || event.metaKey || event.nativeEvent.isComposing) return;
               const lastIndex = SCENE_FOCUS_TABS.length - 1;
               const nextIndex =
                 event.key === "Home"
@@ -624,126 +590,6 @@ export function SceneFocusEditor({
         ))}
       </div>
 
-      <StorySceneFrame stage={stage} variant="editor" speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
-        heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
-      {activeTab === "text" ? (
-        <div
-          className={`editable-stage-dialogue dialogue-box ${
-            selectedLine.type === "narration" ? "narration" : ""
-          }`}
-          role="tabpanel"
-          id="scene-panel-text"
-          aria-labelledby="scene-tab-text"
-        >
-          {nearbyNavigation("글상자")}
-          {draft.continuation?.lineId === selectedLine.id && !selectedLine.text.trim() && selectedStoryLineIndex > 0 && (
-            <div className="scene-continuation-context">
-              <small>앞 장면 · 여기서부터 내 이야기</small>
-              <p>{orderedDraftLines[selectedStoryLineIndex - 1].text}</p>
-            </div>
-          )}
-          {selectedLine.type === "narration" && (
-            <span className="editable-stage-kind">
-              <b>해설</b>
-              <small>상황과 배경을 들려주는 글</small>
-            </span>
-          )}
-          <div
-            className={`editable-stage-writing-line ${selectedLine.type}`}
-          >
-            {selectedLine.type === "dialogue" && (
-              <b className="dialogue-speaker">
-                {selectedLine.speakerName || "화자 없음"}:
-              </b>
-            )}
-            <textarea
-              ref={(node) => {
-                if (lineBodyRefs?.current) {
-                  if (node) {
-                    lineBodyRefs.current.set(selectedLine.id, node);
-                  } else {
-                    lineBodyRefs.current.delete(selectedLine.id);
-                  }
-                }
-              }}
-              className={
-                highlightedApplyIssue?.field === "line-body" &&
-                highlightedApplyIssue.lineId === selectedLine.id
-                  ? "issue-target-highlight"
-                  : undefined
-              }
-              rows={3}
-              value={selectedLine.text}
-              onChange={(event) =>
-                onUpdateLine(selectedLine.id, {
-                  text: event.target.value,
-                })
-              }
-              placeholder={
-                selectedLine.type === "narration"
-                  ? "시간·장소·상황을 괄호 없이 들려주세요."
-                  : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
-              }
-              aria-label="현재 컷 글상자"
-              aria-describedby={`cut-length-${selectedLine.id}`}
-              aria-invalid={countStoryCharacters(selectedLine.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
-            />
-          </div>
-          {selectedLine.type === "narration" &&
-            containsParentheses(selectedLine.text) && (
-              <small className="stage-writing-help warning" role="alert">
-                해설에는 괄호를 쓸 수 없어요.
-              </small>
-            )}
-          <CutLengthGuide id={`cut-length-${selectedLine.id}`} text={selectedLine.text} onSplit={() => onSplitLine(selectedLine.id)} />
-        </div>
-      ) : (
-        <div className="dialogue-box scene-preview-dialogue">
-          <span className="dialogue-meta">이미지 미리보기 · 글은 그대로예요</span>
-          <p>{selectedLine.type === "narration"
-            ? <DialogueText text={selectedLine.text || "여기에 해설을 써 보세요."} />
-            : <DialogueInline speakerName={stage.speakerName} text={selectedLine.text || "여기에 다음 말을 써 보세요."} />}</p>
-        </div>
-      )}
-      </StorySceneFrame>
-
-      {activeTab !== "text" && (
-        <SceneAssetChoicePanel
-          chapter={selectedChapter}
-          line={selectedLine}
-          slot={activeTab}
-          previewAssetId={currentAssetPreview[activeTab]}
-          favoriteIds={favoriteAssets}
-          recentIds={recentAssets}
-          onPreview={(assetId) => previewAsset(activeTab, assetId)}
-          onApply={() => applyPreviewedAsset(activeTab)}
-          onToggleFavorite={onToggleFavorite}
-        />
-      )}
-
-      <button
-        type="button"
-        className="mobile-panel-toggle scene-settings-toggle"
-        aria-expanded={sceneSettingsOpen}
-        onClick={() => onSetSceneSettingsOpen((current) => !current)}
-      >
-        <span>
-          <strong>화자·이미지·컷 설정</strong>
-          <small>종류, 화자 위치, 캐릭터와 배경</small>
-        </span>
-        <b>{sceneSettingsOpen ? "접기" : "펼치기"}</b>
-      </button>
-
-      <div
-        className={`scene-focus-lower ${
-          sceneSettingsOpen ? "mobile-open" : ""
-        }`}
-      >
-        <section className="scene-setting-card">
-          <div className="card-heading">
-            <span>플레이에 표시</span>
-            <strong>대사·해설과 컷 설정</strong>
-          </div>
           <div className="scene-setting-grid">
             <label className="field">
               <span>종류</span>
@@ -813,9 +659,138 @@ export function SceneFocusEditor({
                   </select>
                 </label>
                 <AddSpeaker onAdd={onAddSpeaker} />
+                <fieldset className="co-speaker-options"><legend>함께 말하는 화자</legend>
+                  <p>같은 말을 함께 하는 인물을 골라요. 화자 이름과 화면의 인물 이미지는 따로 정해요.</p>
+                  {unique([...selectedChapter.chapterSpeakerNames, ...(selectedLine.coSpeakerNames ?? [])]).filter(name => name && name !== selectedLine.speakerName).map(name =>
+                    <label key={name}><input type="checkbox" checked={selectedLine.coSpeakerNames?.includes(name) ?? false}
+                      onChange={event => onUpdateLine(selectedLine.id, {coSpeakerNames:event.target.checked ? [...(selectedLine.coSpeakerNames ?? []),name] : (selectedLine.coSpeakerNames ?? []).filter(item => item !== name)})} />{name}</label>)}
+                </fieldset>
               </>
             )}
           </div>
+      <div className="scene-essential-assets" aria-label="현재 컷 이미지와 표정">
+        {(["left", "right", "background"] as const).map(slot => {
+          const field = sceneAssetField(slot);
+          const value = selectedLine[field] || selectedChapter[field];
+          return <AssetPickerButton key={slot} type={slot === "background" ? "background" : "character"}
+            label={slot === "left" ? "왼쪽 표정" : slot === "right" ? "오른쪽 표정" : "컷 배경"}
+            buttonText={`${slot === "left" ? "왼쪽" : slot === "right" ? "오른쪽" : "배경"} · ${assetName(value) || "없음"}`}
+            value={selectedLine[field]} currentValue={value} defaultValue={selectedChapter[field]} allowDefault
+            favoriteIds={favoriteAssets} recentIds={recentAssets} onToggleFavorite={onToggleFavorite}
+            onSelect={assetId => {
+              if (assetId) onAddAssetToChapter(assetId, slot === "background" ? "background" : "character");
+              onUpdateLine(selectedLine.id, { [field]: assetId });
+            }} />;
+        })}
+      </div>
+      <StorySceneFrame stage={stage} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
+        heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
+      {activeTab === "text" ? (
+        <div
+          className={`editable-stage-dialogue dialogue-box ${
+            selectedLine.type === "narration" ? "narration" : ""
+          }`}
+          role="tabpanel"
+          id="scene-panel-text"
+          aria-labelledby="scene-tab-text"
+        >
+          {nearbyNavigation("글상자")}
+          {draft.continuation?.lineId === selectedLine.id && selectedStoryLineIndex > 0 && (
+            <div className="scene-continuation-context">
+              <small>앞 장면 · 여기서부터 내 이야기</small>
+              <p>{orderedDraftLines[selectedStoryLineIndex - 1].text}</p>
+              <small>{draft.continuation.lineId === "palace-continuation-line-7"
+                ? "토끼는 간을 내놓으라는 말에 어떻게 답할까요? 다음 컷에는 용왕이나 자라의 반응을 이어 보세요."
+                : draft.continuation.lineId === "onggojib-continuation-line-1"
+                  ? "사또 앞에서 무엇으로 진짜임을 보여 줄까요? 다음 컷에는 상대 옹고집이나 사또의 반응을 이어 보세요."
+                  : "앞의 말에 답한 뒤, 다음 컷에는 그 말을 들은 인물의 반응을 이어 보세요."}</small>
+            </div>
+          )}
+          {selectedLine.type === "narration" && (
+            <span className="editable-stage-kind">
+              <b>해설</b>
+              <small>상황과 배경을 들려주는 글</small>
+            </span>
+          )}
+          <div
+            className={`editable-stage-writing-line ${selectedLine.type}`}
+          >
+            {selectedLine.type === "dialogue" && (
+              <b className="dialogue-speaker">
+                {lineSpeakerNames(selectedLine).join(" · ") || "화자 없음"}:
+              </b>
+            )}
+            <textarea
+              ref={(node) => {
+                if (lineBodyRefs?.current) {
+                  if (node) {
+                    lineBodyRefs.current.set(selectedLine.id, node);
+                  } else {
+                    lineBodyRefs.current.delete(selectedLine.id);
+                  }
+                }
+              }}
+              className={
+                highlightedApplyIssue?.field === "line-body" &&
+                highlightedApplyIssue.lineId === selectedLine.id
+                  ? "issue-target-highlight"
+                  : undefined
+              }
+              rows={3}
+              value={selectedLine.text}
+              onChange={(event) =>
+                onUpdateLine(selectedLine.id, {
+                  text: event.target.value,
+                })
+              }
+              placeholder={
+                selectedLine.type === "narration"
+                  ? "시간·장소·상황을 괄호 없이 들려주세요."
+                  : "대사를 쓰고, 속마음·행동은 (괄호 안에) 써 보세요."
+              }
+              aria-label="현재 컷 글상자"
+              aria-describedby={`cut-length-${selectedLine.id}`}
+              aria-invalid={countStoryCharacters(selectedLine.text) > STORY_CUT_CHARACTER_LIMIT || undefined}
+            />
+          </div>
+          {selectedLine.type === "narration" &&
+            containsParentheses(selectedLine.text) && (
+              <small className="stage-writing-help warning" role="alert">
+                해설에는 괄호를 쓸 수 없어요.
+              </small>
+            )}
+          <CutLengthGuide id={`cut-length-${selectedLine.id}`} text={selectedLine.text} onSplit={() => onSplitLine(selectedLine.id)} />
+        </div>
+      ) : (
+        <div className="dialogue-box scene-preview-dialogue">
+          <span className="dialogue-meta">이미지 미리보기 · 글은 그대로예요</span>
+          <p>{selectedLine.type === "narration"
+            ? <DialogueText text={selectedLine.text || "여기에 해설을 써 보세요."} />
+            : <DialogueInline names={lineSpeakerNames(selectedLine)} speakerName={stage.speakerName} text={selectedLine.text || "여기에 다음 말을 써 보세요."} />}</p>
+        </div>
+      )}
+      </StorySceneFrame>
+
+      {activeTab !== "text" && (
+        <SceneAssetChoicePanel
+          chapter={selectedChapter}
+          line={selectedLine}
+          slot={activeTab}
+          previewAssetId={currentAssetPreview[activeTab]}
+          favoriteIds={favoriteAssets}
+          recentIds={recentAssets}
+          onPreview={(assetId) => previewAsset(activeTab, assetId)}
+          onApply={() => applyPreviewedAsset(activeTab)}
+          onToggleFavorite={onToggleFavorite}
+        />
+      )}
+
+      <details className="scene-advanced-settings" open={sceneSettingsOpen} onToggle={event => onSetSceneSettingsOpen(event.currentTarget.open)}>
+        <summary>컷 연결·연출·배치 가져오기</summary>
+      <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
+      {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
+      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
+
           <SceneStagingCopy
             key={selectedLine.id}
             chapters={draft.chapters}
@@ -823,8 +798,7 @@ export function SceneFocusEditor({
             currentLineId={selectedLine.id}
             onCopy={onCopySceneStaging}
           />
-        </section>
-      </div>
+      </details>
 
       <div className="scene-focus-actions">
         <button
