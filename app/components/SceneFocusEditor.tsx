@@ -22,10 +22,6 @@ import {
 } from "./SceneThumbnail";
 import { AddSpeaker, assetName } from "./ResourceWidgets";
 import { groupStoryAssets, sortStoryAssets } from "../story-asset-picker-utils";
-import {
-  canonicalizeStoryStageKeys,
-  formatStoryStageLabels,
-} from "../story-stages";
 
 export interface ImageFieldProps {
   label: string;
@@ -454,9 +450,7 @@ export interface SceneFocusEditorProps {
 export function SceneFocusEditor({
   draft,
   selectedChapter,
-  selectedChapterLines,
   selectedLine,
-  selectedLineIndex,
   selectedStoryLineIndex,
   orderedDraftLines,
   sceneSettingsOpen,
@@ -554,38 +548,6 @@ export function SceneFocusEditor({
   }
   return (
     <div className="scene-focus-editor" data-line-id={selectedLine.id}>
-      <div className="scene-focus-nav">
-        <button
-          type="button"
-          disabled={selectedStoryLineIndex <= 0}
-          onClick={() => onMoveThroughStory(-1)}
-        >
-          ← 이전 컷
-        </button>
-        <strong>
-          전체 컷 {selectedStoryLineIndex + 1}/
-          {orderedDraftLines.length}
-          <small>
-            {selectedChapter.order}장
-            {selectedChapter.storyStageKeys && selectedChapter.storyStageKeys.length > 0
-              ? ` (${formatStoryStageLabels(canonicalizeStoryStageKeys(selectedChapter.storyStageKeys), draft.planning.structureMode)})`
-              : ""} · 이 장{" "}
-            {selectedLineIndex + 1}/{selectedChapterLines.length}
-          </small>
-        </strong>
-        <button
-          type="button"
-          disabled={selectedStoryLineIndex >= orderedDraftLines.length - 1}
-          onClick={() => onMoveThroughStory(1)}
-        >
-          다음 컷 →
-        </button>
-      </div>
-
-      <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
-      {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
-      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
-
       <div className="scene-focus-tabs" role="tablist" aria-label="현재 컷 편집">
         {SCENE_FOCUS_TABS.map(([tab, label], index) => (
           <button
@@ -598,6 +560,7 @@ export function SceneFocusEditor({
             className={activeTab === tab ? "active" : ""}
             onClick={() => setActiveTab(tab)}
             onKeyDown={(event) => {
+              if (event.altKey || event.ctrlKey || event.metaKey || event.nativeEvent.isComposing) return;
               const lastIndex = SCENE_FOCUS_TABS.length - 1;
               const nextIndex =
                 event.key === "Home"
@@ -624,7 +587,94 @@ export function SceneFocusEditor({
         ))}
       </div>
 
-      <StorySceneFrame stage={stage} variant="editor" speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
+          <div className="scene-setting-grid">
+            <label className="field">
+              <span>종류</span>
+              <select
+                value={selectedLine.type}
+                onChange={(event) =>
+                  onChangeLineType(
+                    selectedLine.id,
+                    event.target.value as StoryLine["type"],
+                  )
+                }
+              >
+                <option value="dialogue">대사</option>
+                <option value="narration">해설</option>
+              </select>
+            </label>
+            {selectedLine.type === "dialogue" && (
+              <>
+                <label className="field">
+                  <span>화자 위치</span>
+                  <select
+                    value={selectedLine.speaker}
+                    onChange={(event) =>
+                      onUpdateLine(selectedLine.id, {
+                        speaker: event.target
+                          .value as StoryLine["speaker"],
+                      })
+                    }
+                  >
+                    <option value="left">왼쪽</option>
+                    <option value="right">오른쪽</option>
+                  </select>
+                </label>
+                <label className="field">
+                  <span>화자 이름</span>
+                  <select
+                    ref={(node) => {
+                      if (speakerNameRefs?.current) {
+                        if (node) {
+                          speakerNameRefs.current.set(selectedLine.id, node);
+                        } else {
+                          speakerNameRefs.current.delete(selectedLine.id);
+                        }
+                      }
+                    }}
+                    className={
+                      highlightedApplyIssue?.field === "speaker" &&
+                      highlightedApplyIssue.lineId === selectedLine.id
+                        ? "issue-target-highlight"
+                        : undefined
+                    }
+                    value={selectedLine.speakerName}
+                    onChange={(event) =>
+                      onUpdateLine(selectedLine.id, {
+                        speakerName: event.target.value,
+                      })
+                    }
+                  >
+                    {unique([
+                      selectedLine.speakerName,
+                      ...selectedChapter.chapterSpeakerNames,
+                    ]).map((name) => (
+                      <option value={name} key={name}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <AddSpeaker onAdd={onAddSpeaker} />
+              </>
+            )}
+          </div>
+      <div className="scene-essential-assets" aria-label="현재 컷 이미지와 표정">
+        {(["left", "right", "background"] as const).map(slot => {
+          const field = sceneAssetField(slot);
+          const value = selectedLine[field] || selectedChapter[field];
+          return <AssetPickerButton key={slot} type={slot === "background" ? "background" : "character"}
+            label={slot === "left" ? "왼쪽 표정" : slot === "right" ? "오른쪽 표정" : "컷 배경"}
+            buttonText={`${slot === "left" ? "왼쪽" : slot === "right" ? "오른쪽" : "배경"} · ${assetName(value) || "없음"}`}
+            value={selectedLine[field]} currentValue={value} defaultValue={selectedChapter[field]} allowDefault
+            favoriteIds={favoriteAssets} recentIds={recentAssets} onToggleFavorite={onToggleFavorite}
+            onSelect={assetId => {
+              if (assetId) onAddAssetToChapter(assetId, slot === "background" ? "background" : "character");
+              onUpdateLine(selectedLine.id, { [field]: assetId });
+            }} />;
+        })}
+      </div>
+      <StorySceneFrame stage={stage} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
         heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
       {activeTab === "text" ? (
         <div
@@ -636,10 +686,15 @@ export function SceneFocusEditor({
           aria-labelledby="scene-tab-text"
         >
           {nearbyNavigation("글상자")}
-          {draft.continuation?.lineId === selectedLine.id && !selectedLine.text.trim() && selectedStoryLineIndex > 0 && (
+          {draft.continuation?.lineId === selectedLine.id && selectedStoryLineIndex > 0 && (
             <div className="scene-continuation-context">
               <small>앞 장면 · 여기서부터 내 이야기</small>
               <p>{orderedDraftLines[selectedStoryLineIndex - 1].text}</p>
+              <small>{draft.continuation.lineId === "palace-continuation-line-7"
+                ? "토끼는 간을 내놓으라는 말에 어떻게 답할까요? 다음 컷에는 용왕이나 자라의 반응을 이어 보세요."
+                : draft.continuation.lineId === "onggojib-continuation-line-1"
+                  ? "사또 앞에서 무엇으로 진짜임을 보여 줄까요? 다음 컷에는 상대 옹고집이나 사또의 반응을 이어 보세요."
+                  : "앞의 말에 답한 뒤, 다음 컷에는 그 말을 들은 인물의 반응을 이어 보세요."}</small>
             </div>
           )}
           {selectedLine.type === "narration" && (
@@ -721,101 +776,12 @@ export function SceneFocusEditor({
         />
       )}
 
-      <button
-        type="button"
-        className="mobile-panel-toggle scene-settings-toggle"
-        aria-expanded={sceneSettingsOpen}
-        onClick={() => onSetSceneSettingsOpen((current) => !current)}
-      >
-        <span>
-          <strong>화자·이미지·컷 설정</strong>
-          <small>종류, 화자 위치, 캐릭터와 배경</small>
-        </span>
-        <b>{sceneSettingsOpen ? "접기" : "펼치기"}</b>
-      </button>
+      <details className="scene-advanced-settings" open={sceneSettingsOpen} onToggle={event => onSetSceneSettingsOpen(event.currentTarget.open)}>
+        <summary>컷 연결·연출·배치 가져오기</summary>
+      <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
+      {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
+      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
 
-      <div
-        className={`scene-focus-lower ${
-          sceneSettingsOpen ? "mobile-open" : ""
-        }`}
-      >
-        <section className="scene-setting-card">
-          <div className="card-heading">
-            <span>플레이에 표시</span>
-            <strong>대사·해설과 컷 설정</strong>
-          </div>
-          <div className="scene-setting-grid">
-            <label className="field">
-              <span>종류</span>
-              <select
-                value={selectedLine.type}
-                onChange={(event) =>
-                  onChangeLineType(
-                    selectedLine.id,
-                    event.target.value as StoryLine["type"],
-                  )
-                }
-              >
-                <option value="dialogue">대사</option>
-                <option value="narration">해설</option>
-              </select>
-            </label>
-            {selectedLine.type === "dialogue" && (
-              <>
-                <label className="field">
-                  <span>화자 위치</span>
-                  <select
-                    value={selectedLine.speaker}
-                    onChange={(event) =>
-                      onUpdateLine(selectedLine.id, {
-                        speaker: event.target
-                          .value as StoryLine["speaker"],
-                      })
-                    }
-                  >
-                    <option value="left">왼쪽</option>
-                    <option value="right">오른쪽</option>
-                  </select>
-                </label>
-                <label className="field">
-                  <span>화자 이름</span>
-                  <select
-                    ref={(node) => {
-                      if (speakerNameRefs?.current) {
-                        if (node) {
-                          speakerNameRefs.current.set(selectedLine.id, node);
-                        } else {
-                          speakerNameRefs.current.delete(selectedLine.id);
-                        }
-                      }
-                    }}
-                    className={
-                      highlightedApplyIssue?.field === "speaker" &&
-                      highlightedApplyIssue.lineId === selectedLine.id
-                        ? "issue-target-highlight"
-                        : undefined
-                    }
-                    value={selectedLine.speakerName}
-                    onChange={(event) =>
-                      onUpdateLine(selectedLine.id, {
-                        speakerName: event.target.value,
-                      })
-                    }
-                  >
-                    {unique([
-                      selectedLine.speakerName,
-                      ...selectedChapter.chapterSpeakerNames,
-                    ]).map((name) => (
-                      <option value={name} key={name}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <AddSpeaker onAdd={onAddSpeaker} />
-              </>
-            )}
-          </div>
           <SceneStagingCopy
             key={selectedLine.id}
             chapters={draft.chapters}
@@ -823,8 +789,7 @@ export function SceneFocusEditor({
             currentLineId={selectedLine.id}
             onCopy={onCopySceneStaging}
           />
-        </section>
-      </div>
+      </details>
 
       <div className="scene-focus-actions">
         <button

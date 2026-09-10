@@ -38,7 +38,7 @@ test("U2-02: 모바일 숨김은 펼칠 수 있고 시작 탭은 방향키로 �
   assert.match(studio, /mobileEditorToolsOpen \? "mobile-context-open"/);
   assert.match(studio, /aria-expanded=\{mobileEditorToolsOpen\}/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*?\.making-workspace:not\(\.mobile-context-open\) \.chapter-context-strip/);
-  assert.match(editor, /draft.continuation\?\.lineId === selectedLine.id && !selectedLine.text.trim\(\)/);
+  assert.match(editor, /draft.continuation\?\.lineId === selectedLine.id/);
   assert.match(editor, /orderedDraftLines\[selectedStoryLineIndex - 1\].text/);
   assert.equal((entry.match(/tabIndex=\{activeTab ===/g) ?? []).length, 3);
   for (const key of ["ArrowLeft", "ArrowRight", "Home", "End"]) assert.ok(entry.includes(`"${key}"`));

@@ -211,7 +211,7 @@ export function ScriptScreen({
               이 컷 꾸미기
             </button>
           </header>
-          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" speaker={selectedLine.speaker}>
+          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker}>
             <div className="dialogue-box">
               <p>{selectedLine.type === "narration"
                 ? <DialogueText text={selectedLine.text || "아래 글상자에 해설을 써 보세요."} />

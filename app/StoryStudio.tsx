@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { CutNavigation } from "./components/CutNavigation";
 import { createPortal } from "react-dom";
 import { ModalDialog } from "./components/ModalDialog";
 import {
@@ -1425,7 +1426,7 @@ export function StoryStudio() {
 
   function moveThroughStory(direction: -1 | 1) {
     const nextLine = orderedDraftLines[selectedStoryLineIndex + direction];
-    if (nextLine) requestStoryEditorRestore({chapterId: nextLine.chapterId, lineId: nextLine.id, view: "scene", focusTarget: "line-body"}, {scrollY: window.scrollY});
+    if (nextLine) requestStoryEditorRestore({chapterId: nextLine.chapterId, lineId: nextLine.id, view: editorMode, focusTarget: "line-body"}, editorMode === "scene" ? {scrollY: window.scrollY} : undefined);
   }
 
   function editStoryFromBeginning() {
@@ -2373,6 +2374,12 @@ export function StoryStudio() {
         onIndexChange={(index) =>
           dispatchPlayerUi({ type: "change-index", index })
         }
+        onHome={() => {
+          dispatchPlayerUi({ type: "close" });
+          playerReturnLocationRef.current = null;
+          if (context.kind === "student") returnHome();
+          else setCreatorAccess("none");
+        }}
         onBack={returnFromPlayer}
         revisionResponses={revisionResponses}
         onRevisionResponse={(promptId, response) =>
@@ -3004,6 +3011,7 @@ export function StoryStudio() {
                   </section>
                 )}
 
+                {selectedLine && <CutNavigation index={selectedStoryLineIndex} total={orderedDraftLines.length} onMove={moveThroughStory} onAdd={() => addLine("dialogue", true, selectedLine.id)} />}
                 {editorMode === "chapter" ? (
                   <ScriptScreen
                     draft={draft}

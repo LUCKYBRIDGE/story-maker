@@ -39,6 +39,8 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
       label: asset?.displayName || (side === "left" ? "왼쪽 인물" : "오른쪽 인물"),
       missing: Boolean(id && !asset),
       placement: stagePlacementClass(id),
+      // An age variant has its own stage stature; never distort its head/body proportions.
+      scale: asset?.story === "토끼와 자라" && asset.group === "어린 자라" ? 0.72 : 1,
       mirrored: stageShouldMirror(id, side),
     };
   };
