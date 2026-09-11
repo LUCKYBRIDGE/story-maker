@@ -10577,7 +10577,7 @@ img {
 .player-shell .story-scene-frame { min-height: calc(100dvh - 34px); border-radius: 0; }
 .player-shell .story-scene-heading { padding: 0; }
 .player-shell .story-scene-frame .player-topbar { position: relative; inset: auto; background: rgb(15 23 42 / 65%); }
-.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(220px, 46dvh, 560px); }
+.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(200px, 41dvh, 480px); }
 .player-shell .story-scene-frame .dialogue-box p { font-size: 18px; line-height: 1.7; }
 .scene-focus-tabs { border-radius: 10px; }
 @media (max-width: 620px) {
@@ -10603,7 +10603,7 @@ img {
   .script-selected-stage > header { flex-direction: row; align-items: center; }
   .script-selected-stage > header button { width: auto; }
   .story-scene-frame > .story-stage-canvas { height: clamp(125px, 34vw, 165px); }
-  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(230px, 40dvh, 430px); }
+  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(190px, 38dvh, 360px); }
   .story-scene-frame > .dialogue-box,
   .story-scene-frame > .dialogue-box.narration { width: calc(100% - 16px); padding: 10px 12px; margin-bottom: 6px; }
   .story-scene-frame .editable-stage-writing-line textarea,
@@ -11279,7 +11279,7 @@ img {
 .player-shell .story-scene-frame .dialogue-box .reading-paragraph.current-reading { color: #fff9e9; margin-bottom: 0; }
 .reading-paragraph .dialogue-speaker { margin-right: .35em; }
 .reading-paragraph.narration { padding-inline: .5em; }
-.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(160px, 33dvh, 410px); flex: 0 0 auto; }
+.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(200px, 41dvh, 480px); flex: 0 0 auto; }
 .player-shell .story-scene-frame { justify-content: flex-start; }
 @media (max-width: 620px) {
   .book-play-entry .student-book { width: min(82vw, 430px); max-width: 430px; }
@@ -11288,47 +11288,17 @@ img {
   .reader-top-actions button { padding-inline: 12px; }
   .reading-tools { gap: 6px; }
   .reading-tools > small { max-width: 45%; }
-  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(150px, 29dvh, 290px); }
+  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(190px, 38dvh, 360px); }
   .reading-scroll { max-height: 42dvh; }
 }
 
-/* The player fills the viewport: stage above, reading dock at its bottom edge. */
+/* The player fills the viewport: stage above, reading dock overlapping its bottom edge. */
 .player-shell > .story-stage { min-height: 0; }
 .player-shell .story-scene-frame {
   height: calc(100dvh - 34px); min-height: 0;
-  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
-  justify-content: stretch;
+  display: flex; flex-direction: column; justify-content: flex-start;
   padding-bottom: env(safe-area-inset-bottom);
-}
-.player-shell .story-scene-frame > .story-scene-heading { grid-row: 1; }
-.player-shell .story-scene-frame > .story-stage-canvas {
-  grid-row: 2; height: 100%; min-height: 0; max-width: 1440px;
-  align-self: stretch;
-}
-.player-shell .story-scene-frame > .dialogue-box {
-  grid-row: 3; align-self: end; margin: 0 auto;
-  height: clamp(200px, 44dvh, 460px); max-height: 62dvh;
-  display: flex; flex-direction: column; min-height: 0;
-}
-.player-shell .reading-transcript { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
-.player-shell .reading-tools, .player-shell .player-controls { flex: 0 0 auto; }
-.player-shell .reading-scroll { flex: 1 1 auto; min-height: 0; max-height: none; }
-.player-shell .player-choices { flex: 0 1 auto; overflow-y: auto; max-height: 24dvh; }
-.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
-  height: 100%; width: 44%; bottom: 0; object-fit: contain; object-position: center bottom;
-}
-.player-shell > .copyright-bar { min-height: 34px; padding-block: 6px; }
-@media (max-height: 500px) {
-  .player-shell .story-scene-frame > .dialogue-box { padding: 6px 12px; height: 54dvh; }
-  .player-shell .player-controls { padding-top: 4px; }
-  .player-shell .reading-scroll { padding-block: 4px; }
-  .reader-topbar { padding-block: 4px; }
-}
-
-/* Stable actors: neither an open information panel nor speech length resizes the stage. */
-.player-shell .story-scene-frame {
-  display: block;
-  --speech-limit: 35dvh;
+  position: relative;
 }
 .player-shell .story-scene-frame > .story-scene-heading {
   position: absolute; inset: 0 0 auto; z-index: 4;
@@ -11336,27 +11306,50 @@ img {
 .player-shell .reader-topbar { align-items: flex-start; }
 .player-shell .reader-story-info { max-height: min(65dvh, 360px); overflow-y: auto; }
 .player-shell .story-scene-frame > .story-stage-canvas {
-  position: absolute; top: 64px; bottom: var(--speech-limit);
-  left: 0; right: 0; width: 100%; height: auto; margin-inline: auto;
+  width: 100%; max-width: 1440px; margin-inline: auto;
+  margin-top: 56px;
+  height: clamp(200px, 41dvh, 480px);
+  aspect-ratio: auto; background: transparent;
+  flex: 0 0 auto;
+  position: relative;
+}
+.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
+  height: 88%; width: 44%; bottom: 0; object-fit: contain; object-position: center bottom;
 }
 .player-shell .story-scene-frame > .dialogue-box {
-  position: absolute; bottom: env(safe-area-inset-bottom); left: 0; right: 0; top: auto;
-  height: auto; max-height: var(--speech-limit); margin-inline: auto;
+  position: relative; inset: auto; z-index: 3;
+  width: calc(100% - 32px); max-width: 980px;
+  margin: -60px auto 12px;
+  padding: 16px 20px;
+  border: 1px solid #748198; border-radius: 10px;
+  background: rgb(15 23 42 / 96%); color: #f8fafc;
+  transform: none; box-shadow: 0 12px 32px rgb(0 0 0 / 25%);
+  display: flex; flex-direction: column; min-height: 0;
+  max-height: min(56dvh, calc(100dvh - 340px));
 }
-.player-shell .reading-transcript { flex: 0 1 auto; overflow: hidden; }
-.player-shell .reading-scroll { flex: 0 1 auto; min-height: 0; padding-block: 10px; }
-.reading-history-dialog { display: flex; flex-direction: column; width: min(880px, 100%); overflow: hidden; }
-.reading-history-dialog > header, .reading-history-dialog > .reading-tools { flex-shrink: 0; }
-.reading-history-dialog .reading-tools { justify-content: flex-end; margin-bottom: 12px; }
-.reading-history-script { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; }
-.reading-history-script .reading-paragraph {
-  color: #263a34; font-family: "Noto Serif KR", "Batang", serif;
-  font-size: var(--reading-font-size); line-height: 1.85; white-space: pre-wrap; margin: 0 0 1em;
+.player-shell .reading-transcript { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.player-shell .reading-tools, .player-shell .player-controls { flex: 0 0 auto; }
+.player-shell .reading-scroll { flex: 1 1 auto; min-height: 0; max-height: none; padding-block: 10px; }
+.player-shell .player-choices { flex: 0 1 auto; overflow-y: auto; max-height: 24dvh; }
+.player-shell > .copyright-bar { min-height: 34px; padding-block: 6px; }
+@media (max-width: 620px) {
+  .player-shell .story-scene-frame > .story-stage-canvas {
+    margin-top: 48px;
+    height: clamp(190px, 38dvh, 360px);
+  }
+  .player-shell .story-scene-frame > .dialogue-box {
+    width: calc(100% - 16px);
+    margin: -32px auto 8px;
+    padding: 10px 12px;
+    max-height: min(58dvh, calc(100dvh - 270px));
+  }
 }
-.reading-history-script .dialogue-speaker { color: #765014; }
-.reading-choice-record { color: #315e4e; background: #e5ede2; border-left: 3px solid #8a7044; padding: 8px 12px; margin: 0 0 1.2em; font-size: var(--reading-font-size); }
 @media (max-height: 500px) {
-  .player-shell .story-scene-frame > .story-stage-canvas { top: 52px; }
+  .player-shell .story-scene-frame > .story-stage-canvas { margin-top: 36px; height: clamp(140px, 36dvh, 180px); }
+  .player-shell .story-scene-frame > .dialogue-box { margin: -24px auto 4px; padding: 6px 12px; height: auto; max-height: 54dvh; }
+  .player-shell .player-controls { padding-top: 4px; }
+  .player-shell .reading-scroll { padding-block: 4px; }
+  .reader-topbar { padding-block: 4px; }
 }
 
 /* Quiet reading tools share the bottom control row instead of occupying a text row. */
@@ -11392,10 +11385,19 @@ img {
 /* Transcript belongs to the viewport, independent of the stage and speech dock. */
 .reading-history-backdrop { padding: 3dvh 3vw; }
 .reading-history-dialog {
+  display: flex; flex-direction: column; width: min(880px, 100%); overflow: hidden;
   width: min(1200px, 94vw); height: 90dvh; max-height: 90dvh;
   padding: clamp(16px, 3vw, 36px);
 }
-.reading-history-script { flex: 1 1 auto; }
+.reading-history-dialog > header, .reading-history-dialog > .reading-tools { flex-shrink: 0; }
+.reading-history-dialog .reading-tools { justify-content: flex-end; margin-bottom: 12px; }
+.reading-history-script { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; flex: 1 1 auto; }
+.reading-history-script .reading-paragraph {
+  color: #263a34; font-family: "Noto Serif KR", "Batang", serif;
+  font-size: var(--reading-font-size); line-height: 1.85; white-space: pre-wrap; margin: 0 0 1em;
+}
+.reading-history-script .dialogue-speaker { color: #765014; }
+.reading-choice-record { color: #315e4e; background: #e5ede2; border-left: 3px solid #8a7044; padding: 8px 12px; margin: 0 0 1.2em; font-size: var(--reading-font-size); }
 
 /* Choice sheets can cover the stage; its coordinate system never changes. */
 .player-shell .story-scene-frame > .dialogue-box[data-has-choices] {
@@ -11436,42 +11438,866 @@ img {
   .creation-new-actions { flex-direction: column; }
 }
 
-.story-discovery { max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
-.discovery-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; }
-.discovery-header h1 { font-size: clamp(24px, 3vw, 36px); margin: 6px 0; overflow-wrap: anywhere; }
-.discovery-header nav, .discovery-groups, .discovery-actions, .library-pages { display: flex; flex-wrap: wrap; gap: 12px; }
-.story-discovery button { min-height: 44px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border, #d7cbb8); background: var(--surface, #fffdf8); }
-.story-discovery button:focus-visible { outline: 3px solid #24738e; outline-offset: 4px; }
-.story-discovery button:disabled { opacity: .5; cursor: not-allowed; }
-.story-discovery p { line-height: 1.7; }
-.discovery-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,270px),1fr)); gap: 20px; }
-.discovery-card { border: 1px solid var(--border, #d7cbb8); border-radius: 16px; padding: 24px; background: var(--surface, #fffdf8); }
-.discovery-card h2 { margin: 0 0 12px; font-size: 20px; font-weight: 700; overflow-wrap: anywhere; }
-.discovery-card p { margin: 12px 0; }
-.discovery-groups { margin-bottom: 24px; }
-.discovery-groups button[aria-pressed="true"] { background: #173b3d; color: white; }
-.library-shelf { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px 18px; margin: 28px 0; }
-.library-item { min-width: 0; }
-.library-item p { font-size: 14px; }
-.story-discovery .library-book { display: flex; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; min-height: 230px; gap: 20px; padding: 24px 16px; color: #ffecb9; background: linear-gradient(110deg,#173b3d,#245457); border: 5px double #bfa26b; border-left: 12px solid #163332; border-radius: 5px 14px 14px 5px; box-shadow: 5px 7px 0 #dacdb4, 7px 10px 0 #6b715c; }
-.story-discovery .library-book-onggojib { background: linear-gradient(110deg,#473343,#714a57); border-left-color:#382536; }
-.story-discovery .library-book-local { background: linear-gradient(110deg,#233f60,#3f6480); border-left-color:#19354d; }
-.library-book-title { font-size: clamp(18px,2.2vw,27px); font-weight: 800; overflow-wrap: anywhere; }
-.library-book-kind { font-size: 13px; }
-.library-book-mark { font-size: 26px; }
-.library-pages { align-items: center; justify-content: center; margin: 32px 0; }
-@media (min-width:600px) { .library-shelf { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-@media (min-width:1000px) and (orientation:landscape) { .library-shelf { grid-template-columns:repeat(5,minmax(0,1fr)); } }
-@media (max-width:599px) {
-  .story-discovery { padding:20px 16px 40px; }
-  .discovery-header { flex-direction:column; gap:12px; }
-  .discovery-card { padding:20px; }
-  .library-shelf { gap:24px 16px; }
-  .story-discovery .library-book { min-height:220px; padding:20px 12px; }
+/* ══════════════════════════════════════════════════════════════════════════════
+   📖 놀스토리 따뜻한 원목 서재 (StoryDiscovery & Wooden Bookshelf)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.story-discovery {
+  position: relative;
+  min-height: 100dvh;
+  padding: clamp(20px, 3vw, 40px) clamp(16px, 3.5vw, 44px) 72px;
+  background: radial-gradient(ellipse 90% 70% at 15% 15%, #fffef9 0%, #f7f2e6 50%, #ede2cf 100%);
+  color: #3b2b1c;
+  overflow-x: hidden;
 }
-.discovery-file-open { margin: 0 0 24px; }
-.file-remix-option { display:flex; align-items:center; gap:10px; min-height:44px; margin:12px 0; }
-.file-remix-option input { width:20px; height:20px; }
+
+.library-theater-header {
+  max-width: 1240px;
+  margin: 0 auto 28px;
+}
+
+.library-header-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.library-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 8px 18px;
+  border-radius: 24px;
+  border: 1.5px solid #d9cdb8;
+  background: #fffdf9;
+  color: #4a3825;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(45, 25, 10, 0.06);
+  cursor: pointer;
+  transition: all 160ms ease-out;
+}
+
+.library-nav-btn:hover:not(:disabled) {
+  background: #f6eee0;
+  border-color: #ba9e74;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(45, 25, 10, 0.12);
+}
+
+.library-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.library-center-badge {
+  text-align: center;
+  margin-inline: auto;
+  padding-inline: 12px;
+}
+
+.library-book-emblem {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 4px;
+}
+
+.library-eyebrow-text {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9c7b44;
+  margin-bottom: 2px;
+}
+
+.library-main-heading {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: clamp(28px, 3.8vw, 40px);
+  font-weight: 800;
+  color: #382516;
+  letter-spacing: -0.03em;
+  margin: 0 0 4px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.library-motto {
+  font-size: clamp(13px, 1.6vw, 15px);
+  color: #6e5741;
+  margin: 0;
+  font-weight: 500;
+}
+
+.library-warning-box {
+  background: #fef7ea;
+  border: 1px solid #e2cb9b;
+  border-radius: 10px;
+  padding: 10px 16px;
+  color: #6d4b14;
+  font-size: 14px;
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* ── 📚 원목 책장 공간 ── */
+.library-bookcase {
+  position: relative;
+  max-width: 1240px;
+  margin: 20px auto 0;
+}
+
+.bookshelf-ivy-decor {
+  position: absolute;
+  top: -16px;
+  right: 12px;
+  width: clamp(80px, 11vw, 130px);
+  height: auto;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 4px 6px rgba(40, 20, 10, 0.15));
+}
+
+.bookshelf-ivy-decor svg {
+  width: 100%;
+  height: auto;
+}
+
+/* 선반 그리드 (tests/browser 호환 5/3/2 컬럼 유지) */
+.library-shelf {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 18px;
+  margin: 28px 0;
+  align-items: end;
+}
+
+@media (min-width: 600px) {
+  .library-shelf {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 24px;
+  }
+}
+
+@media (min-width: 1000px) and (orientation: landscape) {
+  .library-shelf {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 44px 28px;
+  }
+}
+
+.library-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* 원목 선반 바닥 나무 디테일 (Shelf Plank) */
+.shelf-plank-edge {
+  width: calc(100% + 20px);
+  height: 16px;
+  margin-top: -2px;
+  background: linear-gradient(180deg, #ba8857 0%, #875429 25%, #683d1b 80%, #482710 100%);
+  border-top: 2px solid #deb082;
+  border-radius: 2px 2px 4px 4px;
+  box-shadow: 0 8px 18px rgba(35, 18, 8, 0.28), 0 2px 4px rgba(35, 18, 8, 0.18);
+  z-index: 1;
+}
+
+/* ── 📖 하드커버 양장본 책 컴포넌트 ── */
+.shelf-book {
+  position: relative;
+  width: 100%;
+  max-width: 210px;
+  aspect-ratio: 1 / 1.42;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  background: var(--book-paper, #f7f1e3);
+  color: var(--book-ink, #2e2417);
+  border-radius: 3px 12px 12px 3px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 5px 6px 14px rgba(35, 20, 10, 0.28), 1px 2px 4px rgba(35, 20, 10, 0.16);
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  z-index: 2;
+  transition: transform 180ms cubic-bezier(0.2, 0, 0.2, 1), box-shadow 180ms cubic-bezier(0.2, 0, 0.2, 1);
+  text-align: center;
+}
+
+.shelf-book:hover:not(:disabled) {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 8px 16px 26px rgba(35, 20, 10, 0.38), 2px 4px 8px rgba(35, 20, 10, 0.22);
+}
+
+.shelf-book:focus-visible {
+  outline: 3px solid #c99239;
+  outline-offset: 4px;
+  transform: translateY(-8px) scale(1.02);
+}
+
+.shelf-book:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 양장본 책등(Spine) 효과 */
+.shelf-book-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(255, 255, 255, 0.18) 35%, rgba(0, 0, 0, 0.08) 80%, rgba(0, 0, 0, 0.3) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 표지 안쪽 금박 테두리 및 레이아웃 */
+.shelf-book-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 10px 22px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+}
+
+.shelf-book-face::after {
+  content: "";
+  position: absolute;
+  inset: 6px 6px 6px 18px;
+  border: 1.5px solid var(--book-accent, #c99239);
+  border-radius: 2px 8px 8px 2px;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.shelf-book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  width: 100%;
+}
+
+.shelf-book .library-book-kind {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+}
+
+.shelf-book .library-book-mark {
+  font-size: 12px;
+  color: var(--book-accent, #c99239);
+}
+
+.shelf-book-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 4px 0;
+}
+
+.shelf-art-wrapper {
+  width: clamp(52px, 8vw, 80px);
+  height: clamp(52px, 8vw, 80px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid var(--book-accent, #c99239);
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shelf-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shelf-book .library-book-title {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: clamp(15px, 1.4cqw, 18px);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.shelf-book-subtitle {
+  font-size: 11px;
+  opacity: 0.78;
+  margin: 3px 0 0;
+  line-height: 1.3;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 90%;
+}
+
+.shelf-book-footer {
+  z-index: 2;
+}
+
+.shelf-filigree {
+  font-size: 10px;
+  color: var(--book-accent, #c99239);
+  opacity: 0.8;
+  letter-spacing: 0.12em;
+}
+
+/* ── 🌟 '새 이야기 만들기' 빈 양장본 책 ── */
+.shelf-book-new {
+  background: #fdfaf3;
+  color: #3a2a1b;
+  border: 2px dashed #cca972;
+}
+
+.shelf-book-new .shelf-book-face::after {
+  border-style: dotted;
+  border-color: #cca972;
+}
+
+.shelf-new-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #967440;
+}
+
+.new-book-plus-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f5eddc;
+  border: 1.5px solid #cca972;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #967440;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.shelf-new-title {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #3a2a1b;
+  margin: 0;
+}
+
+.shelf-new-desc {
+  font-size: 11px;
+  color: #7a634c;
+  margin: 3px 0 0;
+}
+
+.shelf-new-prompt {
+  font-size: 11px;
+  font-weight: 700;
+  color: #967440;
+}
+
+/* ── 📚 선반 페이지네이션 (< > chevrons & dots) ── */
+.shelf-paging-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 32px 0 0;
+}
+
+.shelf-arrow-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid #cca972;
+  background: #fffdf7;
+  color: #5a4128;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+  box-shadow: 0 2px 6px rgba(45, 25, 10, 0.08);
+}
+
+.shelf-arrow-btn:hover:not(:disabled) {
+  background: #f5eedc;
+  transform: scale(1.06);
+}
+
+.shelf-arrow-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.shelf-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shelf-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d9c8aa;
+  transition: all 160ms ease;
+}
+
+.shelf-dot.active {
+  background: #8e6834;
+  transform: scale(1.3);
+}
+
+/* ── 🌟 책 꺼내기 인터랙션 (Detail Overlay Modal) ── */
+.book-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 16, 8, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  animation: overlayFadeIn 200ms ease-out forwards;
+}
+
+.book-detail-modal {
+  position: relative;
+  width: min(860px, 94vw);
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: #fffefb;
+  border: 1px solid #d9cdb8;
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(30, 15, 5, 0.38), 0 4px 12px rgba(30, 15, 5, 0.16);
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 32px;
+  padding: 36px 32px;
+  animation: bookPullOut 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.btn-overlay-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #ded3c0;
+  background: #f7f1e3;
+  color: #5a432b;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+  z-index: 10;
+}
+
+.btn-overlay-close:hover {
+  background: #eee1cb;
+  color: #2e1e11;
+  transform: scale(1.05);
+}
+
+.btn-overlay-close:focus-visible {
+  outline: 3px solid #c99239;
+  outline-offset: 3px;
+}
+
+/* 좌측 책 비주얼 디스플레이 */
+.detail-book-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-hardcover-book {
+  width: 220px;
+  aspect-ratio: 1 / 1.42;
+  background: var(--book-paper, #1e4635);
+  color: var(--book-ink, #fcf8ec);
+  border-radius: 4px 14px 14px 4px;
+  box-shadow: 8px 16px 32px rgba(25, 12, 4, 0.38), 2px 4px 8px rgba(25, 12, 4, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-book-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.18) 35%, rgba(0, 0, 0, 0.08) 80%, rgba(0, 0, 0, 0.3) 100%);
+  z-index: 3;
+}
+
+.detail-book-cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 18px 16px 14px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.detail-book-cover::after {
+  content: "";
+  position: absolute;
+  inset: 8px 8px 8px 20px;
+  border: 1.5px solid var(--book-accent, #d4af37);
+  border-radius: 2px 10px 10px 2px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.detail-book-filigree-top {
+  font-size: 11px;
+  color: var(--book-accent, #d4af37);
+  letter-spacing: 0.15em;
+}
+
+.detail-cover-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.detail-hero-illustration {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--book-accent, #d4af37);
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.detail-new-crest {
+  font-size: 32px;
+  color: var(--book-accent, #d4af37);
+  margin-bottom: 6px;
+}
+
+.detail-cover-title {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: 19px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.detail-cover-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 4px 0 0;
+}
+
+.detail-book-edition {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--book-accent, #d4af37);
+  z-index: 2;
+}
+
+/* 우측 액션 컬럼 */
+.detail-action-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.detail-kind-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #846338;
+  background: #f6ecda;
+  border: 1px solid #deb883;
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin-bottom: 6px;
+}
+
+.detail-main-title {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 800;
+  color: #2e1f11;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.detail-main-desc {
+  font-size: 14px;
+  color: #63503d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.detail-prompt {
+  font-size: 15px;
+  font-weight: 700;
+  color: #3d2a1a;
+  margin: 0 0 12px;
+}
+
+.detail-btn-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-action-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-detail-primary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #194a3c;
+  color: #ffffff;
+  border: 1px solid #133a2f;
+  cursor: pointer;
+  text-align: left;
+  transition: all 160ms ease;
+  box-shadow: 0 4px 12px rgba(25, 74, 60, 0.22);
+}
+
+.btn-detail-primary:hover:not(:disabled) {
+  background: #133c30;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(25, 74, 60, 0.28);
+}
+
+.btn-detail-primary:focus-visible {
+  outline: 3px solid #c99239;
+  outline-offset: 3px;
+}
+
+.btn-detail-secondary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #fffdfa;
+  color: #382717;
+  border: 1.5px solid #cbba9a;
+  cursor: pointer;
+  text-align: left;
+  transition: all 160ms ease;
+}
+
+.btn-detail-secondary:hover:not(:disabled) {
+  background: #f7eee1;
+  border-color: #a88d66;
+  transform: translateY(-1px);
+}
+
+.btn-detail-secondary:focus-visible {
+  outline: 3px solid #c99239;
+  outline-offset: 3px;
+}
+
+.btn-detail-disabled {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #f5f0e6;
+  color: #8a7b6b;
+  border: 1px solid #ded4c3;
+  cursor: not-allowed;
+  opacity: 0.75;
+  text-align: left;
+}
+
+.btn-glyph {
+  font-size: 18px;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.btn-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.btn-text-group strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btn-text-group small {
+  font-size: 12px;
+  opacity: 0.82;
+  line-height: 1.35;
+}
+
+.detail-slot-notice {
+  font-size: 12px;
+  color: #8c2a2a;
+  margin: 2px 0 0 6px;
+}
+
+/* 접힘형 작품 관리 메뉴 */
+.detail-manage-collapsible {
+  margin-top: 4px;
+}
+
+.btn-toggle-manage {
+  background: transparent;
+  border: none;
+  color: #78644e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-toggle-manage:hover {
+  color: #382516;
+}
+
+.detail-manage-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-sub-action {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #d9cdb8;
+  background: #fffdf9;
+  color: #4e3e2c;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-sub-action:hover {
+  background: #f4ebd9;
+}
+
+.btn-sub-danger {
+  color: #a62a2a;
+  border-color: #e5b3b3;
+}
+
+.btn-sub-danger:hover {
+  background: #fceeed;
+}
+
+.btn-link-advance {
+  background: transparent;
+  border: none;
+  color: #86612b;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 0;
+  text-align: left;
+  margin-top: 4px;
+}
+
+.btn-link-advance:hover {
+  text-decoration: underline;
+}
+
+/* ── 🎬 인터랙션 애니메이션 & 접근성 ── */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bookPullOut {
+  from {
+    transform: scale(0.92) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 680px) {
+  .book-detail-modal {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 18px;
+    max-height: 94dvh;
+  }
+
+  .detail-hardcover-book {
+    width: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shelf-book,
+  .book-detail-modal,
+  .book-detail-backdrop,
+  .library-nav-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+}
 
 .story-file-dialog .import-dialog-actions { flex-wrap: wrap; }
 .story-file-dialog button { min-height: 44px; }

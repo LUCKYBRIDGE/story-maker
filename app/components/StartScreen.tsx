@@ -144,9 +144,9 @@ export function StartScreen({
             fetchPriority="high"
           />
         </div>
-        <button type="button" className="poster-button poster-read" onClick={() => onOpenReaderEntry ? onOpenReaderEntry() : onPlayExample(coverTheme)} disabled={busy}
+        <button type="button" className="poster-button poster-read" onClick={() => onOpenLibrary ? onOpenLibrary() : (onOpenReaderEntry ? onOpenReaderEntry() : onPlayExample(coverTheme))} disabled={busy}
           aria-label="놀스토리 작품 읽기">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" /></svg><span>놀스토리 작품 읽기</span><span aria-hidden="true">➜</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" /></svg><span>서재 들어가기</span><span aria-hidden="true">➜</span>
         </button>
         <footer className="poster-footer">기본 제공 이미지 © 놀퀴즈<span aria-hidden="true"> · </span><wbr />학생 스토리게임 제작에 자유롭게 사용</footer>
       </div>

@@ -51,7 +51,7 @@ try {
   await page.keyboard.press('Enter');
   await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
   await page.getByRole('button',{name:'놀스토리 작품 읽기',exact:true}).click();
-  await page.getByRole('button',{name:'놀스토리 작품 보기',exact:true}).click();
+  await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();
   await page.getByRole('button',{name:'기본 작품 읽기',exact:true}).click();
   await page.waitForTimeout(1200);
   assert.equal(await page.locator('.nolstory-poster-frame').count(),0);
