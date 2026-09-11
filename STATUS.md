@@ -4,34 +4,23 @@
 
 ---
 
-## 이번 작업 브랜치 검증 — BC-01 (2026-09-08)
+## 최근 작업 검증 — 서재 책 꺼내기 Focus Stage (2026-09-11)
 
-- 브랜치: `codex/book-covers-curtain`, 선행 CE-01 `c8d5912`에서 분기 (main 미통합분 포함).
-- 학생 표지 기본 배치 3종, 제목·지은이·색·글꼴·크기·위치·그림 커스텀, 뒤표지/작가의 말.
-- 대표 표지→커튼→시작 화면, 작품 앞표지→커튼→첫 컷, 중간 장 즉시 재생, 종료 뒤표지.
-- `npm run check` 오류 0, 빌드 포함 `npm test` 147/147. v1 저장 및 실제 XLSX 왕복 통과.
-- Chrome 데스크톱/모바일 폭의 설정·취소·복원·재생·동작 줄이기 통과. 실기기는 미검증.
-- 상세 증거: [BC-01 상태표](docs/storygame-development-status.md#현재-요청-bc-01-내-책-표지와-커튼).
+- 브랜치: `codex/library-centered-ux` ➔ `main` 머지 완료 ([PR #21](https://github.com/LUCKYBRIDGE/story-maker/pull/21), 커밋 `c90efd5`).
+- 서재 책장에서 책을 한 권 꺼내어 원목 거치대에 올리고 집중 조명하는 Focus Stage 인터랙션 구현.
+- 좌우 화살표/방향키 연속 탐색, 2×2 선택 카드([원작], [놀스토리 읽기], [모두의 이야기], [편집하기]).
+- `npm run check` 오류 0, `npm test` 196/196 전체 통과, `npm run qa:smoke` (4개 브라우저 스위트 통과).
+- GitHub Actions CI verify 및 Cloudflare Pages 배포 통과.
 
-## 이전 작업 브랜치 검증 — CE-01 (2026-09-08)
-
-- 브랜치: `codex/cinematic-effects` (시작 기준 `main`/`origin/main`: `8b8b63b`)
-- 컷 연출 5종·강도·시점 설정, 두 편집 화면의 미리보기, 플레이 및 v1/Excel 왕복 구현.
-- `npm run check` 오류 0, 빌드 포함 `npm test` 140/140 (기존 134 + 신규 6).
-- Chrome 152, 1365×900/390×844: 설정·저장 복원·플레이·24회 빠른 이동·동작 줄이기 통과.
-- 평균 프레임 16.66~16.67ms, CPU 4배 감속 p95 17.5ms, 33.4ms 초과 0. 실제 모바일 기기는 미검증.
-- 상세 증거와 재현 명령: [개발 상태표 CE-01](docs/storygame-development-status.md#이전-요청-ce-01-장면-연출).
-- 아래 기존 main 스냅샷은 당시 기록이다. 현재 Git 상태는 `npm run status:check`로 확인한다.
-
-## 1. 현재 최신 기준선 스냅샷 (2026-09-08 기준)
+## 1. 현재 최신 기준선 스냅샷 (2026-09-11 기준)
 
 | 항목 | 상태 | 비고 |
 |---|---|---|
 | **기본 브랜치** | `main` | GitHub `origin/main`과 로컬 `main` 완전 일치 |
-| **최신 HEAD 커밋** | `26c958b` | `Merge pull request #1 from LUCKYBRIDGE/u1-10-chat-player-readability-20260905` |
-| **열린 PR** | 없음 | PR #1 머지 완료 |
-| **검증 상태** | 통과 | `npm run check` (0건), `npm test` (134/134 전체 통과) |
-| **완료된 주요 기능** | U1~U2 완료 | • 시작 화면 UI 전면 재편 (3색 밴드 제거, 세그먼트 탭, 이어하기 3대 카드)<br>• 3D 책 넘김 연출 제거 및 즉각 화면 전환<br>• 이야기 단계 혼용(처음-중간-결말 등) 비강제 권고 다이얼로그<br>• 컷 중간 추가 / 동일 화자 컷 합치기 / 대본 메타바 1줄 통합 |
+| **최신 HEAD 커밋** | `c90efd5` | `Merge pull request #21 from LUCKYBRIDGE/codex/library-centered-ux` |
+| **열린 PR** | #14 (의존성 보안) | stale PR #15 정리 완료 |
+| **검증 상태** | 통과 | `npm run check` (0건), `npm test` (196/196 전체 통과), `qa:smoke` 통과 |
+| **완료된 주요 기능** | U1~U2, BR-01, SP-A~F, 서재 Focus Stage | • 서재 책 꺼내기 Focus Stage 감성 연출 및 액션 4종 카드<br>• 다중 프로젝트 격리 보관(최대 2작품) 및 `.nolstory` 파일 규격<br>• 2/3 선택지 분기 및 합류 플레이(BR-01)<br>• 시네마틱 컷 연출(CE-01) 및 책 표지/커튼(BC-01)<br>• 장·컷 2단계 이야기 편집 및 화자 색상/긴 대사 가변창 |
 
 ---
 
@@ -49,12 +38,12 @@ npm run status:check
  📖 storygame 로컬 ↔ GitHub 최신 동기화 현황 (Fast Check)
 ==============================================================
 • 로컬 브랜치   : main
-• 로컬 HEAD     : 26c958b (Merge pull request #1 ...)
-• 원격 main HEAD: 26c958b (Merge pull request #1 ...)
+• 로컬 HEAD     : c90efd5 (Merge pull request #21 ...)
+• 원격 main HEAD: c90efd5 (Merge pull request #21 ...)
 • 동기화 상태   : 동기화 완료 (In-Sync: local HEAD == origin/main)
 • 작업 트리     : 깨끗함 (Clean, 0 files)
-• 열린 GitHub PR: 열린 PR 없음
-• 최근 검증 상태: 134/134 테스트 통과, ESLint/TS 0 오류
+• 열린 GitHub PR: #14 [chore/dependency-security-20260909] 의존성 취약점 진단 및 안전한 정리
+• 최근 검증 상태: 196/196 테스트 통과, ESLint/TS 0 오류
 ==============================================================
 ```
 
@@ -101,7 +90,7 @@ graph LR
 3. **코드 수정 및 로컬 검증**:
    ```bash
    npm run check   # TS, ESLint 검사
-   npm test        # 134개 전체 회귀 테스트
+   npm test        # 196개 전체 회귀 테스트
    ```
 4. **커밋 및 원격 푸시**:
    ```bash
