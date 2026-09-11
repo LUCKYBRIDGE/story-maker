@@ -241,7 +241,6 @@ export function StoryStudio() {
   const [importError, setImportError] = useState("");
   const [discoveryScreen, setDiscoveryScreen] = useState<DiscoveryScreen>("home");
   const [selectedStoryTheme, setSelectedStoryTheme] = useState<StoryTheme>("onggojib");
-  const [readerEntryFrom, setReaderEntryFrom] = useState<"home" | "library">("home");
   const [storyHubGroup, setStoryHubGroup] = useState<StoryHubGroup>("base");
   const [creationHubOpen, setCreationHubOpen] = useState(false);
   const [collection, setCollection] = useState<ProjectCollection>({ version: 1, selectedProjectId: null, projects: [] });
@@ -568,13 +567,14 @@ export function StoryStudio() {
     } catch (error) { showCollectionError(error instanceof Error ? error.message : "파일로 보관하지 못했어요."); }
   }
 
-  async function copyBaseEdition() {
+  async function copyBaseEdition(theme?: StoryTheme) {
     if (busy || entryBusy || !hydrated) return;
     setEntryBusy(true);
     try {
       const { getExampleProject } = await import("./story-examples");
-      const master = getExampleProject(selectedStoryTheme);
-      const project = createBaseEditionDraft(master, selectedStoryTheme, `story-${crypto.randomUUID()}`);
+      const targetTheme = theme ?? selectedStoryTheme;
+      const master = getExampleProject(targetTheme);
+      const project = createBaseEditionDraft(master, targetTheme, `story-${crypto.randomUUID()}`);
       if (!createCollectionProject(project)) return;
       openCollectionProject(project.id);
     } catch (error) {
@@ -2467,7 +2467,7 @@ export function StoryStudio() {
     homeReturnOriginRef.current = origin;
     saveStudioUiSession(() => window.localStorage, origin.session);
     setLocalDraftStatus("available");
-    setCreationHubOpen(true);
+    showDiscovery("library");
     setEntryNotice("");
     setProjectToolsOpen(false);
     setMemoPopupOpen(false);
@@ -2593,7 +2593,10 @@ export function StoryStudio() {
           dispatchPlayerUi({ type: "close" });
           playerReturnLocationRef.current = null;
           if (context.kind === "student") returnHome();
-          else setCreatorAccess("none");
+          else {
+            setCreatorAccess("none");
+            showDiscovery("library");
+          }
         }}
         onBack={returnFromPlayer}
         revisionResponses={revisionResponses}
@@ -2612,7 +2615,7 @@ export function StoryStudio() {
           busy={Boolean(busy) || entryBusy || !hydrated}
           failed={localDraftStatus === "failed"}
           notice={entryNotice}
-          onHome={() => showDiscovery("home")}
+          onHome={() => showDiscovery("library")}
           onRetry={retryCollection}
           onOpen={openCollectionProject}
           onDelete={deleteCollectionProject}
@@ -2635,18 +2638,23 @@ export function StoryStudio() {
           busy={Boolean(busy) || entryBusy || !hydrated}
           failed={localDraftStatus === "failed"}
           notice={entryNotice}
-          onBack={() => showDiscovery(discoveryScreen === "story-hub" ? "reader-entry" : discoveryScreen === "reader-entry" ? readerEntryFrom : "home")}
+          onBack={() => showDiscovery("home")}
           onCreation={() => setCreationHubOpen(true)}
-          onSelectStory={theme => { setSelectedStoryTheme(theme); setReaderEntryFrom("library"); showDiscovery("reader-entry"); }}
-          onGroup={group => { setStoryHubGroup(group); showDiscovery("story-hub"); }}
-          onReadBase={() => { void openPlay(0, "example", selectedStoryTheme); }}
+          onSelectStory={theme => { setSelectedStoryTheme(theme); }}
+          onGroup={group => { setStoryHubGroup(group); }}
+          onReadBase={(theme) => { void openPlay(0, "example", theme ?? selectedStoryTheme); }}
           onReadLocal={id => openCollectionProject(id, true)}
           onEditLocal={id => openCollectionProject(id)}
-          onCopyBase={() => { void copyBaseEdition(); }}
+          onCopyBase={(theme) => { void copyBaseEdition(theme); }}
+          onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
+          onStartRabbit={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
+          onStartOnggojib={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
+          onDeleteLocal={deleteCollectionProject}
+          onBackupLocal={id => saveStoryFile(false, id)}
         /> : <StartScreen
           selectedTheme={selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
-          onOpenReaderEntry={() => { setReaderEntryFrom("home"); showDiscovery("reader-entry"); }}
+          onOpenReaderEntry={() => { showDiscovery("library"); }}
           onOpenCreationHub={() => setCreationHubOpen(true)}
           savedProject={localDraftStatus === "available" ? draft : undefined}
           entryBusy={entryBusy}
