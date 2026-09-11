@@ -1,9 +1,7 @@
-# Testing & Verification Rules
+# Verification scope
 
-## 1. Zero-Error Build Policy
-- Every code change must maintain `npm run build` (or stack equivalent) with **0 errors**.
-- Never commit broken code or disabled tests.
-
-## 2. Self-Healing Verification
-- Run local unit tests and build gates before completing a task.
-- If verification fails, iteratively heal root causes up to 3 times before escalation.
+- The repository AGENTS.md and affected task's required checks define the gate; this file adds no independent full-suite or build requirement.
+- For documentation-only edits, check affected references and consistency. For code, select affected checks; preserve explicit release, security and data-compatibility gates.
+- Reuse passing evidence only for matching relevant code, inputs and required environment. Do not repeat local checks already established by equivalent CI evidence.
+- Distinguish pre-existing warnings from new regressions. Do not modify unrelated code to satisfy a generic zero-warning target.
+- Use a focused regression case for meaningful logic changes when practical; do not add tests merely to mirror wording or trivial implementation.

@@ -10,11 +10,11 @@
 - 현재 실행 상태: `docs/storygame-development-status.md`
 - AI 실행 절차: `docs/storygame-ai-implementation-runbook.md`
 - 작업별 계약: `docs/tasks/storygame-atomic-task-cards.md`
-- 상태: 현재 개발의 우선순위와 완료 조건을 관리하는 실행 문서
+- 역할: 단계 순서의 이유와 단계별 계약. 현재 진행 상태·우선 작업·완료 증거는 개발 상태표만 갱신한다. 아래 날짜별 실행 기록은 당시의 이력이며 재실행 지시가 아니다.
 
 ---
 
-## 0. 실행 결론
+## 0. 기존 실행 결정과 이력
 
 BR-01 사용자 직접 구현 요청: 2/3 선택지 → 갈래별 컷 → 합류 또는 각 결말을 지원한다.
 한 작업 안에서 데이터·저장/Excel → 편집 → 재생 → 회귀/브라우저 검증 순서로 완결한다.

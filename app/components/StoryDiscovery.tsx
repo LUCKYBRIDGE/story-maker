@@ -96,7 +96,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   const [page, setPage] = useState(0);
   const [capacity, setCapacity] = useState(10);
   const [selectedBook, setSelectedBook] = useState<SelectedBook | null>(null);
-  const [showLocalManagement, setShowLocalManagement] = useState(false);
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -117,53 +116,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
     };
   }, []);
 
-  // Overlay Focus Trap & Escape key handling
-  useEffect(() => {
-    if (!selectedBook) return;
-    const dialog = overlayRef.current;
-    const previous = document.activeElement as HTMLElement | null;
-    previousFocusRef.current = previous;
-
-    const focusable = dialog?.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), [tabindex="0"]:not([disabled])'
-    );
-    if (focusable && focusable.length > 0) {
-      focusable[0]?.focus();
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        closeOverlay();
-      } else if (e.key === "Tab" && dialog) {
-        const items = Array.from(
-          dialog.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), [tabindex="0"]:not([disabled])'
-          )
-        ).filter((el) => el.getClientRects().length > 0);
-        if (items.length === 0) return;
-        const first = items[0];
-        const last = items[items.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      previousFocusRef.current?.focus();
-    };
-  }, [selectedBook]);
-
   function closeOverlay() {
     setSelectedBook(null);
-    setShowLocalManagement(false);
   }
 
   // 1. 기본 작품 데이터
@@ -226,10 +180,114 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
     accent: "#c7a76c",
   }));
 
+  // 새 이야기 특수 책
+  const newStoryBook: SelectedBook = {
+    kind: "new",
+    id: "__new_story__",
+    title: "새 이야기 만들기",
+    subtitle: "새로운 이야기를 시작해요",
+    description: "빈 도화지에서 자유롭게 시작하거나, 준비된 전래동화의 뒷이야기를 내가 상상해 보세요.",
+    paper: "#fcf8ee",
+    ink: "#382c1e",
+    accent: "#bfa373",
+  };
+
   // 표준 테스트 및 페이지네이션 대상 책 목록 (기본 + 내 작품 + 공유)
   const booksToDisplay = [...baseBooks, ...localBooks, ...sharedBooks];
   const pagination = libraryPage(booksToDisplay, page, capacity);
   const isFull = props.collection.projects.length >= MAX_EDITABLE_PROJECTS;
+
+  const allSelectableBooks = [...booksToDisplay, newStoryBook];
+
+  const goToPrevBook = () => {
+    if (!selectedBook) return;
+    const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
+    if (currentIndex === -1) return;
+    const prevIndex = (currentIndex - 1 + allSelectableBooks.length) % allSelectableBooks.length;
+    const nextBook = allSelectableBooks[prevIndex];
+    setSelectedBook(nextBook);
+    if (nextBook.kind === "base" && props.onSelectStory) {
+      props.onSelectStory(nextBook.theme);
+    }
+  };
+
+  const goToNextBook = () => {
+    if (!selectedBook) return;
+    const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
+    if (currentIndex === -1) return;
+    const nextIndex = (currentIndex + 1) % allSelectableBooks.length;
+    const nextBook = allSelectableBooks[nextIndex];
+    setSelectedBook(nextBook);
+    if (nextBook.kind === "base" && props.onSelectStory) {
+      props.onSelectStory(nextBook.theme);
+    }
+  };
+
+  // Overlay Focus Trap, Escape & Arrow key handling
+  useEffect(() => {
+    if (!selectedBook) return;
+    const dialog = overlayRef.current;
+    const previous = document.activeElement as HTMLElement | null;
+    previousFocusRef.current = previous;
+
+    const focusable = dialog?.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [tabindex="0"]:not([disabled])'
+    );
+    if (focusable && focusable.length > 0) {
+      focusable[0]?.focus();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeOverlay();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
+        if (currentIndex !== -1) {
+          const prevIndex = (currentIndex - 1 + allSelectableBooks.length) % allSelectableBooks.length;
+          const nextBook = allSelectableBooks[prevIndex];
+          setSelectedBook(nextBook);
+          if (nextBook.kind === "base" && props.onSelectStory) {
+            props.onSelectStory(nextBook.theme);
+          }
+        }
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
+        if (currentIndex !== -1) {
+          const nextIndex = (currentIndex + 1) % allSelectableBooks.length;
+          const nextBook = allSelectableBooks[nextIndex];
+          setSelectedBook(nextBook);
+          if (nextBook.kind === "base" && props.onSelectStory) {
+            props.onSelectStory(nextBook.theme);
+          }
+        }
+      } else if (e.key === "Tab" && dialog) {
+        const items = Array.from(
+          dialog.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [tabindex="0"]:not([disabled])'
+          )
+        ).filter((el) => el.getClientRects().length > 0);
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+    };
+  });
 
   return (
     <main className="story-discovery">
@@ -303,7 +361,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
 
       {/* 🌟 2. 원목 책장 공간 (Wooden Bookshelf Space) */}
       <section
-        className="library-bookcase"
+        className={`library-bookcase ${selectedBook ? "is-receded" : ""}`}
         aria-label="서재 책장"
       >
         {/* 우측 상단 덩굴 식물 (Ivy Vine) 장식 */}
@@ -418,18 +476,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             <button
               type="button"
               className="shelf-book shelf-book-new"
-              onClick={() =>
-                setSelectedBook({
-                  kind: "new",
-                  id: "__new_story__",
-                  title: "새 이야기 만들기",
-                  subtitle: "새로운 이야기를 시작해요",
-                  description: "빈 도화지에서 자유롭게 시작하거나, 준비된 전래동화의 뒷이야기를 내가 상상해 보세요.",
-                  paper: "#fcf8ee",
-                  ink: "#382c1e",
-                  accent: "#bfa373",
-                })
-              }
+              onClick={() => setSelectedBook(newStoryBook)}
               disabled={props.busy}
               aria-label="새 이야기 만들기 · 새 작품 시작"
             >
@@ -490,358 +537,554 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         )}
       </section>
 
-      {/* 🌟 4. 책 꺼내기 인터랙션 (Detail Overlay Modal) */}
+      {/* 🌟 4. 책 꺼내기 Focus Stage */}
       {selectedBook && (
         <div
-          className="book-detail-backdrop"
+          className="library-focus-backdrop"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeOverlay();
           }}
           role="presentation"
         >
+          {/* 상단 닫기/돌아가기 버튼 */}
+          <button
+            type="button"
+            className="btn-focus-close"
+            onClick={closeOverlay}
+            aria-label="돌아가기"
+            title="서재로 돌아가기 (Escape)"
+          >
+            <span className="btn-close-glyph" aria-hidden="true">✕</span>
+            <span className="btn-close-label">돌아가기</span>
+          </button>
+
           <section
             ref={overlayRef}
-            className="book-detail-modal"
+            className="library-focus-stage"
             role="dialog"
             aria-modal="true"
             aria-labelledby={dialogTitleId}
           >
-            {/* 닫기 버튼 */}
-            <button
-              type="button"
-              className="btn-overlay-close"
-              onClick={closeOverlay}
-              aria-label="돌아가기"
-              title="서재로 돌아가기 (Escape)"
-            >
-              ✕
-            </button>
-
-            {/* 좌측: 펼쳐진 책 비주얼 디스플레이 */}
-            <div className="detail-book-col" aria-hidden="true">
-              <div
-                className="detail-hardcover-book"
-                style={
-                  {
-                    "--book-paper": selectedBook.paper,
-                    "--book-ink": selectedBook.ink,
-                    "--book-accent": selectedBook.accent,
-                  } as CSSProperties
-                }
-              >
-                <div className="detail-book-spine" />
-                <div className="detail-book-cover">
-                  <span className="detail-book-filigree-top">─ ◇ ─</span>
-                  <div className="detail-cover-center">
-                    {selectedBook.kind === "base" && selectedBook.coverArt && (
-                      <img
-                        src={selectedBook.coverArt}
-                        alt=""
-                        className="detail-hero-illustration"
-                      />
-                    )}
-                    {selectedBook.kind === "new" && (
-                      <div className="detail-new-crest">✦</div>
-                    )}
-                    <h3 className="detail-cover-title">{selectedBook.title}</h3>
-                    <p className="detail-cover-subtitle">{selectedBook.subtitle}</p>
-                  </div>
-                  <span className="detail-book-edition">놀스토리 이야기 극장</span>
-                </div>
+            {/* 상단 엠블럼 및 서재 타이틀 */}
+            <div className="focus-header">
+              <div className="focus-emblem-wrap" aria-hidden="true">
+                <svg
+                  className="focus-book-emblem"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#c99239"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                  <path d="M6 6h10M6 10h10M6 14h6" />
+                </svg>
+              </div>
+              <span className="focus-eyebrow">나의 이야기 극장</span>
+              <p className="focus-motto">책을 펼치면 무대가 시작돼요</p>
+              <div className="focus-divider-ornament" aria-hidden="true">
+                ─ ◇ ─
               </div>
             </div>
 
-            {/* 우측: 책에 따른 행동 선택 패널 */}
-            <div className="detail-action-col">
-              <div className="detail-action-header">
-                <span className="detail-kind-pill">
-                  {selectedBook.kind === "base"
-                    ? "놀스토리 기본 전래동화"
-                    : selectedBook.kind === "mine"
-                    ? "내가 만든 이야기"
-                    : selectedBook.kind === "shared"
-                    ? "공유받은 이야기"
-                    : "새로운 창작 이야기"}
-                </span>
-                <h2 id={dialogTitleId} className="detail-main-title">
-                  {selectedBook.title}
-                </h2>
-                <p className="detail-main-desc">{selectedBook.description}</p>
-              </div>
+            {/* 중앙 책 쇼케이스 & 좌우 탐색 네비게이션 */}
+            <div className="focus-showcase-row">
+              <button
+                type="button"
+                className="focus-nav-arrow focus-arrow-prev"
+                onClick={goToPrevBook}
+                aria-label="이전 이야기"
+                title="이전 이야기 (← 키)"
+              >
+                <span aria-hidden="true">‹</span>
+              </button>
 
-              {/* 1) 기본 전래동화 선택 시 */}
-              {selectedBook.kind === "base" && (
-                <div className="detail-choice-block">
-                  <h3 className="detail-prompt">어떤 이야기를 펼칠까요?</h3>
-                  <div className="detail-btn-stack">
-                    {/* 원작 전체 준비 중 (disabled) */}
-                    <div className="detail-action-item">
-                      <button
-                        type="button"
-                        className="btn-detail-disabled"
-                        disabled
-                        aria-label="원작 전체 · 준비 중"
-                      >
-                        <span className="btn-glyph" aria-hidden="true">📜</span>
-                        <div className="btn-text-group">
-                          <strong>원작 전체 · 준비 중</strong>
-                          <small>고전 원작 전체는 준비 중이에요. 놀스토리 이야기로 읽어보세요.</small>
-                        </div>
-                      </button>
+              <div className="focus-book-stage-center" key={selectedBook.id}>
+                {/* 은은한 금빛 반짝임 효과 */}
+                <div className="focus-sparkles" aria-hidden="true">
+                  <span className="sparkle s1">✦</span>
+                  <span className="sparkle s2">✧</span>
+                  <span className="sparkle s3">✦</span>
+                  <span className="sparkle s4">✧</span>
+                </div>
+
+                {/* 3D 하드커버 양장본 책 */}
+                <div
+                  className="focus-hardcover-book"
+                  style={
+                    {
+                      "--book-paper": selectedBook.paper,
+                      "--book-ink": selectedBook.ink,
+                      "--book-accent": selectedBook.accent,
+                    } as CSSProperties
+                  }
+                >
+                  {/* 양장본 책등(Spine) 및 세로 표제 */}
+                  <div className="focus-book-spine" aria-hidden="true">
+                    <span className="focus-spine-title">{selectedBook.title}</span>
+                  </div>
+
+                  {/* 책 표지면 */}
+                  <div className="focus-book-face">
+                    <div className="focus-face-top" aria-hidden="true">
+                      <span className="face-diamond">─ ◇ ─</span>
                     </div>
 
-                    {/* 놀스토리 이야기 읽기 */}
-                    <div className="detail-action-item">
-                      <button
-                        type="button"
-                        className="btn-detail-primary"
-                        aria-label="기본 작품 읽기"
-                        onClick={() => {
-                          closeOverlay();
-                          props.onReadBase(selectedBook.theme);
-                        }}
-                        disabled={props.busy}
-                      >
-                        <span className="btn-glyph" aria-hidden="true">▶</span>
-                        <div className="btn-text-group">
-                          <strong>기본 작품 읽기</strong>
-                          <small>전래동화를 재구성한 놀스토리 선택형 이야기를 감상해요.</small>
-                        </div>
-                      </button>
-                    </div>
+                    <h3 className="focus-cover-title">{selectedBook.title}</h3>
 
-                    {/* 이 이야기로 만들기 (복제) */}
-                    <div className="detail-action-item">
-                      <button
-                        type="button"
-                        className="btn-detail-secondary"
-                        aria-label="복제해서 만들기"
-                        onClick={() => {
-                          closeOverlay();
-                          props.onCopyBase(selectedBook.theme);
-                        }}
-                        disabled={props.busy || props.failed || isFull}
-                      >
-                        <span className="btn-glyph" aria-hidden="true">✎</span>
-                        <div className="btn-text-group">
-                          <strong>복제해서 만들기</strong>
-                          <small>이 이야기의 앞부분을 가져와 나만의 새로운 결말로 써보세요.</small>
+                    <div className="focus-cover-art-box">
+                      {selectedBook.kind === "base" && selectedBook.coverArt && (
+                        <img
+                          src={selectedBook.coverArt}
+                          alt=""
+                          className="focus-hero-img"
+                        />
+                      )}
+                      {selectedBook.kind === "mine" && (
+                        <div className="focus-custom-crest">
+                          <span className="crest-symbol">✦</span>
+                          <span className="crest-sub">{selectedBook.subtitle}</span>
                         </div>
-                      </button>
-                      {isFull && (
-                        <p className="detail-slot-notice" role="status">
-                          두 작품을 모두 사용하고 있어요. 새로 만들려면 창작 관리에서 기존 작품을 정리해 주세요.
-                        </p>
+                      )}
+                      {selectedBook.kind === "shared" && (
+                        <div className="focus-custom-crest">
+                          <span className="crest-symbol">🤝</span>
+                          <span className="crest-sub">{selectedBook.subtitle}</span>
+                        </div>
+                      )}
+                      {selectedBook.kind === "new" && (
+                        <div className="focus-custom-crest">
+                          <span className="crest-symbol">✏️</span>
+                          <span className="crest-sub">새 도화지</span>
+                        </div>
                       )}
                     </div>
+
+                    <div className="focus-face-bottom" aria-hidden="true">
+                      <span className="face-tag">놀스토리 이야기 극장</span>
+                    </div>
                   </div>
+
+                  {/* 책 우측 페이지 옆면 (양장본 두께감) */}
+                  <div className="focus-book-pages" aria-hidden="true" />
                 </div>
+
+                {/* 책 하단 원목 받침대 (Wooden Pedestal) */}
+                <div className="focus-pedestal" aria-hidden="true">
+                  <div className="pedestal-disc" />
+                  <div className="pedestal-rim" />
+                  <div className="pedestal-shadow" />
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="focus-nav-arrow focus-arrow-next"
+                onClick={goToNextBook}
+                aria-label="다음 이야기"
+                title="다음 이야기 (→ 키)"
+              >
+                <span aria-hidden="true">›</span>
+              </button>
+            </div>
+
+            {/* 책 메타 텍스트 (제목, 한두 줄 소개, 오너먼트) */}
+            <div className="focus-meta-block">
+              <h2 id={dialogTitleId} className="focus-meta-title">
+                {selectedBook.title}
+              </h2>
+              <p className="focus-meta-desc">{selectedBook.description}</p>
+              <div className="focus-meta-filigree" aria-hidden="true">
+                ─ ◇ ─
+              </div>
+            </div>
+
+            {/* 하단 4개 액션 카드 그리드 */}
+            <div className="focus-action-grid">
+              {/* 1) 기본 전래동화 선택 시 */}
+              {selectedBook.kind === "base" && (
+                <>
+                  <button
+                    type="button"
+                    className="focus-action-card is-disabled"
+                    disabled
+                    aria-label="원작 전체 · 준비 중"
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">원작 읽기</strong>
+                      <small className="action-card-sub">원래 이야기를 만나보아요 (준비 중)</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card is-primary"
+                    aria-label="기본 작품 읽기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onReadBase(selectedBook.theme);
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                        <polygon points="12 4 13.5 7.5 17 8 14.5 10.5 15 14 12 12.5 9 14 9.5 10.5 7 8 10.5 7.5 12 4" fill="currentColor" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">놀스토리 읽기</strong>
+                      <small className="action-card-sub">새롭게 각색한 이야기를 읽어요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    aria-label="공유 작품 보기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onCreation();
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">모두의 이야기 읽기</strong>
+                      <small className="action-card-sub">친구들이 만든 이야기를 읽어요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card is-accent"
+                    aria-label="복제해서 만들기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onCopyBase(selectedBook.theme);
+                    }}
+                    disabled={props.busy || props.failed || isFull}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">편집하기</strong>
+                      <small className="action-card-sub">나만의 이야기를 만들어봐요</small>
+                    </div>
+                  </button>
+                </>
               )}
 
               {/* 2) 내가 만든 이야기 선택 시 */}
               {selectedBook.kind === "mine" && (
-                <div className="detail-choice-block">
-                  <h3 className="detail-prompt">내 이야기를 어떻게 볼까요?</h3>
-                  <div className="detail-btn-stack">
-                    {/* 이야기 읽기 */}
-                    <button
-                      type="button"
-                      className="btn-detail-primary"
-                      aria-label="읽기"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onReadLocal(selectedBook.id);
-                      }}
-                      disabled={props.busy || !selectedBook.readable}
-                    >
-                      <span className="btn-glyph" aria-hidden="true">▶</span>
-                      <div className="btn-text-group">
-                        <strong>읽기</strong>
-                        <small>
-                          {selectedBook.readable
-                            ? "마지막으로 플레이에 적용한 버전을 펼쳐 읽어요."
-                            : "편집 화면에서 글을 쓰고 플레이에 적용하면 읽을 수 있어요."}
-                        </small>
-                      </div>
-                    </button>
-
-                    {/* 이어서 편집 */}
-                    <button
-                      type="button"
-                      className="btn-detail-secondary"
-                      aria-label="이어만들기"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onEditLocal(selectedBook.id);
-                      }}
-                      disabled={props.busy}
-                    >
-                      <span className="btn-glyph" aria-hidden="true">✎</span>
-                      <div className="btn-text-group">
-                        <strong>이어만들기</strong>
-                        <small>스토리 스튜디오 편집기에서 대본과 장면을 고쳐 써요.</small>
-                      </div>
-                    </button>
-
-                    {/* 1차 행동 외 관리 기능: 접힘 메뉴 */}
-                    <div className="detail-manage-collapsible">
-                      <button
-                        type="button"
-                        className="btn-toggle-manage"
-                        onClick={() => setShowLocalManagement((v) => !v)}
-                        aria-expanded={showLocalManagement}
-                      >
-                        <span>··· 작품 관리</span>
-                        <span aria-hidden="true">{showLocalManagement ? "▲" : "▼"}</span>
-                      </button>
-
-                      {showLocalManagement && (
-                        <div className="detail-manage-box">
-                          <button
-                            type="button"
-                            className="btn-sub-action"
-                            onClick={() => {
-                              props.onBackupLocal?.(selectedBook.id);
-                            }}
-                            disabled={props.busy}
-                          >
-                            💾 .nolstory 파일로 보관
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-sub-action btn-sub-danger"
-                            onClick={() => {
-                              if (confirm(`'${selectedBook.title}' 이야기를 정말 삭제할까요?`)) {
-                                closeOverlay();
-                                props.onDeleteLocal?.(selectedBook.id);
-                              }
-                            }}
-                            disabled={props.busy}
-                          >
-                            🗑️ 작품 삭제
-                          </button>
-                        </div>
-                      )}
+                <>
+                  <button
+                    type="button"
+                    className="focus-action-card is-primary"
+                    aria-label="읽기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onReadLocal(selectedBook.id);
+                    }}
+                    disabled={props.busy || !selectedBook.readable}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+                      </svg>
                     </div>
-                  </div>
-                </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">이야기 읽기</strong>
+                      <small className="action-card-sub">
+                        {selectedBook.readable
+                          ? "완성된 플레이 버전을 펼쳐 읽어요"
+                          : "플레이에 적용한 뒤 읽을 수 있어요"}
+                      </small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card is-accent"
+                    aria-label="이어만들기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onEditLocal(selectedBook.id);
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">이어만들기</strong>
+                      <small className="action-card-sub">스튜디오에서 대본과 무대를 고쳐 써요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    aria-label="파일로 보관"
+                    onClick={() => {
+                      props.onBackupLocal?.(selectedBook.id);
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">파일로 보관</strong>
+                      <small className="action-card-sub">.nolstory 파일로 내 기기에 저장해요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card is-danger"
+                    aria-label="작품 삭제"
+                    onClick={() => {
+                      if (confirm(`'${selectedBook.title}' 이야기를 정말 삭제할까요?`)) {
+                        closeOverlay();
+                        props.onDeleteLocal?.(selectedBook.id);
+                      }
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">작품 삭제</strong>
+                      <small className="action-card-sub">이 작품을 기기에서 정리해요</small>
+                    </div>
+                  </button>
+                </>
               )}
 
               {/* 3) 공유받은 이야기 선택 시 */}
               {selectedBook.kind === "shared" && (
-                <div className="detail-choice-block">
-                  <h3 className="detail-prompt">공유 작품을 어떻게 감상할까요?</h3>
-                  <div className="detail-btn-stack">
+                <>
+                  <button
+                    type="button"
+                    className="focus-action-card is-primary"
+                    aria-label="읽기"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onReadShared(selectedBook.file);
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">공유 이야기 읽기</strong>
+                      <small className="action-card-sub">친구가 공유한 이야기를 감상해요</small>
+                    </div>
+                  </button>
+
+                  {selectedBook.file.sharing.allowRemix ? (
                     <button
                       type="button"
-                      className="btn-detail-primary"
-                      aria-label="읽기"
+                      className="focus-action-card is-accent"
+                      aria-label="고쳐 쓰기"
                       onClick={() => {
                         closeOverlay();
-                        props.onReadShared(selectedBook.file);
+                        props.onRemixShared(selectedBook.file);
                       }}
-                      disabled={props.busy}
+                      disabled={props.busy || props.failed || isFull}
                     >
-                      <span className="btn-glyph" aria-hidden="true">▶</span>
-                      <div className="btn-text-group">
-                        <strong>읽기</strong>
-                        <small>친구나 선생님이 공유한 이야기를 바로 감상해요.</small>
+                      <div className="action-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                          <path d="m15 5 4 4" />
+                        </svg>
+                      </div>
+                      <div className="action-card-text">
+                        <strong className="action-card-title">고쳐 쓰기</strong>
+                        <small className="action-card-sub">내 작품으로 가져와 새롭게 바꿔요</small>
                       </div>
                     </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="focus-action-card is-disabled"
+                      disabled
+                      aria-label="고쳐 쓰기 불가"
+                    >
+                      <div className="action-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                      <div className="action-card-text">
+                        <strong className="action-card-title">읽기 전용</strong>
+                        <small className="action-card-sub">원작자가 감상용으로 공유했어요</small>
+                      </div>
+                    </button>
+                  )}
 
-                    {selectedBook.file.sharing.allowRemix && (
-                      <button
-                        type="button"
-                        className="btn-detail-secondary"
-                        aria-label="고쳐 쓰기"
-                        onClick={() => {
-                          closeOverlay();
-                          props.onRemixShared(selectedBook.file);
-                        }}
-                        disabled={props.busy || props.failed || isFull}
-                      >
-                        <span className="btn-glyph" aria-hidden="true">✎</span>
-                        <div className="btn-text-group">
-                          <strong>고쳐 쓰기</strong>
-                          <small>원작자가 고쳐 쓰기를 허용했어요. 내 작품으로 가져와 수정해요.</small>
-                        </div>
-                      </button>
-                    )}
-                  </div>
-                </div>
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onCreation();
+                    }}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">창작 관리</strong>
+                      <small className="action-card-sub">다른 공유 작품도 둘러보아요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    onClick={closeOverlay}
+                    aria-label="서재로 돌아가기"
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">서재로 돌아가기</strong>
+                      <small className="action-card-sub">다른 책을 다시 살펴봐요</small>
+                    </div>
+                  </button>
+                </>
               )}
 
-              {/* 4) '새 이야기 만들기' 선택 시 */}
+              {/* 4) 새 이야기 만들기 선택 시 */}
               {selectedBook.kind === "new" && (
-                <div className="detail-choice-block">
-                  <h3 className="detail-prompt">어떤 이야기를 시작할까요?</h3>
-                  <div className="detail-btn-stack">
-                    {/* 빈 이야기 */}
-                    <button
-                      type="button"
-                      className="btn-detail-primary"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onStartBlank?.();
-                      }}
-                      disabled={props.busy || isFull}
-                    >
-                      <span className="btn-glyph" aria-hidden="true">✏️</span>
-                      <div className="btn-text-group">
-                        <strong>빈 이야기부터 만들기</strong>
-                        <small>처음부터 끝까지 나만의 대본과 무대로 새 이야기를 써요.</small>
-                      </div>
-                    </button>
+                <>
+                  <button
+                    type="button"
+                    className="focus-action-card is-primary"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onStartBlank?.();
+                    }}
+                    disabled={props.busy || isFull}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">빈 이야기부터 만들기</strong>
+                      <small className="action-card-sub">처음부터 나만의 무대로 시작해요</small>
+                    </div>
+                  </button>
 
-                    {/* 토끼와 자라 이어쓰기 */}
-                    <button
-                      type="button"
-                      className="btn-detail-secondary"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onStartRabbit?.();
-                      }}
-                      disabled={props.busy || isFull}
-                    >
-                      <span className="btn-glyph" aria-hidden="true">🐰</span>
-                      <div className="btn-text-group">
-                        <strong>토끼와 자라 · 이어 쓰기</strong>
-                        <small>용궁에서 위기에 빠진 토끼의 다음 대사부터 이어서 써요.</small>
-                      </div>
-                    </button>
+                  <button
+                    type="button"
+                    className="focus-action-card is-accent"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onStartRabbit?.();
+                    }}
+                    disabled={props.busy || isFull}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <span>🐰</span>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">토끼와 자라 이어 쓰기</strong>
+                      <small className="action-card-sub">용궁 위기에서 다음 대사부터 써요</small>
+                    </div>
+                  </button>
 
-                    {/* 옹고집전 이어쓰기 */}
-                    <button
-                      type="button"
-                      className="btn-detail-secondary"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onStartOnggojib?.();
-                      }}
-                      disabled={props.busy || isFull}
-                    >
-                      <span className="btn-glyph" aria-hidden="true">⚖️</span>
-                      <div className="btn-text-group">
-                        <strong>옹고집전 · 이어 쓰기</strong>
-                        <small>처음 재판장에 끌려온 두 옹고집의 말부터 이어서 써요.</small>
-                      </div>
-                    </button>
+                  <button
+                    type="button"
+                    className="focus-action-card is-accent"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onStartOnggojib?.();
+                    }}
+                    disabled={props.busy || isFull}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <span>⚖️</span>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">옹고집전 이어 쓰기</strong>
+                      <small className="action-card-sub">두 옹고집의 첫 재판부터 써요</small>
+                    </div>
+                  </button>
 
-                    {/* 파일/시트 관리 바로가기 */}
-                    <button
-                      type="button"
-                      className="btn-link-advance"
-                      onClick={() => {
-                        closeOverlay();
-                        props.onCreation();
-                      }}
-                    >
-                      📁 파일이나 Excel·Google 시트에서 가져오기 ➔
-                    </button>
-                  </div>
-                </div>
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onCreation();
+                    }}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">외부 파일 가져오기</strong>
+                      <small className="action-card-sub">Excel이나 파일에서 불러와요</small>
+                    </div>
+                  </button>
+                </>
               )}
             </div>
+
+            {/* 슬롯 꽉 참 안내 */}
+            {isFull && (selectedBook.kind === "base" || selectedBook.kind === "new") && (
+              <p className="focus-slot-notice" role="status">
+                두 작품을 모두 사용하고 있어요. 새로 만들려면 창작 관리에서 기존 작품을 정리해 주세요.
+              </p>
+            )}
           </section>
         </div>
       )}

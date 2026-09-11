@@ -1,33 +1,11 @@
 ---
 name: code-review
-description: 10단계 다차원 정밀 코드 리뷰 스킬
+description: Review a requested diff or material regression risk against this repository's contracts; ordinary edits do not require a separate review workflow.
 ---
-# 📋 10-Step Code Review (다차원 정밀 코드 리뷰)
+# Review
 
-## 1. 10단계 점검 매트릭스
-1. **보안 & 시크릿**: `.env` 비밀키 하드코딩 금지, XSS/CSRF 방어
-2. **타입 안정성**: TypeScript strict 준수, any 타입 지양
-3. **에러 핸들링**: 예외 상황 방어 및 친절한 사용자 피드백
-4. **성능 & 렌더링**: 불필요한 리렌더링, 메모리 누수 방지
-5. **접근성 (a11y)**: 시맨틱 태그, ARIA 라벨, 키보드 네비게이션
-6. **반응형 UI**: 모바일/태블릿/데스크톱 뷰포트 및 44px 터치 타겟
-7. **모듈화 & 재사용성**: 중복 로직 제거, 단일 책임 원칙
-8. **문서 일치성**: `docs/` 및 `AGENTS.md` 변경사항 동기화
-9. **테스트 커버리지**: 엣지 케이스 및 핵심 로직 테스트 여부
-10. **검증 무결성**: 작업 카드가 요구한 CI/브라우저/실기기 증거 통과. 기존에 기록된 비차단 경고는 새 회귀와 구분
-
-
-## 2. 실행 환경 검토
-리뷰에서는 Lead가 누구였는지보다 실제 증거 출처와 변경의 재현 가능성을 구분합니다.
-- GitHub diff/문서: G evidence
-- Actions check/test: A evidence
-- 실제 브라우저/IME: B evidence
-- 실제 장치/OS: D evidence
-
-필수 증거가 없는 항목은 미검증으로 기록하며, 단순히 Work를 호출하기 위해 자동 검사를 중복하지 않습니다.
-
-
-## 3. 하이브리드 리뷰
-- Work가 만든 코드도 push된 PR diff와 CI를 기준으로 동일하게 리뷰합니다.
-- Chat이 만든 UI 코드도 B/D 증거가 필요한 경우 실제 환경 증거 없이 완료로 보지 않습니다.
-- 불필요한 도구 간 재작업보다 동일 branch/PR의 작은 handoff를 우선합니다.
+- Read the scoped diff and affected contract. Report actionable defects with a concrete trigger and consequence; do not silently implement fixes during review.
+- Preserve student works, prior Excel compatibility, asset IDs and edit/play separation. Use the current task card and G/A/B/D evidence contract; CI success is reusable only for matching revision and relevant inputs.
+- Prioritize correctness, data loss, security and affected user behavior. Read design or architecture references only when the change touches them.
+- Inspect existing matching evidence before choosing additional checks. Do not impose a full suite, build or zero-warning target beyond the project's gate.
+- Distinguish verified defects from untested concerns. Keep findings in the response unless the user requested a review artifact.
