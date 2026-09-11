@@ -2467,7 +2467,7 @@ export function StoryStudio() {
     homeReturnOriginRef.current = origin;
     saveStudioUiSession(() => window.localStorage, origin.session);
     setLocalDraftStatus("available");
-    showDiscovery("library");
+    setCreationHubOpen(true);
     setEntryNotice("");
     setProjectToolsOpen(false);
     setMemoPopupOpen(false);
@@ -2615,7 +2615,7 @@ export function StoryStudio() {
           busy={Boolean(busy) || entryBusy || !hydrated}
           failed={localDraftStatus === "failed"}
           notice={entryNotice}
-          onHome={() => showDiscovery("library")}
+          onHome={() => showDiscovery("home")}
           onRetry={retryCollection}
           onOpen={openCollectionProject}
           onDelete={deleteCollectionProject}

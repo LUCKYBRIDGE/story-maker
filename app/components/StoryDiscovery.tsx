@@ -241,7 +241,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             className="library-nav-btn library-btn-back"
             onClick={props.onBack}
             disabled={props.busy}
-            aria-label="메인으로 돌아가기"
           >
             <span aria-hidden="true">←</span> 메인으로
           </button>
@@ -273,7 +272,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               className="library-nav-btn library-btn-manage"
               onClick={props.onCreation}
               disabled={props.busy}
-              aria-label="창작 관리 열기"
             >
               <span aria-hidden="true">📁</span> 창작 관리
             </button>
@@ -513,8 +511,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               type="button"
               className="btn-overlay-close"
               onClick={closeOverlay}
-              aria-label="서재로 돌아가기"
-              title="닫기 (Escape)"
+              aria-label="돌아가기"
+              title="서재로 돌아가기 (Escape)"
             >
               ✕
             </button>
@@ -597,6 +595,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       <button
                         type="button"
                         className="btn-detail-primary"
+                        aria-label="기본 작품 읽기"
                         onClick={() => {
                           closeOverlay();
                           props.onReadBase(selectedBook.theme);
@@ -616,6 +615,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       <button
                         type="button"
                         className="btn-detail-secondary"
+                        aria-label="복제해서 만들기"
                         onClick={() => {
                           closeOverlay();
                           props.onCopyBase(selectedBook.theme);
@@ -647,6 +647,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     <button
                       type="button"
                       className="btn-detail-primary"
+                      aria-label="읽기"
                       onClick={() => {
                         closeOverlay();
                         props.onReadLocal(selectedBook.id);
@@ -668,6 +669,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     <button
                       type="button"
                       className="btn-detail-secondary"
+                      aria-label="이어만들기"
                       onClick={() => {
                         closeOverlay();
                         props.onEditLocal(selectedBook.id);
@@ -733,6 +735,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     <button
                       type="button"
                       className="btn-detail-primary"
+                      aria-label="읽기"
                       onClick={() => {
                         closeOverlay();
                         props.onReadShared(selectedBook.file);
@@ -750,6 +753,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       <button
                         type="button"
                         className="btn-detail-secondary"
+                        aria-label="고쳐 쓰기"
                         onClick={() => {
                           closeOverlay();
                           props.onRemixShared(selectedBook.file);
