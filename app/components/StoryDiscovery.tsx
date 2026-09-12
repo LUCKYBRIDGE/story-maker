@@ -1,4 +1,5 @@
 "use client";
+import { UiIcon } from "./UiIcon";
 
 import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { libraryPage, type StoryTheme, type DiscoveryScreen } from "../story-discovery";
@@ -13,6 +14,7 @@ import { resolveAssetUrl } from "../story-asset-url";
 export type StoryHubGroup = "base" | "mine" | "shared";
 
 export interface StoryDiscoveryProps {
+  initialFilter?: StoryHubGroup;
   onStoryFile: (file?: File) => void;
   sharedFiles: NolstorySharedFile[];
   onReadShared: (file: NolstorySharedFile) => void;
@@ -103,7 +105,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [filter, setFilter] = useState<"all" | StoryHubGroup>("all");
+  const [filter, setFilter] = useState<"all" | StoryHubGroup>(props.initialFilter ?? "all");
   const [sharedTheme, setSharedTheme] = useState<StoryTheme | null>(null);
   const dialogTitleId = useId();
 
@@ -300,7 +302,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
     const frame = requestAnimationFrame(() => {
       try {
         const saved = JSON.parse(sessionStorage.getItem("storygame:library-view:v1") ?? "null");
-        if (saved?.version === 1) {
+        if (saved?.version === 1 && !props.initialFilter) {
           if (["all", "base", "mine", "shared"].includes(saved.filter)) setFilter(saved.filter);
           if (Number.isSafeInteger(saved.page) && saved.page >= 0) setPage(saved.page);
           if (["rabbit", "onggojib"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
@@ -387,7 +389,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             onClick={props.onBack}
             disabled={props.busy}
           >
-            <span aria-hidden="true">←</span> 메인으로
+            <UiIcon name="back" /> 놀스토리 소개
           </button>
 
           <div className="library-center-badge">
@@ -583,7 +585,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             aria-label="돌아가기"
             title="서재로 돌아가기 (Escape)"
           >
-            <span className="btn-close-glyph" aria-hidden="true">✕</span>
+            <UiIcon name="close" />
             <span className="btn-close-label">돌아가기</span>
           </button>
 
@@ -670,6 +672,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                 {selectedBook.title}
               </h2>
               <p className="focus-meta-desc">{selectedBook.description}</p>
+              {selectedBook.kind === "base" && <small className="focus-availability">원작 읽기 · 준비 중</small>}
               <div className="focus-meta-filigree" aria-hidden="true">
                 ─ ◇ ─
               </div>
@@ -680,24 +683,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               {/* 1) 기본 전래동화 선택 시 */}
               {selectedBook.kind === "base" && (
                 <>
-                  <button
-                    type="button"
-                    className="focus-action-card is-disabled"
-                    disabled
-                    aria-label="원작 전체 · 준비 중"
-                  >
-                    <div className="action-card-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                      </svg>
-                    </div>
-                    <div className="action-card-text">
-                      <strong className="action-card-title">원작 읽기</strong>
-                      <small className="action-card-sub">원래 이야기를 만나보아요 (준비 중)</small>
-                    </div>
-                  </button>
-
                   <button
                     type="button"
                     className="focus-action-card is-primary"

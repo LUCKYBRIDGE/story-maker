@@ -27,6 +27,7 @@ import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery"
 import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
 import { CreationHub } from "./components/CreationHub";
 import { createProjectCollectionRepository, type ProjectCollectionRepository, type ProjectCollection, type CollectionResult } from "./story-project-collection";
+import { loadLandingVisit, markLandingVisited } from "./story-landing-visit";
 import { StartScreen, type EntryLocalDraftStatus } from "./components/StartScreen";
 import { StoryEntryDialog } from "./components/StoryEntryDialog";
 import {
@@ -245,6 +246,7 @@ export function StoryStudio() {
   const [selectedStoryTheme, setSelectedStoryTheme] = useState<StoryTheme>("onggojib");
   const [storyHubGroup, setStoryHubGroup] = useState<StoryHubGroup>("base");
   const [creationHubOpen, setCreationHubOpen] = useState(false);
+  const [libraryInitialFilter, setLibraryInitialFilter] = useState<StoryHubGroup>();
   const [collection, setCollection] = useState<ProjectCollection>({ version: 1, selectedProjectId: null, projects: [] });
   const [creatorAccess, setCreatorAccess] = useState<CreatorAccess>("none");
   const [playerUi, dispatchPlayerUi] = useReducer(
@@ -357,7 +359,6 @@ export function StoryStudio() {
   const applyIssueHighlightTimerRef = useRef<number | null>(null);
   const memoReturnOriginRef = useRef<MemoReturnOrigin | null>(null);
   const playerReturnLocationRef = useRef<StudioReturnOrigin | null>(null);
-  const homeReturnOriginRef = useRef<StudioReturnOrigin | null>(null);
   const mountedRef = useRef(false);
 
   function projectRepository() {
@@ -412,7 +413,6 @@ export function StoryStudio() {
     setMobileEditorToolsOpen(false);
     setSceneSettingsOpen(false);
     setChapterResourcesOpen(false);
-    homeReturnOriginRef.current = null;
     playerReturnLocationRef.current = null;
     memoReturnOriginRef.current = null;
   }
@@ -440,7 +440,7 @@ export function StoryStudio() {
       dispatchPlayerUi({ type: "open", index: 0, context: createStoryPlaybackContext("student", entry.playback.project) });
     } else {
       setCreatorAccess("local");
-      setNotice("선택한 작품을 열었어요.");
+      setNotice("");
     }
   }
 
@@ -586,6 +586,7 @@ export function StoryStudio() {
   }
 
   function showDiscovery(screen: DiscoveryScreen) {
+    setLibraryInitialFilter(undefined);
     if (screen === "home") { try { sessionStorage.removeItem("storygame:library-view:v1"); } catch { /* optional tab state */ } }
     setCreationHubOpen(false);
     setDiscoveryScreen(screen);
@@ -625,6 +626,9 @@ export function StoryStudio() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
+      const returning = loadLandingVisit(() => window.localStorage);
+      if (returning) setDiscoveryScreen("library");
+      markLandingVisited(() => window.localStorage);
       try {
         const repository = projectRepository();
         const savedCheckpoints = checkpointRepository().list();
@@ -653,7 +657,7 @@ export function StoryStudio() {
         try {
           const saved = JSON.parse(sessionStorage.getItem("storygame:navigation:v1") ?? "null");
           if (saved?.version === 1) {
-            if (["home", "library", "reader-entry", "story-hub"].includes(saved.screen)) setDiscoveryScreen(saved.screen);
+            if (["home", "library", "reader-entry", "story-hub"].includes(saved.screen)) setDiscoveryScreen(!returning ? "home" : saved.screen === "home" ? "library" : saved.screen);
             if (["rabbit", "onggojib"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
             if (["base", "mine", "shared"].includes(saved.group)) setStoryHubGroup(saved.group);
             setCreationHubOpen(saved.creation === true);
@@ -2500,24 +2504,15 @@ export function StoryStudio() {
   function returnHome() {
     if (busy || !preserveCurrentDraft()) return;
     const origin = captureStudioReturnOrigin();
-    homeReturnOriginRef.current = origin;
     saveStudioUiSession(() => window.localStorage, origin.session);
     setLocalDraftStatus("available");
-    setCreationHubOpen(true);
+    showDiscovery("library");
     setEntryNotice("");
     setProjectToolsOpen(false);
     setMemoPopupOpen(false);
     setSelectedCreativeMemoId(null);
     setCreatorAccess("none");
     window.scrollTo({ top: 0, behavior: "auto" });
-  }
-
-  function resumeStudio() {
-    if (localDraftStatus !== "available" || busy) return;
-    setCreatorAccess("local");
-    restoreStudioSession(homeReturnOriginRef.current);
-    homeReturnOriginRef.current = null;
-    setNotice("만들던 이야기와 작업 위치를 이어서 엽니다.");
   }
 
   async function openPlay(index = 0, kind: "student" | "example" = "student", theme: "rabbit" | "onggojib" = "rabbit") {
@@ -2643,6 +2638,10 @@ export function StoryStudio() {
     );
   }
 
+  if (!navigationReady) return <main className="app-entry-loading" aria-busy="true" aria-label="놀스토리 시작">
+    <p role="status">이야기를 준비하고 있어요.</p>
+  </main>;
+
   if (creatorAccess === "none") {
     return (
       <>
@@ -2651,13 +2650,10 @@ export function StoryStudio() {
           busy={Boolean(busy) || entryBusy || !hydrated}
           failed={localDraftStatus === "failed"}
           notice={entryNotice}
-          onHome={() => showDiscovery("home")}
+          onHome={() => showDiscovery("library")}
           onRetry={retryCollection}
-          onOpen={openCollectionProject}
+          onManage={id => { openCollectionProject(id); setProjectToolsOpen(true); }}
           onDelete={deleteCollectionProject}
-          onBlank={startBlankProject}
-          onRabbit={startRabbitTurtleContinuation}
-          onOnggojib={startOnggojibContinuation}
           onStoryFile={openStoryFile}
           onBackup={id => saveStoryFile(false, id)}
           onExcel={openExcelFile}
@@ -2667,6 +2663,7 @@ export function StoryStudio() {
           sharedFiles={sharedFiles}
           onRemixShared={file => { setFileError(""); setFilePreview(file); }}
           onReadShared={file => { playerReturnLocationRef.current = captureStudioReturnOrigin(); dispatchPlayerUi({type:"open", index:0, context:createStoryPlaybackContext("shared", file.story.project)}); }}
+          initialFilter={libraryInitialFilter}
           screen={discoveryScreen}
           theme={selectedStoryTheme}
           group={storyHubGroup}
@@ -2691,21 +2688,11 @@ export function StoryStudio() {
           selectedTheme={selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
           onOpenReaderEntry={() => { void openPlay(0, "example", selectedStoryTheme); }}
-          onOpenCreationHub={() => setCreationHubOpen(true)}
-          savedProject={localDraftStatus === "available" ? draft : undefined}
-          entryBusy={entryBusy}
-          localDraftStatus={localDraftStatus}
-          entryNotice={entryNotice}
+          onOpenMyStories={() => {
+            showDiscovery("library");
+            setLibraryInitialFilter("mine");
+          }}
           busy={Boolean(busy)}
-          busyStep={busyStep}
-          onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
-          onOpenExcelFile={openExcelFile}
-          onOpenGoogleSheet={updateFromSheet}
-          onStartRabbitTurtleContinuation={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
-          onStartOnggojibContinuation={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
-          onResumeSavedDraft={resumeStudio}
-          onPlayExample={theme => { void openPlay(0, "example", theme); }}
-          onAbortUpdate={() => updateController.current?.abort()}
         />}
         {fileDialog}
         <StoryEntryDialog
@@ -2737,25 +2724,15 @@ export function StoryStudio() {
     );
   }
 
-  const currentLocation = selectedChapter
-    ? `${selectedChapter.order}장 〈${
-        selectedChapter.title || "제목 없음"
-      }〉${
-        selectedLine
-          ? ` › ${selectedLineIndex + 1}컷/${selectedChapterLines.length} › ${
-              editorMode === "scene"
-                ? selectedLine.type === "narration"
-                  ? "해설 컷 편집"
-                  : `${selectedLine.speakerName || "화자 없음"}의 대사 편집`
-                : "이 장 대본"
-            }`
-          : ""
-      }`
-    : "아직 장이 없어요";
+  const locationDetail = selectedChapter
+    ? `${selectedChapter.order}장${workspaceMode === "create" && selectedLine ? ` › ${selectedLineIndex + 1}컷` : ""}`
+    : "이야기 구성";
+  const currentLocation = `${draft.title || "제목 없는 이야기"} › ${locationDetail}`;
 
   return (
     <StudioShell
-      currentLocation={currentLocation}
+      projectTitle={draft.title || "제목 없는 이야기"}
+      currentLocation={locationDetail}
       saveStatus={saveStatus}
       busy={Boolean(busy)}
       projectToolsOpen={projectToolsOpen}
@@ -2764,28 +2741,11 @@ export function StoryStudio() {
         setProjectToolsOpen((current) => !current)
       }
     >
-      <BookCoverEditor key={draft.id} project={draft} onApply={(title, cover) => setDraft(project => ({...project, title, cover}))} />
-
-      <button
-        className="mobile-panel-toggle project-info-toggle"
-        aria-expanded={mobileProjectOpen}
-        onClick={() => setMobileProjectOpen((current) => !current)}
-      >
-        <span>
-          <strong>작품 제목·소개</strong>
-          <small>
-            {draft.title || "제목 없음"} · 장 {draft.chapters.length} · 컷{" "}
-            {draft.lines.length}
-          </small>
-        </span>
-        <b>{mobileProjectOpen ? "접기" : "펼치기"}</b>
-      </button>
-
-      <section
-        className={`creator-project-bar ${
-          mobileProjectOpen ? "mobile-open" : ""
-        }`}
-      >
+      <details className="creator-project-details" open={mobileProjectOpen}
+        onToggle={event => setMobileProjectOpen(event.currentTarget.open)}>
+        <summary>작품 제목·소개·표지</summary>
+        <BookCoverEditor key={draft.id} project={draft} onApply={(title, cover) => setDraft(project => ({...project, title, cover}))} />
+        <section className="creator-project-bar mobile-open">
         <label>
           <span>이야기 제목</span>
           <input
@@ -2819,7 +2779,8 @@ export function StoryStudio() {
           <span>장 {draft.chapters.length}</span>
           <span>컷 {draft.lines.length}</span>
         </div>
-      </section>
+        </section>
+      </details>
 
       {projectToolsOpen && (
         <section
@@ -2885,9 +2846,9 @@ export function StoryStudio() {
         </section>
       )}
 
-      <p className="creator-notice" role="status">
+      {notice && <p className="creator-notice" role="status">
         {notice}
-      </p>
+      </p>}
 
       {applyIssuesVisible && applyIssues.length > 0 && (
         <section
@@ -3042,16 +3003,13 @@ export function StoryStudio() {
               onClick={() => setMobileEditorToolsOpen((current) => !current)}
             >
               <span>
-                <strong>편집 방법·이 장 정보</strong>
-                <small>
-                  {editorMode === "chapter" ? "이 장 대본" : "컷 꾸미기"} ·{" "}
-                  {imageView === "text" ? "글만" : "작은 그림"}
-                </small>
+                <strong>이 장 정보·보기 설정</strong>
               </span>
               <b>{mobileEditorToolsOpen ? "접기" : "펼치기"}</b>
             </button>
             <div className="editor-mode-switch" aria-label="편집 화면 선택">
               <button
+                aria-pressed={editorMode === "chapter"}
                 className={editorMode === "chapter" ? "active" : ""}
                 onClick={() => switchStoryEditorView("chapter")}
               >
@@ -3059,6 +3017,7 @@ export function StoryStudio() {
                 <small>컷을 이어 읽으며 써요</small>
               </button>
               <button
+                aria-pressed={editorMode === "scene"}
                 className={editorMode === "scene" ? "active" : ""}
                 onClick={() => switchStoryEditorView("scene")}
                 disabled={!selectedLine}
@@ -3066,10 +3025,6 @@ export function StoryStudio() {
                 <strong>컷 꾸미기</strong>
                 <small>인물과 배경까지 꾸며요</small>
               </button>
-            </div>
-            <div className="location-pill">
-              <span>지금 고치는 곳</span>
-              <strong>{currentLocation}</strong>
             </div>
             <label className="view-setting">
               <span>보기 설정</span>
@@ -3154,28 +3109,7 @@ export function StoryStudio() {
               <section className="editor-main">
                 <header className="chapter-editor-heading">
                   <div>
-                    <span className="eyebrow">
-                      {selectedChapter.order}장
-                      {canonicalizeStoryStageKeys(selectedChapter.storyStageKeys).length > 0
-                        ? ` · ${formatStoryStageLabels(selectedChapter.storyStageKeys, selectedStructure.mode)}`
-                        : " · 단계 미설정"}
-                    </span>
                     <h1>{selectedChapter.title || "제목 없는 장"}</h1>
-                    <p>
-                      컷 {selectedChapterLines.length}개 · 대사{" "}
-                      {
-                        selectedChapterLines.filter(
-                          (line) => line.type === "dialogue",
-                        ).length
-                      }
-                      개 · 해설{" "}
-                      {
-                        selectedChapterLines.filter(
-                          (line) => line.type === "narration",
-                        ).length
-                      }
-                      개
-                    </p>
                   </div>
                   <div>
                     <button

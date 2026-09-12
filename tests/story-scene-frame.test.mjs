@@ -30,7 +30,7 @@ test("U2-02: 해설도 남색 창에서 읽히며 본문은 고정 높이로 자
   assert.match(css, /\.dialogue-copy,[\s\S]*?max-height: none;[\s\S]*?white-space: pre-wrap;/);
 });
 
-test("U2-02: 모바일 숨김은 펼칠 수 있고 시작 탭은 방향키로 이동한다", async () => {
+test("U2-02: 모바일 보조 정보는 펼칠 수 있고 Landing은 서재 진입만 제공한다", async () => {
   const [studio, entry, css, editor] = await Promise.all([
     source("app/StoryStudio.tsx"), source("app/components/StartScreen.tsx"),
     source("app/globals.css"), source("app/components/SceneFocusEditor.tsx"),
@@ -40,8 +40,10 @@ test("U2-02: 모바일 숨김은 펼칠 수 있고 시작 탭은 방향키로 �
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*?\.making-workspace:not\(\.mobile-context-open\) \.chapter-context-strip/);
   assert.match(editor, /draft.continuation\?\.lineId === selectedLine.id/);
   assert.match(editor, /orderedDraftLines\[selectedStoryLineIndex - 1\].text/);
-  assert.equal((entry.match(/tabIndex=\{activeTab ===/g) ?? []).length, 3);
-  for (const key of ["ArrowLeft", "ArrowRight", "Home", "End"]) assert.ok(entry.includes(`"${key}"`));
+  assert.match(entry, /onOpenLibrary/);
+  assert.match(entry, /onOpenMyStories/);
+  assert.doesNotMatch(entry, /role="tablist"|type="file"/);
+  assert.doesNotMatch(css, /\.making-toolbar:not\(\.mobile-open\) \.editor-mode-switch,/);
 });
 
 test("U2-02: 플레이 복귀 시 이중 rAF로 ref를 안전하게 복원하고, 모바일 비활성 컷 가이드를 정리한다", async () => {

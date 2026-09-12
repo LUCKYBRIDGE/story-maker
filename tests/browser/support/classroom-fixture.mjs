@@ -1,3 +1,4 @@
+import { openLibrary, openManagement, selectLocalBook } from './library-entry.mjs';
 import { execFileSync } from 'node:child_process';
 export const { doc, tabs, title } = JSON.parse(execFileSync(process.execPath, [
  '--experimental-strip-types', '--experimental-loader=./tests/node-types-loader.mjs', '--input-type=module', '-e', `
@@ -19,8 +20,7 @@ export async function seed(page) {
  await page.goto(process.env.QA_URL || 'http://localhost:3002');
  await page.evaluate(doc => { localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1', doc); localStorage.setItem('storygame:active:v1', doc); }, doc);
  await page.reload();
- await page.getByRole('button', { name: '나만의 이야기 창작 공작소 열기' }).waitFor({ state: 'visible' });
+ await openLibrary(page);
 }
-export async function openResume(page) {
- await page.getByRole('button', { name: '나만의 이야기 창작 공작소 열기' }).click();
-}
+export async function openResume(page) { await selectLocalBook(page); }
+export { openManagement };

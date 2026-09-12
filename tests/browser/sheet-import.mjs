@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { launchBrowser } from './support/runtime.mjs';
-import { doc, tabs, title, seed, openResume } from './support/classroom-fixture.mjs';
+import { doc, tabs, title, seed, openManagement } from './support/classroom-fixture.mjs';
 const output = process.env.QA_OUTPUT || '/tmp/sheet-import-qa';
 const browser = await launchBrowser(output), results = [];
 try {
  for (const scenario of ['normal', 'missing-optional', 'denied', 'login']) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  await seed(page); await openResume(page);
+  await seed(page); await openManagement(page);
   const requested = [];
   await page.route('https://docs.google.com/spreadsheets/**', route => {
    const name = new URL(route.request().url()).searchParams.get('sheet'); requested.push(name);
@@ -31,7 +31,7 @@ try {
    assert.equal(collection.projects.length,2);
    assert.equal(collection.projects[0].draft.project.lines[0].text,'학생이 직접 쓴 문장','different-ID import preserves the original project');
    if (scenario === 'normal') {
-    await page.getByRole('button',{name:'창작 관리',exact:true}).click();
+    await openManagement(page);
     await page.getByLabel('공개 Google 시트 주소',{exact:true}).fill('https://docs.google.com/spreadsheets/d/classroom_fixture_20260909/edit');
     await page.getByRole('button',{name:'시트에서 이어만들기',exact:true}).click();
     page.once('dialog',dialog => dialog.accept());

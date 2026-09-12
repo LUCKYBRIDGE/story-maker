@@ -1,9 +1,9 @@
-# 놀퀴즈 스토리 스튜디오 디자인 토큰
+# 놀스토리 디자인 토큰
 
-- 기준일: 2026-09-04
+- 기준일: 2026-09-12
 - 기준 소스: `app/globals.css`
-- 목적: 현재 CSS와 선택 목업의 목표 디자인을 구분하고 U1에서 안전하게 이전
-- 상태: 공통 셸 토큰은 U1-03에서 구현·검증, 화면별 세부 이전은 U1-04~10 대기
+- 목적: 현재 포스터·서재의 표현을 보존하고 작업 화면의 공통 기반을 정리
+- 상태: 공통 셸 적용. IA-01에서 UI/이야기 글꼴·버튼/패널 반지름과 화면 역할 정돈
 - 기준 그림: [메인 A](mockups/home-a-v2.png), [전체 목업 기준표](mockups/README.md)
 
 ## 1. 색상
@@ -142,3 +142,29 @@ Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
 4. 이미 적용한 항목과 미적용 목표를 카드 결과에 기록한다. 전면 디자인 라이브러리
    교체·새 의존성은 이번 작업에 필요하지 않다.
 5. 화면별 대표 크기·키보드·긴 글을 실제 확인한 뒤에만 “구현/검증됨”으로 갱신한다.
+
+
+## 8. 이야기 경험과 작업 경험
+
+- Story Experience: Landing·Library·Reader·Player. 포스터·원목·책 표지·무대 모션은 각 화면에 보존한다. 이야기 제목에만 제한적으로 Serif를 쓴다.
+- Workspace Experience: 이야기 구성·대본·컷·창작 관리. UI Sans, 밝은 작업면, 입력과 현재 위치를 우선한다. 같은 생김새를 강제하지 않는다.
+- 구현 Foundation: `--font-ui`, `--font-story`, `--radius-control`(12px), `--radius-panel`(16px), `--space-panel`(24px), `--color-danger`와 기존 색/그림자/셸 토큰. 4px 간격 체계를 사용한다.
+- UI 글꼴 fallback은 §2를 공유한다. 작품 제목·읽기 본문과 기능 버튼의 역할을 분리하며 새 웹폰트는 추가하지 않는다.
+
+| 의미 | 기존 표현 | 규칙 |
+|---|---|---|
+| Primary | poster-read, primary-button, focus-action-card.is-primary | 화면의 가장 중요한 실행 가능 행동 |
+| Secondary | poster-library, focus-action-card, 일반 관리 버튼 | 다른 실행 가능한 선택 |
+| Quiet | quiet-button, ghost-button, library-nav-btn | 돌아가기·보기·보조 도구 |
+| Danger | danger-button, is-danger | 삭제 대상·결과 명시, 기존 확인 유지 |
+| Tab | editor-mode-switch, scene-focus-tabs, 단계 버튼 | 선택 상태를 aria-pressed/current/selected와 함께 표시 |
+| Icon | UiIcon 및 기존 stroke SVG | 24px viewBox, 1.8~2 stroke, round cap/join. 클릭 영역은 44px 이상 |
+
+입력은 기존 field/label과 12px 반지름, 패널은 16px·24px 내부 여백을 기본으로 한다.
+Dialog는 기존 초점 가두기·Escape·복귀를 유지한다. 저장·오류 Status는 문구와 aria-live로
+알리고 장식과 혼동하지 않는다. 장식 문자와 기능 SVG는 역할을 분리한다.
+
+서재 Focus Stage는 책 → 제목 → 소개 → 행동 순서다. 상단 장식 문구는 14px 보조 강도로,
+미구현 원작 읽기는 소개 아래 작은 상태 문구로 표시한다. 뒤 책장 좌표와 원본 이미지는 유지한다.
+편집기는 상단 위치 한 곳과 항상 보이는 세 단계·두 보기·네 탭을 우선하며 보조 보기 설정만 접는다.
+CSS는 해당 규칙을 직접 수정한다. 포스터와 책장 특화 규칙을 공통 패널에 합치지 않는다.

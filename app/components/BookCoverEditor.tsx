@@ -1,4 +1,5 @@
 "use client";
+import { UiIcon } from "./UiIcon";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import type { StoryProject } from "../story-data";
@@ -11,7 +12,7 @@ export function BookCoverEditor({ project, onApply }: {
   project: StoryProject; onApply: (title: string, cover: StoryCover) => void;
 }) {
   const [open, setOpen] = useState(false);
-  return <><button type="button" className="book-design-button" onClick={() => setOpen(true)} aria-haspopup="dialog">📖 내 책 표지 꾸미기</button>
+  return <><button type="button" className="book-design-button" onClick={() => setOpen(true)} aria-haspopup="dialog"><UiIcon name="book" /> 내 책 표지 꾸미기</button>
     {open && createPortal(<CoverEditorForm project={project} onClose={() => setOpen(false)} onApply={onApply} />, document.body)}</>;
 }
 function CoverEditorForm({ project, onClose, onApply }: {

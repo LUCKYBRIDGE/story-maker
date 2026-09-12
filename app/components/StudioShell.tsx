@@ -13,6 +13,7 @@ const SAVE_STATUS_LABELS: Record<StoryProjectSaveStatus, string> = {
 };
 
 export function StudioShell({
+  projectTitle,
   currentLocation,
   saveStatus,
   busy,
@@ -21,6 +22,7 @@ export function StudioShell({
   onToggleProjectTools,
   children,
 }: {
+  projectTitle: string;
   currentLocation: string;
   saveStatus: StoryProjectSaveStatus;
   busy: boolean;
@@ -31,15 +33,15 @@ export function StudioShell({
 }) {
   return (
     <main className="creator-shell">
-      <header className="creator-header" aria-label="스토리 스튜디오 작업 머리말">
+      <header className="creator-header" aria-label="놀스토리 작업 머리말">
         <div className="creator-brand">
           <span className="brand-mark" aria-hidden="true">
-            놀퀴즈
+            놀스토리
           </span>
           <div>
-            <strong>스토리 스튜디오</strong>
-            <small title={currentLocation} aria-label={`현재 위치: ${currentLocation}`}>
-              {currentLocation}
+            <small title={`${projectTitle} › ${currentLocation}`} aria-label={`현재 위치: ${projectTitle} › ${currentLocation}`}>
+              <span className="context-project-title">{projectTitle}</span>
+              <span className="context-position"> › {currentLocation}</span>
             </small>
           </div>
         </div>
@@ -50,7 +52,7 @@ export function StudioShell({
             onClick={onReturnHome}
             disabled={busy}
           >
-            창작 관리
+            서재로
           </button>
           <span
             className={`save-state save-state-${saveStatus}`}

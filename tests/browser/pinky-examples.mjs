@@ -1,3 +1,4 @@
+import { openLibrary } from './support/library-entry.mjs';
 import assert from 'node:assert/strict';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
@@ -32,7 +33,7 @@ try {
    await page.reload();
    const snapshot = () => page.evaluate(keys => Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)])), Object.keys(storage));
    assert.deepEqual(await snapshot(), storage);
-   await page.getByRole('button', { name: /이야기 변경/ }).click();
+   await openLibrary(page);
    await page.getByRole('button', { name: `${index === 0 ? '토끼와 자라' : '옹고집전'} · 기본 이야기`, exact: true }).click();
    await page.getByRole('button', { name: '기본 작품 읽기', exact: true }).click();
    await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
