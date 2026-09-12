@@ -5,7 +5,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const output=process.env.QA_OUTPUT || '/tmp/story-flow-qa';await mkdir(output,{recursive:true});
 import {execFileSync} from 'node:child_process';
 const doc=execFileSync(process.execPath,['--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`import {DEFAULT_PROJECT,cloneProject} from './app/story-data.ts';import {createStoryDocument} from './app/story-project-document.ts';const p=cloneProject(DEFAULT_PROJECT);p.chapters=p.chapters.slice(0,1);p.lines=[{...p.lines[0],text:'갈림길 앞에 섰어요.'}];console.log(JSON.stringify(createStoryDocument({project:p,savedAt:new Date().toISOString(),appVersion:'test'})));`],{encoding:'utf8'}).trim();
-const browser=await launchBrowser(output);const results=[];try { for(const [width,height] of viewports()) { const page=await browser.newPage({viewport:{width,height}});console.log('viewport',width);const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await page.locator('.entry-template-options[open]').waitFor({state:'attached'});await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();await page.locator('.story-flow-editor summary').click();await page.getByRole('button',{name:'세 갈래 만들기',exact:true}).click();
+const browser=await launchBrowser(output);const results=[];try { for(const [width,height] of viewports()) { const page=await browser.newPage({viewport:{width,height}});console.log('viewport',width);const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();await page.locator('.story-flow-editor summary').click();await page.getByRole('button',{name:'세 갈래 만들기',exact:true}).click();
 const passcodeModal = page.getByRole('dialog', { name: '선생님 승인 코드 입력' });
 await passcodeModal.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
 if (await passcodeModal.isVisible()) {
@@ -48,8 +48,7 @@ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWid
 for(const button of await page.locator('.player-choices button').all()){const box=await button.boundingBox();assert.ok(box.height>=44);}
 await page.getByRole('button',{name:'돌아가기',exact:true}).click();
 await page.getByRole('button',{name:'편집화면',exact:true}).click();
-await page.reload();await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
+await page.reload();await page.waitForFunction(()=>Boolean(JSON.parse(localStorage.getItem('storygame:projects:v1'))?.projects?.[0]?.draft?.project));
 const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project);
 assert.equal(saved.lines.find(l=>l.flow?.type==='choice').flow.options.length,3);
 console.log('passed',width);assert.deepEqual(errors,[]);results.push({width,height,branches:3,join:true,previous:true,keyboard:true,reload:true});await page.close();
