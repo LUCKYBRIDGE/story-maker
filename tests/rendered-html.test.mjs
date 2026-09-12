@@ -26,27 +26,16 @@ async function render() {
   );
 }
 
-test("서버가 로그인 없는 놀퀴즈 스토리 스튜디오 시작 화면을 렌더링한다", async () => {
+test("서버는 방문 기록을 읽기 전 중립 시작 화면을 렌더링한다", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
   const html = await response.text();
-  assert.match(html, /<title>놀퀴즈 스토리 스튜디오<\/title>/i);
-  assert.match(html, /놀퀴즈/);
-  assert.match(html, /이야기를 만들어 볼까요\?/);
-  assert.match(html, /새 이야기 만들기/);
-  assert.match(html, /이어만들기/);
-  assert.match(html, /Excel 파일에서 이어만들기/);
-  assert.match(html, /공개 Google 시트/);
-  assert.match(html, /이어쓰기 템플릿/);
-  assert.match(html, /<details class="entry-template-options"><summary>이야기 읽고 이어 쓰기 · 2가지<\/summary>/);
-  assert.match(html, /토끼와 자라 · 용궁에서 위기에 처하다/);
-  assert.match(html, /옹고집전 · 처음 재판장에 끌려오다/);
-  assert.match(html, /예시 작품 플레이/);
-  assert.match(html, /이 기기의 이야기를 확인하고 있어요/);
+  assert.match(html, /<title>놀스토리<\/title>/i);
+  assert.match(html, /aria-busy="true"/);
+  assert.match(html, /이야기를 준비하고 있어요/);
+  assert.doesNotMatch(html, /class="nolstory-poster-viewport/);
   assert.doesNotMatch(html, /Google로 시작하기/);
-  assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 });
 
 test("공식 Excel 양식은 웹과 같은 이야기 순서와 네 구성 묶음을 제공한다", async () => {
@@ -438,8 +427,8 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /시트에서 불러오기/);
   assert.match(studio, /빈 작품 시작/);
   assert.match(studio, /function startRabbitTurtleContinuation/);
-  assert.match(startScreen, /시작할 곳:\s*위기에 처한 토끼의 다음 말/);
-  assert.match(startScreen, /시작할 곳:\s*첫 재판장에 선 옹고집의 다음 말/);
+  assert.match(startScreen, /onOpenMyStories/);
+  assert.match(studio, /처음 재판장에 선 옹고집|처음 재판장에 끌려오다/);
   assert.match(studio, /처음부터 읽고 고치기/);
   assert.match(studio, /이어 쓸 곳으로/);
   assert.match(studio, /function moveThroughStory/);
@@ -786,7 +775,7 @@ test("U1-03: 공통 셸은 세 단계·저장 상태·적용 행동과 접근성
   assert.match(primaryNav, /이야기 구성/);
   assert.match(primaryNav, /대본·컷 쓰기/);
   assert.match(primaryNav, /마지막으로 적용한 버전을 확인해요/);
-  assert.match(studioShell, /창작 관리/);
+  assert.match(studioShell, /서재로/);
   assert.match(studioShell, /aria-live="polite"/);
   assert.match(studioShell, /save-state-\$\{saveStatus\}/);
   assert.match(studioShell, /aria-controls="studio-project-tools"/);

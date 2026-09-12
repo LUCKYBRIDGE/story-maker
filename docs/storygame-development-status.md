@@ -9,6 +9,19 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
+## 현재 작업: IA-01 서재 홈과 작업 화면 정돈
+
+- 2026-09-12 사용자 첨부 요청으로 승인, **DONE — 로컬 구현·검증**, Work Lead · G/A/B.
+- root `/Volumes/WAN2/apps/story-maker`, branch `codex/library-home-workspace`, 기준 `origin/main` 7520b04. 기존 로컬 변경 없음.
+- 범위·인수 조건은 IA-01 카드. 방문 정책, 관리 역할, 브랜드, 공통 표현, 편집 위치와 서재 위계를 순서대로 구현한다. 데이터·파일 형식·이미지·Router는 보존한다.
+- 첫 방문 Landing/재방문 Library, 손상·이전 버전·차단 저장소 대응, 포스터 깜빡임 없는 SSR 준비 화면. 같은 탭 편집·읽기 복원 유지.
+- 창작 관리는 백업·가져오기·삭제·Excel/복구 진입, 서재는 읽기·편집·생성. 제목·소개·표지는 펼침 영역, 위치는 머리말 한 곳, 세 단계·두 보기·네 탭 상시 제공. 모바일 탭 44px 보완. 브랜드 놀스토리, 저작권 © 놀퀴즈 보존.
+- 기준선 198/198, 구현 후 `npm run check`, `npm test`(빌드+199/199), `git diff --check`와 변경 문서 내부 링크 검사 통과. `/tmp/library-home-{baseline,check,tests}.log`.
+- B: `qa:smoke` 5개(start-screen/story-flow/sticky-memos/pinky-examples/library-home), `qa:classroom` 2개, library-craft/library-motion/player-continuity 통과. `/tmp/library-home-{smoke,classroom,craft,motion,continuity,browser}.log`.
+- 1440×900/1280×720/1024×768/820×1180/390×844/844×390/320×740/720×450(200% 확대의 가용 크기)에서 위치·보기·탭·44px·가로 넘침·저장/새로고침·백업·표지 대화상자 취소/초점 확인. `/tmp/library-home-qa/`, `/tmp/library-home-smoke/` 캡처 육안 확인.
+- 실제 iOS/Android 키보드와 OS 파일 선택창, 실제 Google 서버는 미검증. 시트는 응답 fixture, 200%는 가용 크기 등가 검사다. 준비 중 기능은 완료 조건에서 제외했다.
+- 작업 branch `codex/library-home-workspace`에서 초안 PR로 공유한다. main 병합·공개 배포 없음. 다음 READY 없음.
+
 ## 최근 완료: PLAY-UI-01 화면 복원과 읽기 표시 설정
 
 - 2026-09-12 사용자 요청 및 후속 결정. **DONE — 로컬 구현·검증**.

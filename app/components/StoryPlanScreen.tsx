@@ -1,4 +1,5 @@
 "use client";
+import { UiIcon } from "./UiIcon";
 
 import type { Dispatch, SetStateAction } from "react";
 import type {
@@ -601,7 +602,7 @@ export function StoryPlanScreen({
                   <div className="chapter-flow-guidance" style={{ borderColor: "#f59e0b", background: "#fffbeb" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
                       <p style={{ margin: 0, color: "#92400e" }}>
-                        <span className="guidance-tag" style={{ background: "#fef3c7", color: "#92400e" }}>💡 단계 다듬기 안내</span>
+                        <span className="guidance-tag" style={{ background: "#fef3c7", color: "#92400e" }}><UiIcon name="hint" /> 단계 다듬기 안내</span>
                         {" "}
                         <strong>{stageWarning.title}</strong>: {stageWarning.detectedPattern}
                       </p>
@@ -618,7 +619,7 @@ export function StoryPlanScreen({
 
                 {stageAnalysis.unlinkedStages.length > 0 && sortedChapters.length > 0 && (
                   <div className="chapter-flow-guidance">
-                    <span className="guidance-tag">💡 이야기 구성 안내</span>
+                    <span className="guidance-tag"><UiIcon name="hint" /> 이야기 구성 안내</span>
                     <p>
                       <strong>
                         {stageAnalysis.unlinkedStages

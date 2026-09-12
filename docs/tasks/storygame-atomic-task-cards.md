@@ -1590,3 +1590,18 @@ npm test
 - 저장 계약: 표시 설정 localStorage, 화면/읽기 경로 sessionStorage. 작품 저장·Excel 형식·자산 원본·asset ID는 변경하지 않는다. 복원 작품은 기존 validator 사용.
 - 검사: check, 전체 자동 회귀, stage/display-settings 단위 검사, player-continuity/display-settings/reader-layout/reader-history/library-craft 브라우저. 390×844, 1365×900, 1380×1412 및844×390에서 하단 정렬과35%/배율/재접속 확인.
 - 완료 증거는 상태표. 커밋·푸시·배포 범위 밖.
+
+
+## IA-01 — 서재 홈과 작업 화면 정돈
+
+- 선행: main 7520b04의 메인·서재·위치 복원 구현. 2026-09-12 사용자 직접 요청.
+- 가치: 학생은 서재에서 읽기와 이어 만들기를 시작하고, 편집 위치와 핵심 도구를 바로 찾는다.
+- 관점: 교육 UX·접근성·데이터 보존. Work Lead, G/A/B 증거.
+- 허용: `app/StoryStudio.tsx`, 진입 선호 모듈, 대상 화면 컴포넌트, 공통 아이콘, `app/layout.tsx`, `app/globals.css`, 관련 테스트, 화면 ADR·디자인 토큰·상세 설계·이 카드·상태표.
+- 금지: 작품 schema/저장 형식/Excel/자산 변경, Router·인증·클라우드 도입, main 직접 수정·병합·배포.
+- 사전: GitHub main/PR/Actions와 clean working tree 확인, 기존 자동 검사 통과 확인.
+- 절차: 1. 방문·복귀 정책 2. 관리 역할·브랜드 3. Foundation과 편집 위치·보기 4. 서재 미세 위계 5. 자동·브라우저 회귀 및 문서·diff 확인.
+- 인수: (1) 최초 Landing/재방문 Library, 깜빡임 없음, 버전·손상·차단 안전 처리 (2) 탭의 편집/읽기 복원 유지 (3) 서재에서 읽기/편집/생성, 관리에서 파일/복구 (4) 포스터·책장 자리·선택 모션 유지 (5) 세 단계·두 보기·네 이미지 탭 유지, 위치 한 곳 (6) 데이터/플레이/파일 회귀 없음 (7) 대표 반응형·초점·44px 및 문서 일치.
+- 검사: `npm run check`, `npm test`, `QA_URL=http://localhost:3003 node tests/browser/library-home.mjs`, 관련 `library-craft.mjs`·`library-motion.mjs`·`player-continuity.mjs`, `git diff --check`.
+- 중단: 데이터 보존 실패·기존 사용자 변경 충돌 발견 시 수정 중단. UI 수정만 되돌리고 작품 저장소는 건드리지 않는다.
+- 상태 갱신: 상태표 한 곳에 실제 증거와 남은 기기 검증을 기록. 다음 작업을 동시에 시작하지 않는다.

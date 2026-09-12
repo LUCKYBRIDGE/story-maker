@@ -19,8 +19,8 @@ const browser = await launchBrowser(output);
 const snapshot = page => page.evaluate(key => localStorage.getItem(key), key);
 async function enter(page) {
   await page.goto(url);
-  await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-  await page.getByRole('button',{name:/이야기 변경/}).click();
+  await page.locator('.nolstory-poster-frame').waitFor({state:'attached'});
+  await page.getByRole('button',{name:'서재 입장',exact:true}).click();
   await page.locator('.library-shelf').waitFor();
 }
 async function returnFromReader(page) {
@@ -52,7 +52,8 @@ try {
     const dialog = page.getByRole('dialog',{name:'토끼와 자라',exact:true});
     await dialog.waitFor();
     assert.equal(await page.locator('.library-room-content').getAttribute('inert'),'');
-    assert.ok(await page.getByRole('button',{name:'원작 전체 · 준비 중',exact:true}).isDisabled());
+    assert.ok(await page.getByText('원작 읽기 · 준비 중',{exact:true}).isVisible());
+    assert.equal(await page.getByRole('button',{name:'원작 전체 · 준비 중',exact:true}).count(),0);
     for (let i=0;i<10;i++) {
       await page.keyboard.press('Tab');
       assert.ok(await page.evaluate(()=>Boolean(document.activeElement.closest('[role="dialog"]'))), 'Tab stays inside dialog');

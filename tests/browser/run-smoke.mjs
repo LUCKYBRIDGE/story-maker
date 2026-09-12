@@ -28,8 +28,8 @@ if (!url) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   url = `http://127.0.0.1:${server.address().port}${prefix}/`;
 }
-const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples'];
-const allowed = new Set(['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import']);
+const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'library-home'];
+const allowed = new Set(['library-home', 'start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import']);
 const results = [];
 try {
   assert.equal((await fetch(url, { signal: AbortSignal.timeout(10_000) })).status, 200);

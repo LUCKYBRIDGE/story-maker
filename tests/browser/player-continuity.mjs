@@ -5,7 +5,7 @@ try {
  for(const [width,height] of [[390,844],[1365,900],[1380,1412]]) {
   const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
   await page.goto('http://localhost:3003');
-  await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
+  await page.locator('.nolstory-poster-frame').waitFor({state:'attached'});
   await page.getByRole('button',{name:'서재 입장',exact:true}).click();
   await page.locator('.library-shelf').waitFor();
   await page.reload();await page.locator('.library-shelf').waitFor();
@@ -13,7 +13,7 @@ try {
   await page.getByRole('dialog',{name:'새 이야기 만들기',exact:true}).waitFor();
   await page.reload();await page.getByRole('dialog',{name:'새 이야기 만들기',exact:true}).waitFor();
   await page.keyboard.press('Escape');
-  await page.getByRole('button',{name:'메인으로',exact:true}).click();
+  await page.getByRole('button',{name:'놀스토리 소개',exact:true}).click();
   await page.getByRole('button',{name:'이야기 읽기',exact:true}).click();
   await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
   await page.locator('.player-shell').waitFor();
@@ -54,7 +54,7 @@ try {
    sessionStorage.setItem('storygame:book-phase:v1','{bad');
    localStorage.setItem('storygame:display-settings:v1','{bad');
  });
- await invalid.goto('http://localhost:3003');await invalid.locator('.entry-template-options[open]').waitFor({state:'attached'});
+ await invalid.goto('http://localhost:3003');await invalid.locator('.nolstory-poster-frame').waitFor({state:'attached'});
  await invalid.getByRole('button',{name:'이야기 읽기',exact:true}).click();
  await invalid.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await invalid.locator('.player-shell').waitFor();
  assert.equal(await invalid.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects.length),0,'invalid UI state must not manufacture a saved project');

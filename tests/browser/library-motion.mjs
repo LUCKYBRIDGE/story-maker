@@ -5,8 +5,8 @@ const browser=await launchBrowser(output);
 try {
  const page=await browser.newPage({viewport:{width:1365,height:900},reducedMotion:'no-preference'});
  await page.goto(process.env.QA_URL || 'http://localhost:3003');
- await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
- await page.getByRole('button',{name:/이야기 변경/}).click();
+ await page.locator('.nolstory-poster-frame').waitFor({state:'attached'});
+ await page.getByRole('button',{name:'서재 입장',exact:true}).click();
  const shelf=page.locator('.library-shelf');await shelf.waitFor();
  const books=page.locator('.library-book');assert.equal(await books.count(),3);
  async function check(rows,columns) {

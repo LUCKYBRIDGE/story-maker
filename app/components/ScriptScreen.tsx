@@ -1,4 +1,5 @@
 "use client";
+import { UiIcon } from "./UiIcon";
 
 import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
@@ -65,7 +66,6 @@ export function ScriptScreen({
   selectedChapter,
   selectedChapterLines,
   selectedLine,
-  selectedLineIndex,
   imageView,
   highlightedApplyIssue,
   revisionResponses,
@@ -109,11 +109,7 @@ export function ScriptScreen({
         </div>
         <div className="script-heading-meta">
           <span className="script-stage-indicator">{chapterStageLabel}</span>
-          <span>
-            {selectedLine
-              ? `${selectedLineIndex + 1}컷 편집 중`
-              : "컷 없음"}
-          </span>
+
         </div>
       </div>
       <div
@@ -150,7 +146,7 @@ export function ScriptScreen({
               onClick={onOpenStageWarning}
               title="이야기 단계 다듬기 안내 열기"
             >
-              💡 단계 다듬기 안내
+              <UiIcon name="hint" /> 단계 다듬기 안내
             </button>
           )}
         </div>
@@ -203,7 +199,7 @@ export function ScriptScreen({
         <section className="script-selected-stage" aria-label="현재 컷 무대">
           <header>
             <span>
-              지금 고치는 곳 · {selectedChapter.order}장 {selectedLineIndex + 1}컷
+              선택한 컷 미리보기
             </span>
             <button
               type="button"
