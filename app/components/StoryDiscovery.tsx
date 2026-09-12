@@ -1,13 +1,13 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- 동화 책 표지 및 캐릭터 자산 렌더링 */
-
-import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { libraryPage, type StoryTheme, type DiscoveryScreen } from "../story-discovery";
 import type { NolstorySharedFile } from "../story-file";
 import { MAX_EDITABLE_PROJECTS, type ProjectCollection } from "../story-project-collection";
 import type { StoryProject } from "../story-data";
 import { COVER_THEMES, resolveStoryCover } from "../story-cover";
+import { BookCover } from "./BookCover";
+import { getExampleProject } from "../story-examples";
 import { resolveAssetUrl } from "../story-asset-url";
 
 export type StoryHubGroup = "base" | "mine" | "shared";
@@ -47,7 +47,6 @@ export type SelectedBook =
       title: string;
       subtitle: string;
       description: string;
-      coverArt: string;
       paper: string;
       ink: string;
       accent: string;
@@ -86,15 +85,33 @@ export type SelectedBook =
       accent: string;
     };
 
+// Keep the previous finish available for the user's visual comparison.
+const LIBRARY_ROOM = { finish: "warm", room: "/library/parquet-room-clear.webp", shelf: "/library/oak-shelf-soft.webp" };
+// Previous: { finish: "original", room: "/library/sunlit-room.webp", shelf: "/library/oak-shelf.webp" }
+const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib") };
+function DiscoveryCover({ book }: { book: SelectedBook }) {
+  const project = book.kind === "base" ? baseCoverProjects[book.theme]
+    : book.kind === "mine" ? book.project : book.kind === "shared" ? book.file.story.project : null;
+  return project ? <BookCover project={project} /> : <div className="blank-book-cover">
+    <span>아직 쓰지 않은 책</span><span aria-hidden="true">＋</span>
+    <strong>새 이야기</strong><small>여기서 시작해요</small>
+  </div>;
+}
+
 export function StoryDiscovery(props: StoryDiscoveryProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [filter, setFilter] = useState<"all" | StoryHubGroup>("all");
+  const [sharedTheme, setSharedTheme] = useState<StoryTheme | null>(null);
   const dialogTitleId = useId();
 
   const [page, setPage] = useState(0);
-  const [capacity, setCapacity] = useState(10);
+  const [shelfLayout, setShelfLayout] = useState({ columns: 5, rows: 2 });
+  const capacity = shelfLayout.columns * shelfLayout.rows;
+  const shelfRef = useRef<HTMLDivElement>(null);
+  const roomRef = useRef<HTMLElement>(null);
   const [selectedBook, setSelectedBook] = useState<SelectedBook | null>(null);
 
   useEffect(() => {
@@ -102,21 +119,91 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   }, []);
 
   useEffect(() => {
-    const wide = matchMedia("(min-width: 1000px) and (orientation: landscape)");
+    const wide = matchMedia("(min-width: 1000px)");
     const tablet = matchMedia("(min-width: 600px)");
-    const update = () => {
-      setCapacity(wide.matches ? 10 : tablet.matches ? 9 : 6);
-    };
+    const portrait = matchMedia("(orientation: portrait)");
+    const update = () => setShelfLayout({
+      columns: wide.matches && !portrait.matches ? 5 : tablet.matches ? 3 : 2,
+      rows: portrait.matches ? 3 : 2,
+    });
     update();
-    wide.addEventListener("change", update);
-    tablet.addEventListener("change", update);
+    const queries = [wide, tablet, portrait];
+    queries.forEach(query => query.addEventListener("change", update));
+    return () => queries.forEach(query => query.removeEventListener("change", update));
+  }, []);
+
+  // Measure layout coordinates, not animated rectangles, so a second resize can
+  // interrupt an in-flight movement without accumulating transform offsets.
+  useLayoutEffect(() => {
+    const shelf = shelfRef.current;
+    if (!shelf) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    let previous = new Map<string, { x: number; y: number; width: number }>();
+    const animations = new Map<HTMLElement, Animation>();
+    let frame = 0;
+    const measure = () => {
+      const next = new Map<string, { x: number; y: number; width: number }>();
+      shelf.querySelectorAll<HTMLElement>("[data-book-id]").forEach((element, index) => {
+        const id = element.dataset.bookId!;
+        const rect = { x: element.offsetLeft, y: element.offsetTop, width: element.offsetWidth };
+        const old = previous.get(id);
+        next.set(id, rect);
+        if (reduced.matches) { animations.get(element)?.cancel(); return; }
+        if (old && (Math.abs(old.x - rect.x) > 1 || Math.abs(old.y - rect.y) > 1 || Math.abs(old.width - rect.width) > 1)) {
+          const current = getComputedStyle(element).transform;
+          const matrix = current === "none" ? new DOMMatrix() : new DOMMatrix(current);
+          animations.get(element)?.cancel();
+          const animation = element.animate([
+            { transform: `translate(${old.x - rect.x + matrix.m41}px, ${old.y - rect.y + matrix.m42}px) scale(${Math.min(1.12, Math.max(.88, old.width / rect.width))})` },
+            { transform: "translate(0, 0) scale(1)" },
+          ], { duration: 560 + index * 18, easing: "cubic-bezier(.22, 1, .36, 1)" });
+          animations.set(element, animation);
+        } else if (!old && previous.size) {
+          animations.set(element, element.animate([
+            { opacity: 0, transform: "translateY(12px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ], { duration: 420, delay: index * 24, easing: "ease-out" }));
+        }
+      });
+      for (const [element, animation] of animations) {
+        if (!element.isConnected) { animation.cancel(); animations.delete(element); }
+      }
+      previous = next;
+    };
+    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure); };
+    const resize = new ResizeObserver(schedule);
+    const mutation = new MutationObserver(schedule);
+    resize.observe(shelf);
+    mutation.observe(shelf, { childList: true, attributes: true, attributeFilter: ["style"] });
+    const stopMotion = () => { if (reduced.matches) animations.forEach(animation => animation.cancel()); };
+    reduced.addEventListener("change", stopMotion);
+    measure();
     return () => {
-      wide.removeEventListener("change", update);
-      tablet.removeEventListener("change", update);
+      resize.disconnect(); mutation.disconnect(); cancelAnimationFrame(frame);
+      reduced.removeEventListener("change", stopMotion);
+      animations.forEach(animation => animation.cancel());
     };
   }, []);
 
+  useLayoutEffect(() => {
+    const room = roomRef.current;
+    const bookcase = shelfRef.current?.parentElement;
+    if (!room || !bookcase || !["soft", "warm"].includes(LIBRARY_ROOM.finish)) return;
+    // The generated wall/floor seam is at 80.5%; keep it under the plinth
+    // even when a filter notice, another shelf, or pagination changes height.
+    const alignFloor = () => {
+      const bottom = bookcase.getBoundingClientRect().bottom - room.getBoundingClientRect().top;
+      room.style.setProperty("--room-image-height", `${(bottom - 22) / .805}px`);
+    };
+    const observer = new ResizeObserver(alignFloor);
+    observer.observe(room); observer.observe(bookcase);
+    alignFloor();
+    return () => observer.disconnect();
+  }, []);
+
   function closeOverlay() {
+    // A read/edit action may unmount this component before the next layout effect.
+    try { sessionStorage.setItem("storygame:library-view:v1", JSON.stringify({version: 1, filter, page, sharedTheme})); } catch { /* optional tab state */ }
     setSelectedBook(null);
   }
 
@@ -129,7 +216,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       title: "옹고집전",
       subtitle: "옹고집의 속죄",
       description: "똑같이 생긴 두 옹고집, 진짜는 누구일까요? 욕심쟁이 옹고집의 흥미진진한 재판 이야기.",
-      coverArt: resolveAssetUrl("/story-assets/onggojib.character.real-angry-pixel.webp"),
       paper: "#1e4635",
       ink: "#fcf8ec",
       accent: "#d4af37",
@@ -141,7 +227,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       title: "토끼와 자라",
       subtitle: "용궁 속 지혜",
       description: "용왕님의 약을 구하러 뭍으로 나온 자라와 꾀를 낸 토끼의 아슬아슬한 모험 이야기.",
-      coverArt: resolveAssetUrl("/story-assets/rabbit-turtle.character.rabbit-white-unified-720x900.webp"),
       paper: "#f7f1e3",
       ink: "#2e2417",
       accent: "#8b6e46",
@@ -160,7 +245,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       subtitle: cover.subtitle || (cover.author ? `${cover.author} 지음` : "내가 만든 이야기"),
       description: project.description || "이 기기에 보관 중인 나의 창작 이야기입니다.",
       readable: Boolean(entry.playback?.project.lines.length),
-      project: entry.draft.project,
+      project,
       paper: themeStyle.paper,
       ink: themeStyle.ink,
       accent: themeStyle.accent,
@@ -194,10 +279,46 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
 
   // 표준 테스트 및 페이지네이션 대상 책 목록 (기본 + 내 작품 + 공유)
   const booksToDisplay = [...baseBooks, ...localBooks, ...sharedBooks];
-  const pagination = libraryPage(booksToDisplay, page, capacity);
+  const visibleBooks = booksToDisplay.filter(book => filter === "all" || book.kind === filter)
+    .filter(book => {
+      if (filter !== "shared" || !sharedTheme) return true;
+      const source = book.kind === "shared" ? book.file.story.project.source : undefined;
+      return source && "baseStoryId" in source &&
+        source.baseStoryId === (sharedTheme === "rabbit" ? "rabbit-turtle" : "onggojib");
+    });
+  const shelfBooks = filter === "all" || filter === "mine" ? [...visibleBooks, newStoryBook] : visibleBooks;
+  const pagination = libraryPage(shelfBooks, page, capacity);
+  function changeFilter(next: "all" | StoryHubGroup) {
+    setFilter(next); setSharedTheme(null); setPage(0);
+  }
   const isFull = props.collection.projects.length >= MAX_EDITABLE_PROJECTS;
 
-  const allSelectableBooks = [...booksToDisplay, newStoryBook];
+  const allSelectableBooks = [...visibleBooks, newStoryBook];
+
+  const [libraryRestored, setLibraryRestored] = useState(false);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem("storygame:library-view:v1") ?? "null");
+        if (saved?.version === 1) {
+          if (["all", "base", "mine", "shared"].includes(saved.filter)) setFilter(saved.filter);
+          if (Number.isSafeInteger(saved.page) && saved.page >= 0) setPage(saved.page);
+          if (["rabbit", "onggojib"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
+          const book = [...booksToDisplay, newStoryBook].find(book => book.id === saved.selectedId);
+          if (book) setSelectedBook(book);
+        }
+      } catch { /* Optional tab state never changes the collection. */ }
+      setLibraryRestored(true);
+    });
+    return () => cancelAnimationFrame(frame);
+    // The parent has already loaded the collection before restoring this screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useLayoutEffect(() => {
+    if (!libraryRestored) return;
+    try { sessionStorage.setItem("storygame:library-view:v1", JSON.stringify({version: 1, filter, page, sharedTheme, selectedId: selectedBook?.id})); } catch { /* optional tab state */ }
+  }, [libraryRestored, filter, page, sharedTheme, selectedBook?.id]);
+
 
   const goToPrevBook = () => {
     if (!selectedBook) return;
@@ -223,74 +344,40 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
     }
   };
 
-  // Overlay Focus Trap, Escape & Arrow key handling
-  useEffect(() => {
-    if (!selectedBook) return;
-    const dialog = overlayRef.current;
-    const previous = document.activeElement as HTMLElement | null;
-    previousFocusRef.current = previous;
-
-    const focusable = dialog?.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), [tabindex="0"]:not([disabled])'
-    );
-    if (focusable && focusable.length > 0) {
-      focusable[0]?.focus();
+  // Keep navigation current without tearing down focus on each book change.
+  const handleDialogKey = useEffectEvent((e: KeyboardEvent) => {
+    if (e.key === "Escape") { e.preventDefault(); closeOverlay(); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); goToPrevBook(); }
+    if (e.key === "ArrowRight") { e.preventDefault(); goToNextBook(); }
+    if (e.key === "Tab") {
+      const items = Array.from(overlayRef.current?.querySelectorAll<HTMLElement>('button:not([disabled])') ?? [])
+        .filter(el => el.getClientRects().length > 0);
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
     }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        closeOverlay();
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
-        if (currentIndex !== -1) {
-          const prevIndex = (currentIndex - 1 + allSelectableBooks.length) % allSelectableBooks.length;
-          const nextBook = allSelectableBooks[prevIndex];
-          setSelectedBook(nextBook);
-          if (nextBook.kind === "base" && props.onSelectStory) {
-            props.onSelectStory(nextBook.theme);
-          }
-        }
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        const currentIndex = allSelectableBooks.findIndex((b) => b.id === selectedBook.id);
-        if (currentIndex !== -1) {
-          const nextIndex = (currentIndex + 1) % allSelectableBooks.length;
-          const nextBook = allSelectableBooks[nextIndex];
-          setSelectedBook(nextBook);
-          if (nextBook.kind === "base" && props.onSelectStory) {
-            props.onSelectStory(nextBook.theme);
-          }
-        }
-      } else if (e.key === "Tab" && dialog) {
-        const items = Array.from(
-          dialog.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), [tabindex="0"]:not([disabled])'
-          )
-        ).filter((el) => el.getClientRects().length > 0);
-        if (items.length === 0) return;
-        const first = items[0];
-        const last = items[items.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
+  });
+  const dialogOpen = Boolean(selectedBook);
+  useEffect(() => {
+    if (!dialogOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    overlayRef.current?.querySelector<HTMLElement>('button:not([disabled])')?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => handleDialogKey(event);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      previousFocusRef.current?.focus();
+      document.body.style.overflow = overflow;
+      if (previousFocusRef.current?.isConnected) previousFocusRef.current.focus();
     };
-  });
+  }, [dialogOpen]);
 
   return (
-    <main className="story-discovery">
+    <main ref={roomRef} className="story-discovery" data-room-finish={LIBRARY_ROOM.finish} style={{ "--library-room": `url("${resolveAssetUrl(LIBRARY_ROOM.room)}")`, "--shelf-wood": `url("${resolveAssetUrl(LIBRARY_ROOM.shelf)}")`, "--library-plant": `url("${resolveAssetUrl("/library/pothos-pot.webp")}")`, "--library-foreground-left": `url("${resolveAssetUrl("/library/foreground-plant-books.webp")}")`, "--library-foreground-right": `url("${resolveAssetUrl("/library/foreground-chair-lamp.webp")}")` } as CSSProperties}>
+      <div className="library-foreground library-foreground-left" aria-hidden="true" />
+      <div className="library-foreground library-foreground-right" aria-hidden="true" />
+      <div className="library-room-content" inert={dialogOpen}>
       {/* 🌟 1. 따뜻한 서재 헤더 및 네비게이션 */}
       <header className="library-theater-header">
         <div className="library-header-bar">
@@ -314,12 +401,11 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               strokeLinejoin="round"
               aria-hidden="true"
             >
-              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-              <path d="M6 6h10M6 10h10M6 14h6" />
+              <path d="M12 5C8 2 4 3 2 4v16c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Zm0 0v16" />
             </svg>
-            <span className="library-eyebrow-text">나의 이야기 극장</span>
+            <span className="library-eyebrow-text">한 권의 상상, 하나의 무대</span>
             <h1 ref={headingRef} tabIndex={-1} className="library-main-heading">
-              서재
+              나의 이야기 극장
             </h1>
             <p className="library-motto">책을 펼치면 무대가 시작돼요</p>
           </div>
@@ -359,40 +445,36 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         )}
       </header>
 
+      <div className="library-catalog-bar">
+        <div className="library-filters" role="group" aria-label="책 종류">
+          {([["all", "모든 책"], ["base", "기본 이야기"], ["mine", "내 작품"], ["shared", "모두의 이야기"]] as const).map(([value, label]) =>
+            <button key={value} type="button" aria-pressed={filter === value} onClick={() => changeFilter(value)}>{label}</button>)}
+        </div>
+        <span className="library-count" role="status">{visibleBooks.length}권의 이야기</span>
+      </div>
+      {filter === "shared" && <div className="library-collection-note">
+        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "토끼와 자라" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
+        <small>불러온 공유 작품은 지금 열린 세션에서만 보여요. 온라인 공개 서재는 준비 중이에요.</small>
+        <button type="button" className="library-nav-btn" disabled={props.busy} onClick={() => fileInputRef.current?.click()}>공유 파일 열기</button>
+        {sharedTheme && <button type="button" className="library-nav-btn" onClick={() => setSharedTheme(null)}>모든 공유 작품 보기</button>}
+      </div>}
       {/* 🌟 2. 원목 책장 공간 (Wooden Bookshelf Space) */}
       <section
         className={`library-bookcase ${selectedBook ? "is-receded" : ""}`}
         aria-label="서재 책장"
       >
-        {/* 우측 상단 덩굴 식물 (Ivy Vine) 장식 */}
-        <div className="bookshelf-ivy-decor" aria-hidden="true">
-          <svg viewBox="0 0 160 180" fill="none">
-            <path
-              d="M160 0 C140 30, 110 50, 125 100 C135 130, 95 160, 80 180"
-              stroke="#597040"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M160 10 C130 20, 135 70, 150 120"
-              stroke="#68834d"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <path d="M125 45 C110 40, 105 55, 120 62 C130 65, 135 50, 125 45 Z" fill="#69854e" />
-            <path d="M140 30 C150 18, 135 15, 130 25 C125 35, 135 40, 140 30 Z" fill="#7a9a5d" />
-            <path d="M115 85 C95 80, 95 105, 112 108 C125 110, 130 90, 115 85 Z" fill="#587340" />
-            <path d="M138 100 C152 92, 150 115, 138 120 C128 122, 128 105, 138 100 Z" fill="#749458" />
-            <path d="M98 140 C80 135, 80 155, 95 160 C108 162, 112 145, 98 140 Z" fill="#637f48" />
-            <path d="M80 170 C68 165, 68 180, 82 185 C90 185, 92 172, 80 170 Z" fill="#7ea060" />
-          </svg>
-        </div>
-
+        <div className="library-top-plant" aria-hidden="true" />
+        <div className="library-upright library-upright-left" aria-hidden="true" />
+        <div className="library-upright library-upright-right" aria-hidden="true" />
         {/* 책장 선반 컨테이너 (tests/browser 호환 data-capacity 유지) */}
         <div
+          ref={shelfRef}
           className="library-shelf"
+          style={{ "--shelf-rows": shelfLayout.rows, "--shelf-columns": shelfLayout.columns } as CSSProperties}
           data-capacity={capacity}
+          data-rows={shelfLayout.rows}
         >
+          {pagination.items.length === 0 && <div className="library-empty"><span aria-hidden="true">◇</span><h2>{filter === "mine" ? "첫 이야기를 기다리는 자리" : "아직 제공되는 공유 작품이 없어요"}</h2><p>{filter === "mine" ? "새 이야기를 만들면 여기에 한 권씩 꽂혀요." : "친구의 공유 파일을 열어 함께 읽어 보세요."}</p></div>}
           {pagination.items.map((book) => {
             const isBase = book.kind === "base";
             const isMine = book.kind === "mine";
@@ -402,15 +484,15 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                 ? "library-book-onggojib"
                 : "library-book-rabbit"
               : "library-book-local";
-            const accessibleLabel = `${book.title} · ${
+            const accessibleLabel = book.kind === "new" ? "빈 책 · 새 이야기 만들기" : `${book.title} · ${
               isBase ? "기본 이야기" : isMine ? "내 작품" : isShared ? "공유 작품" : "이야기"
             }`;
 
             return (
-              <article className="library-item" key={book.id}>
+              <article className={`library-item ${book.kind === "new" ? "library-item-new" : ""}`} key={book.id} data-book-id={book.id}>
                 <button
                   type="button"
-                  className={`shelf-book library-book ${themeClass}`}
+                  className={`shelf-book library-book ${themeClass} ${book.kind === "new" ? "library-book-new" : ""}`}
                   onClick={() => {
                     setSelectedBook(book);
                     if (isBase && props.onSelectStory) {
@@ -427,42 +509,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     } as CSSProperties
                   }
                 >
-                  {/* 양장본 책등(Spine) 효과 */}
-                  <span className="shelf-book-spine" aria-hidden="true" />
-
-                  {/* 책 표지면 */}
-                  <div className="shelf-book-face">
-                    <div className="shelf-book-header">
-                      <span className="library-book-kind">
-                        {isBase ? "기본 이야기" : isMine ? "내 작품" : "공유 작품"}
-                      </span>
-                      <span className="library-book-mark" aria-hidden="true">
-                        ✦
-                      </span>
-                    </div>
-
-                    {/* 책 표지 중앙 일러스트 / 표제 */}
-                    <div className="shelf-book-body">
-                      {isBase && (
-                        <div className="shelf-art-wrapper" aria-hidden="true">
-                          <img
-                            src={book.coverArt}
-                            alt=""
-                            className="shelf-cover-image"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
-                      <h2 className="library-book-title">{book.title}</h2>
-                      <p className="shelf-book-subtitle">{book.subtitle}</p>
-                    </div>
-
-                    <div className="shelf-book-footer">
-                      <span className="shelf-filigree" aria-hidden="true">
-                        ─ ◇ ─
-                      </span>
-                    </div>
-                  </div>
+                  <DiscoveryCover book={book} />
+                  <span className="library-book-kind">{isBase ? "기본 이야기" : isMine ? "내 작품" : isShared ? "공유 작품" : "새 이야기 만들기"}</span>
                 </button>
 
                 {/* 선반 바닥 나무 디테일 */}
@@ -471,37 +519,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             );
           })}
 
-          {/* 🌟 3. '새 작품 만들기' 특수 빈 책 (양장본 빈 도화지 책) */}
-          <article className="library-item library-new-item" key="__new_story__">
-            <button
-              type="button"
-              className="shelf-book shelf-book-new"
-              onClick={() => setSelectedBook(newStoryBook)}
-              disabled={props.busy}
-              aria-label="새 이야기 만들기 · 새 작품 시작"
-            >
-              <span className="shelf-book-spine" aria-hidden="true" />
-              <div className="shelf-book-face new-book-face">
-                <div className="shelf-book-header">
-                  <span className="shelf-new-badge">새 이야기</span>
-                  <span className="library-book-mark" aria-hidden="true">
-                    ✏️
-                  </span>
-                </div>
-                <div className="shelf-book-body new-book-body">
-                  <div className="new-book-plus-circle" aria-hidden="true">
-                    <span>＋</span>
-                  </div>
-                  <h2 className="shelf-new-title">새 이야기 만들기</h2>
-                  <p className="shelf-new-desc">나만의 상상을 책으로 적어보세요</p>
-                </div>
-                <div className="shelf-book-footer">
-                  <span className="shelf-new-prompt">펼쳐서 시작하기</span>
-                </div>
-              </div>
-            </button>
-            <div className="shelf-plank-edge" aria-hidden="true" />
-          </article>
+
         </div>
 
         {/* 선반 페이지네이션 (< > chevrons & dots: 책 수가 많을 때만 표시) */}
@@ -511,7 +529,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               type="button"
               className="shelf-arrow-btn prev"
               disabled={pagination.page === 0}
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              onClick={() => setPage(Math.max(0, pagination.page - 1))}
               aria-label="이전 선반 책들 보기"
             >
               ‹
@@ -528,7 +546,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               type="button"
               className="shelf-arrow-btn next"
               disabled={pagination.page + 1 === pagination.pages}
-              onClick={() => setPage((p) => Math.min(pagination.pages - 1, p + 1))}
+              onClick={() => setPage(Math.min(pagination.pages - 1, pagination.page + 1))}
               aria-label="다음 선반 책들 보기"
             >
               ›
@@ -537,6 +555,10 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         )}
       </section>
 
+      <footer className="library-footer">
+        <span aria-hidden="true">─ ◇ ─</span><p>오늘도, 새로운 이야기가 기다리고 있어요.</p><small>© 놀퀴즈</small>
+      </footer>
+      </div>
       {/* 🌟 4. 책 꺼내기 Focus Stage */}
       {selectedBook && (
         <div
@@ -546,6 +568,13 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           }}
           role="presentation"
         >
+          <section
+            ref={overlayRef}
+            className="library-focus-stage"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={dialogTitleId}
+          >
           {/* 상단 닫기/돌아가기 버튼 */}
           <button
             type="button"
@@ -558,13 +587,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             <span className="btn-close-label">돌아가기</span>
           </button>
 
-          <section
-            ref={overlayRef}
-            className="library-focus-stage"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={dialogTitleId}
-          >
             {/* 상단 엠블럼 및 서재 타이틀 */}
             <div className="focus-header">
               <div className="focus-emblem-wrap" aria-hidden="true">
@@ -620,54 +642,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     } as CSSProperties
                   }
                 >
-                  {/* 양장본 책등(Spine) 및 세로 표제 */}
-                  <div className="focus-book-spine" aria-hidden="true">
-                    <span className="focus-spine-title">{selectedBook.title}</span>
-                  </div>
-
-                  {/* 책 표지면 */}
-                  <div className="focus-book-face">
-                    <div className="focus-face-top" aria-hidden="true">
-                      <span className="face-diamond">─ ◇ ─</span>
-                    </div>
-
-                    <h3 className="focus-cover-title">{selectedBook.title}</h3>
-
-                    <div className="focus-cover-art-box">
-                      {selectedBook.kind === "base" && selectedBook.coverArt && (
-                        <img
-                          src={selectedBook.coverArt}
-                          alt=""
-                          className="focus-hero-img"
-                        />
-                      )}
-                      {selectedBook.kind === "mine" && (
-                        <div className="focus-custom-crest">
-                          <span className="crest-symbol">✦</span>
-                          <span className="crest-sub">{selectedBook.subtitle}</span>
-                        </div>
-                      )}
-                      {selectedBook.kind === "shared" && (
-                        <div className="focus-custom-crest">
-                          <span className="crest-symbol">🤝</span>
-                          <span className="crest-sub">{selectedBook.subtitle}</span>
-                        </div>
-                      )}
-                      {selectedBook.kind === "new" && (
-                        <div className="focus-custom-crest">
-                          <span className="crest-symbol">✏️</span>
-                          <span className="crest-sub">새 도화지</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="focus-face-bottom" aria-hidden="true">
-                      <span className="face-tag">놀스토리 이야기 극장</span>
-                    </div>
-                  </div>
-
-                  {/* 책 우측 페이지 옆면 (양장본 두께감) */}
-                  <div className="focus-book-pages" aria-hidden="true" />
+                  <DiscoveryCover book={selectedBook} />
                 </div>
 
                 {/* 책 하단 원목 받침대 (Wooden Pedestal) */}
@@ -750,8 +725,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     className="focus-action-card"
                     aria-label="공유 작품 보기"
                     onClick={() => {
-                      closeOverlay();
-                      props.onCreation();
+                      closeOverlay(); setFilter("shared"); setSharedTheme(selectedBook.theme); setPage(0);
+                      requestAnimationFrame(() => headingRef.current?.focus());
                     }}
                     disabled={props.busy}
                   >
@@ -973,7 +948,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     </div>
                     <div className="action-card-text">
                       <strong className="action-card-title">창작 관리</strong>
-                      <small className="action-card-sub">다른 공유 작품도 둘러보아요</small>
+                      <small className="action-card-sub">내가 쓰는 작품을 관리해요</small>
                     </div>
                   </button>
 
@@ -1006,7 +981,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       closeOverlay();
                       props.onStartBlank?.();
                     }}
-                    disabled={props.busy || isFull}
+                    disabled={props.busy || props.failed || isFull}
                   >
                     <div className="action-card-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1027,7 +1002,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       closeOverlay();
                       props.onStartRabbit?.();
                     }}
-                    disabled={props.busy || isFull}
+                    disabled={props.busy || props.failed || isFull}
                   >
                     <div className="action-card-icon" aria-hidden="true">
                       <span>🐰</span>
@@ -1045,7 +1020,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       closeOverlay();
                       props.onStartOnggojib?.();
                     }}
-                    disabled={props.busy || isFull}
+                    disabled={props.busy || props.failed || isFull}
                   >
                     <div className="action-card-icon" aria-hidden="true">
                       <span>⚖️</span>

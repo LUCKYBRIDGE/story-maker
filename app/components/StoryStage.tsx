@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- Story assets are local transparent images. */
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useStoryDisplaySettings } from "../hooks/useStoryDisplaySettings";
 import { useSceneEffect } from "../hooks/useSceneEffect";
 import type { StorySceneEffect } from "../story-scene-effect";
 import type { resolveStoryStage } from "../story-stage-view";
@@ -74,11 +75,13 @@ export function StoryStageCharacter(props: CharacterProps) {
 }
 
 function StageCharacterImage({ character, side, variant, listener = false, loading = "lazy" }: CharacterProps) {
+  const settings = useStoryDisplaySettings();
+  const scale = character.scale * (settings.characterScales[character.scaleGroup] ?? 100) / 100;
   const [failed, setFailed] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   useEffect(() => {
     const image = imageRef.current;
-    if (!image || character.scale === 1) return;
+    if (!image || scale === 1) return;
     const anchorFeet = () => {
       if (!image.naturalWidth) return;
       const renderedHeight = Math.min(image.clientHeight, image.clientWidth * image.naturalHeight / image.naturalWidth);
@@ -90,7 +93,7 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
     const observer = new ResizeObserver(anchorFeet);
     observer.observe(image);
     return () => { image.removeEventListener("load", anchorFeet); observer.disconnect(); };
-  }, [character.scale]);
+  }, [scale]);
   if (!character.id) return null;
   const variantClass = variant === "thumbnail" ? "scene-thumb-character"
     : variant === "editor" ? "editable-stage-character" : "stage-character";
@@ -100,8 +103,9 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
   }
   return <img
     ref={imageRef}
+    data-scale-group={character.scaleGroup}
     data-stature={character.scale < 1 ? "child" : undefined}
-    style={{ "--actor-scale": character.scale, "--actor-facing": character.mirrored ? -1 : 1 } as CSSProperties}
+    style={{ "--actor-scale": scale, "--actor-facing": character.mirrored ? -1 : 1 } as CSSProperties}
     className={`${classes} ${character.mirrored ? "mirrored" : ""}`}
     data-asset-id={character.id}
     src={resolveAssetUrl(character.src)}

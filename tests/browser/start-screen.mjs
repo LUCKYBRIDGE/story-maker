@@ -40,6 +40,9 @@ try {
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`overflow at ${width}`);
   for(const b of await page.locator('.poster-button').all()) { const r=await b.boundingBox(); assert.ok(r.height>=44 && r.width>=44); }
   await page.screenshot({path:`${output}/rabbit-${width}.png`,fullPage:true});
+  await page.getByRole('button',{name:'서재 입장',exact:true}).click();
+  await page.locator('.library-shelf').waitFor();
+  await page.getByRole('button',{name:'메인으로',exact:true}).click();
   const open=page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'});await open.click();
   await page.getByRole('heading',{name:'창작 관리',exact:true}).waitFor();
   assert.ok(await page.getByRole('heading',{name:'창작 관리',exact:true}).evaluate(el=>el===document.activeElement));
@@ -50,9 +53,9 @@ try {
   await page.getByRole('button',{name:'메인으로',exact:true}).focus();
   await page.keyboard.press('Enter');
   await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-  await page.getByRole('button',{name:'놀스토리 작품 읽기',exact:true}).click();
-  await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();
-  await page.getByRole('button',{name:'기본 작품 읽기',exact:true}).click();
+  await page.getByRole('button',{name:'이야기 읽기',exact:true}).click();
+  await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
+  await page.locator('.player-shell').waitFor();
   await page.waitForTimeout(1200);
   assert.equal(await page.locator('.nolstory-poster-frame').count(),0);
   assert.deepEqual(errors,[]);

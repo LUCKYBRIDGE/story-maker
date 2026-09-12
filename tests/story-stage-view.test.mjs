@@ -59,3 +59,16 @@ test("어린 자라의 기본·회상은 같은 작은 키를 쓰고 성인 자�
   `);
   assert.deepEqual(result,[0.72,0.72,1]);
 });
+
+
+test("옹고집전 아이들은 성인보다 작은 키로 렌더링한다", () => {
+  const result=run(`
+    const {STORY_ASSETS}=await import('./app/story-assets.ts');
+    const p=createCurrentV1ProjectFixture();
+    const ids=STORY_ASSETS.filter(a=>a.story==='옹고집전' && ['아이','둘째 아이','막내 아이'].includes(a.group)).map(a=>a.id);
+    console.log(JSON.stringify({children:ids.map(id=>resolveStoryStage(p.chapters[0],{...p.lines[0],leftAssetId:id}).left.scale),adult:resolveStoryStage(p.chapters[0],{...p.lines[0],leftAssetId:'onggojib.character.real-angry-pixel'}).left.scale}));
+  `);
+  assert.ok(result.children.length>=5);
+  assert.ok(result.children.every(scale=>scale===0.62));
+  assert.equal(result.adult,1);
+});

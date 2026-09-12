@@ -9,6 +9,140 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
+## 최근 완료: PLAY-UI-01 화면 복원과 읽기 표시 설정
+
+- 2026-09-12 사용자 요청 및 후속 결정. **DONE — 로컬 구현·검증**.
+- © 놀퀴즈, 같은 탭 화면/읽던 컷/선택 기록 복원, 하단35% 고정 글상자와20~60% 조절, 인물 그룹별 균일 크기 설정.
+- 기존 작품 저장 형식·원본 이미지 유지. 표시 설정 localStorage/화면 sessionStorage 분리. 상세 계약은 PLAY-UI-01 카드.
+- 화면 설정에서 글상자20~60%/기본35%, 인물별40~140%/기본값 복원. 동일 인물 그룹의 포즈·편집 미리보기·썸네일 공유. 아이 기본62%와 어린 자라72%, 발 기준 균일 배율 유지.
+- 서재 필터·페이지·팝업, 편집 위치, 읽기 컷·표지·실제 선택 경로·종료 선택을 같은 탭 새로고침 후 복원. 공유 읽기 스냅숏은 기존 validator를 통과한 경우에만 복원한다.
+- `npm run check`, `npm test`(빌드+198개), `git diff --check` 통과. `/tmp/display-settings-{check,tests}.log`.
+- 브라우저: player-continuity, display-settings, reader-layout, reader-history, library-craft 통과. 390×844/1365×900/1380×1412/844×390에서35% 고정·변경·초기화·동일 인물 다른 포즈·새로고침·선택 기록·편집 복원·키보드·스크롤 확인. `/tmp/player-continuity.log`, `/tmp/display-settings-{browser,layout,history}.log`, `/tmp/player-fix-library.log`; screenshot `/tmp/player-continuity-qa/`, `/tmp/display-settings-qa/` 육안 확인.
+- 로컬 `codex/library-craft`에 적용. 커밋·푸시·배포 없음. 실제 기기 OS와 저장이 차단된 환경의 영구 복원은 미검증/미보장. 다음 READY 없음.
+
+
+## 최근 완료: HOME-01 상단 메뉴와 하단 읽기
+
+- 2026-09-12 사용자 요청. **DONE — 로컬 구현·검증**.
+- 상단에 이야기 변경/나만의 이야기/서재 입장 3개 메뉴를 두고 하단 중앙 버튼은 이야기 읽기로 변경했다. 읽기는 현재 선택된 기본 작품의 읽기 표지를 열며 이야기 펼치기로 재생한다.
+- `npm run check`, `start-screen.mjs`의 320×740, 390×844, 820×1180, 1365×900 검사, `git diff --check` 통과. 이야기 변경 후 읽기, 서재 입장, 창작 관리·키보드 복귀, 44px 터치 영역, 가로 넘침 없음 확인. `/tmp/home-nav-{check,browser}.log`, `/tmp/start-screen-qa/` screenshot.
+- 로컬 `codex/library-craft` 적용. 커밋·푸시·배포 없음. 실제 기기 OS 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-11 빈 윤곽 책으로 새 이야기 시작
+
+- 2026-09-12 하단 두 버튼을 제거하고 빈 책으로 생성 팝업을 여는 사용자 요청. **DONE — 로컬 구현·검증**.
+- 모든 책/내 작품에서 기존 이야기 다음 순서에 윤곽 책을 추가했다. 실제 이야기 수에는 제외하고 페이지 용량에는 포함한다. 기존 확대 팝업의 빈 작품 생성·전래동화 이어쓰기·외부 파일 가져오기 안내 재사용.
+- `npm run check`, `library-craft.mjs`, `library-motion.mjs`, `git diff --check` 통과. 로그 `/tmp/library-blank-{check,browser,motion}.log`. 1365/820/390/320px에서 빈 책 선택·확대·Escape 초점 복원·Enter 재진입·실제 생성, 기존 읽기/편집/공유/페이지/리사이즈 검증. screenshot `/tmp/library-craft-qa/new-book-*.png` 및 서재 확인.
+- 후속 결정: 빈 책은 기존 이야기 뒤에 일반 순서로 배치한다. 우측 고정은 하지 않으며 행이 차면 다음 행 왼쪽, 단독이면 첫 행 왼쪽에 놓는다. 줄바꿈·단독 왼쪽 정렬 검사를 추가했으며 check·library-motion·diff 검사 통과. 로그 `/tmp/library-order-{check,motion}.log`.
+- 로컬 `codex/library-craft`에 적용. 커밋·푸시·배포 없음. 실제 기기 OS 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-10 책의 선반 안쪽 배치
+
+- 2026-09-12 책이 더 안쪽에 들어가 보이도록 후속 요청. **DONE — 로컬 구현·검증**.
+- 서재 책 너비 비율 .56→.52, 밑면 위치 .20→.205, 종이 단면과 바깥 그림자 축소, 밀착 그림자 및 hover 이동 1px 적용. 선택/읽기 표지와 데이터 유지.
+- `npm run check`, `library-motion.mjs`, `library-craft.mjs`, `git diff --check` 통과. 로그 `/tmp/library-inset-{check,motion,browser}.log`. 4가지 화면 크기의 읽기·편집 진입·키보드·페이지·리사이즈 확인, 가로/세로 화면의 책 안착 육안 확인.
+- 로컬 적용만 수행. 커밋·푸시·배포 없음. 실제 기기 OS 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-09 참고 이미지의 목재 깊이와 하단 전경
+
+- 2026-09-12 사용자 참고 이미지에 맞춘 후속 조정. **DONE — 로컬 구현·검증**.
+- 책장 내부 상단/양옆의 음영과 선반 앞면의 밝기를 분리하고, 기둥과 테두리 갈색을 맞췄다. 책 너비 비율 .54→.56, 전경은 아래 모서리 쪽으로 이동했다. 기존 소품·벽·마루·2/3단 구조 유지.
+- `npm run check`, `library-motion.mjs`, `library-craft.mjs`, `git diff --check` 통과. 로그 `/tmp/library-warm-{check,motion,browser}.log`. 4가지 크기에서 읽기·편집 진입·키보드·페이지 이동 및 리사이즈 확인, 가로/세로 screenshot 육안 확인.
+- `codex/library-craft` 로컬 반영. 커밋·푸시·배포 없음. 실제 기기 OS는 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-08 전경 가구 크기와 화면 가장자리 구도
+
+- 2026-09-12 사용자 요청: 전경 소품이 미니어처처럼 보이는 문제 수정. 소품 전체 노출은 요구가 아니며 화면 경계에서 일부만 보여도 된다. **DONE — 로컬 구현·검증**.
+- 전경 가구는 큰 크기와 원래 비율을 유지하고 좌우·아래 화면 밖으로 배치한다. 모바일은 축소 대신 노출 폭을 줄인다. 화면 내부 잘림은 금지한다.
+- LIB-07의 전체 윤곽 노출/방 하단 일치 검증은 이번 사용자 결정으로 대체했다. 투명 원본과 기존 책장·책·데이터는 유지한다.
+- `npm run check`, `library-motion.mjs`, `library-craft.mjs`, `git diff --check` 통과. `/tmp/library-scale-{check,motion,browser}.log`. 1365×900, 820×1180, 390×844, 320×740 흐름 및 연속 리사이즈 확인. 가로·세로와 여러 권 화면 육안 확인.
+- `codex/library-craft` 로컬 적용만 수행. 커밋·푸시·배포 없음. 실제 기기 OS는 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-07 소품 톤과 전경 초점 (로컬)
+
+- 사용자 요청: 통일된 재질·색감과 전경의 얕은 심도, 잎과 소품의 부자연스러운 잘림 제거. **DONE — 로컬 구현·검증**.
+- 배경에 합쳐진 우측 식물을 제거하고, 전체 윤곽이 담긴 투명 식물·책 더미와 의자·램프를 각각 생성했다. 원래 비율 전체를 표시하며 방 하단에 고정한다. 윗판 식물은 기둥 앞에 자연스럽게 겹친다.
+- 소품은 비상호작용/접근성 트리 제외, 전경만 약한 흐림. 이전 배경·소재는 보존했다.
+- `npm run check`, `library-craft.mjs`, `library-motion.mjs`, `git diff --check` 통과. 로그 `/tmp/library-depth-{check,browser,motion}.log`. 1365×900, 820×1180, 390×844, 320×740의 읽기·편집 진입·키보드·페이지 이동 및 연속 리사이즈 확인. 방 하단 정렬 검증 추가.
+- `/tmp/library-motion-qa/` 가로/세로 실화면에서 소품의 온전한 윤곽, 바닥 배치, 가로 넘침 없음 확인. 실제 기기 OS는 미검증.
+- `codex/library-craft` 로컬 변경만 적용. 커밋·푸시·배포 없음. 다음 READY 없음.
+
+## 최근 완료: LIB-06 갈색 목재·주변 화분·책 안착 (로컬)
+
+- 사용자 첨부 참고 색감, 책을 가리지 않는 장식, 일자 기둥·책 안착 후속 요청, **DONE — 로컬 구현·검증**.
+- warm finish로 중간 갈색 적용. 투명 화분 `public/library/pothos-pot.webp`을 윗판 우측에 올리고
+  잎은 기둥 주변으로 내렸다. 모바일 축소/별도 여백, pointer-events none/aria-hidden 처리.
+- 선반의 반복 이미지와 독립된 양쪽 세로 기둥을 만들어 가로 굴곡을 제거했다.
+  서재 책만 종이 단면/바깥 그림자를 줄이고 선반 윗면에 접촉 그림자를 적용, hover 이동은3px로 줄였다.
+  선택 화면의 표지 연출은 유지했다.
+- `npm run check`, `library-craft.mjs`, `library-motion.mjs`, `git diff --check` 통과.
+  로그 `/tmp/library-seated-check.log`, `/tmp/library-seated-browser.log`, `/tmp/library-seated-motion.log`.
+  desktop/mobile 및 여러 권 screenshot `/tmp/library-motion-qa/`, `/tmp/library-craft-qa/` 확인.
+- 기존 로컬 branch `codex/library-craft`와 모든 변경 보존. 이전 배경·소재 보존. 저장 형식 변경 없음.
+- 커밋·푸시·배포 없음. `http://localhost:3003/` 적용. 실제 기기 OS는 별도 미검증. 다음 READY 없음.
+
+## 최근 완료: LIB-05 부드러운 오크·벽과 마루 공간 (로컬 후보)
+
+- 사용자 후속 요청: 강한 대비를 줄인 새 책장 후보, 책상 대신 벽 앞 마루 위에 선 책장. **DONE — 로컬 구현·검증 / 사용자 취향 평가 대기**.
+- `codex/library-craft` 기존 변경 보존. 새 soft finish와 parquet room을 built-in imagegen으로 생성했다.
+  `public/library/oak-shelf-soft.webp`, `parquet-room.webp`; 이전 소재·CSS·설정은 보존해 복원 가능하다.
+- 밝은 무광 오크와 옅은 그림자, 책장 하부 받침을 적용하고 벽/마루 경계를 책장 높이에 맞춰 자동 정렬한다.
+  소재별 선반 윗선에 책 밑면을 맞췄다. 2/3단 및 반응형 연출 유지.
+- `npm run check`, `library-craft.mjs`, `library-motion.mjs`, `git diff --check` 통과.
+  desktop/mobile 실화면에서 낮은 대비, 마루 위 받침, 선반 정렬 확인. 기존 책·읽기·키보드·공유·페이지 회귀 통과.
+- 로그 `/tmp/library-soft-check.log`, `/tmp/library-soft-browser.log`, `/tmp/library-soft-motion.log`.
+  화면 `/tmp/library-motion-qa/landscape.png`, portrait-phone.png. 실제 기기 OS는 별도 미검증.
+- 커밋·푸시·배포 없음. `http://localhost:3003/`에 새 후보 적용. 다음 READY 없음.
+
+## 최근 완료: LIB-04 책장 기본 단수와 반응형 연출 (로컬)
+
+- 사용자 후속 결정: 가로 기본 2단 이상, 세로로 긴 화면 3단. **DONE — 로컬 구현·검증**, Work Lead · A/B.
+- 기존 LIB-02/03 로컬 변경 보존. branch `codex/library-craft`, root `/Volumes/WAN2/apps/story-maker`.
+- 책 수가 적거나 없어도 선반 단수를 유지한다. 넓은 가로5열/중간3열/좁은2열, 용량은 열×단수.
+- 화면 높이에 맞춘 책/선반 크기, 2→3단 전환, 책 위치 이동(560ms 기본 + 순서별 차이),
+  새로 등장하는 책의 시차 효과를 연결했다. 진행 중 리사이즈를 중단·재연결하며 동작 축소 설정에서는 즉시 배치한다.
+- `npm run check` 오류/경고 없음, `npm test` 빌드 및 **196/196 통과**, `git diff --check` 통과.
+- `library-craft.mjs`: 1365/820/390/320px, 기존 실제 책·키보드·읽기 복귀·생성·공유 파일·페이지 검사 통과.
+- `library-motion.mjs`: 가로2/세로3 실제 grid 단수, 빈 상태, 방향 경계 포함 연속 6회 리사이즈,
+  실행 중 책 애니메이션, 초점 유지, 동작 축소 시 실행 애니메이션0, 선택 화면의 리사이즈·ESC 복귀 통과.
+- 로그 `/tmp/library-motion-check.log`, `/tmp/library-motion-test.log`, `/tmp/library-motion-regression.log`,
+  `/tmp/library-motion-browser.log`. 시각 확인 `/tmp/library-motion-qa/landscape.png`, portrait-tablet.png, portrait-phone.png.
+- 저장·파일 형식 변경 없음. 물리 기기 회전/OS 동작은 자동 브라우저 검증과 구분한다.
+- 커밋·푸시·배포 없음. `http://localhost:3003/` 미리보기. 다음 READY 없음.
+
+## 최근 완료: LIB-03 선반 재질·조명 정합화 (로컬)
+
+- 2026-09-11 사용자 후속 요청, **DONE — 로컬 구현·검증**. 기존 LIB-02 변경을 보존했다.
+- `codex/library-craft`. built-in imagegen으로 목재 선반 한 단을 생성해 `public/library/oak-shelf.webp`에 저장했다.
+  기존 평면 그라데이션을 나뭇결·측광·윗면·전면 두께가 있는 소재로 교체하고 행별 반복/프레임/받침대에 연결했다.
+  책 밑면을 선반 전면 윗선에 맞췄고 desktop 행 높이를 340px로 조정했다.
+- `npm run check` 통과, `library-craft.mjs` 1365/820/390/320px 실제 흐름 및 공유 파일 11개·리사이즈/페이지 검사 통과.
+  `/tmp/library-shelf-check.log`, `/tmp/library-shelf-browser.log`, `/tmp/library-craft-qa/` 캡처 확인.
+  desktop/mobile 한 단 및 desktop 여러 단에서 재질·배치 확인. `git diff --check` 통과.
+- 이번 범위는 자산·CSS·자산 경로이며 저장·읽기 로직 변경 없음. 전체 회귀는 LIB-02 증거를 유지한다.
+- 커밋·푸시·배포 없음. 미리보기 `http://localhost:3003/`. 다음 READY 없음.
+
+## 최근 완료: LIB-02 서재·책 표지 완성도 개선 (로컬)
+
+- 사용자 2026-09-11 첨부 4종 예시 기반 요청, **DONE — 로컬 구현·검증**. Work Lead · A/B.
+- root `/Volumes/WAN2/apps/story-maker`, branch `codex/library-craft`. 시작 시 main/origin 동일, 로컬 변경 없음.
+- 햇빛이 드는 실내 배경, 연속 목재 선반, 양장 표지/금박/책등/페이지 단면, 그림 없는 책 장식을 적용했다.
+  서재·선택·읽기에서 BookCover를 공유하고 내 작품의 적용본 표지와 편집본을 구분한다.
+- 모든 책/기본/내 작품/공유 필터, 해당 원작의 공유 파일 탐색, 파일 열기, 새 창작을 연결했다.
+  잘못된 공유 버튼의 창작 관리 이동, 선택 화면의 초점 재설정, 리사이즈 뒤 페이지 이전 이동을 수정했다.
+- 검증: `npm run check` 오류/경고 없음. `npm test` 빌드 및 **196/196 통과**.
+  `QA_URL=http://localhost:3003 node tests/browser/library-craft.mjs` 통과:
+  1365×900, 820×1180, 390×844, 320×740에서 실제 목록/열/페이지 용량, 44px 조작,
+  Tab 가두기·좌우키·ESC 복귀·배경 비활성·스크롤 복원, 읽기 복귀·저장 불변·빈 작품 생성.
+  적용/편집 표지 분리, 내 작품 읽기/편집, 실제 공유 파일 11개 가져오기·출처 필터·페이지 전환·양방향 리사이즈 확인.
+- 기본 표지 이미지 로딩 및 읽기 표지 desktop/mobile 실화면 확인.
+  로그 `/tmp/library-check.log`, `/tmp/library-test.log`, `/tmp/library-browser.log`;
+  스크린샷 `/tmp/library-craft-qa/` (shelf/focus/reader-cover/many-books).
+- 최종 scoped diff/whitespace 확인. 변경: BookCover, StoryDiscovery, CSS, `public/library/`,
+  해당 browser 검사와 기존 상세 설계·작업 카드·상태표. 저장 형식·공식 Excel·자산 ID 변경 없음.
+- 한계: 실물 휴대폰/OS/IME는 이번 검증 밖. 원작 전체와 온라인 공개 서재는 미지원 상태를 정직하게 유지한다.
+- 커밋·푸시·머지·배포 없음. 개발 화면 `http://localhost:3003/`. 다음 READY 없음.
+
 ## 최근 완료: 서재 책 꺼내기 Focus Stage 및 감성 UI 구현 main 반영 (2026-09-11)
 
 - 사용자 명시 요청으로 서재 진입 간소화 및 책 꺼내기 Focus Stage 감성 UI/UX를 구현하여 PR #20 및 PR #21로 main에 병합 완료했다. (머지 커밋: `c90efd5`)

@@ -16,6 +16,7 @@ export function BookCover({ project, back = false }: { project: StoryProject; ba
   const cover = resolveStoryCover(project);
   // The built-in rabbit edition introduces its title character, rather than the opening speaker.
   if (!project.cover && project.id === "pinky-review-main-002") {
+    cover.theme = "cream";
     const scene = project.lines.find(line => [line.leftAssetId, line.rightAssetId]
       .some(id => ASSET_BY_ID.get(id)?.group === "토끼"));
     const characterId = scene && [scene.leftAssetId, scene.rightAssetId]
