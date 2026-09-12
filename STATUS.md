@@ -27,19 +27,28 @@ PR #23에서 현재 `main`에 들어온 핵심 변경은 다음과 같다.
 | 최신 제품 기능 병합 | PR #23 `feat: refine library and reading experience` |
 | PR #23 원본 커밋 | `a0809e0` |
 | PR #23 병합 직후 commit | `a18b7ca` |
+| 기준선 동기화 | PR #24 `chore: sync docs and smoke test with current main` |
 | 열린 별도 PR | **#14 의존성 보안 정리** |
 | GitHub Pages | PR #23 병합 후 deploy run #21 성공 |
-| 정적 검사 / 빌드 / 단위·회귀 | PR #23 병합 후 CI에서 성공 |
-| `npm test` 회귀 수 | PR #23 작업 기준 **198개 통과** |
-| 브라우저 smoke | PR #23 병합 직후 과거 `story-flow` 진입 selector 때문에 실패, 현재 동기화 브랜치에서 수정 중 |
+| 단위·회귀 수 | PR #23 작업 기준 **198개 통과** |
+| 최신 전체 검증 | PR #24 CI run #100 **성공** |
+| 브라우저 smoke | `start-screen`, `story-flow`, `sticky-memos`, `pinky-examples` 성공 |
+| 교실 QA | 모바일 터치·Google 시트 fixture 성공 |
 
-### CI 실패의 실제 원인
+### PR #23 직후 CI 실패와 정리 결과
 
 PR #23 병합 후 `main`의 CI run #96은 `Static checks`, `Build and tests`, `Build GitHub Pages artifact`까지 성공한 뒤 **Browser smoke regression** 단계에서 실패했다.
 
-실패한 테스트는 `tests/browser/story-flow.mjs`가 더 이상 존재하지 않는 `.entry-template-options[open]` 요소를 기다리던 과거 진입 흐름을 유지하고 있었기 때문이다. 현재 UI는 메인 화면의 `나만의 이야기`에서 창작 허브로 진입하는 구조이므로, 제품 코드보다 **스모크 시나리오의 구형 selector가 원인**이다.
+원인은 제품 코드가 아니라 테스트 코드가 과거 첫 화면의 `.entry-template-options[open]` 요소를 계속 기다리고 있던 데 있었다. 현재 UI는 메인 화면의 `나만의 이야기`와 서재/읽기 흐름으로 재구성되었고, 같은 탭의 편집·읽기 상태도 복원한다.
 
-현재 기준선 동기화 브랜치 `chore/sync-main-baseline-20260912`에서 이 테스트를 현행 흐름에 맞게 조정한다. 최종 병합 전 GitHub Actions 결과를 다시 확인한다.
+PR #24에서 다음 QA를 현재 계약에 맞게 동기화했다.
+
+- `tests/browser/story-flow.mjs`
+- `tests/browser/sticky-memos.mjs`
+- `tests/browser/pinky-examples.mjs`
+- `tests/browser/support/classroom-fixture.mjs`
+
+그 결과 **CI run #100에서 whitespace, Static checks, Build and tests, Chromium, GitHub Pages artifact, Browser smoke regression, Classroom touch and sheet fixtures가 모두 성공**했다.
 
 ---
 
@@ -86,7 +95,17 @@ PR #23 병합 후 `main`의 CI run #96은 `Static checks`, `Build and tests`, `B
 
 ---
 
-## 5. 빠른 현황 확인
+## 5. 열린 유지보수 PR
+
+### PR #14 — 의존성 보안 정리
+
+PR #14는 `sharp`와 `fflate`의 안전한 패치 업데이트를 담고 있으며, 제품 UI 변경과는 분리된 유지보수 작업이다.
+
+현재 이 브랜치는 최신 `main`과 분기되어 있으며 **main보다 25커밋 뒤처진 상태**이다. 변경 파일은 `package.json`, `package-lock.json` 두 개뿐이지만, PR 본문에 “별도 승인 전 main 병합 금지”가 명시되어 있으므로 자동 병합하지 않는다. 병합을 결정할 때는 최신 `main` 위에서 dependency diff를 다시 재현하고 CI를 새로 확인한다.
+
+---
+
+## 6. 빠른 현황 확인
 
 로컬 작업 환경에서는 다음 명령을 먼저 실행한다.
 
@@ -107,7 +126,7 @@ gh pr list --state open
 
 ---
 
-## 6. 표준 작업 흐름
+## 7. 표준 작업 흐름
 
 ```mermaid
 graph LR
@@ -149,7 +168,7 @@ graph LR
 
 ---
 
-## 7. 문서 우선순위
+## 8. 문서 우선순위
 
 현재 상태를 판단할 때는 다음 순서를 사용한다.
 
@@ -164,7 +183,7 @@ graph LR
 
 ---
 
-## 8. 자주 발생하는 불일치
+## 9. 자주 발생하는 불일치
 
 | 상황 | 판단 기준 | 처리 |
 |---|---|---|
