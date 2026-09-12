@@ -1,12 +1,13 @@
 "use client";
 
+import { useStoryDisplaySettings, updateStoryDisplaySettings } from "../hooks/useStoryDisplaySettings";
 import { speakerColor } from "../story-speaker-colors";
 import { ModalDialog } from "./ModalDialog";
 import { ReadingTranscript, type ReadingRecord } from "./ReadingTranscript";
 import { resolveAssetUrl } from "../story-asset-url";
 import { StorySceneFrame } from "./StoryStage";
 
-import { useEffectEvent, useEffect, useRef, useState } from "react";
+import { useEffectEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { storyFlowTargets } from "../story-flow";
 import type { StoryProject } from "../story-data";
 import { resolveStoryStage } from "../story-stage-view";
@@ -88,13 +89,37 @@ export function StoryPlayer({
   revisionResponses,
   onRevisionResponse,
 }: StoryPlayerProps) {
+  const displaySettings = useStoryDisplaySettings();
+  const [displayOpen, setDisplayOpen] = useState(false);
+  const characterGroups = useMemo(() => {
+    const ids = new Set([...project.chapters, ...project.lines].flatMap(row => [row.leftAssetId, row.rightAssetId]));
+    const groups = new Map<string, string>();
+    for (const id of ids) {
+      const asset = id ? ASSET_BY_ID.get(id) : undefined;
+      if (asset?.type === "character") groups.set(`${asset.story}:${asset.group}`, asset.group);
+    }
+    return [...groups];
+  }, [project]);
   const [menu, setMenu] = useState<"return" | "chapters" | null>(null);
   const playerRef = useRef<HTMLElement>(null);
   const { lines, index, line, chapter, playableChapters, number, total } =
     selectStoryPlayerPosition(project, startIndex);
-  const [history, setHistory] = useState<ReadingRecord[]>([]);
-  const [endingChoice, setEndingChoice] = useState<string>();
-  const [choiceEnded, setChoiceEnded] = useState(false);
+  const [restoredReading] = useState(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("storygame:reading-path:v1") ?? "null");
+      if (saved?.projectId === project.id && saved.index === index && Array.isArray(saved.history)) {
+        const history: ReadingRecord[] = saved.history.filter((item: ReadingRecord) => item && typeof item.lineId === "string" && lines.some(line => line.id === item.lineId) && (item.choiceLabel === undefined || typeof item.choiceLabel === "string"));
+        return {history, endingChoice: typeof saved.endingChoice === "string" ? saved.endingChoice : undefined, choiceEnded: saved.choiceEnded === true};
+      }
+    } catch { /* A missing history does not prevent opening the current cut. */ }
+    return {history: [] as ReadingRecord[], endingChoice: undefined, choiceEnded: false};
+  });
+  const [history, setHistory] = useState<ReadingRecord[]>(restoredReading.history);
+  const [endingChoice, setEndingChoice] = useState<string | undefined>(restoredReading.endingChoice);
+  const [choiceEnded, setChoiceEnded] = useState(restoredReading.choiceEnded);
+  useLayoutEffect(() => {
+    try { sessionStorage.setItem("storygame:reading-path:v1", JSON.stringify({projectId: project.id, index, history, endingChoice, choiceEnded})); } catch { /* optional tab history */ }
+  }, [project.id, index, history, endingChoice, choiceEnded]);
   const pendingMove = useRef(false);
   const branching = project.lines.some(line => line.flow);
   const targets = storyFlowTargets(lines, index);
@@ -155,7 +180,7 @@ export function StoryPlayer({
 
   // 키보드 조작은 선택지를 건너뛰지 않으며 최신 재생 경로를 사용한다.
   const onPlayerKey = useEffectEvent((event: KeyboardEvent) => {
-      if (menu || (event.target instanceof Element && event.target.closest('[role="dialog"]')) || !shouldHandleStoryPlayerKey(event) ||
+      if (menu || displayOpen || (event.target instanceof Element && event.target.closest('[role="dialog"]')) || !shouldHandleStoryPlayerKey(event) ||
         !(event.target instanceof Node) || !playerRef.current?.contains(event.target)) {
         return;
       }
@@ -192,7 +217,7 @@ export function StoryPlayer({
 
 
   return (
-    <main className="player-shell" ref={playerRef} tabIndex={-1} aria-label={isExample ? "예시 스토리 플레이" : "스토리 플레이"}>
+    <main className="player-shell" style={{ "--dialogue-height": `${displaySettings.dialoguePercent}dvh` } as CSSProperties} ref={playerRef} tabIndex={-1} aria-label={isExample ? "예시 스토리 플레이" : "스토리 플레이"}>
       <div
         className="story-stage"
       >
@@ -205,6 +230,7 @@ export function StoryPlayer({
             <small>{number} / {total}</small>
           </details>
           <div className="reader-top-actions">
+            <button type="button" onClick={() => setDisplayOpen(true)}>화면 설정</button>
             <button type="button" onClick={() => setMenu("chapters")}>이동</button>
             <button type="button" onClick={() => setMenu("return")}>돌아가기</button>
           </div>
@@ -260,6 +286,27 @@ export function StoryPlayer({
           />
         </section>
       )}
+      {displayOpen && <ModalDialog overlayClassName="reader-menu-backdrop" dialogClassName="reader-menu-dialog reader-display-settings" label="화면 설정" onClose={() => setDisplayOpen(false)}>
+        <header><h2>화면 설정</h2><button type="button" onClick={() => setDisplayOpen(false)}>닫기</button></header>
+        <section className="display-setting-section">
+          <label htmlFor="dialogue-height">글상자 높이 <output>{displaySettings.dialoguePercent}%</output></label>
+          <p>화면 하단에서 위로 차지하는 높이예요. 글이 짧아도 같은 높이를 유지해요.</p>
+          <input id="dialogue-height" type="range" min="20" max="60" step="1" value={displaySettings.dialoguePercent}
+            onChange={event => updateStoryDisplaySettings(settings => ({...settings, dialoguePercent: Number(event.target.value)}))} />
+          <button type="button" onClick={() => updateStoryDisplaySettings(settings => ({...settings, dialoguePercent: 35}))}>글상자 기본값 35%</button>
+        </section>
+        <section className="display-setting-section"><h3>인물 크기</h3><p>같은 인물의 모든 자세에 함께 적용해요. 아이는 작은 기본 키를 기준으로 조절해요.</p>
+          {characterGroups.map(([key, label], index) => <div className="character-size-setting" key={key}>
+            <label htmlFor={`character-size-${index}`}>{label} <output>{displaySettings.characterScales[key] ?? 100}%</output></label>
+            <input id={`character-size-${index}`} type="range" min="40" max="140" step="5" value={displaySettings.characterScales[key] ?? 100}
+              onChange={event => updateStoryDisplaySettings(settings => ({...settings, characterScales: {...settings.characterScales, [key]: Number(event.target.value)}}))} />
+            <button type="button" aria-label={`${label} 크기 기본값`} onClick={() => updateStoryDisplaySettings(settings => {
+              const characterScales = {...settings.characterScales}; delete characterScales[key]; return {...settings, characterScales};
+            })}>기본 크기</button>
+          </div>)}
+        </section>
+        <p className="display-setting-note">이 기기의 화면에 적용되며, 작품 파일은 바뀌지 않아요.</p>
+      </ModalDialog>}
       {menu && <ModalDialog overlayClassName="reader-menu-backdrop" dialogClassName="reader-menu-dialog"
         label={menu === "return" ? "돌아갈 화면" : "장 처음으로 이동"} onClose={() => setMenu(null)}>
         <header><h2>{menu === "return" ? "어디로 돌아갈까요?" : "어느 장부터 읽을까요?"}</h2>
@@ -275,7 +322,7 @@ export function StoryPlayer({
         </div>}
       </ModalDialog>}
       <footer className="copyright-bar">
-        기본 제공 이미지 © 놀퀴즈 · 토끼와 자라·옹고집전 이미지 사용
+        © 놀퀴즈
       </footer>
     </main>
   );

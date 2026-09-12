@@ -38,9 +38,12 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
       src: asset?.src,
       label: asset?.displayName || (side === "left" ? "왼쪽 인물" : "오른쪽 인물"),
       missing: Boolean(id && !asset),
+      scaleGroup: asset ? `${asset.story}:${asset.group}` : "",
+      scaleLabel: asset?.group ?? "",
       placement: stagePlacementClass(id),
       // An age variant has its own stage stature; never distort its head/body proportions.
-      scale: asset?.story === "토끼와 자라" && asset.group === "어린 자라" ? 0.72 : 1,
+      scale: asset?.story === "토끼와 자라" && asset.group === "어린 자라" ? 0.72
+        : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62 : 1,
       mirrored: stageShouldMirror(id, side),
     };
   };

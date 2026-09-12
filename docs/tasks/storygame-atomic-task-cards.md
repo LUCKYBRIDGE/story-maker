@@ -1461,3 +1461,132 @@ npm test
 검증은 실행 가능한 단계에 한정한다. 해당 핵심 Node 검사와 `npm run check` 1회;
 화면 연결 후 대표 desktop/mobile에서 실제 생성·전환·읽기·복귀를 확인한다.
 미구현 파일/서버 흐름을 현재 E2E로 만들지 않는다. 전체 빌드·회귀를 사소한 수정마다 반복하지 않는다.
+
+
+## LIB-02 — 서재와 양장 표지 완성도 개선
+
+- 선행: SP-A~F 및 Focus Stage main 통합. 2026-09-11 사용자 직접 요청.
+- 가치/범위: 학생이 실제 책을 고르고 읽거나 고쳐 쓰는 서재. 첨부 이미지는 재질·조명·배치 참고이며 가짜 책·미지원 서비스는 추가하지 않는다.
+- Work Lead · A/B. 교육 UX, 접근성, 작품 보존 관점.
+- 허용: StoryDiscovery, BookCover, globals.css, library 배경 자산, 관련 browser/단위 검사와 기존 상태표·상세 설계.
+- 금지: 저장 스키마 변경, 기존 인물 변경, 외부 서버·커뮤니티 구현, 공개 배포.
+- 사전 확인: clean main/origin 동일; 기존 원형 인물 표지, 미반영 학생 표지, 공유 버튼의 창작 관리 이동 경로 확인.
+- 절차: (1) 공통 표지 연결 (2) 연속 선반·배경·선택 화면 (3) 공유 필터·파일 열기·초점 복귀 (4) 자동 검사와 실제 흐름 확인.
+- 인수: 실제 목록/페이지 유지; 저장된 표지 반영; 기본 읽기·복제·내 작품 읽기/편집·공유 파일 경로 보존; 닫기/ESC/화살표/Tab 및 배경 비활성; 1365/820/390px에서 넘침 없이 44px 조작; 동작 축소 설정 준수.
+- 검사: `npm run check`, `npm test`, `QA_URL=http://localhost:3003 node tests/browser/library-craft.mjs`, `git diff --check`.
+- 중단: 작품 보존·기존 파일 호환 회귀. 저장 변경 없이 원인을 해결하고 증거 부족 시 상태표에 미완료 항목을 기록한다.
+- 최종 상태/증거는 개발 상태표 LIB-02 절에서만 관리한다.
+
+- 배경 자산: `public/library/sunlit-room.webp`, built-in imagegen, 2026-09-11 생성. 1536×1024 PNG를 품질 84 WebP로 인코딩했다. 캐릭터·문구·UI가 없는 실내 배경이며 책과 조작부는 HTML이다.
+  최종 생성 프롬프트:
+  > Create a photorealistic warm cozy Korean storybook library ROOM BACKGROUND asset for a web application. Landscape 3:2. Front facing symmetrical view. Huge blank warm ivory plaster wall occupies central 80 percent, no bookshelf in center because real HTML bookshelf will overlay it. Far left edge tall oak window with soft leafy garden outside casting diagonal afternoon sun and mullion shadows onto wall. Upper right corner trailing pothos in cream ceramic pot on a very short side ledge. Bottom 12 percent a warm oak tabletop, far right edge small brass lamp with linen shade, far left bottom softly out of focus few closed books and small plant. Tactile natural materials, honey sunlight, cozy editorial interior photography, subtle atmospheric depth, elegant calm uncluttered central negative space. No writing, no text, no letters, no UI, no people, no book covers facing camera. This is a reusable background only, not screenshot or mockup. Save high quality.
+
+
+## LIB-03 — 선반 재질·조명 정합화
+
+- 선행 LIB-02 로컬 완료. 사용자 2026-09-11 후속 요청. Work Lead · A/B.
+- 목표: 사진 배경과 어울리는 실제 목재 선반. 미디어/교육 UX/접근성 관점.
+- 허용: StoryDiscovery 자산 경로, 선반 CSS, `public/library/`, 이 카드·기존 상태표.
+- 금지: 작품·저장 형식 변경, 책 자산 변경, 배포. 기존 미커밋 작업을 보존한다.
+- 절차: 원목 한 단 배경 생성 → 로컬 WebP 저장 → 행 높이별 반복 및 책 발선 조정 → 대표 화면 검증.
+- 인수: 목재 결/측광/선반 두께 일치; 한 단/여러 단 연속성; desktop/mobile 책 하단과 선반 윗면 일치; 기존 클릭/키보드/페이지 동작 유지.
+- 검증: `npm run check`, `QA_URL=http://localhost:3003 node tests/browser/library-craft.mjs`, `git diff --check` 및 선반 screenshot 확인.
+- 중단/되돌리기: 정렬·반응형 실패 시 이번 CSS/신규 자산 연결만 조정한다. 완료 증거는 기존 상태표에서 관리한다.
+- 자산: `public/library/oak-shelf.webp`, built-in imagegen 생성. 2164×727 원본을 WebP quality 85로 인코딩.
+- 최종 프롬프트:
+  > Generate a photorealistic reusable website background asset: ONE empty oak bookshelf compartment, straight front elevation, wide landscape 3:1 aspect ratio. Fills image edge to edge. Warm honey brown aged oak matching a cozy sunlit library with cream plaster, golden afternoon daylight from the upper left. The upper 88% is the inside BACK WALL of the shelf made of real oak boards, with subtle flowing wood grain and gentle uneven natural color, darker softly occluded upper edge, softly lit lower left. The bottom 12% is one solid oak shelf board: visible shallow horizontal top surface lit by window light, then a thick vertical front lip with rich LONG HORIZONTAL wood grain, softly rounded bevel, underside shadow. Perfectly straight horizontal shelf edge, no tilted camera, no strong perspective convergence. No side posts, no outer frame, no extra tiers, no books, no objects, no plants, no wall outside the compartment, no text or UI. The left and right edges must continue naturally as wood, suitable for a continuous shelf of arbitrary width. Materials should look like genuine beautifully crafted oak furniture, tactile pores, subtle patina, soft realistic shadows, not smooth plastic, not cartoon, not striped gradient. Keep the background calm enough for book covers overlaid by HTML. High resolution.
+
+
+## LIB-04 — 기본 단수와 반응형 연출
+
+- 선행 LIB-03. 사용자 후속 요청으로 가로 최소 2단, 세로 3단 확정. Work Lead · A/B.
+- 가치: 실제 책 수와 무관한 서재의 공간감, 화면 크기 변화에도 이어지는 위치 인지. 교육 UX/접근성 관점.
+- 허용: StoryDiscovery, 서재 CSS, 관련 browser 검사, 기존 상세 설계·상태표·이 카드.
+- 금지: 가짜 작품/새 저장 형식, 실제 책의 복제, 새 의존성/배포.
+- 절차: 방향·열·용량 일치 → 빈 단 보존 → 유동 크기/선반 전환/책 위치 애니메이션 → 연속 리사이즈와 동작 축소 검증.
+- 인수: 빈 서재도 가로2/세로3단; 실제 책 수 유지; 방향별 페이지 용량; 연속 크기 변경 중 초점·선택 보존; 새 항목 시차/기존 책 이동; reduced-motion에서는 애니메이션 없음.
+- 검사: `npm run check`, `QA_URL=http://localhost:3003 node tests/browser/library-craft.mjs`, `node tests/browser/library-motion.mjs`, `git diff --check`.
+- 사전: 기존 로컬 branch/미커밋 보존. 중단 조건: 책/상태 유실이나 키보드 접근 회귀. 해당 연출만 조정하며 실제 증거는 상태표에 기록한다.
+## LIB-05 — 부드러운 오크와 마룻바닥 위 책장
+
+- 사용자 후속 요청: 대비 낮춘 새 후보, 책상 대신 벽 앞 마루 위 책장. 선행 LIB-04, Work Lead · A/B.
+- 범위: StoryDiscovery 배경 경로·바닥 정렬, CSS soft finish, 신규 library 소재, 기존 작업 카드·상태표. 이전 자산과 스타일을 보존해 복원 가능하게 한다.
+- 절차: 낮은 대비 오크/빈 방 생성 → WebP 인코딩 → 받침대와 벽/바닥 경계 연결 → desktop/mobile 및 반응형 회귀 확인.
+- 인수: 옅은 목재와 부드러운 그림자; 벽과 마루가 분리되고 받침이 바닥에 닿음; 가로2/세로3 유지; 이전 스타일 복원 가능; 실제 책·초점·페이지 흐름 유지.
+- 검사: `npm run check`, `node tests/browser/library-craft.mjs`, `node tests/browser/library-motion.mjs`, `git diff --check`, 실제 화면 확인.
+- 금지/중단: 학생 데이터 변경·배포 없음. 바닥 정렬/접근성 회귀 시 이번 finish만 조정한다. 상태/증거는 개발 상태표.
+- 생성: built-in imagegen, `public/library/oak-shelf-soft.webp`, `public/library/parquet-room.webp`, WebP quality85. 이전 `oak-shelf.webp`, `sunlit-room.webp` 보존; StoryDiscovery의 LIBRARY_ROOM 이전 설정 및 기존 CSS 유지.
+- 선반 최종 프롬프트:
+  > Photorealistic furniture material asset for a cozy sunlit library website. ONE EMPTY oak bookshelf compartment in exact straight front elevation, wide 3:1 landscape, fills frame edge to edge. Soft natural pale honey oak, warm muted beige and oatmeal caramel tones, like gently sun-bleached matte oak furniture beside an ivory plaster wall. LOW CONTRAST, low saturation, delicate fine wood grain, subtle pores, quiet premium finish. Soft diffuse afternoon daylight from upper left, gentle ambient bounce everywhere; no black shadows, no dark brown corners, no orange varnish, no stark bright shelf stripe, no dramatic spotlight. Upper 87.5% is a pale warm oak back panel with restrained subtle horizontal grain. Bottom 12.5% is the vertical front lip of one shelf, with shallow visible top surface just above it, softly rounded edges and very gentle contact shading. Depth is suggested delicately, not with strong contrast. No side posts or outer frame. No objects, books, plants, text, UI, extra shelf rows, wall outside compartment. Left and right edges continue naturally for a responsive repeating shelf. Beautiful tactile real furniture photography, harmonious and airy, with an understated warm cream palette. Keep exact horizontal geometry for HTML books to sit on the front lip.
+- 방 최종 프롬프트:
+  > Photorealistic background plate for a full-size floor-standing library bookcase web interface. Wide landscape 3:2, exact front elevation of a cozy room. Empty warm ivory plaster WALL occupies upper 82 percent of image. At precisely 82 percent height, a modest wooden baseboard and wall-floor junction. Bottom 18 percent is a real warm natural OAK PARQUET FLOOR with floorboards receding gently toward wall, unmistakably a room floor, NOT a tabletop. No desk, no table, no countertop, no ledge, no tabletop objects, no books, no lamps on furniture, no shelves or bookcase: a real HTML bookcase will overlay center and its base will meet the wall-floor junction. Far left narrow edge tall wooden window reaching nearly to floor; soft afternoon daylight and subtle diagonal window shadows on plaster and floor. Far right edge a modest floor-standing green plant in ceramic pot, only peripheral. Center 85 percent of wall completely empty for HTML furniture. Muted beige cream pale honey oak, soft low contrast natural light, no dark vignette, no dramatic bright hotspots, beautiful tactile calm editorial interior photography. Architectural geometry straight, camera at bookcase height looking level, wall-floor boundary horizontal. The empty floor extends to bottom image edge without any tabletop or raised platform.
+## LIB-06 — 참고 이미지의 갈색 목재와 주변 화분
+
+- 선행 LIB-05. 사용자 요청: 참고 사진처럼 조금 진한 갈색 책장, 윗판 화분과 책을 가리지 않는 소품 배치. Work Lead · A/B.
+- 범위: StoryDiscovery 장식/소재 설정, CSS warm finish, 투명 화분 자산, 기존 상태표·이 카드. 이전 소재 보존.
+- 절차: 투명 화분 생성 → WebP alpha 보존 → 윗판 우측에 화분 바닥 정렬 → 기둥 바깥으로 잎 배치 → 모바일 축소/여백 조정 → 실제 전체 책 목록 회귀.
+- 사용자 후속 범위: 선반 반복 굴곡이 없는 독립 일자 세로 기둥, 책장 안 책의 얇은 단면·접촉 그림자·작은 hover 이동. 허용 파일 동일.
+- 인수: 따뜻한 중간 갈색; 책이 선반 윗면에 놓임; 세로 기둥이 끊김 없이 직선; 화분 바닥이 윗판에 닿음; 책·버튼 가림 최소화; 장식은 pointer-events none/aria-hidden; 2/3단·리사이즈·읽기 유지.
+- 검사: `npm run check`, `node tests/browser/library-craft.mjs`, `node tests/browser/library-motion.mjs`, `git diff --check`, desktop/mobile 및 여러 권 화면 확인.
+- 금지/중단: 저장·책 내용·배포 변경 없음. 장식이 읽기/조작을 가리면 위치·크기만 조정한다. 완료 증거는 상태표에 기록.
+- 생성: built-in imagegen, `public/library/pothos-pot.webp`, 원본1086×1448 RGBA를 높이900 WebP quality86으로 인코딩, 투명 알파 보존.
+- 최종 프롬프트:
+  > Photorealistic transparent-background cutout PNG of a lush trailing pothos houseplant in a small warm ivory ceramic pot for compositing ON TOP of the right corner of a bookshelf. Only the plant and pot, genuinely transparent alpha background, no room, no shelf, no floor, no text. Soft afternoon light from upper left. Elegant natural heart-shaped green leaves with subtle veins, warm cream matte rounded pot. Composition: pot on right half with its flat BASE precisely at 68 percent of canvas height; bushy leaves above it, one graceful narrow trailing vine hanging down along the far RIGHT edge to 97 percent canvas height. Left half stays mostly transparent so it will not obscure titles. Pot base must be clear for aligning on a bookshelf surface. Front view at pot level, natural realistic scale, sophisticated cozy library editorial photography. Portrait 3:4, entire plant within frame, no clipping.
+
+## LIB-07 — 소품 톤·전경 심도·잘림 제거
+
+- 사용자 후속 요청, Work Lead · A/B. 허용 범위: StoryDiscovery 소재 연결, 장식 CSS, public/library 자산, 반응형 브라우저 검사, 기존 설계·상태표·이 카드.
+- 인수: 전체 윤곽을 포함한 투명 소품, 같은 따뜻한 재질과 광원, 전경만 약한 흐림, 책/버튼 가림 최소화, 방 하단 바닥 정렬, 가로 넘침 없음. 2/3단과 읽기·키보드 흐름 유지.
+- 배경에 합쳐져 책장 뒤에서 잘리던 식물은 제거하고, 윗판과 전경 식물을 독립 배치한다. 저장·데이터 형식 변경과 배포는 범위 밖.
+- 생성 방식: built-in imagegen. 소품 PNG 1086×1448 RGBA를 높이900 WebP quality88로 인코딩해 알파 보존. 완성 자산: `public/library/foreground-plant-books.webp`, `public/library/foreground-chair-lamp.webp`, `public/library/parquet-room-clear.webp`. 이전 방 소재는 보존.
+- 검사: npm run check, library-craft.mjs, library-motion.mjs, git diff --check 및 대표 가로·세로 screenshot. 완료 증거는 상태표.
+- 최종 생성/편집 프롬프트:
+
+  1. A complete isolated still life cutout on genuinely transparent RGBA background: three small horizontal stacked antique clothbound books (forest green, cream, muted tan) with an ivory ceramic pot of lush natural green pothos NEXT TO the stack, left foreground of a cozy library. Show the WHOLE plant including every upper leaf and whole pot and books, with generous TRANSPARENT margin on ALL FOUR sides, absolutely no object touching canvas edges. No floor, furniture, room, background color, text or lettering. Warm matte natural materials, soft afternoon light from upper left, subdued honey cream palette, editorial interior photography, softly out of focus like a foreground lens bokeh. Not illustration, not glossy 3D. Compact composition, portrait 3:4. All objects rest on same invisible floor baseline. Visible clear silhouettes with alpha, no glow cloud, no dark haze. The full uncut upper plant silhouette is critical.
+
+  2. Complete isolated honey-oak reading chair beside a slim antique brass FLOOR lamp with cream linen lampshade, on genuinely transparent RGBA background. Show entire chair including all legs and entire lamp including top shade and base. Generous transparent padding ALL sides, no clipping or objects touching edges. No floor or wall. Compact portrait 3:4 composition, elegant rounded wood joinery, restrained warm matte honey brown, ivory cushion. Soft afternoon window light from upper left, same cozy natural editorial interior photography as ivory ceramic pothos and antique clothbound books. No text, no room, no shelf, no table, no decorative extra objects. Subtle soft optical focus but recognizable. No glow clouds, no opaque background. Fully intact outlines especially chair top and lampshade, clean alpha.
+
+  3. Edit this room background: remove ONLY the entire plant and ceramic pot on the far right, replacing them seamlessly with the same empty ivory plaster wall, wooden baseboard and parquet floor. Keep the exact camera, image dimensions, perspective, left window, warm daylight, wall texture and floor junction height unchanged. No new objects. Empty room plate for compositing separate plants in foreground.
+
+## LIB-08 — 가까운 전경 가구의 크기와 부분 노출
+
+- 2026-09-12 사용자 결정이 LIB-07의 전체 노출/하단 일치 조건을 대체한다. Work Lead · A/B.
+- 범위: 전경 CSS, 기존 library-motion 검사, 설계·상태표·이 카드. 자산·작품 데이터·기존 책장 동작 보존.
+- 인수: 조명·의자·식물이 책장보다 앞의 큰 가구로 보임; 양끝/하단에서 일부만 노출; 내부 사각 절단 없음; 모바일에서 소품을 미니어처로 축소하지 않음; 가로 스크롤·버튼 차단 없음.
+- 검증: npm run check, library-motion.mjs, library-craft.mjs, 가로/세로 실제 렌더와 여러 권 화면 확인. 완성 증거는 상태표에 기록한다.
+
+## LIB-09 — 참고 이미지의 목재 깊이와 하단 전경
+
+- 2026-09-12 참고 이미지에 더 가까운 분위기 요청. Work Lead · A/B.
+- 범위: 기존 CSS의 목재 명암·책 크기·전경 위치, 설계·상태표·이 카드. 새 작품·가짜 책·새 기능 없음.
+- 인수: 짙은 내부와 따뜻한 선반 앞면, 자연스러운 책 안착, 하단 모서리의 부분 전경, 2/3단·읽기·키보드·페이지 이동 유지.
+- 검사: npm run check, library-motion.mjs, library-craft.mjs, git diff --check 및 가로·세로 실제 렌더. 증거는 상태표.
+
+## LIB-10 — 책의 선반 안쪽 배치
+
+- 2026-09-12 사용자 요청. Work Lead · A/B. 범위는 서재 책의 CSS 배치/단면/접촉 그림자와 관련 기존 문서.
+- 인수: 책 위·옆 여백과 선반 앞면이 확보되고 책 밑면은 선반에 밀착함; 선택/읽기 표지는 유지; 모바일 조작 및 2/3단·읽기·키보드 흐름 유지.
+- 검사: npm run check, library-motion.mjs, library-craft.mjs, git diff --check와 가로·세로 screenshot. 완료 증거는 상태표.
+
+## LIB-11 — 빈 윤곽 책으로 새 이야기 시작
+
+- 2026-09-12 사용자 요청. Work Lead · A/B. 하단 두 버튼 제거, 모든 책/내 작품에서 기존 이야기 다음에 놓이는 빈 윤곽 책과 기존 선택 팝업 연결.
+- 허용 범위: StoryDiscovery, 표지 CSS, 기존 브라우저 검사와 관련 문서. 저장 형식·기존 작품 내용 유지.
+- 인수: 생성 책은 저장된 작품이나 이야기 수에 포함하지 않음; 페이지 용량에는 포함; 기존 확대 연출·안내·시작 버튼 사용; Escape 초점 복원; 실제 빈 작품 생성과 기존 페이지·읽기·편집 흐름 유지.
+- 검사: npm run check, library-craft.mjs, library-motion.mjs, git diff --check 및 대표 화면. 완료 증거는 상태표.
+
+## HOME-01 — 상단 메뉴와 하단 읽기
+
+- 2026-09-12 사용자 요청. Work Lead · A/B. 첫 화면 상단에 이야기 변경/나만의 이야기/서재 입장, 하단 중앙에 이야기 읽기.
+- 범위: StartScreen, StoryStudio 읽기 진입 연결, 포스터 CSS, start-screen 브라우저 검사, 관련 문서.
+- 인수: 세 상단 메뉴와 하단 읽기 분리, 선택한 기본 작품 읽기 표지 진입, 기존 창작 관리/서재 보존, 모바일 가로 넘침 없음·44px 터치 영역.
+- 검사: npm run check, start-screen.mjs 대표 화면 및 읽기·메뉴 이동, git diff --check. 증거는 상태표.
+
+## PLAY-UI-01 — 새로고침 복원·하단 글상자·인물 표시 설정
+
+- 2026-09-12 사용자 요청 및 후속 결정. Work Lead · A/B. 하단 © 놀퀴즈, 같은 탭 새로고침 시 현재 화면 복원, 하단 글상자, 작은 아이와 인물 그룹 크기 조절.
+- 범위: StoryStudio 복원 연결, StoryDiscovery/StoryBookPlayback/StoryPlayer 화면 상태, StoryStage 및 stage-view 배율, 표시 설정 모듈/훅, CSS, 관련 자동·브라우저 검사와 기준 문서.
+- 후속 인수: 글상자는 기본 화면 높이35% 고정, 20~60% 사용자 조절/기본값 복원. 긴 글·선택지 내부 스크롤, 인물 좌표 독립. 인물 그룹별40~140% 균일 배율과 발 정렬, 기본 아이62%/어린 자라72% 유지.
+- 저장 계약: 표시 설정 localStorage, 화면/읽기 경로 sessionStorage. 작품 저장·Excel 형식·자산 원본·asset ID는 변경하지 않는다. 복원 작품은 기존 validator 사용.
+- 검사: check, 전체 자동 회귀, stage/display-settings 단위 검사, player-continuity/display-settings/reader-layout/reader-history/library-craft 브라우저. 390×844, 1365×900, 1380×1412 및844×390에서 하단 정렬과35%/배율/재접속 확인.
+- 완료 증거는 상태표. 커밋·푸시·배포 범위 밖.

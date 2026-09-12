@@ -3,6 +3,7 @@ import { remixSharedFile } from "./story-publication";
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
@@ -17,10 +18,11 @@ import {
   StudioShell,
   type StudioWorkspaceMode,
 } from "./components/StudioShell";
+import { normalizeAndValidateStoryProject } from "./story-project-validation";
 import { createStoryDocument } from "./story-project-document";
 import { STORY_PROJECT_APP_VERSION } from "./story-project-repository";
 import { StoryFileDialog } from "./components/StoryFileDialog";
-import { createNolstoryProject, createNolstoryShared, downloadNolstoryFile, readNolstoryFile, type NolstoryFile, type NolstorySharedFile } from "./story-file";
+import { createNolstoryProject, createNolstoryShared, downloadNolstoryFile, readNolstoryFile, parseNolstoryFile, type NolstoryFile, type NolstorySharedFile } from "./story-file";
 import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery";
 import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
 import { CreationHub } from "./components/CreationHub";
@@ -297,6 +299,7 @@ export function StoryStudio() {
   const [busyStep, setBusyStep] = useState("");
   const [blankConfirmOpen, setBlankConfirmOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [navigationReady, setNavigationReady] = useState(false);
   const [localDraftStatus, setLocalDraftStatus] = useState<EntryLocalDraftStatus>("checking");
   const [entryChoiceLabel, setEntryChoiceLabel] = useState("");
   const entryChoiceRef = useRef<(() => void) | null>(null);
@@ -583,6 +586,7 @@ export function StoryStudio() {
   }
 
   function showDiscovery(screen: DiscoveryScreen) {
+    if (screen === "home") { try { sessionStorage.removeItem("storygame:library-view:v1"); } catch { /* optional tab state */ } }
     setCreationHubOpen(false);
     setDiscoveryScreen(screen);
     setEntryNotice("");
@@ -646,6 +650,26 @@ export function StoryStudio() {
             setEditorMode(session.location.view);
           } else setLocalDraftStatus("missing");
         }
+        try {
+          const saved = JSON.parse(sessionStorage.getItem("storygame:navigation:v1") ?? "null");
+          if (saved?.version === 1) {
+            if (["home", "library", "reader-entry", "story-hub"].includes(saved.screen)) setDiscoveryScreen(saved.screen);
+            if (["rabbit", "onggojib"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
+            if (["base", "mine", "shared"].includes(saved.group)) setStoryHubGroup(saved.group);
+            setCreationHubOpen(saved.creation === true);
+            if (Array.isArray(saved.shared)) setSharedFiles(saved.shared.flatMap((value: unknown) => {
+              const parsed = parseNolstoryFile(JSON.stringify(value));
+              return parsed.ok && "story" in parsed.file ? [parsed.file] : [];
+            }));
+            if (saved.creator === "local" && loaded.ok && loaded.value.projects.some(item => item.draft.project.id === loaded.value.selectedProjectId)) setCreatorAccess("local");
+            if (saved.player && ["student", "example", "shared"].includes(saved.player.kind)) {
+              const checked = normalizeAndValidateStoryProject(saved.player.project);
+              if (checked.project) dispatchPlayerUi({ type: "open", index: Number.isSafeInteger(saved.index) ? saved.index : 0,
+                context: createStoryPlaybackContext(saved.player.kind, checked.project) });
+            }
+          }
+        } catch { /* Invalid or unavailable tab storage must never change student works. */ }
+
         setBackupFound(Boolean(localStorage.getItem(BACKUP_KEY)));
         setFavoriteAssets(
           JSON.parse(localStorage.getItem(FAVORITES_KEY) ?? "[]") as string[],
@@ -664,10 +688,22 @@ export function StoryStudio() {
         setLocalDraftStatus("failed");
       } finally {
         setHydrated(true);
+        setNavigationReady(true);
       }
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  useLayoutEffect(() => {
+    if (!navigationReady) return;
+    try {
+      sessionStorage.setItem("storygame:navigation:v1", JSON.stringify({version: 1,
+        screen: discoveryScreen, theme: selectedStoryTheme, group: storyHubGroup,
+        creation: creationHubOpen, creator: creatorAccess, shared: sharedFiles,
+        player: view === "play" ? playerUi.context : null, index: playIndex,
+      }));
+    } catch { /* Reading remains usable when browser storage is unavailable. */ }
+  }, [navigationReady, discoveryScreen, selectedStoryTheme, storyHubGroup, creationHubOpen, creatorAccess, view, playerUi.context, playIndex, sharedFiles]);
 
   useEffect(() => {
     if (!hydrated || creatorAccess !== "local") return;
@@ -2654,7 +2690,7 @@ export function StoryStudio() {
         /> : <StartScreen
           selectedTheme={selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
-          onOpenReaderEntry={() => { showDiscovery("library"); }}
+          onOpenReaderEntry={() => { void openPlay(0, "example", selectedStoryTheme); }}
           onOpenCreationHub={() => setCreationHubOpen(true)}
           savedProject={localDraftStatus === "available" ? draft : undefined}
           entryBusy={entryBusy}

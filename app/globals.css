@@ -11438,1115 +11438,301 @@ img {
   .creation-new-actions { flex-direction: column; }
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   📖 놀스토리 따뜻한 원목 서재 (StoryDiscovery & Wooden Bookshelf)
-   ══════════════════════════════════════════════════════════════════════════════ */
-
+/* StoryDiscovery: sunlight, continuous oak shelves, and a shared book renderer. */
 .story-discovery {
-  position: relative;
-  min-height: 100dvh;
-  padding: clamp(20px, 3vw, 40px) clamp(16px, 3.5vw, 44px) 72px;
-  background: radial-gradient(ellipse 90% 70% at 15% 15%, #fffef9 0%, #f7f2e6 50%, #ede2cf 100%);
-  color: #3b2b1c;
-  overflow-x: hidden;
+  --oak: linear-gradient(180deg, #fff0dc18, #51290930), var(--shelf-wood) center bottom / 1200px auto;
+  min-height: 100dvh; padding: 28px 6vw 60px; color: #392616;
+  background: #ead9bd var(--library-room) center / cover;
+  overflow-x: clip;
 }
+.library-room-content { max-width: 1200px; margin: auto; }
+.library-theater-header { margin: 0 auto 28px; }
+.library-header-bar { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 18px; }
+.library-header-tools { justify-self: end; }
+.library-nav-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border: 1px solid #a68053; border-radius: 28px; color: #523b27; background: #fff8e6d9; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px #65402012; }
+.library-btn-back { justify-self: start; }
+.library-nav-btn:hover:not(:disabled) { background: #fff9ea; box-shadow: 0 4px 12px #52331d25; }
+.story-discovery button:disabled { cursor: not-allowed; opacity: .55; }
+.story-discovery button:focus-visible { outline: 3px solid #16716b; outline-offset: 5px; }
+.library-center-badge { text-align: center; padding-top: 15px; }
+.library-book-emblem { display: block; width: 34px; height: 34px; margin: 0 auto 12px; }
+.library-eyebrow-text { display: block; color: #826441; font-size: 11px; letter-spacing: .22em; margin-bottom: 12px; }
+.library-main-heading { font-family: "Noto Serif KR", "Batang", serif; font-size: clamp(30px, 4vw, 55px); font-weight: 600; letter-spacing: -.05em; line-height: 1.3; margin: 0 0 12px; text-shadow: 0 1px #fff8; }
+.library-main-heading:focus { outline: none; }
+.library-motto { font-family: "Noto Serif KR", "Batang", serif; font-size: clamp(14px, 1.5vw, 19px); margin: 0; color: #705239; }
+.library-motto::after { content: "─ ◇ ─"; display: block; margin-top: 16px; color: #a17a47; font-size: 15px; letter-spacing: .4em; }
+.library-catalog-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 12px 14px; }
+.library-filters { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid #af8a5340; border-radius: 30px; background: #fff8e3ad; }
+.library-filters button { min-height: 44px; padding: 8px 20px; border: 0; border-radius: 24px; background: transparent; color: #6e5136; font-size: 13px; cursor: pointer; }
+.library-filters button[aria-pressed="true"] { background: #214d40; color: #fff3d7; box-shadow: 0 2px 5px #14392c30; }
+.library-count { flex-shrink: 0; font-size: 12px; color: #705239; }
+.library-warning-box, .library-collection-note { padding: 18px; background: #fff8eae8; border: 1px solid #c7a679; border-radius: 12px; margin-bottom: 18px; }
+.library-collection-note p { margin: 0 0 6px; font-weight: 600; }
+.library-collection-note small { display: block; line-height: 1.6; margin-bottom: 12px; }
+.library-collection-note button { margin-right: 8px; }
+.library-bookcase { position: relative; padding: 0 18px; border: 1px solid #7d482b; border-radius: 6px 6px 3px 3px; background: var(--oak); box-shadow: 0 22px 40px #44210c40, inset 2px 0 3px #ffd8a880, inset -4px 0 5px #3c1c0e70; }
+.library-bookcase::before { content: ""; display: block; height: 24px; margin: 0 -24px; position: relative; z-index: 2; border-radius: 4px; background: var(--oak); border-top: 2px solid #dfae78; box-shadow: 0 8px 12px #32180980, inset 0 -6px 5px #66361750; }
+.library-shelf { --row-height: 306px; --shelf-columns: 2; display: grid; grid-template-columns: repeat(var(--shelf-columns), minmax(0, 1fr)); grid-auto-rows: var(--row-height); align-items: end; column-gap: 22px; padding: 0 24px; background-color: #81502c; background-image: linear-gradient(180deg, #29160980, #42250f24 65%, transparent 88%), var(--shelf-wood); background-size: 100% var(--row-height); background-repeat: repeat-y; box-shadow: inset 12px 0 20px #29170770, inset -12px 0 20px #29170770; }
+.library-item { position: relative; display: flex; align-items: end; justify-content: center; min-width: 0; height: 100%; padding-bottom: calc(var(--row-height) * .125); }
+.shelf-plank-edge { display: none; }
+.shelf-book { position: relative; width: 100%; max-width: 204px; padding: 0; border: 0; border-radius: 4px 8px 8px 4px; background: transparent; color: var(--book-ink); cursor: pointer; text-align: center; transition: transform 220ms ease, filter 220ms ease; }
+.shelf-book:hover:not(:disabled), .shelf-book:focus-visible { transform: translateY(-10px) rotate(-1deg); filter: brightness(1.06); }
+.shelf-book .student-book { max-width: none; }
+.shelf-book .library-book-kind { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 9px; letter-spacing: .1em; color: #f7e2bf; text-shadow: 0 1px 2px #2e1909; }
+.library-empty { grid-column: 1 / -1; align-self: center; color: #f9e8ce; text-align: center; padding: 30px 10px; }
+.library-empty > span { color: #d2a26b; font-size: 30px; }
+.library-empty h2 { font-family: "Batang", serif; font-size: 22px; }
+.library-empty p { font-size: 14px; line-height: 1.7; }
+.shelf-paging-bar { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 14px; }
+.shelf-arrow-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #f4d4a8; background: #613c23; color: #fff1d9; cursor: pointer; font-size: 26px; }
+.shelf-dots { display: flex; gap: 10px; }
+.shelf-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: #e2c69a70; }
+.shelf-dot.active { background: #fff0cc; box-shadow: 0 0 6px #fff5d090; }
+.library-footer { text-align: center; margin: 30px auto 0; color: #745032; }
+.library-footer-actions { display: flex; justify-content: center; gap: 14px; margin-bottom: 20px; }
+.library-create-btn { background: #214d40; color: #fff2d2; border-color: #dbbd81; padding-inline: 30px; }
+.library-create-btn:hover:not(:disabled) { background: #306352; }
+.library-footer > span { color: #9c7345; font-size: 13px; }
+.library-footer p { font-size: 14px; font-family: "Batang", serif; }
+.library-bookcase.is-receded { filter: blur(3px); }
 
-.library-theater-header {
-  max-width: 1240px;
-  margin: 0 auto 28px;
-}
+/* Covers keep student settings while gaining cloth, foil, and a believable page edge. */
+.student-book { border-radius: 5px 9px 9px 5px; background-image: repeating-linear-gradient(90deg, #ffffff03 0 1px, transparent 1px 3px), linear-gradient(110deg, #ffffff15, #0000000a 55%, #0002); box-shadow: 2px 1px 0 var(--book-accent), 5px 3px 0 #ecdfbf, 7px 4px 0 #ad936c, 10px 10px 18px #21130860; }
+.student-book::before { inset: 1.5% -6px -3px 7%; border-radius: 3px 5px 5px 3px; }
+.student-book::after { width: 6%; border-radius: 5px 0 0 5px; border-right: 1px solid #0003; }
+.student-book-face { min-height: 140cqw; }
+.student-book-face::after { inset: 4% 5% 4% 10%; border: 3px double var(--book-accent); border-radius: 2px; opacity: .65; }
+.student-book[data-layout="classic"] .book-art { inset: 39% 9% 10% 13%; border: 0; border-radius: 40% 40% 2px 2px; box-shadow: none; }
+.student-book[data-layout="classic"] .student-book-title { text-shadow: none; }
+.student-book[data-layout="classic"] .book-art-character { width: 88%; left: 6%; height: 95%; }
+.student-book[data-layout="classic"][data-character-position="left"] .book-art-character { left: -12%; }
+.student-book[data-layout="classic"][data-character-position="right"] .book-art-character { left: 24%; }
+.student-book[data-layout="classic"] .book-author-bottom { margin-top: 0; font-size: 3cqw; }
+.student-book[data-layout="classic"] .book-author-bottom::before { content: none; }
+.student-book[data-layout="classic"] .book-art:empty { background: none; overflow: visible; }
+.student-book[data-layout="classic"] .book-art:empty::before { content: ""; position: absolute; width: 34%; aspect-ratio: 1; left: 33%; top: 35%; border: 3px double var(--book-accent); transform: rotate(45deg); opacity: .45; }
+.student-book[data-layout="classic"] .book-art:empty::after { content: "✧"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--book-accent); font-size: 18cqw; }
 
-.library-header-bar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
 
-.library-nav-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 42px;
-  padding: 8px 18px;
-  border-radius: 24px;
-  border: 1.5px solid #d9cdb8;
-  background: #fffdf9;
-  color: #4a3825;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(45, 25, 10, 0.06);
-  cursor: pointer;
-  transition: all 160ms ease-out;
-}
+.library-focus-backdrop { position: fixed; inset: 0; z-index: 100; overflow-y: auto; overscroll-behavior: contain; padding: 60px 20px 28px; background: radial-gradient(ellipse at 50% 35%, #60432655, #241309bf); backdrop-filter: blur(5px); animation: focusBackdropFadeIn 220ms ease both; }
+.library-focus-stage { position: relative; width: min(760px, 100%); margin: auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.btn-focus-close { position: fixed; top: 14px; right: 20px; z-index: 110; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 18px; border-radius: 24px; background: #3e291be6; border: 1px solid #e1c28b; color: #fff2d8; cursor: pointer; }
+.focus-header { color: #f9e7c9; margin-bottom: 18px; }
+.focus-emblem-wrap { display: none; }
+.focus-eyebrow { font-family: "Batang", serif; font-size: 26px; letter-spacing: -.03em; }
+.focus-motto { font-size: 13px; margin: 8px 0; }
+.focus-divider-ornament { color: #e2bf82; letter-spacing: .2em; font-size: 12px; }
+.focus-showcase-row { display: flex; align-items: center; justify-content: center; width: 100%; gap: clamp(12px, 5vw, 62px); }
+.focus-nav-arrow { flex: 0 0 48px; height: 58px; border: 1px solid #ead5b1; border-radius: 50%; background: #a4805259; color: #fff3da; font-size: 40px; font-weight: 300; cursor: pointer; backdrop-filter: blur(8px); }
+.focus-nav-arrow:hover { background: #be92588c; }
+.focus-book-stage-center { position: relative; display: flex; flex-direction: column; align-items: center; animation: bookFocusPop 280ms ease both; min-width: 0; }
+.focus-hardcover-book { width: clamp(160px, calc((100dvh - 510px) / 1.4), 250px); transform: perspective(1000px) rotateY(-7deg); position: relative; z-index: 2; }
+.focus-hardcover-book .student-book { max-width: none; }
+.focus-pedestal { width: 116%; height: 30px; position: relative; z-index: 1; margin-top: 0; }
+.pedestal-disc { height: 20px; border-radius: 50% 50% 4px 4px; background: var(--oak); border-top: 3px solid #efc58b; box-shadow: 0 5px 0 #8b5129, 0 9px 0 #5c321a, 0 17px 20px #1d0e0980; }
+.pedestal-rim, .pedestal-shadow { display: none; }
+.focus-sparkles { position: absolute; inset: -15px; pointer-events: none; }
+.sparkle { position: absolute; color: #ffe4a0; text-shadow: 0 0 14px #ffc863; animation: sparklePulse 3s ease-in-out infinite; }
+.s1 { top: 10%; left: -15px; }.s2 { top: 35%; right: -24px; animation-delay: .7s; }.s3 { bottom: 18%; left: -28px; animation-delay: 1.4s; }.s4 { top: -5%; right: 0; animation-delay: 2s; }
+.focus-meta-block { max-width: 520px; padding: 0 12px; margin-top: 18px; color: #fff2d7; text-shadow: 0 2px 8px #1c0d07; }
+.focus-meta-title { font-family: "Noto Serif KR", "Batang", serif; font-size: clamp(26px, 3vw, 38px); font-weight: 500; margin: 0 0 10px; overflow-wrap: anywhere; }
+.focus-meta-desc { font-size: 14px; line-height: 1.7; margin: 0; word-break: keep-all; overflow-wrap: anywhere; }
+.focus-meta-filigree { font-size: 12px; color: #eccb8e; margin-top: 10px; letter-spacing: .3em; }
+.focus-action-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); width: min(650px,100%); gap: 12px; margin-top: 18px; }
+.focus-action-card { display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 14px 18px; border-radius: 16px; border: 3px double #b48a55; background: linear-gradient(120deg,#fff5df,#ecd0a7); color: #54341b; text-align: left; box-shadow: 0 4px 12px #2612064a, inset 0 0 0 2px #fff2d480; cursor: pointer; }
+.focus-action-card:hover:not(:disabled) { background: #fff4dc; transform: translateY(-2px); }
+.focus-action-card.is-primary { background: linear-gradient(120deg,#245544,#123b30); border-color: #e7c589; color: #fff0ce; }
+.focus-action-card.is-primary:hover:not(:disabled) { background: #2b624d; }
+.focus-action-card.is-disabled { opacity: .7; }
+.action-card-icon { display: grid; place-items: center; width: 30px; flex: 0 0 30px; font-size: 26px; }
+.action-card-icon svg { width: 30px; height: 30px; }
+.action-card-text { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.action-card-title { font-family: "Batang", serif; font-size: 19px; line-height: 1.3; overflow-wrap: anywhere; }
+.action-card-sub { font-size: 11px; line-height: 1.5; opacity: .85; word-break: keep-all; }
+.is-danger { color: #8f3222; }
+.focus-slot-notice { background: #3b241ce6; border-radius: 8px; color: #ffe0b7; padding: 12px; font-size: 13px; line-height: 1.6; }
+.blank-book-cover { width: 100%; aspect-ratio: 1 / 1.4; display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 8%; color: #fff0cf; background: #f7e4bd08; border: 2px solid #efd9ad9c; border-radius: 3px 7px 7px 3px; box-shadow: inset 5px 0 #efd9ad18, inset 7px 0 #efd9ad50; font-family: "Batang", serif; }
+.blank-book-cover > span:first-child { font-size: clamp(8px, 1vw, 13px); }
+.blank-book-cover > span:nth-child(2) { font-size: clamp(28px, 4vw, 48px); font-weight: 300; }
+.blank-book-cover strong { font-size: clamp(14px, 2vw, 25px); line-height: 1.5; }
+.blank-book-cover small { font-size: clamp(9px, 1vw, 12px); }
+.library-book-new::after { opacity: .4; }
+.library-book-new:hover .blank-book-cover, .library-book-new:focus-visible .blank-book-cover { background: #f7e4bd18; border-color: #fff0cf; }
+.focus-hardcover-book .blank-book-cover { background: #e4cea322; border-color: #f4ddb3; }
 
-.library-nav-btn:hover:not(:disabled) {
-  background: #f6eee0;
-  border-color: #ba9e74;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(45, 25, 10, 0.12);
-}
-
-.library-nav-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.library-center-badge {
-  text-align: center;
-  margin-inline: auto;
-  padding-inline: 12px;
-}
-
-.library-book-emblem {
-  width: 28px;
-  height: 28px;
-  margin: 0 auto 4px;
-}
-
-.library-eyebrow-text {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #9c7b44;
-  margin-bottom: 2px;
-}
-
-.library-main-heading {
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: clamp(28px, 3.8vw, 40px);
-  font-weight: 800;
-  color: #382516;
-  letter-spacing: -0.03em;
-  margin: 0 0 4px;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-}
-
-.library-motto {
-  font-size: clamp(13px, 1.6vw, 15px);
-  color: #6e5741;
-  margin: 0;
-  font-weight: 500;
-}
-
-.library-warning-box {
-  background: #fef7ea;
-  border: 1px solid #e2cb9b;
-  border-radius: 10px;
-  padding: 10px 16px;
-  color: #6d4b14;
-  font-size: 14px;
-  margin-top: 16px;
-  text-align: center;
-}
-
-/* ── 📚 원목 책장 공간 ── */
-.library-bookcase {
-  position: relative;
-  max-width: 1240px;
-  margin: 20px auto 0;
-}
-
-.bookshelf-ivy-decor {
-  position: absolute;
-  top: -16px;
-  right: 12px;
-  width: clamp(80px, 11vw, 130px);
-  height: auto;
-  pointer-events: none;
-  z-index: 5;
-  filter: drop-shadow(0 4px 6px rgba(40, 20, 10, 0.15));
-}
-
-.bookshelf-ivy-decor svg {
-  width: 100%;
-  height: auto;
-}
-
-/* 선반 그리드 (tests/browser 호환 5/3/2 컬럼 유지) */
-.library-shelf {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 36px 18px;
-  margin: 28px 0;
-  align-items: end;
-}
-
-@media (min-width: 600px) {
-  .library-shelf {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 40px 24px;
-  }
-}
-
+@keyframes focusBackdropFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bookFocusPop { from { opacity: 0; transform: translateY(18px) scale(.95); } to { opacity: 1; transform: none; } }
+@keyframes sparklePulse { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+@media (min-width: 600px) { .library-shelf { --shelf-columns: 3; --row-height: 350px; column-gap: 30px; } }
 @media (min-width: 1000px) and (orientation: landscape) {
-  .library-shelf {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 44px 28px;
-  }
+  .library-shelf { --shelf-columns: 5; --row-height: 340px; }
+  .library-shelf:has(> .library-item:last-child:nth-child(2)) > .library-item:first-child { grid-column: 2; }
+  .library-shelf:has(> .library-item:last-child:nth-child(2)) > .library-item:last-child { grid-column: 4; }
 }
-
-.library-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+@media (max-width: 700px) {
+  .story-discovery { padding: 16px 4vw 38px; background-attachment: scroll; }
+  .library-header-bar { grid-template-columns: 1fr 1fr; gap: 4px; }
+  .library-center-badge { grid-row: 2; grid-column: 1/-1; padding-top: 22px; }
+  .library-header-tools { grid-row: 1; grid-column: 2; }
+  .library-nav-btn { font-size: 12px; padding-inline: 14px; }
+  .library-catalog-bar { margin-inline: 0; flex-direction: column; gap: 10px; }
+  .library-filters { width: 100%; justify-content: center; }
+  .library-filters button { font-size: 12px; padding-inline: 12px; }
+  .library-bookcase { padding-inline: 10px; }.library-bookcase::before { margin-inline: -15px; height: 20px; }
+  .library-shelf { --row-height: 260px; column-gap: 20px; padding-inline: 16px; }
+  .library-footer-actions { gap: 8px; }.library-footer-actions button { padding-inline: 16px; }
+  .library-focus-backdrop { padding: 66px 12px 24px; }
+  .focus-header { margin-bottom: 18px; }.focus-eyebrow { font-size: 22px; }.focus-motto { font-size: 12px; }
+  .focus-hardcover-book { width: clamp(155px, 49vw, 240px); }
+  .focus-showcase-row { gap: 18px; }.focus-nav-arrow { flex-basis: 44px; height: 50px; }
+  .focus-meta-block { margin-top: 15px; }.focus-meta-desc { font-size: 12px; }
+  .focus-action-grid { gap: 8px; }.focus-action-card { padding: 12px 10px; gap: 8px; min-height: 84px; border-radius: 12px; }
+  .action-card-icon { width: 24px; flex-basis: 24px; }.action-card-icon svg { width: 24px; height: 24px; }
+  .action-card-title { font-size: 15px; }.action-card-sub { font-size: 10px; }
 }
-
-/* 원목 선반 바닥 나무 디테일 (Shelf Plank) */
-.shelf-plank-edge {
-  width: calc(100% + 20px);
-  height: 16px;
-  margin-top: -2px;
-  background: linear-gradient(180deg, #ba8857 0%, #875429 25%, #683d1b 80%, #482710 100%);
-  border-top: 2px solid #deb082;
-  border-radius: 2px 2px 4px 4px;
-  box-shadow: 0 8px 18px rgba(35, 18, 8, 0.28), 0 2px 4px rgba(35, 18, 8, 0.18);
-  z-index: 1;
+@media (max-width: 380px) { .library-shelf { --row-height: 240px; padding-inline: 12px; gap: 16px; }.library-filters button { padding-inline: 9px; }.focus-showcase-row { gap: 12px; }.action-card-icon { display: none; } }
+/* Alternative finish: pale matte oak, standing on the room's parquet floor.
+   Original finish rules and assets above remain available for comparison. */
+.story-discovery:is([data-room-finish="soft"], [data-room-finish="warm"]) {
+  --oak: linear-gradient(180deg, #fff8ec14, #84624410), var(--shelf-wood) center bottom / 1200px auto;
+  background-color: #d9b98f;
+  background-size: 100% var(--room-image-height, 100%);
+  background-position: center top;
+  background-repeat: no-repeat;
 }
-
-/* ── 📖 하드커버 양장본 책 컴포넌트 ── */
-.shelf-book {
-  position: relative;
-  width: 100%;
-  max-width: 210px;
-  aspect-ratio: 1 / 1.42;
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  background: var(--book-paper, #f7f1e3);
-  color: var(--book-ink, #2e2417);
-  border-radius: 3px 12px 12px 3px;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  box-shadow: 5px 6px 14px rgba(35, 20, 10, 0.28), 1px 2px 4px rgba(35, 20, 10, 0.16);
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-  z-index: 2;
-  transition: transform 180ms cubic-bezier(0.2, 0, 0.2, 1), box-shadow 180ms cubic-bezier(0.2, 0, 0.2, 1);
-  text-align: center;
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-bookcase {
+  border-color: #b09270;
+  padding-bottom: 22px;
+  box-shadow: 0 18px 20px -12px #624a3650, 0 4px 7px #634b3620, inset 2px 0 3px #fff4df60, inset -3px 0 5px #86634528;
 }
-
-.shelf-book:hover:not(:disabled) {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 8px 16px 26px rgba(35, 20, 10, 0.38), 2px 4px 8px rgba(35, 20, 10, 0.22);
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-bookcase::before {
+  border-top-color: #e6ceb0;
+  box-shadow: 0 5px 8px #76553635, inset 0 -3px 4px #86634520;
 }
-
-.shelf-book:focus-visible {
-  outline: 3px solid #c99239;
-  outline-offset: 4px;
-  transform: translateY(-8px) scale(1.02);
-}
-
-.shelf-book:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* 양장본 책등(Spine) 효과 */
-.shelf-book-spine {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 14px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(255, 255, 255, 0.18) 35%, rgba(0, 0, 0, 0.08) 80%, rgba(0, 0, 0, 0.3) 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* 표지 안쪽 금박 테두리 및 레이아웃 */
-.shelf-book-face {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 10px 10px 10px 22px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  align-items: center;
-}
-
-.shelf-book-face::after {
-  content: "";
-  position: absolute;
-  inset: 6px 6px 6px 18px;
-  border: 1.5px solid var(--book-accent, #c99239);
-  border-radius: 2px 8px 8px 2px;
-  opacity: 0.75;
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-bookcase::after {
+  content: ""; position: absolute; height: 18px; bottom: 0; left: 8px; right: 8px;
+  border-top: 1px solid #d7bd98; border-radius: 0 0 3px 3px;
+  background: var(--oak); box-shadow: inset 0 -4px 5px #8c6b4933, 0 5px 5px #6d52352b;
   pointer-events: none;
 }
-
-.shelf-book-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-  width: 100%;
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-shelf {
+  background-color: #c4a47c;
+  background-image: linear-gradient(180deg, #80613f23, #ac8b6510 65%, transparent 88%), var(--shelf-wood);
+  box-shadow: inset 8px 0 12px #80634423, inset -8px 0 12px #80634423;
 }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-item { padding-bottom: calc(var(--row-height) * .18); }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .shelf-book { width: min(100%, calc(var(--row-height) * .52)); }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .shelf-book .library-book-kind { color: #553e29; text-shadow: 0 1px #fff2; }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-empty { color: #614a32; }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .library-empty > span { color: #866745; }
+:is([data-room-finish="soft"], [data-room-finish="warm"]) .pedestal-disc { border-top-color: #e4caa6; box-shadow: 0 5px 0 #b18e63, 0 9px 0 #95714d, 0 15px 18px #38291c45; }
 
-.shelf-book .library-book-kind {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  opacity: 0.9;
+/* Honey oak and a peripheral plant: decoration stays outside the book faces. */
+.story-discovery[data-room-finish="warm"] {
+  --oak: linear-gradient(180deg, #985f3088, #633716b3), var(--shelf-wood) center bottom / 1200px auto;
 }
-
-.shelf-book .library-book-mark {
-  font-size: 12px;
-  color: var(--book-accent, #c99239);
+[data-room-finish="warm"] .library-bookcase { border-color: #84582f; }
+[data-room-finish="warm"] .library-bookcase::before { border-top-color: #caa16c; box-shadow: 0 5px 9px #704c2c45, inset 0 -3px 4px #86634530; }
+[data-room-finish="warm"] .library-shelf {
+  background-image: linear-gradient(180deg, #30190de0, #51301bbf 12%, #6c40269c 62%, #51301bb0 79%, #9d673b77 81%, #75472499 88%, #613619bb), var(--shelf-wood);
+  box-shadow: inset 12px 0 18px #301b0d80, inset -12px 0 18px #301b0d80;
 }
-
-.shelf-book-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  padding: 4px 0;
+.library-top-plant {
+  --plant-height: clamp(180px, 22vw, 290px);
+  position: absolute; height: var(--plant-height); width: calc(var(--plant-height) * .75);
+  right: -8px; top: calc(var(--plant-height) * -.572 + 2px);
+  background: var(--library-plant) center / contain no-repeat;
+  pointer-events: none; z-index: 4;
+  filter: drop-shadow(3px 5px 3px #443d2220);
 }
-
-.shelf-art-wrapper {
-  width: clamp(52px, 8vw, 80px);
-  height: clamp(52px, 8vw, 80px);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1.5px solid var(--book-accent, #c99239);
-  margin-bottom: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+[data-room-finish="warm"] .library-count { margin-right: 150px; }
+@media (max-width: 700px) {
+  .library-top-plant { --plant-height: 126px; right: -5px; }
+  [data-room-finish="warm"] .library-catalog-bar { margin-bottom: 64px; }
+  [data-room-finish="warm"] .library-count { margin-right: 0; }
 }
-
-.shelf-cover-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.shelf-book .library-book-title {
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: clamp(15px, 1.4cqw, 18px);
-  font-weight: 800;
-  line-height: 1.25;
-  margin: 0;
-  overflow-wrap: anywhere;
-  word-break: keep-all;
-  text-wrap: balance;
-}
-
-.shelf-book-subtitle {
-  font-size: 11px;
-  opacity: 0.78;
-  margin: 3px 0 0;
-  line-height: 1.3;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 90%;
-}
-
-.shelf-book-footer {
-  z-index: 2;
-}
-
-.shelf-filigree {
-  font-size: 10px;
-  color: var(--book-accent, #c99239);
-  opacity: 0.8;
-  letter-spacing: 0.12em;
-}
-
-/* ── 🌟 '새 이야기 만들기' 빈 양장본 책 ── */
-.shelf-book-new {
-  background: #fdfaf3;
-  color: #3a2a1b;
-  border: 2px dashed #cca972;
-}
-
-.shelf-book-new .shelf-book-face::after {
-  border-style: dotted;
-  border-color: #cca972;
-}
-
-.shelf-new-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: #967440;
-}
-
-.new-book-plus-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #f5eddc;
-  border: 1.5px solid #cca972;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #967440;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.shelf-new-title {
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: 15px;
-  font-weight: 800;
-  color: #3a2a1b;
-  margin: 0;
-}
-
-.shelf-new-desc {
-  font-size: 11px;
-  color: #7a634c;
-  margin: 3px 0 0;
-}
-
-.shelf-new-prompt {
-  font-size: 11px;
-  font-weight: 700;
-  color: #967440;
-}
-
-/* ── 📚 선반 페이지네이션 (< > chevrons & dots) ── */
-.shelf-paging-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin: 32px 0 0;
-}
-
-.shelf-arrow-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1.5px solid #cca972;
-  background: #fffdf7;
-  color: #5a4128;
-  font-size: 20px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 150ms ease;
-  box-shadow: 0 2px 6px rgba(45, 25, 10, 0.08);
-}
-
-.shelf-arrow-btn:hover:not(:disabled) {
-  background: #f5eedc;
-  transform: scale(1.06);
-}
-
-.shelf-arrow-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.shelf-dots {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.shelf-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #d9c8aa;
-  transition: all 160ms ease;
-}
-
-.shelf-dot.active {
-  background: #8e6834;
-  transform: scale(1.3);
-}
-
-/* ── 🌟 서재 원목 책장 배경 뎁스 (Receded Bookshelf) ── */
-.library-bookcase.is-receded {
-  filter: blur(4px) brightness(0.78) saturate(0.85);
-  transform: scale(0.97);
-  pointer-events: none;
-  user-select: none;
-  transition: filter 360ms ease, transform 360ms ease;
-}
-
-/* ── 🌟 책 꺼내기 Focus Stage Backdrop & Container ── */
-.library-focus-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(10px, 1.8vh, 22px) clamp(12px, 2.5vw, 28px);
-  background: radial-gradient(ellipse at 50% 38%, rgba(38, 22, 10, 0.42) 0%, rgba(18, 9, 3, 0.72) 100%);
-  backdrop-filter: blur(2px);
-  overflow-y: auto;
-  animation: focusBackdropFadeIn 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.library-focus-stage {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-  padding: 8px 0;
-}
-
-/* 닫기 / 서재로 돌아가기 버튼 */
-.btn-focus-close {
-  position: fixed;
-  top: clamp(12px, 2vh, 22px);
-  right: clamp(12px, 2.5vw, 26px);
-  z-index: 110;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 8px 18px;
-  border-radius: 24px;
-  background: rgba(45, 26, 12, 0.78);
-  border: 1.5px solid rgba(212, 175, 55, 0.4);
-  color: #fdf6ec;
-  font-size: 13.5px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  transition: all 180ms ease;
-}
-
-.btn-focus-close:hover {
-  background: rgba(68, 38, 18, 0.92);
-  border-color: #d4af37;
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-}
-
-.btn-focus-close:focus-visible {
-  outline: 3px solid #d4af37;
-  outline-offset: 3px;
-}
-
-.btn-close-glyph {
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.btn-close-label {
-  font-size: 13.5px;
-}
-
-/* 상단 엠블럼 및 헤더 */
-.focus-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.focus-book-emblem {
-  width: 26px;
-  height: 26px;
-  stroke: #d4af37;
-  margin-bottom: 2px;
-}
-
-.focus-eyebrow {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: #d4af37;
-  text-transform: uppercase;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.focus-motto {
-  font-size: 13.5px;
-  color: #eedcc6;
-  margin: 2px 0 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  font-weight: 500;
-}
-
-.focus-divider-ornament {
-  font-size: 10px;
-  color: #d4af37;
-  opacity: 0.85;
-  letter-spacing: 0.15em;
-  margin-top: 4px;
-}
-
-/* 중앙 쇼케이스 행 (좌/우 화살표 + 책 + 받침대) */
-.focus-showcase-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: clamp(14px, 4vw, 42px);
-  margin: 4px 0;
-}
-
-.focus-nav-arrow {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  border-radius: 50%;
-  background: rgba(45, 26, 12, 0.68);
-  border: 1.5px solid rgba(212, 175, 55, 0.45);
-  color: #fdf8ee;
-  font-size: 26px;
-  font-weight: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  transition: all 180ms cubic-bezier(0.2, 0, 0.2, 1);
-  padding: 0;
-  z-index: 5;
-}
-
-.focus-nav-arrow:hover {
-  background: rgba(75, 42, 18, 0.9);
-  border-color: #d4af37;
-  transform: scale(1.08);
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
-}
-
-.focus-nav-arrow:focus-visible {
-  outline: 3px solid #d4af37;
-  outline-offset: 3px;
-}
-
-/* 중앙 책 스테이지 */
-.focus-book-stage-center {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  animation: bookFocusPop 360ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* 은은한 반짝임 데코레이션 */
-.focus-sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.sparkle {
-  position: absolute;
-  color: #f7d67b;
-  text-shadow: 0 0 8px rgba(247, 214, 123, 0.85);
-  animation: sparklePulse 2.8s infinite ease-in-out;
-}
-
-.sparkle.s1 {
-  top: 10%;
-  left: -22px;
-  font-size: 16px;
-  animation-delay: 0s;
-}
-
-.sparkle.s2 {
-  top: 36%;
-  right: -24px;
-  font-size: 12px;
-  animation-delay: 0.9s;
-}
-
-.sparkle.s3 {
-  bottom: 24%;
-  left: -18px;
-  font-size: 14px;
-  animation-delay: 1.8s;
-}
-
-.sparkle.s4 {
-  top: 6%;
-  right: -12px;
-  font-size: 11px;
-  animation-delay: 1.4s;
-}
-
-/* 3D 하드커버 양장본 책 */
-.focus-hardcover-book {
-  position: relative;
-  width: clamp(210px, 25vw, 256px);
-  aspect-ratio: 1 / 1.42;
-  min-height: 290px;
-  background: var(--book-paper, #1e4635);
-  color: var(--book-ink, #fcf8ec);
-  border-radius: 4px 16px 16px 4px;
-  border: 1px solid rgba(0, 0, 0, 0.22);
-  box-shadow: 0 24px 50px rgba(12, 6, 2, 0.65), 0 6px 16px rgba(12, 6, 2, 0.35);
-  overflow: hidden;
-  z-index: 2;
-  transform: perspective(1000px) rotateY(-2.5deg);
-  transition: transform 240ms ease;
-  display: flex;
-  flex-direction: column;
-}
-
-/* 양장본 책등(Spine) 및 세로 표제 */
-.focus-book-spine {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 22px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(255, 255, 255, 0.2) 28%, rgba(0, 0, 0, 0.12) 75%, rgba(0, 0, 0, 0.45) 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 4;
-}
-
-.focus-spine-title {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--book-ink, #fcf8ec);
-  opacity: 0.85;
-  white-space: nowrap;
-  max-height: 82%;
-  overflow: hidden;
-}
-
-/* 책 표지면 */
-.focus-book-face {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 14px 14px 14px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-}
-
-.focus-book-face::after {
-  content: "";
-  position: absolute;
-  inset: 8px 8px 8px 24px;
-  border: 1.5px solid var(--book-accent, #d4af37);
-  border-radius: 2px 10px 10px 2px;
-  opacity: 0.8;
+/* Continuous stiles cover the shelf texture's horizontal seams. */
+.library-upright {
+  position: absolute; top: 24px; bottom: 0; width: 18px; z-index: 3;
+  background-color: #ad8258;
+  background-image: linear-gradient(90deg, #71482122, #ffffff0b 30%, #6e472329), linear-gradient(#79451b99, #79451b99), var(--shelf-wood);
+  background-size: 100% 100%, 100% 100%, auto 300%;
+  background-position: center, center, 40% top;
+  background-repeat: no-repeat;
+  border-radius: 0;
   pointer-events: none;
 }
-
-.focus-face-top {
-  z-index: 2;
+.library-upright-left { left: 0; box-shadow: 3px 0 6px #54351930, inset 1px 0 #e0ba873d; }
+.library-upright-right { right: 0; box-shadow: -3px 0 6px #54351930, inset -1px 0 #6f4b2826; }
+/* On the shelf the book has a narrow page edge and a contact shadow, rather
+   than the floating presentation shadow used by the selected book. */
+.story-discovery .library-item { padding-bottom: calc(var(--row-height) * .205); }
+.shelf-book .student-book {
+  border-radius: 3px 5px 5px 3px;
+  box-shadow: 1px 0 0 var(--book-accent), 2px 0 0 #c5b594, 3px 1px 0 #806643, 1px 2px 2px #38220e55;
 }
-
-.face-diamond {
-  font-size: 10px;
-  color: var(--book-accent, #d4af37);
-  letter-spacing: 0.15em;
-  opacity: 0.85;
+.shelf-book .student-book::before { inset: 1% -3px 0 7%; box-shadow: inset -2px 0 2px #0002; }
+.shelf-book::after {
+  content: ""; position: absolute; height: 3px; left: 0; right: -2px; bottom: -1px;
+  background: #35200e88; filter: blur(1px); border-radius: 50%; pointer-events: none;
 }
-
-.focus-cover-title {
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: clamp(17px, 2.1vw, 22px);
-  font-weight: 800;
-  line-height: 1.25;
-  margin: 4px 0 8px;
-  z-index: 2;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  word-break: keep-all;
+.shelf-book:hover:not(:disabled), .shelf-book:focus-visible { transform: translateY(-1px); filter: brightness(1.025); }
+@media (max-width: 700px) { .library-upright { top: 20px; width: 10px; } }
+/* A quiet foreground frames the sharp bookshelf, never the reading controls. */
+.story-discovery { position: relative; isolation: isolate; }
+/* Near-camera props extend beyond the scene, never behind an internal crop window. */
+.library-foreground {
+  --foreground-width: clamp(360px, 46vw, 720px);
+  --foreground-peek: clamp(46px, 13vw, 200px);
+  position: absolute; bottom: calc(var(--foreground-width) * -.39);
+  width: var(--foreground-width); aspect-ratio: 3 / 4; z-index: 5;
+  background-repeat: no-repeat; background-size: contain; background-position: center bottom;
+  pointer-events: none; user-select: none;
+  filter: blur(3px) saturate(.78) brightness(.94);
+  transform: scaleX(-1);
 }
-
-.focus-cover-art-box {
-  width: clamp(75px, 9.5vw, 98px);
-  height: clamp(75px, 9.5vw, 98px);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid var(--book-accent, #d4af37);
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.library-foreground-left { left: calc(var(--foreground-peek) - var(--foreground-width)); background-image: var(--library-foreground-left); }
+.library-foreground-right { right: calc(var(--foreground-peek) - var(--foreground-width)); background-image: var(--library-foreground-right); }
+.library-top-plant { filter: saturate(.76) sepia(.08) brightness(.94) drop-shadow(3px 5px 3px #443d2220); }
+.library-footer { position: relative; z-index: 6; }
+.story-discovery { overflow: clip; }
+@media (max-width: 700px) {
+  .library-foreground { --foreground-peek: clamp(36px, 10vw, 65px); filter: blur(2.5px) saturate(.78) brightness(.94); }
 }
-
-.focus-hero-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* The furniture keeps its empty shelves; only real books are interactive. */
+.library-shelf {
+  --row-height: clamp(190px, calc((100svh - 350px) / 2), 290px);
+  --third-row-height: 0px;
+  grid-template-rows: var(--row-height) var(--row-height) var(--third-row-height);
+  min-height: calc(2 * var(--row-height) + var(--third-row-height));
+  transition: grid-template-rows 560ms cubic-bezier(.22, 1, .36, 1), min-height 560ms cubic-bezier(.22, 1, .36, 1), background-size 560ms cubic-bezier(.22, 1, .36, 1);
+  column-gap: clamp(16px, 2.2vw, 30px);
 }
-
-.focus-custom-crest {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+.library-item { transform-origin: center bottom; }
+.shelf-book { width: min(100%, calc(var(--row-height) * .57)); }
+.library-bookcase { transition: box-shadow 500ms ease; }
+.library-center-badge { padding-top: 0; }
+.library-book-emblem { width: 28px; height: 28px; margin-bottom: 6px; }
+.library-eyebrow-text { margin-bottom: 6px; }
+.library-main-heading { font-size: clamp(30px, 3.6vw, 48px); margin-bottom: 8px; }
+.library-motto::after { margin-top: 8px; }
+.library-theater-header { margin-bottom: 16px; }
+.library-catalog-bar { margin-top: 16px; }
+.library-footer { margin-top: 20px; }
+.library-footer-actions { margin-bottom: 12px; }
+@media (orientation: portrait) {
+  .library-shelf { --third-row-height: var(--row-height); --row-height: clamp(170px, calc((100svh - 340px) / 3), 280px); }
 }
-
-.crest-symbol {
-  font-size: 26px;
-  color: var(--book-accent, #d4af37);
+@media (max-width: 700px) {
+  .library-center-badge { padding-top: 14px; }
+  .library-eyebrow-text { display: none; }
+  .library-main-heading { font-size: clamp(28px, 5.5vw, 36px); }
+  .library-theater-header { margin-bottom: 10px; }
+  .library-catalog-bar { margin-top: 10px; gap: 6px; }
+  .library-motto::after { margin-top: 4px; }
+  .library-footer { margin-top: 16px; }
 }
-
-.crest-sub {
-  font-size: 10.5px;
-  opacity: 0.85;
-  max-width: 80px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.focus-face-bottom {
-  z-index: 2;
-}
-
-.face-tag {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  color: var(--book-accent, #d4af37);
-  opacity: 0.9;
-}
-
-/* 책 우측 페이지 옆면 (양장본 두께감) */
-.focus-book-pages {
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: 6px;
-  background: repeating-linear-gradient(90deg, #f5ecd9 0px, #e8d7bb 2px, #f5ecd9 4px);
-  border-radius: 0 4px 4px 0;
-  z-index: 3;
-  box-shadow: inset 1px 0 2px rgba(0, 0, 0, 0.25);
-}
-
-/* 책 하단 원목 받침대 (Wooden Pedestal) */
-.focus-pedestal {
-  position: relative;
-  width: clamp(230px, 28vw, 290px);
-  height: 26px;
-  margin-top: -12px;
-  z-index: 1;
-}
-
-.pedestal-disc {
-  width: 100%;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 30%, #cb9764 0%, #a26939 60%, #76451e 100%);
-  border-top: 2px solid #deb082;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.35);
-}
-
-.pedestal-rim {
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  width: 80%;
-  height: 10px;
-  background: linear-gradient(180deg, #875429 0%, #5d3416 100%);
-  border-radius: 0 0 50% 50%;
-}
-
-.pedestal-shadow {
-  position: absolute;
-  bottom: -8px;
-  left: 5%;
-  width: 90%;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(10, 5, 2, 0.48);
-  filter: blur(4px);
-  z-index: -1;
-}
-
-/* 책 메타 텍스트 블록 */
-.focus-meta-block {
-  margin-top: 8px;
-  max-width: 600px;
-  padding: 0 16px;
-}
-
-.focus-meta-title {
-  font-family: "Noto Serif KR", "Batang", serif;
-  font-size: clamp(22px, 3.2vw, 30px);
-  font-weight: 800;
-  color: #fdf8ee;
-  letter-spacing: -0.02em;
-  margin: 0 0 4px;
-  text-shadow: 0 2px 6px rgba(15, 8, 3, 0.6);
-}
-
-.focus-meta-desc {
-  font-size: clamp(13px, 1.8vw, 15px);
-  color: #edd8c0;
-  line-height: 1.55;
-  margin: 0;
-  text-shadow: 0 1px 3px rgba(15, 8, 3, 0.5);
-  word-break: keep-all;
-  text-wrap: balance;
-}
-
-.focus-meta-filigree {
-  font-size: 11px;
-  color: #d4af37;
-  opacity: 0.85;
-  letter-spacing: 0.15em;
-  margin-top: 6px;
-}
-
-/* ── 🌟 하단 4개 액션 카드 그리드 ── */
-.focus-action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(230px, 310px));
-  gap: 10px 14px;
-  justify-content: center;
-  width: 100%;
-  max-width: 650px;
-  margin-top: 14px;
-}
-
-.focus-action-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 52px;
-  padding: 10px 16px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #fffcf5 0%, #f6ecd8 100%);
-  border: 1.5px solid #d4b884;
-  box-shadow: 0 3px 8px rgba(25, 12, 5, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  color: #382414;
-  cursor: pointer;
-  text-align: left;
-  transition: all 160ms cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.focus-action-card:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(25, 12, 5, 0.25), 0 0 0 1.5px #ba8e4a;
-  background: linear-gradient(180deg, #ffffff 0%, #fcf3e3 100%);
-}
-
-.focus-action-card:focus-visible {
-  outline: 3px solid #d4af37;
-  outline-offset: 2px;
-}
-
-.focus-action-card.is-primary {
-  border-color: #c49952;
-  background: linear-gradient(180deg, #fffaf0 0%, #faecd4 100%);
-}
-
-.focus-action-card.is-accent {
-  border-color: #b5833e;
-}
-
-.focus-action-card.is-disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  background: #eee5d3;
-  border-color: #d0c2ab;
-  box-shadow: none;
-}
-
-.focus-action-card.is-danger {
-  border-color: #dfa8a8;
-}
-
-.focus-action-card.is-danger .action-card-title {
-  color: #9c2828;
-}
-
-.focus-action-card.is-danger .action-card-icon {
-  background: rgba(156, 40, 40, 0.12);
-  color: #9c2828;
-  border-color: rgba(156, 40, 40, 0.25);
-}
-
-.action-card-icon {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 10px;
-  background: rgba(186, 142, 74, 0.16);
-  border: 1px solid rgba(186, 142, 74, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #845722;
-  font-size: 18px;
-}
-
-.action-card-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.action-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
-}
-
-.action-card-title {
-  font-size: 14.5px;
-  font-weight: 700;
-  color: #2e1a0c;
-  line-height: 1.25;
-}
-
-.action-card-sub {
-  font-size: 11.5px;
-  color: #6d5239;
-  line-height: 1.3;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.focus-slot-notice {
-  font-size: 12px;
-  color: #f7b4b4;
-  margin: 8px 0 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* ── 🎬 인터랙션 애니메이션 & 반응형 ── */
-@keyframes focusBackdropFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes bookFocusPop {
-  from {
-    transform: scale(0.9) translateY(24px);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes sparklePulse {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-}
-
-@media (max-width: 640px) {
-  .focus-action-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    max-width: 96vw;
-  }
-
-  .focus-action-card {
-    padding: 8px 10px;
-    gap: 8px;
-    min-height: 48px;
-  }
-
-  .action-card-icon {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    font-size: 16px;
-  }
-
-  .action-card-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .action-card-title {
-    font-size: 13px;
-  }
-
-  .action-card-sub {
-    font-size: 10.5px;
-  }
-
-  .focus-hardcover-book {
-    width: 175px;
-    min-height: 240px;
-  }
-
-  .focus-pedestal {
-    width: 200px;
-  }
-
-  .focus-nav-arrow {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    font-size: 22px;
-  }
-
-  .focus-meta-title {
-    font-size: 22px;
-  }
-
-  .focus-meta-desc {
-    font-size: 12.5px;
-  }
-
-  .btn-focus-close {
-    padding: 6px 14px;
-    font-size: 12px;
-    min-height: 38px;
-  }
-}
-
-@media (max-width: 420px) {
-  .focus-action-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shelf-book,
-  .library-focus-backdrop,
-  .focus-book-stage-center,
-  .focus-nav-arrow,
-  .sparkle,
-  .library-nav-btn {
-    transition: none !important;
-    animation: none !important;
-  }
-}
+@media (prefers-reduced-motion: reduce) { .story-discovery *, .story-discovery *::before, .story-discovery *::after { animation: none !important; transition: none !important; } }
 
 .story-file-dialog .import-dialog-actions { flex-wrap: wrap; }
 .story-file-dialog button { min-height: 44px; }
@@ -12570,3 +11756,67 @@ img {
 .co-speaker-options { grid-column: 1 / -1; border: 1px solid #c9d2ce; border-radius: 10px; padding: 12px; }
 .co-speaker-options label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-right: 16px; }
 .co-speaker-options input { width: 20px; height: 20px; }
+
+/* Home navigation stays above the story; reading is the centered primary action. */
+.poster-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.poster-menu .poster-button { justify-content: center; gap: 6px; }
+.poster-menu .poster-button > span:last-child { display: none; }
+@media (max-width: 700px) {
+  .poster-menu .poster-button { flex-direction: column; padding: 9px 3px; font-size: 12px; min-height: 58px; }
+  .poster-menu .poster-button > span:nth-child(2) { font-size: 12px; }
+}
+@media (min-width: 960px), (min-width: 740px) and (orientation: landscape) {
+  .poster-brand { grid-row: 1; }
+  .poster-menu { grid-column: 1 / -1; grid-row: 2; margin-top: 20px; }
+  .poster-heading { grid-column: 1; grid-row: 3; align-self: center; }
+  .poster-scene-space { grid-column: 2; grid-row: 3; min-height: 380px; }
+  .poster-read { grid-column: 1 / -1; grid-row: 4; justify-self: center; width: min(460px, 86%); }
+  .poster-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* The reading dock rests at the viewport bottom; text growth never rescales actors. */
+.player-shell .story-scene-frame > .story-stage-canvas {
+  position: absolute; top: 56px; bottom: clamp(170px, 25dvh, 250px);
+  left: 0; right: 0; margin: 0 auto; height: auto; min-height: 110px;
+}
+.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
+  height: min(76%, 430px); width: 40%;
+}
+.player-shell .story-scene-frame > .dialogue-box,
+.player-shell .story-scene-frame > .dialogue-box.narration {
+  flex: 0 1 auto; margin: auto auto 8px; max-height: 60%;
+}
+.player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) { max-height: 60%; }
+
+@media (max-height: 500px) {
+  .player-shell .story-scene-frame > .story-stage-canvas { top: 44px; bottom: 100px; min-height: 0; }
+}
+.book-entry-copyright { margin-top: 16px; color: #bbcabf; font-size: 12px; }
+/* Display preferences are independent of the saved story and preserve actor proportions. */
+.story-stage-canvas > .story-stage-actor.story-stage-actor {
+  transform: scale(var(--actor-scale, 1)) scaleX(var(--actor-facing, 1));
+  transform-origin: center bottom;
+}
+.player-shell .story-scene-frame > .story-stage-canvas { bottom: calc(35dvh + 8px); }
+.player-shell .story-scene-frame > .dialogue-box,
+.player-shell .story-scene-frame > .dialogue-box.narration,
+.player-shell .story-scene-frame > .dialogue-box[data-has-choices],
+.player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) {
+  height: var(--dialogue-height, 35dvh); min-height: 0;
+  max-height: var(--dialogue-height, 35dvh); flex: 0 0 var(--dialogue-height, 35dvh);
+  box-sizing: border-box; overflow: hidden;
+}
+.player-shell .dialogue-box[data-has-choices] > .reading-transcript { flex: 1 1 40%; min-height: 0; max-height: 45%; }
+.player-shell .dialogue-box[data-has-choices] > .player-choices { flex: 1 1 50%; min-height: 0; }
+.reader-display-settings { max-height: 88dvh; overflow-y: auto; }
+.display-setting-section { padding: 16px 0; border-top: 1px solid #78857755; }
+.display-setting-section p, .display-setting-note { font-size: 14px; line-height: 1.6; color: #526057; }
+.display-setting-section label { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+.display-setting-section input[type="range"] { display: block; width: 100%; min-height: 44px; accent-color: #e1b955; }
+.display-setting-section button { min-height: 44px; padding: 8px 12px; }
+.character-size-setting { margin-top: 18px; }
+.reader-display-settings button:focus-visible, .reader-display-settings input:focus-visible { outline: 3px solid #e1b955; outline-offset: 3px; }
+@media (max-width: 620px) {
+  .reader-top-actions { gap: 4px; }
+  .player-shell .reader-top-actions button { padding: 6px 8px; font-size: 13px; }
+}
