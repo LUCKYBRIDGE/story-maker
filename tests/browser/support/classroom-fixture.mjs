@@ -19,7 +19,7 @@ export async function seed(page) {
  await page.goto(process.env.QA_URL || 'http://localhost:3002');
  await page.evaluate(doc => { localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1', doc); localStorage.setItem('storygame:active:v1', doc); }, doc);
  await page.reload();
- await page.locator('.entry-template-options[open]').waitFor({ state: 'attached' });
+ await page.getByRole('button', { name: '나만의 이야기 창작 공작소 열기' }).waitFor({ state: 'visible' });
 }
 export async function openResume(page) {
  await page.getByRole('button', { name: '나만의 이야기 창작 공작소 열기' }).click();
