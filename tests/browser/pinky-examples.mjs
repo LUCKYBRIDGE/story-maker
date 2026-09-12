@@ -30,7 +30,6 @@ try {
    await page.goto(process.env.QA_URL || 'http://localhost:3002');
    await page.evaluate(storage => { localStorage.removeItem('storygame:projects:v1'); for (const [key, value] of Object.entries(storage)) localStorage.setItem(key, value); }, storage);
    await page.reload();
-   await page.locator('.entry-template-options[open]').waitFor({ state: 'attached' });
    const snapshot = () => page.evaluate(keys => Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)])), Object.keys(storage));
    assert.deepEqual(await snapshot(), storage);
    await page.getByRole('button', { name: /이야기 변경/ }).click();
