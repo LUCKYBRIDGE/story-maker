@@ -6,7 +6,7 @@ import {execFileSync} from 'node:child_process';
 const output=process.env.QA_OUTPUT || '/tmp/sticky-memos-qa';await mkdir(output,{recursive:true});
 const doc=execFileSync(process.execPath,['--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`import {DEFAULT_PROJECT,cloneProject} from './app/story-data.ts';import {createStoryDocument} from './app/story-project-document.ts';const p=cloneProject(DEFAULT_PROJECT);p.chapters=p.chapters.slice(0,1);p.lines=[{...p.lines[0],text:'메모를 참고하며 글을 써요.'},{...p.lines[0],id:'second',order:2,text:'다음 컷'}];p.creativeMemos=[];console.log(JSON.stringify(createStoryDocument({project:p,savedAt:new Date().toISOString(),appVersion:'test'})));`],{encoding:'utf8'}).trim();
 const browser=await launchBrowser(output);const results=[];
-async function resume(page){await page.locator('.entry-template-options[open]').waitFor({state:'attached'});await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();}
+async function resume(page){await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();}
 try{for(const [width,height] of viewports()){
  console.log('viewport',width);const page=await browser.newPage({viewport:{width,height}});const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto(process.env.QA_URL || 'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();await resume(page);
@@ -46,7 +46,7 @@ try{for(const [width,height] of viewports()){
  assert.equal(await page.getByLabel('현재 컷 글상자',{exact:true}).inputValue(),'웃으면서 대답했다.');
  await page.getByRole('button',{name:'미리보기 다음 컷',exact:true}).click();
  assert.ok(await page.getByRole('button',{name:'글상자 다음 컷',exact:true}).isDisabled());
- await page.reload();await resume(page);await page.getByRole('button',{name:/창작 메모 펼치기/}).click();
+ await page.reload();await page.getByLabel('현재 컷 글상자',{exact:true}).waitFor({state:'visible'});await page.getByRole('button',{name:/창작 메모 펼치기/}).click();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project);
  assert.equal(saved.creativeMemos.length,2);assert.equal(saved.creativeMemos[0].fields[0].value,long);assert.equal(saved.creativeMemos[0].linkedChapterId,chapterId);
  assert.equal(saved.lines[0].text,'웃으면서 대답했다.');
