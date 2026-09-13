@@ -249,8 +249,42 @@ img {
   pointer-events: none;
 }
 .poster-brand { text-align: center; }
-.poster-brand svg { width: clamp(28px, 7cqi, 44px); height: auto; margin: auto; }
-.poster-brand strong { display: block; font-size: clamp(20px, 4.8cqi, 30px); font-weight: 900; line-height: 1.2; }
+.poster-brand > svg { width: clamp(28px, 7cqi, 44px); height: auto; margin: auto; }
+.poster-brand-title { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.poster-brand strong { display: inline-block; font-size: clamp(20px, 4.8cqi, 30px); font-weight: 900; line-height: 1.2; }
+.poster-theme-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid #c9923980;
+  background: #fff8eb80;
+  color: #78562e;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 260ms cubic-bezier(.2, 0, .1, 1), background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.poster-theme-refresh:hover:not(:disabled) {
+  background: #fff3d6;
+  color: #3b2816;
+  border-color: #c99239;
+  transform: rotate(90deg);
+}
+.poster-theme-refresh:active:not(:disabled) {
+  transform: rotate(180deg) scale(.92);
+}
+.poster-theme-refresh:focus-visible {
+  outline: 2px solid #c99239;
+  outline-offset: 2px;
+}
+.poster-theme-refresh svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
 .poster-brand p { margin: 8px 0 0; color: #78562e; font-size: clamp(15px, 3cqi, 19px); font-weight: 500; line-height: 1.5; }
 .poster-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4%; width: 100%; margin-top: 3cqi; }
 .poster-button {
@@ -309,7 +343,8 @@ img {
 
   .nolstory-poster-frame::after { inset: 12px; border-radius: 16px; }
   .poster-brand { grid-column: 1; text-align: left; display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: center; }
-  .poster-brand svg { width: 42px; grid-row: span 2; }
+  .poster-brand > svg { width: 42px; grid-row: span 2; }
+  .poster-brand-title { justify-content: flex-start; }
   .poster-brand strong { font-size: 28px; line-height: 1.3; }
   .poster-brand p { font-size: 16px; margin: 2px 0 0; }
   .poster-brand p br { display: none; }

@@ -2692,6 +2692,7 @@ export function StoryStudio() {
             showDiscovery("library");
             setLibraryInitialFilter("mine");
           }}
+          onToggleTheme={() => setSelectedStoryTheme(t => t === "rabbit" ? "onggojib" : "rabbit")}
           busy={Boolean(busy)}
         />}
         {fileDialog}
