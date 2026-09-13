@@ -48,7 +48,7 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
     };
   };
   return {
-    background: { id: backgroundId, src: backgroundAsset?.src, missing: Boolean(backgroundId && !backgroundAsset) },
+    background: { meaningful: backgroundAsset?.backgroundRole !== "scenery", id: backgroundId, src: backgroundAsset?.src, missing: Boolean(backgroundId && !backgroundAsset) },
     left: character("left"),
     right: character("right"),
     speakerName: line?.speakerName.trim() || "화자 없음",

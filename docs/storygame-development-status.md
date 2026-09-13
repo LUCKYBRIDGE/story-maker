@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-11
+- 기준일: 2026-09-13
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,22 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: IA-01 서재 홈과 작업 화면 정돈
+## 현재 작업: IMG-01 이미지·무대 레이아웃 안전화
+
+- 2026-09-12 사용자 첨부 요청으로 승인, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 `origin/main` `002f844bb6373362b46b507481edef947a8990ba`, branch `codex/image-layout-safety`. 시작 시 로컬 변경 없음.
+- 범위와 인수 조건은 IMG-01 카드. 이미지 역할별 crop, 글상자와 무대 연동, 인물 확대·framing·표지 안전 영역 및 브라우저 회귀를 검증한다.
+- 저장/Excel/공유 파일/원본 자산/배포 형식 보존. 다음 READY 없음.
+- 포스터 contain/비율 확보, 장면·풍경 backgroundRole 생성기, 실제 무대/장식 backdrop 분리, 글상자 변수 연동, 자연 치수·알파 발 기준과 framing별 슬롯, 표지 안전 좌우 배치 구현. 후속 사용자 결정대로 하단 일부 겹침 허용, 상반신 이상 보존. 표시 계약은 상세 설계 §8.1.
+- `npm run check`, `npm test` 빌드+200/200, `git diff --check` 통과. `/tmp/image-layout-{check,tests}-final.log`.
+- `image-layout-safety.mjs`: 14 viewport × framing3 × dock4 × scale4 = 672 조합, 표지3배치 × framing3 × 위치3 × viewport3 = 81 조합 통과. 실제 배율·비율·발선·상반신·무대 경계·배경 crop·가로 넘침 assertion. `outputs/image-layout-safety/results.json` 및 대표 PNG.
+- viewport: 320×740, 360×800, 390×844, 720×450, 844×390, 768×1024, 820×1180, 1024×768, 1280×720, 1365×900, 1440×900, 1920×1080, 667×375, 932×430. 편집/썸네일 경계는390/844/820/1365px에서 배율4종 추가 확인.
+- start-screen, display-settings, reader-layout, reader-history, reader-book, library-craft, docked-cuts 통과. 최종 qa:smoke의 start-screen/story-flow/sticky-memos/pinky-examples/library-home 5개 통과, `outputs/image-layout-smoke-final/results.json`. 긴 글·선택·기록·새로고침·표지·서재·편집·파일 가져오기 보존.
+- 오래된 진입 selector를 현재 홈 경로로 변경. 표시 설정 검사는 위치 동일 대신 크기 동일/상향 이동으로, 포스터 theme 비교는 스크롤과 독립인 문서 좌표로 수정. 이전 story-flow 1회 적용 대기 실패는 소스 변경 없이 최종 재실행 통과; 숨기거나 assertion을 완화하지 않음.
+- 실제 상반신 framing 자산은 현재0개여서 공통 정책은 DOM framing fixture로 검증. 현재 배경38개 육안 확인, 대표 포스터/무대/표지 PNG 육안 확인. 실제 iOS/Android·키보드/OS 파일창은 미검증. 극단 설정은 필요 시 세로 스크롤, 원본 포스터 자체의 종이 여백은 보존.
+- 작업 브랜치 로컬 커밋. 원격 push·main 병합·공개 배포 없음.
+
+## 최근 완료: IA-01 서재 홈과 작업 화면 정돈
 
 - 2026-09-12 사용자 첨부 요청으로 승인, **DONE — 로컬 구현·검증**, Work Lead · G/A/B.
 - root `/Volumes/WAN2/apps/story-maker`, branch `codex/library-home-workspace`, 기준 `origin/main` 7520b04. 기존 로컬 변경 없음.

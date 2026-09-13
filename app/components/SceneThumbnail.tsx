@@ -37,6 +37,7 @@ export function AssetPreview({
   return (
     <img
       className={className}
+      data-background-role={asset.backgroundRole}
       src={resolveAssetUrl(asset.src)}
       alt={alt}
       loading={loading}

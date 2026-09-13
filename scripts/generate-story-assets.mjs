@@ -304,6 +304,17 @@ function classifyStem(stem, type) {
   ];
 }
 
+// Visually audited empty environments. Unknown/new backgrounds default to scene preservation.
+// category is a picker category, not a crop contract (legacy paths classify all backgrounds special).
+const sceneryStems = new Set([
+  "adventure_rabbit_turtle_bg_grassland", "adventure_rabbit_turtle_bg_grassland_night",
+  "adventure_rabbit_turtle_bg_palace", "adventure_rabbit_turtle_bg_palace_welcome",
+  "adventure_rabbit_turtle_bg_river_winter", "adventure_rabbit_turtle_bg_shore",
+  "onggojib_magistrate_yard_pixel", "onggojib_snow_road_pixel", "onggojib_snow_village_road_pixel",
+  "onggojib_spring_courtyard_pixel", "onggojib_spring_room_pixel", "onggojib_warm_room_pixel",
+  "onggojib_winter_courtyard_pixel",
+]);
+
 const duplicateNames = new Map();
 const assets = paths.map((sourcePath) => {
   const relativePath = sourcePath.slice(sourcePrefix.length);
@@ -341,6 +352,7 @@ const assets = paths.map((sourcePath) => {
     story,
     type,
     category,
+    backgroundRole: type === "background" ? (sceneryStems.has(stem) ? "scenery" : "scene") : undefined,
     group,
     pose,
     framing,
@@ -365,6 +377,7 @@ export type StoryAsset = {
   category: "character" | "background" | "special";
   group: string;
   pose: string;
+  backgroundRole?: "scenery" | "scene";
   framing?: "전신" | "상반신" | "여러 인물";
   usage: "원작 사용" | "추가 연출";
   selectionTier: "기본 추천" | "추가 자료";

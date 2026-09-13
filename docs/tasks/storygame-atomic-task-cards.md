@@ -1605,3 +1605,20 @@ npm test
 - 검사: `npm run check`, `npm test`, `QA_URL=http://localhost:3003 node tests/browser/library-home.mjs`, 관련 `library-craft.mjs`·`library-motion.mjs`·`player-continuity.mjs`, `git diff --check`.
 - 중단: 데이터 보존 실패·기존 사용자 변경 충돌 발견 시 수정 중단. UI 수정만 되돌리고 작품 저장소는 건드리지 않는다.
 - 상태 갱신: 상태표 한 곳에 실제 증거와 남은 기기 검증을 기록. 다음 작업을 동시에 시작하지 않는다.
+
+
+## IMG-01 — 이미지·무대 레이아웃 안전화
+
+- 선행: IA-01. 사용자 2026-09-12 첨부 요청. 학생이 선택한 그림과 인물 크기를 화면 비율에 관계없이 보존한다. Work Lead · G/A/B, 교육 UX·자산·접근성·회귀 관점.
+- 허용: 공통 무대/표지/포스터 관련 app 소스와 CSS 및 자산 카탈로그 생성기, 관련 tests, 본 카드·상태표·상세 설계의 표시 계약. 저장 형식·자산 원본·의존성·배포·서재 전면 재설계 금지.
+- 사전 확인: 최신 GitHub main 및 clean worktree, CSS cascade, 실제 표시 경로/원본 비율, 기존 browser fixture 유효성.
+- 절차: 1) 원인 재현 2) 역할별 contain/cover 및 실제 무대 배경 분리 3) 공통 안전 배치 4) 브라우저 경계 assertion과 화면 검토 5) scoped diff 및 상태 갱신.
+- 인수 조건:
+  1. 대표 포스터 전체를 비율 유지로 표시하며 장식 여백은 기존 종이 배경과 연결한다.
+  2. backgroundRole=scene 장면은 전체 보존, 일반 풍경은 원본 면적의 60% 미만이 남는 cover일 때만 contain으로 전환하고 장식 backdrop으로 여백을 채운다.
+  3. 글상자20/35/45/60%와 같은 높이 변수를 무대 하단에 연결한다. 인물의 기준 크기는 글상자 설정과 독립이다. 후속 사용자 결정으로 하단은 글상자 뒤에 가려져도 되며 상반신 이상은 보존한다. 최대35% 하단 겹침을 활용하고 그래도 부족한 세로 공간은 스크롤로 확보한다.
+  4. 인물40/100/120/140%에서 비율·발 기준·무대 경계를 보존한다. 전신/상반신/여러 인물은 공통 framing 정책을 사용하며 원본 규격을 가정하지 않는다.
+  5. 표지 좌/중앙/우에서 콘텐츠 box가 안전 영역 안에 머물며 기존 서재/편집/읽기 동작을 유지한다.
+  6. 요청된12개와 추가2개 viewport에서 가로 넘침 및 실제 경계 검사, 대표 screenshot을 남긴다.
+- 검증: `npm run check`, `npm test`, `node tests/browser/image-layout-safety.mjs`, 관련 start-screen/display-settings/reader-layout/reader-history/reader-book/library-home/library-craft/docked-cuts 및 `npm run qa:smoke` (QA_URL 지정).
+- 중단: 실제 사용자 데이터/형식 변경이 필요하면 중단하고 범위를 확인한다. 되돌림은 본 작업 diff만 대상으로 한다. 증거와 미검증 사항을 상태표에 기록하고 인수 조건 충족 후 DONE, 다음 작업을 열지 않는다.

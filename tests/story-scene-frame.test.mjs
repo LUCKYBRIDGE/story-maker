@@ -12,7 +12,8 @@ test("U2-02: 컷 편집·대본 미리보기·플레이는 같은 프레임/배�
     assert.match(component, /speaker=\{/);
     assert.doesNotMatch(component, /backgroundImage:/);
   }
-  assert.match(frame, /showBackground=\{false\}/);
+  assert.match(frame, /loading="eager" decorative/);
+  assert.doesNotMatch(frame, /showBackground=\{false\}/);
   assert.match(frame, /variant !== "thumbnail" && speaker === "right"/);
   assert.match(frame, /variant !== "thumbnail" && speaker === "left"/);
   assert.doesNotMatch(frame, /setDraft|onUpdateLine|onIndexChange/);

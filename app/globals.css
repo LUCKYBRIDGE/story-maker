@@ -243,8 +243,8 @@ img {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 70%;
+  object-fit: contain;
+  object-position: center;
   border-radius: inherit;
   pointer-events: none;
 }
@@ -282,7 +282,7 @@ img {
 .poster-author { display: flex; align-items: center; justify-content: center; gap: 2cqi; margin: 3cqi 0 0; font-size: clamp(15px, 3.8cqi, 24px); font-weight: 800; line-height: 1.5; }
 .poster-author > span { color: #b68a3f; font-size: .8em; }
 .poster-description { margin: 1.5cqi 0 0; color: #626562; font-size: clamp(14px, 3.2cqi, 20px); font-weight: 500; }
-.poster-scene-space { position: relative; flex: 1; width: 100%; min-height: 88cqi; margin-top: 12px; overflow: hidden; border-radius: 16px; }
+.poster-scene-space { position: relative; flex: none; width: 100%; aspect-ratio: 9 / 16; min-height: 0; margin-top: 12px; overflow: hidden; border-radius: 16px; background: radial-gradient(ellipse, #efe0c3, #fbf5e9 75%); }
 .poster-read { margin-top: 12px; width: 86%; justify-content: center; gap: 3cqi; padding: 3cqi 5cqi; font-size: clamp(18px, 4.5cqi, 28px); color: #251b0b; background: linear-gradient(115deg, #fff0a4, #ffcd58 55%, #dba740); border-color: #bc852e; box-shadow: inset 0 0 0 2px #fff2bf, 0 4px 0 #b38238, 0 8px 14px #72501f33; }
 .poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font-size: clamp(12px, 2.2cqi, 14px); font-weight: 400; line-height: 1.7; }
 
@@ -306,7 +306,6 @@ img {
     padding: clamp(28px, 4vw, 56px);
     overflow: hidden;
   }
-  .nolstory-poster-img { object-position: center 75%; border-radius: 0; }
 
   .nolstory-poster-frame::after { inset: 12px; border-radius: 16px; }
   .poster-brand { grid-column: 1; text-align: left; display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: center; }
@@ -321,7 +320,7 @@ img {
   .poster-heading h2 { font-size: clamp(44px, 5.2vw, 72px); }
   .poster-author { font-size: clamp(16px, 1.8vw, 23px); gap: 12px; margin-top: 24px; }
   .poster-description { font-size: clamp(15px, 1.6vw, 20px); margin-top: 10px; }
-  .poster-scene-space { grid-column: 2; grid-row: 1 / 6; min-height: 0; height: 100%; margin: 0; border-radius: 12px; }
+  .poster-scene-space { grid-column: 2; grid-row: 1 / 6; aspect-ratio: auto; min-height: 0; height: 100%; margin: 0; border-radius: 12px; }
   .poster-read { grid-column: 1; width: 100%; font-size: clamp(18px, 1.9vw, 26px); padding: 18px; gap: 16px; }
   .poster-footer { grid-column: 1; width: 100%; font-size: 12px; margin-top: 26px; padding-top: 16px; }
 }
@@ -10554,7 +10553,6 @@ img {
 .player-shell .story-scene-frame { min-height: calc(100dvh - 34px); border-radius: 0; }
 .player-shell .story-scene-heading { padding: 0; }
 .player-shell .story-scene-frame .player-topbar { position: relative; inset: auto; background: rgb(15 23 42 / 65%); }
-.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(200px, 41dvh, 480px); }
 .player-shell .story-scene-frame .dialogue-box p { font-size: 18px; line-height: 1.7; }
 .scene-focus-tabs { border-radius: 10px; }
 @media (max-width: 620px) {
@@ -10580,7 +10578,6 @@ img {
   .script-selected-stage > header { flex-direction: row; align-items: center; }
   .script-selected-stage > header button { width: auto; }
   .story-scene-frame > .story-stage-canvas { height: clamp(125px, 34vw, 165px); }
-  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(190px, 38dvh, 360px); }
   .story-scene-frame > .dialogue-box,
   .story-scene-frame > .dialogue-box.narration { width: calc(100% - 16px); padding: 10px 12px; margin-bottom: 6px; }
   .story-scene-frame .editable-stage-writing-line textarea,
@@ -10643,8 +10640,7 @@ img {
   }
 }
 @media (max-height: 480px) and (orientation: landscape) {
-  .story-scene-frame > .story-stage-canvas,
-  .player-shell .story-scene-frame > .story-stage-canvas { height: 190px; flex-grow: 0; }
+  .story-scene-frame[data-scene-variant="editor"] > .story-stage-canvas { height: 190px; flex-grow: 0; }
   .story-scene-frame .dialogue-box,
   .story-scene-frame .player-topbar {
     padding-left: max(12px, env(safe-area-inset-left));
@@ -10939,11 +10935,11 @@ img {
 .student-book-face { position: relative; isolation: isolate; overflow: hidden; min-height: 132cqw; border-radius: inherit; padding: 7% 8% 6% 10%; display: grid; grid-template-rows: auto 1fr auto 1fr auto; gap: 3cqw; }
 .student-book-face::after { content: ""; pointer-events: none; position: absolute; inset: 4%; border: 1px solid var(--book-accent); border-radius: 2px 8px 8px 2px; opacity: .55; }
 .student-book-edition { grid-row: 1; font-size: 3cqw; letter-spacing: .2em; position: relative; z-index: 1; padding: 4px; background: var(--book-paper); color: var(--book-ink); }
-.book-art { position: absolute; inset: 31% 9% 18% 11%; overflow: hidden; border-radius: 48% 48% 6px 6px; z-index: -1; background: linear-gradient(150deg,var(--book-accent),var(--book-paper)); }
+.book-art { position: absolute; inset: 31% 9% 18% 11%; overflow: hidden; border-radius: 4%; z-index: -1; background: linear-gradient(150deg,var(--book-accent),var(--book-paper)); }
 .book-art-background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85; }
 .book-art-character { position: absolute; bottom: 0; left: 10%; width: 80%; height: 90%; object-fit: contain; object-position: center bottom; }
-.student-book[data-character-position="left"] .book-art-character { left: -10%; }
-.student-book[data-character-position="right"] .book-art-character { left: 30%; }
+.student-book[data-character-position="left"] .book-art-character { left: 4%; }
+.student-book[data-character-position="right"] .book-art-character { left: 16%; }
 .student-book[data-layout="picture"] .book-art { inset: 0; border-radius: 0; }
 .student-book[data-layout="picture"] .book-art-character { height: 75%; bottom: 20%; }
 .student-book[data-layout="picture"][data-title-position="top"] .book-art-character { height: 48%; bottom: 14%; }
@@ -11256,7 +11252,6 @@ img {
 .player-shell .story-scene-frame .dialogue-box .reading-paragraph.current-reading { color: #fff9e9; margin-bottom: 0; }
 .reading-paragraph .dialogue-speaker { margin-right: .35em; }
 .reading-paragraph.narration { padding-inline: .5em; }
-.player-shell .story-scene-frame > .story-stage-canvas { height: clamp(200px, 41dvh, 480px); flex: 0 0 auto; }
 .player-shell .story-scene-frame { justify-content: flex-start; }
 @media (max-width: 620px) {
   .book-play-entry .student-book { width: min(82vw, 430px); max-width: 430px; }
@@ -11265,7 +11260,6 @@ img {
   .reader-top-actions button { padding-inline: 12px; }
   .reading-tools { gap: 6px; }
   .reading-tools > small { max-width: 45%; }
-  .player-shell .story-scene-frame > .story-stage-canvas { height: clamp(190px, 38dvh, 360px); }
   .reading-scroll { max-height: 42dvh; }
 }
 
@@ -11282,17 +11276,6 @@ img {
 }
 .player-shell .reader-topbar { align-items: flex-start; }
 .player-shell .reader-story-info { max-height: min(65dvh, 360px); overflow-y: auto; }
-.player-shell .story-scene-frame > .story-stage-canvas {
-  width: 100%; max-width: 1440px; margin-inline: auto;
-  margin-top: 56px;
-  height: clamp(200px, 41dvh, 480px);
-  aspect-ratio: auto; background: transparent;
-  flex: 0 0 auto;
-  position: relative;
-}
-.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
-  height: 88%; width: 44%; bottom: 0; object-fit: contain; object-position: center bottom;
-}
 .player-shell .story-scene-frame > .dialogue-box {
   position: relative; inset: auto; z-index: 3;
   width: calc(100% - 32px); max-width: 980px;
@@ -11310,10 +11293,6 @@ img {
 .player-shell .player-choices { flex: 0 1 auto; overflow-y: auto; max-height: 24dvh; }
 .player-shell > .copyright-bar { min-height: 34px; padding-block: 6px; }
 @media (max-width: 620px) {
-  .player-shell .story-scene-frame > .story-stage-canvas {
-    margin-top: 48px;
-    height: clamp(190px, 38dvh, 360px);
-  }
   .player-shell .story-scene-frame > .dialogue-box {
     width: calc(100% - 16px);
     margin: -32px auto 8px;
@@ -11322,7 +11301,6 @@ img {
   }
 }
 @media (max-height: 500px) {
-  .player-shell .story-scene-frame > .story-stage-canvas { margin-top: 36px; height: clamp(140px, 36dvh, 180px); }
   .player-shell .story-scene-frame > .dialogue-box { margin: -24px auto 4px; padding: 6px 12px; height: auto; max-height: 54dvh; }
   .player-shell .player-controls { padding-top: 4px; }
   .player-shell .reading-scroll { padding-block: 4px; }
@@ -11354,10 +11332,6 @@ img {
   .player-shell .dialogue-box > .player-controls > button { width: auto; padding: 6px 9px; font-size: 13px; }
 }
 
-/* Age-specific stature uses uniform scaling around the feet, including mirrored poses. */
-.story-stage-canvas > .story-stage-actor.story-stage-actor[data-stature="child"] {
-  transform: scale(var(--actor-scale)) scaleX(var(--actor-facing));
-}
 
 /* Transcript belongs to the viewport, independent of the stage and speech dock. */
 .reading-history-backdrop { padding: 3dvh 3vw; }
@@ -11481,11 +11455,8 @@ img {
 .student-book::after { width: 6%; border-radius: 5px 0 0 5px; border-right: 1px solid #0003; }
 .student-book-face { min-height: 140cqw; }
 .student-book-face::after { inset: 4% 5% 4% 10%; border: 3px double var(--book-accent); border-radius: 2px; opacity: .65; }
-.student-book[data-layout="classic"] .book-art { inset: 39% 9% 10% 13%; border: 0; border-radius: 40% 40% 2px 2px; box-shadow: none; }
+.student-book[data-layout="classic"] .book-art { inset: 39% 9% 10% 13%; border: 0; border-radius: 4%; box-shadow: none; }
 .student-book[data-layout="classic"] .student-book-title { text-shadow: none; }
-.student-book[data-layout="classic"] .book-art-character { width: 88%; left: 6%; height: 95%; }
-.student-book[data-layout="classic"][data-character-position="left"] .book-art-character { left: -12%; }
-.student-book[data-layout="classic"][data-character-position="right"] .book-art-character { left: 24%; }
 .student-book[data-layout="classic"] .book-author-bottom { margin-top: 0; font-size: 3cqw; }
 .student-book[data-layout="classic"] .book-author-bottom::before { content: none; }
 .student-book[data-layout="classic"] .book-art:empty { background: none; overflow: visible; }
@@ -11747,37 +11718,25 @@ img {
 }
 @media (min-width: 960px), (min-width: 740px) and (orientation: landscape) {
   .poster-brand { grid-row: 1; }
-  .poster-menu { grid-column: 1 / -1; grid-row: 2; margin-top: 20px; }
-  .poster-heading { grid-column: 1; grid-row: 3; align-self: center; }
-  .poster-scene-space { grid-column: 2; grid-row: 3; min-height: 380px; }
-  .poster-read { grid-column: 1 / -1; grid-row: 4; justify-self: center; width: min(460px, 86%); }
-  .poster-footer { grid-column: 1 / -1; grid-row: 5; }
+  .poster-menu { grid-row: 2; }
+  .poster-heading { grid-row: 3; align-self: center; }
+  .poster-read { grid-row: 4; }
+  .poster-footer { grid-row: 5; }
 }
 
 /* The reading dock rests at the viewport bottom; text growth never rescales actors. */
-.player-shell .story-scene-frame > .story-stage-canvas {
-  position: absolute; top: 56px; bottom: clamp(170px, 25dvh, 250px);
-  left: 0; right: 0; margin: 0 auto; height: auto; min-height: 110px;
-}
-.player-shell .story-stage-canvas > .story-stage-actor.story-stage-actor {
-  height: min(76%, 430px); width: 40%;
-}
 .player-shell .story-scene-frame > .dialogue-box,
 .player-shell .story-scene-frame > .dialogue-box.narration {
   flex: 0 1 auto; margin: auto auto 8px; max-height: 60%;
 }
 .player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) { max-height: 60%; }
 
-@media (max-height: 500px) {
-  .player-shell .story-scene-frame > .story-stage-canvas { top: 44px; bottom: 100px; min-height: 0; }
-}
 .book-entry-copyright { margin-top: 16px; color: #bbcabf; font-size: 12px; }
 /* Display preferences are independent of the saved story and preserve actor proportions. */
 .story-stage-canvas > .story-stage-actor.story-stage-actor {
-  transform: scale(var(--actor-scale, 1)) scaleX(var(--actor-facing, 1));
+  transform: scaleX(var(--actor-facing, 1));
   transform-origin: center bottom;
 }
-.player-shell .story-scene-frame > .story-stage-canvas { bottom: calc(35dvh + 8px); }
 .player-shell .story-scene-frame > .dialogue-box,
 .player-shell .story-scene-frame > .dialogue-box.narration,
 .player-shell .story-scene-frame > .dialogue-box[data-has-choices],
@@ -11800,3 +11759,43 @@ img {
   .reader-top-actions { gap: 4px; }
   .player-shell .reader-top-actions button { padding: 6px 8px; font-size: 13px; }
 }
+
+/* IMG-01: decorative extensions may crop; the actual scene uses its own viewport. */
+.story-stage-backdrop > img { filter: blur(18px) brightness(.65); }
+.story-stage-background[data-fit="contain"]::before {
+  content: ""; position: absolute; inset: 0; background: var(--scene-image) center / cover;
+  filter: blur(16px) brightness(.65);
+}
+.story-stage-background[data-fit="contain"] > img { position: relative; object-fit: contain; }
+
+/* The same dock variable owns the stage boundary. The natural image box owns actor scale.
+   When both large preferences cannot fit, retain their sizes and allow page scrolling. */
+.player-shell .story-scene-frame {
+  --stage-dialogue-gap: 8px;
+  --stage-heading-height: 64px;
+  --stage-required-height: 0px;
+  --stage-lower-overlap: 0px;
+  min-height: calc(var(--stage-heading-height) + var(--stage-required-height) - var(--stage-lower-overlap) + var(--dialogue-height, 35dvh) + var(--stage-dialogue-gap) + 8px + env(safe-area-inset-bottom));
+}
+.player-shell .story-scene-frame > .story-stage-canvas {
+  position: absolute; left: 0; right: 0;
+  top: var(--stage-heading-height);
+  bottom: calc(var(--dialogue-height, 35dvh) + var(--stage-dialogue-gap) + 8px + env(safe-area-inset-bottom) - var(--stage-lower-overlap));
+  width: 100%; max-width: 1440px; margin: 0 auto; height: auto; min-height: 0;
+  aspect-ratio: auto; flex: none;
+}
+/* Wider framing gets wider slots in useStageImageLayout; these are safe pre-load fallbacks. */
+.story-stage-canvas > .story-stage-actor.framing-full { object-position: center bottom; }
+.story-stage-canvas > .story-stage-actor.framing-upper { width: 48%; object-position: center bottom; }
+.story-stage-canvas > .story-stage-actor.framing-group { width: 62%; object-position: center bottom; }
+.book-art-character.framing-group { width: 88%; left: 6%; }
+.student-book[data-character-position="left"] .book-art-character.framing-group { left: 2%; }
+.student-book[data-character-position="right"] .book-art-character.framing-group { left: 10%; }
+
+.player-shell .story-stage-canvas > .story-stage-background { bottom: var(--stage-lower-overlap); }
+
+/* Picker previews are content references: preserve the complete semantic scene. */
+.asset-picker-current-thumb.background img[data-background-role="scene"],
+.asset-picker-thumb.background img[data-background-role="scene"],
+.scene-nearby-assets.background button img[data-background-role="scene"] { object-fit: contain; }
+.book-art > .story-stage-background::after { display: none; }
