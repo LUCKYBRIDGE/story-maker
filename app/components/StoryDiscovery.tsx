@@ -40,6 +40,7 @@ export interface StoryDiscoveryProps {
   onStartOnggojib?: () => void;
   onDeleteLocal?: (id: string) => void;
   onBackupLocal?: (id: string) => void;
+  onManageLocal?: (id: string) => void;
 }
 
 export type SelectedBook =
@@ -846,6 +847,27 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     <div className="action-card-text">
                       <strong className="action-card-title">파일로 보관</strong>
                       <small className="action-card-sub">.nolstory 파일로 내 기기에 저장해요</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="focus-action-card"
+                    aria-label="Excel·복구 도구"
+                    onClick={() => {
+                      closeOverlay();
+                      props.onManageLocal?.(selectedBook.id);
+                    }}
+                    disabled={props.busy}
+                  >
+                    <div className="action-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                      </svg>
+                    </div>
+                    <div className="action-card-text">
+                      <strong className="action-card-title">Excel·복구 도구</strong>
+                      <small className="action-card-sub">스프레드시트로 저장하거나 이전 작업본으로 복구해요</small>
                     </div>
                   </button>
 

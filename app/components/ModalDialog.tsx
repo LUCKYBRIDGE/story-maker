@@ -8,12 +8,14 @@ export function ModalDialog({
   label,
   children,
   onClose,
+  initialFocusRef,
 }: {
   overlayClassName: string;
   dialogClassName: string;
   label: string;
   children: ReactNode;
   onClose?: () => void;
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
 }) {
   const dialogRef = useRef<HTMLElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -26,15 +28,19 @@ export function ModalDialog({
   useEffect(() => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
 
-    const dialog = dialogRef.current;
-    if (dialog) {
-      const focusable = dialog.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-      );
-      if (focusable.length > 0) {
-        focusable[0].focus();
-      } else {
-        dialog.focus();
+    if (initialFocusRef?.current) {
+      initialFocusRef.current.focus();
+    } else {
+      const dialog = dialogRef.current;
+      if (dialog) {
+        const focusable = dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        } else {
+          dialog.focus();
+        }
       }
     }
 
@@ -81,7 +87,7 @@ export function ModalDialog({
         previousFocusRef.current.focus();
       }
     };
-  }, []);
+  }, [initialFocusRef]);
 
   return (
     <div
