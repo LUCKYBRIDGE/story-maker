@@ -28,6 +28,7 @@ export interface StoryDiscoveryProps {
   notice: string;
   onBack: () => void;
   onCreation: () => void;
+  onOpenQr?: () => void;
   onSelectStory?: (theme: StoryTheme) => void;
   onGroup?: (group: StoryHubGroup) => void;
   onReadBase: (theme?: StoryTheme) => void;
@@ -94,30 +95,9 @@ const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getEx
 function DiscoveryCover({ book }: { book: SelectedBook }) {
   const project = book.kind === "base" ? baseCoverProjects[book.theme]
     : book.kind === "mine" ? book.project : book.kind === "shared" ? book.file.story.project : null;
-  return project ? <BookCover project={project} /> : <div
-    className="student-book blank-book-cover blank-student-book"
-    data-layout="blank"
-    data-font="serif"
-    style={{
-      "--book-paper": book.paper,
-      "--book-ink": book.ink,
-      "--book-accent": book.accent,
-      "--book-title-ink": book.ink,
-      "--book-title-panel": "transparent",
-      "--book-title-size": "7.6cqw",
-      textAlign: "center",
-    } as CSSProperties}
-  >
-    <div className="student-book-face">
-      <span className="student-book-edition">나만의 이야기</span>
-      <div className="blank-book-emblem" aria-hidden="true">
-        <span className="blank-book-plus">＋</span>
-      </div>
-      <div className="book-title-group">
-        <h2 className="student-book-title blank-book-title">새 이야기</h2>
-        <p className="student-book-author">직접 쓰기</p>
-      </div>
-    </div>
+  return project ? <BookCover project={project} /> : <div className="blank-book-cover">
+    <span>아직 쓰지 않은 책</span><span aria-hidden="true">＋</span>
+    <strong>새 이야기</strong><small>여기서 시작해요</small>
   </div>;
 }
 
@@ -434,6 +414,29 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           </div>
 
           <div className="library-header-tools">
+            {props.onOpenQr && (
+              <button
+                type="button"
+                className="library-nav-btn library-btn-qr"
+                onClick={props.onOpenQr}
+                disabled={props.busy}
+                aria-label="교실 접속 QR 코드 열기"
+                title="교실 접속 QR 코드 열기"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="6.5" y="6.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <rect x="17.5" y="6.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <rect x="6.5" y="17.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <path d="M14 14h3v3h-3z" />
+                  <path d="M20 14v3" />
+                  <path d="M14 20h6" />
+                </svg>
+                <span>접속 QR</span>
+              </button>
+            )}
             <button
               type="button"
               className="library-nav-btn library-btn-manage"
