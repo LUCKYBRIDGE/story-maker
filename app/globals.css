@@ -12416,7 +12416,7 @@ img {
 .library-main-heading:focus { outline: none; }
 .library-motto { font-family: "Noto Serif KR", "Batang", serif; font-size: clamp(14px, 1.5vw, 19px); margin: 0; color: #705239; }
 .library-motto::after { content: "─ ◇ ─"; display: block; margin-top: 16px; color: #a17a47; font-size: 15px; letter-spacing: .4em; }
-.library-catalog-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 12px 14px; }
+.library-catalog-bar { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin: 24px 12px 14px; }
 .library-filters { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid #af8a5340; border-radius: 30px; background: #fff8e3ad; }
 .library-filters button { min-height: 44px; padding: 8px 20px; border: 0; border-radius: 24px; background: transparent; color: #6e5136; font-size: 13px; cursor: pointer; }
 .library-filters button[aria-pressed="true"] { background: #214d40; color: #fff3d7; box-shadow: 0 2px 5px #14392c30; }
@@ -12650,13 +12650,60 @@ img {
   right: -8px; top: calc(var(--plant-height) * -.572 + 2px);
   background: var(--library-plant) center / contain no-repeat;
   pointer-events: none; z-index: 4;
-  filter: drop-shadow(3px 5px 3px #443d2220);
 }
-[data-room-finish="warm"] .library-count { margin-right: 150px; }
+.library-top-frame {
+  position: absolute; z-index: 4;
+  right: clamp(152px, 18vw, 185px); top: -62px;
+  width: 124px; height: 72px;
+  background: #fdfaf2;
+  border: 3.5px solid #84532c; border-radius: 6px;
+  box-shadow: 0 4px 8px #2b140640, inset 0 0 0 1px #59351a, 0 1px 0 #caa16c, inset 0 1px 2px #ffffff90;
+  transform: rotate(-1.5deg); transform-origin: center bottom;
+  cursor: pointer; padding: 5px 8px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+  font-family: inherit; line-height: 1.25;
+  transition: transform 200ms cubic-bezier(.2,.8,.4,1), box-shadow 200ms ease;
+  user-select: none;
+}
+.library-top-frame:hover, .library-top-frame:focus-visible {
+  transform: rotate(-0.5deg) translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 14px #2b140650, inset 0 0 0 1px #59351a, 0 1px 0 #caa16c;
+  outline: none;
+}
+.library-top-frame.is-tapping {
+  animation: library-frame-tap 360ms ease;
+}
+@keyframes library-frame-tap {
+  0% { transform: rotate(-1.5deg) scale(1); }
+  35% { transform: rotate(1deg) scale(0.96) translateY(2px); }
+  70% { transform: rotate(-2.5deg) scale(1.03) translateY(-2px); }
+  100% { transform: rotate(-1.5deg) scale(1) translateY(0); }
+}
+.library-frame-inner {
+  width: 100%; height: 100%;
+  border: 1px dashed #d5be9f; border-radius: 3px; background: #fffdf9;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 2px 4px; box-sizing: border-box;
+}
+.library-frame-tag {
+  font-size: 9px; color: #93683f; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 2px;
+}
+.library-frame-main {
+  font-size: 12px; color: #382415; font-weight: 700; letter-spacing: -0.02em; display: block;
+}
+.library-frame-sub {
+  font-size: 8.5px; color: #8c7055; margin-top: 2px; white-space: nowrap;
+}
 @media (max-width: 700px) {
   .library-top-plant { --plant-height: 126px; right: -5px; }
-  [data-room-finish="warm"] .library-catalog-bar { margin-bottom: 64px; }
-  [data-room-finish="warm"] .library-count { margin-right: 0; }
+  .library-top-frame {
+    right: 86px; top: -46px; width: 96px; height: 54px;
+    border-width: 2.5px; padding: 3px 5px;
+  }
+  .library-frame-tag { font-size: 7.5px; margin-bottom: 1px; }
+  .library-frame-main { font-size: 9.5px; }
+  .library-frame-sub { font-size: 7px; margin-top: 1px; }
+  [data-room-finish="warm"] .library-catalog-bar { margin-bottom: 36px; }
 }
 /* Continuous stiles cover the shelf texture's horizontal seams. */
 .library-upright {
@@ -12700,7 +12747,7 @@ img {
 }
 .library-foreground-left { left: calc(var(--foreground-peek) - var(--foreground-width)); background-image: var(--library-foreground-left); }
 .library-foreground-right { right: calc(var(--foreground-peek) - var(--foreground-width)); background-image: var(--library-foreground-right); }
-.library-top-plant { filter: saturate(.76) sepia(.08) brightness(.94) drop-shadow(3px 5px 3px #443d2220); }
+.library-top-plant { filter: blur(0.35px) contrast(.95) saturate(.76) sepia(.08) brightness(.94) drop-shadow(3px 5px 3px #443d2220); }
 .library-footer { position: relative; z-index: 6; }
 .story-discovery { overflow: clip; }
 @media (max-width: 700px) {

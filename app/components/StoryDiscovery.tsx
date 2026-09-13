@@ -102,6 +102,14 @@ function DiscoveryCover({ book }: { book: SelectedBook }) {
   </div>;
 }
 
+const EASTER_EGG_NOTES = [
+  { tag: "놀스토리 서재", main: null, sub: "한 권의 상상, 하나의 무대" },
+  { tag: "작은 쪽지 💌", main: "작은 상상이 무대가 돼요", sub: "언제든 새 이야기를 꺼내봐요 ✨" },
+  { tag: "작은 쪽지 🌿", main: "틀려도 괜찮아!", sub: "다시 쓰면 더 재미난 모험이 돼" },
+  { tag: "작은 쪽지 📖", main: "오늘 너의 책장엔", sub: "어떤 모험이 꽂히게 될까?" },
+  { tag: "작은 쪽지 🎭", main: "이 서재의 주인공은", sub: "바로 너야! 멋진 작가님" },
+];
+
 export function StoryDiscovery(props: StoryDiscoveryProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -117,6 +125,14 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   const shelfRef = useRef<HTMLDivElement>(null);
   const roomRef = useRef<HTMLElement>(null);
   const [selectedBook, setSelectedBook] = useState<SelectedBook | null>(null);
+  const [easterEggIndex, setEasterEggIndex] = useState(0);
+  const [isFrameTapping, setIsFrameTapping] = useState(false);
+
+  const cycleEasterEgg = () => {
+    setEasterEggIndex((prev) => (prev + 1) % EASTER_EGG_NOTES.length);
+    setIsFrameTapping(true);
+    setTimeout(() => setIsFrameTapping(false), 360);
+  };
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -298,6 +314,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   const isFull = props.collection.projects.length >= MAX_EDITABLE_PROJECTS;
 
   const allSelectableBooks = [...visibleBooks, newStoryBook];
+  const currentFrameNote = EASTER_EGG_NOTES[easterEggIndex];
+  const countLabel = `${visibleBooks.length}권의 이야기`;
 
   const [libraryRestored, setLibraryRestored] = useState(false);
   useEffect(() => {
@@ -477,7 +495,6 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           {([["all", "모든 책"], ["base", "기본 이야기"], ["mine", "내 작품"], ["shared", "모두의 이야기"]] as const).map(([value, label]) =>
             <button key={value} type="button" aria-pressed={filter === value} onClick={() => changeFilter(value)}>{label}</button>)}
         </div>
-        <span className="library-count" role="status">{visibleBooks.length}권의 이야기</span>
       </div>
       {filter === "shared" && <div className="library-collection-note">
         <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "토끼와 자라" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
@@ -490,6 +507,21 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         className={`library-bookcase ${selectedBook ? "is-receded" : ""}`}
         aria-label="서재 책장"
       >
+        <button
+          type="button"
+          className={`library-top-frame ${isFrameTapping ? "is-tapping" : ""}`}
+          onClick={cycleEasterEgg}
+          aria-label={currentFrameNote.main ? `${currentFrameNote.tag}: ${currentFrameNote.main} - ${currentFrameNote.sub}` : `서재 안내 액자 · ${countLabel}`}
+          title="눌러서 놀스토리 쪽지를 확인해보세요!"
+        >
+          <span className="library-frame-inner">
+            <span className="library-frame-tag">{currentFrameNote.tag}</span>
+            <strong className="library-frame-main" role={currentFrameNote.main ? undefined : "status"}>
+              {currentFrameNote.main ?? countLabel}
+            </strong>
+            <span className="library-frame-sub">{currentFrameNote.sub}</span>
+          </span>
+        </button>
         <div className="library-top-plant" aria-hidden="true" />
         <div className="library-upright library-upright-left" aria-hidden="true" />
         <div className="library-upright library-upright-right" aria-hidden="true" />
