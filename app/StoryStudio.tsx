@@ -2647,47 +2647,55 @@ export function StoryStudio() {
   if (creatorAccess === "none") {
     return (
       <>
-        {creationHubOpen ? <CreationHub
-          collection={collection}
-          busy={Boolean(busy) || entryBusy || !hydrated}
-          failed={localDraftStatus === "failed"}
-          notice={entryNotice}
-          onHome={() => showDiscovery("library")}
-          onRetry={retryCollection}
-          onManage={id => { openCollectionProject(id); setProjectToolsOpen(true); }}
-          onDelete={deleteCollectionProject}
-          onStoryFile={openStoryFile}
-          onBackup={id => saveStoryFile(false, id)}
-          onExcel={openExcelFile}
-          onSheet={updateFromSheet}
-        /> : discoveryScreen !== "home" ? <StoryDiscovery
-          onStoryFile={openStoryFile}
-          sharedFiles={sharedFiles}
-          onRemixShared={file => { setFileError(""); setFilePreview(file); }}
-          onReadShared={file => { playerReturnLocationRef.current = captureStudioReturnOrigin(); dispatchPlayerUi({type:"open", index:0, context:createStoryPlaybackContext("shared", file.story.project)}); }}
-          initialFilter={libraryInitialFilter}
-          screen={discoveryScreen}
-          theme={selectedStoryTheme}
-          group={storyHubGroup}
-          collection={collection}
-          busy={Boolean(busy) || entryBusy || !hydrated}
-          failed={localDraftStatus === "failed"}
-          notice={entryNotice}
-          onBack={() => showDiscovery("home")}
-          onCreation={() => setCreationHubOpen(true)}
-          onOpenQr={() => setSiteQrModalOpen(true)}
-          onSelectStory={theme => { setSelectedStoryTheme(theme); }}
-          onGroup={group => { setStoryHubGroup(group); }}
-          onReadBase={(theme) => { void openPlay(0, "example", theme ?? selectedStoryTheme); }}
-          onReadLocal={id => openCollectionProject(id, true)}
-          onEditLocal={id => openCollectionProject(id)}
-          onCopyBase={(theme) => { void copyBaseEdition(theme); }}
-          onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
-          onStartRabbit={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
-          onStartOnggojib={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
-          onDeleteLocal={deleteCollectionProject}
-          onBackupLocal={id => saveStoryFile(false, id)}
-        /> : <StartScreen
+        {discoveryScreen !== "home" ? (
+          <>
+            <StoryDiscovery
+              onStoryFile={openStoryFile}
+              sharedFiles={sharedFiles}
+              onRemixShared={file => { setFileError(""); setFilePreview(file); }}
+              onReadShared={file => { playerReturnLocationRef.current = captureStudioReturnOrigin(); dispatchPlayerUi({type:"open", index:0, context:createStoryPlaybackContext("shared", file.story.project)}); }}
+              initialFilter={libraryInitialFilter}
+              screen={discoveryScreen}
+              theme={selectedStoryTheme}
+              group={storyHubGroup}
+              collection={collection}
+              busy={Boolean(busy) || entryBusy || !hydrated}
+              failed={localDraftStatus === "failed"}
+              notice={entryNotice}
+              onBack={() => showDiscovery("home")}
+              onCreation={() => setCreationHubOpen(true)}
+              onOpenQr={() => setSiteQrModalOpen(true)}
+              onSelectStory={theme => { setSelectedStoryTheme(theme); }}
+              onGroup={group => { setStoryHubGroup(group); }}
+              onReadBase={(theme) => { void openPlay(0, "example", theme ?? selectedStoryTheme); }}
+              onReadLocal={id => openCollectionProject(id, true)}
+              onEditLocal={id => openCollectionProject(id)}
+              onManageLocal={id => { openCollectionProject(id); setProjectToolsOpen(true); }}
+              onCopyBase={(theme) => { void copyBaseEdition(theme); }}
+              onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
+              onStartRabbit={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
+              onStartOnggojib={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
+              onDeleteLocal={deleteCollectionProject}
+              onBackupLocal={id => saveStoryFile(false, id)}
+            />
+            {creationHubOpen && (
+              <CreationHub
+                collection={collection}
+                busy={Boolean(busy) || entryBusy || !hydrated}
+                failed={localDraftStatus === "failed"}
+                notice={entryNotice}
+                onHome={() => setCreationHubOpen(false)}
+                onRetry={retryCollection}
+                onManage={id => { setCreationHubOpen(false); openCollectionProject(id); setProjectToolsOpen(true); }}
+                onDelete={deleteCollectionProject}
+                onStoryFile={openStoryFile}
+                onBackup={id => saveStoryFile(false, id)}
+                onExcel={openExcelFile}
+                onSheet={updateFromSheet}
+              />
+            )}
+          </>
+        ) : <StartScreen
           selectedTheme={selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
           onOpenReaderEntry={() => { void openPlay(0, "example", selectedStoryTheme); }}
