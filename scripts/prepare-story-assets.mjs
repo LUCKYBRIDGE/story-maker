@@ -70,6 +70,11 @@ async function worker() {
     const index = cursor;
     cursor += 1;
     const asset = assets[index];
+    // This story pack is already normalized by its canonical source generator.
+    if (asset.id.startsWith('seonnyeo.')) {
+      await access(path.join(projectRoot, 'public', asset.src));
+      continue;
+    }
     const inputPath = path.join(tempRoot, `${index}.png`);
     const outputPath = path.join(outputRoot, `${asset.id}.webp`);
     if (

@@ -21,7 +21,7 @@ export function stagePlacementClass(assetId: string) {
 }
 
 export function stageShouldMirror(assetId: string, side: "left" | "right") {
-  const facing = CHARACTER_FACING.get(assetId);
+  const facing = CHARACTER_FACING.get(assetId) || (assetId.startsWith("seonnyeo.character.") ? "left" : undefined);
   return Boolean(facing && facing !== (side === "left" ? "right" : "left"));
 }
 

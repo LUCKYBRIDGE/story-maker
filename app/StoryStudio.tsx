@@ -660,7 +660,7 @@ export function StoryStudio() {
           const saved = JSON.parse(sessionStorage.getItem("storygame:navigation:v1") ?? "null");
           if (saved?.version === 1) {
             if (["home", "library", "reader-entry", "story-hub"].includes(saved.screen)) setDiscoveryScreen(!returning ? "home" : saved.screen === "home" ? "library" : saved.screen);
-            if (["rabbit", "onggojib"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
+            if (["rabbit", "onggojib", "seonnyeo"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
             if (["base", "mine", "shared"].includes(saved.group)) setStoryHubGroup(saved.group);
             setCreationHubOpen(saved.creation === true);
             if (Array.isArray(saved.shared)) setSharedFiles(saved.shared.flatMap((value: unknown) => {
@@ -2517,7 +2517,7 @@ export function StoryStudio() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
-  async function openPlay(index = 0, kind: "student" | "example" = "student", theme: "rabbit" | "onggojib" = "rabbit") {
+  async function openPlay(index = 0, kind: "student" | "example" = "student", theme: StoryTheme = "rabbit") {
     playerReturnLocationRef.current = captureStudioReturnOrigin();
     const project = kind === "example" ? (await import("./story-examples")).getExampleProject(theme)
       : resolveActiveProjectForDraft({ draft, active }).project;
@@ -2696,7 +2696,7 @@ export function StoryStudio() {
             )}
           </>
         ) : <StartScreen
-          selectedTheme={selectedStoryTheme}
+          selectedTheme={selectedStoryTheme === "seonnyeo" ? "onggojib" : selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
           onOpenReaderEntry={() => { void openPlay(0, "example", selectedStoryTheme); }}
           onOpenMyStories={() => {

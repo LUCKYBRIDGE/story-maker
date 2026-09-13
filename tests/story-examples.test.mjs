@@ -16,6 +16,10 @@ test('source provenance and original openings are pinned',()=>{
  assert.match(source.projects[0].lines[0].text,/용궁 대청/);
  assert.equal(source.projects[0].lines.filter(l=>l.flow?.type==='choice').length,3);
  assert.equal(source.projects[1].lines.filter(l=>l.flow?.type==='choice').length,8);
+ if(source.projects[2]){
+  assert.match(source.projects[2].lines[0].text,/깊은 산속 계곡/);
+  assert.equal(source.projects[2].lines.filter(l=>l.flow?.type==='choice').length,21);
+ }
 });
 
 // Source snapshot df00a622 retains five disconnected old routes in Onggojib.
@@ -23,12 +27,12 @@ test('source provenance and original openings are pinned',()=>{
 import { analyzeExample } from './helpers/example-graph.mjs';
 for (const [index, project] of source.projects.entries()) test(`example graph coverage: ${project.title}`, () => {
  const graph = analyzeExample(project);
- const oldRoutes = index === 0 ? [] : [['real-route',9],['real-loop-testimony',18],['fake-first-verdict',7],['fake-repeat-verdict',8],['fake-route',66]];
+ const oldRoutes = index === 0 ? [] : index === 1 ? [['real-route',9],['real-loop-testimony',18],['fake-first-verdict',7],['fake-repeat-verdict',8],['fake-route',66]] : [];
  const expected = oldRoutes.flatMap(([route, count]) => Array.from({length:count}, (_,i) => `review-main-003:${route}:${i}`));
  assert.deepEqual([...graph.unreachable].sort(), expected.sort(), 'new unreachable content requires source review');
- assert.equal(graph.routes.length, index === 0 ? 6 : 16);
- assert.equal(graph.endingRoutes.length, index === 0 ? 3 : 2);
- assert.equal(graph.reachableCuts, index === 0 ? 136 : 345);
+ assert.equal(graph.routes.length, index === 0 ? 6 : index === 1 ? 16 : 48);
+ assert.equal(graph.endingRoutes.length, index === 0 ? 3 : index === 1 ? 2 : 4);
+ assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1570);
  assert.ok(graph.joins.length > 0);
 });
 test('example graph oracle rejects broken links, cycles and duplicate IDs', () => {

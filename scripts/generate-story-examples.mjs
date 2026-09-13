@@ -37,5 +37,19 @@ const projects=stories.slice(0,2).map(story=>{
  project.speakerNames=[...new Set(project.lines.filter(line=>line.type==='dialogue').map(line=>line.speakerName))];
  return project;
 });
+const { compileSeonnyeo } = await import(pathToFileURL(`${root}/scripts/story/compile-seonnyeo.mjs`));
+const { exportNolstory } = await import(pathToFileURL(`${root}/scripts/story/export-nolstory.mjs`));
+const seonnyeoStory = await compileSeonnyeo();
+const seonnyeoNolstory = exportNolstory(seonnyeoStory);
+const seonnyeoProject = seonnyeoNolstory.draft.project;
+delete seonnyeoProject.source;
+seonnyeoProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7);
+const assetIds = new Set(STORY_ASSETS.map(a => a.id));
+for (const line of seonnyeoProject.lines) {
+  for (const id of [line.leftAssetId, line.rightAssetId, line.backgroundId]) {
+    if (id && !assetIds.has(id)) missing.add(id);
+  }
+}
+projects.push(seonnyeoProject);
 await writeFile(new URL('../app/story-examples.generated.json',import.meta.url),JSON.stringify({sourceCommit:commit,projects},null,2)+'\n');
 console.log(JSON.stringify({stories:projects.map(p=>({title:p.title,cuts:p.lines.length})),missingAssets:[...missing]}));

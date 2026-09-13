@@ -7,14 +7,14 @@ import assert from 'node:assert/strict';
 import {createBaseEditionDraft,libraryPage} from './app/story-discovery.ts';
 import {readFileSync} from 'node:fs';
 const examples=JSON.parse(readFileSync('./app/story-examples.generated.json','utf8'));
-const getExampleProject=theme=>structuredClone(examples.projects[theme==='rabbit'?0:1]);
+const getExampleProject=theme=>structuredClone(examples.projects[theme==='rabbit'?0:theme==='onggojib'?1:2]);
 import {createStoryDocument,parseStoryDocument} from './app/story-project-document.ts';
 import {createProjectCollectionRepository} from './app/story-project-collection.ts';
 import {analyzeExample} from './tests/helpers/example-graph.mjs';
 ${body}`],{encoding:'utf8'}));
 }
-test('both base editions clone only reachable cuts, preserve branch routes and master bytes',()=>{
- const result=run(`const out=[];for(const theme of ['rabbit','onggojib']) {
+test('base editions clone only reachable cuts, preserve branch routes and master bytes',()=>{
+ const result=run(`const out=[];for(const theme of ['rabbit','onggojib','seonnyeo']) {
  const master=getExampleProject(theme),before=JSON.stringify(master),graph=analyzeExample(master);
  const seed=createBaseEditionDraft(master,theme,'new-'+theme);const clonedGraph=analyzeExample(seed);
  assert.equal(JSON.stringify(master),before);assert.notEqual(seed.id,master.id);
@@ -24,7 +24,7 @@ test('both base editions clone only reachable cuts, preserve branch routes and m
  assert.ok(parseStoryDocument(createStoryDocument({project:seed,savedAt:'2026-09-10T00:00:00.000Z',appVersion:'qa'})).ok);
  assert.equal(seed.source.baseEditionId,master.id);seed.lines[0].text='my edit';assert.equal(JSON.stringify(master),before);
  out.push({theme,cuts:clonedGraph.reachableCuts});}console.log(JSON.stringify(out));`);
- assert.deepEqual(result,[{theme:'rabbit',cuts:136},{theme:'onggojib',cuts:345}]);
+ assert.deepEqual(result,[{theme:'rabbit',cuts:136},{theme:'onggojib',cuts:345},{theme:'seonnyeo',cuts:1570}]);
 });
 test('base clones use the same two-slot policy and reject a third without replacing either work',()=>{
  const result=run(`const values=new Map();const repo=createProjectCollectionRepository({storage:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}});

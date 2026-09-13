@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -365,6 +365,9 @@ const assets = paths.map((sourcePath) => {
   };
 });
 
+// This pack is synchronized from pinky-ne-site's approved story compiler.
+assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/seonnyeo-manifest.json'), 'utf8')));
+
 const output = `// 이 파일은 scripts/generate-story-assets.mjs로 생성됩니다.
 // 원본: LUCKYBRIDGE/pinky-ne-site @ ${sourceCommit}
 
@@ -372,7 +375,7 @@ export type StoryAsset = {
   id: string;
   displayName: string;
   label: string;
-  story: "토끼와 자라" | "옹고집전";
+  story: "토끼와 자라" | "옹고집전" | "선녀와 나무꾼";
   type: "character" | "background";
   category: "character" | "background" | "special";
   group: string;
