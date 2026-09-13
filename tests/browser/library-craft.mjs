@@ -46,8 +46,8 @@ try {
     assert.equal(await page.locator('.library-shelf').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),columns);
     const newBookInfo = await page.evaluate(() => {
       const item = document.querySelector('.library-item-new');
-      const blank = item?.querySelector('.blank-student-book');
-      const title = blank?.querySelector('.student-book-title');
+      const blank = item?.querySelector('.blank-book-cover');
+      const title = blank?.querySelector('strong');
       const itemRect = item?.getBoundingClientRect();
       const blankRect = blank?.getBoundingClientRect();
       const itemPaddingBottom = item ? parseFloat(getComputedStyle(item).paddingBottom) : 0;
@@ -60,7 +60,7 @@ try {
         titleText: title?.textContent
       };
     });
-    assert.ok(newBookInfo.exists, 'blank student book exists');
+    assert.ok(newBookInfo.exists, 'blank book cover exists');
     assert.ok(newBookInfo.fitsInRow, 'blank book height with padding does not exceed shelf row height');
     assert.ok(newBookInfo.clearanceAbove > 5, 'blank book has positive clearance under upper shelf plank');
     assert.equal(newBookInfo.titleLines, 1, '새 이야기 title renders on exactly 1 line without wrapping');
@@ -103,7 +103,6 @@ try {
     await page.getByRole('button',{name:'빈 책 · 새 이야기 만들기',exact:true}).click();
     await page.getByRole('dialog',{name:'새 이야기 만들기',exact:true}).waitFor();
     assert.equal(await page.locator('.focus-hardcover-book .blank-book-cover').count(),1);
-    assert.equal(await page.locator('.focus-hardcover-book .blank-student-book').count(),1);
     await page.screenshot({path:`${output}/new-book-${width}.png`,fullPage:true});
     await page.keyboard.press('Escape');
     assert.ok(await page.getByRole('button',{name:'빈 책 · 새 이야기 만들기',exact:true}).evaluate(el=>el===document.activeElement));

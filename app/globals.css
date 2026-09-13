@@ -11502,96 +11502,64 @@ img {
 .action-card-sub { font-size: 11px; line-height: 1.5; opacity: .85; word-break: keep-all; }
 .is-danger { color: #8f3222; }
 .focus-slot-notice { background: #3b241ce6; border-radius: 8px; color: #ffe0b7; padding: 12px; font-size: 13px; line-height: 1.6; }
-/* Blank hardcover storybook waiting for student writing */
-.blank-student-book {
+/* Translucent wireframe storybook waiting for student writing */
+.blank-book-cover {
+  container-type: inline-size;
   width: 100%;
   aspect-ratio: 1 / 1.4;
+  max-height: 100%;
   box-sizing: border-box;
-}
-.blank-student-book .student-book-face {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  justify-content: space-between;
-  padding: 8.5% 7.5% 9% 11.5%;
-  min-height: 140cqw;
-  max-height: 140cqw;
-  box-sizing: border-box;
+  padding: 8%;
   overflow: hidden;
+  color: #fff0cf;
+  background: #f7e4bd08;
+  border: 2px solid #efd9ad9c;
+  border-radius: 3px 7px 7px 3px;
+  box-shadow: inset 5px 0 #efd9ad18, inset 7px 0 #efd9ad50;
+  font-family: "Batang", serif;
   text-align: center;
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
-.blank-student-book .student-book-edition {
-  position: static;
-  font-size: 3.4cqw;
-  letter-spacing: .2em;
-  color: var(--book-ink);
-  opacity: .82;
-  background: transparent;
-  padding: 0;
-  margin-top: 1cqw;
+.blank-book-cover > span:first-child {
+  font-size: clamp(8px, 8cqw, 13px);
   white-space: nowrap;
+  opacity: .88;
 }
-.blank-student-book .student-book-edition::after {
-  content: "─ ◇ ─";
-  display: block;
-  color: var(--book-accent);
-  font-size: 3cqw;
-  letter-spacing: .15em;
-  margin-top: 1.5cqw;
-  opacity: .85;
-}
-.blank-book-emblem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32cqw;
-  height: 32cqw;
-  border-radius: 50%;
-  border: 2px solid var(--book-accent);
-  background: radial-gradient(circle at 35% 35%, #fffdf8 20%, #f4e8cb 85%);
-  box-shadow: 0 2px 5px #482f1422, inset 0 1px 1px #ffffffd0, inset 0 -1px 2px #b0895340;
-  transition: transform 220ms cubic-bezier(.2, 0, .1, 1), box-shadow 220ms ease;
-}
-.blank-book-plus {
-  display: block;
-  font-size: 16cqw;
+.blank-book-cover > span:nth-child(2) {
+  font-size: clamp(24px, 25cqw, 42px);
   line-height: 1;
   font-weight: 300;
-  color: var(--book-ink);
-  transform: translateY(-0.5cqw);
+  opacity: .95;
 }
-.shelf-book:hover .blank-book-emblem,
-.shelf-book:focus-visible .blank-book-emblem {
-  transform: scale(1.09);
-  border-color: #a87e38;
-  box-shadow: 0 3px 8px #482f143d, inset 0 1px 2px #fff;
-}
-.blank-student-book .book-title-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1cqw;
-  margin-bottom: 2cqw;
-}
-.blank-student-book .student-book-title {
-  margin: 0;
-  font-family: "Noto Serif KR", "Batang", "Georgia", serif;
-  font-size: 7.6cqw;
-  font-weight: 700;
+.blank-book-cover strong {
+  font-size: clamp(13px, 13.5cqw, 20px);
   line-height: 1.25;
-  letter-spacing: -.02em;
-  color: var(--book-title-ink);
+  font-weight: 700;
   white-space: nowrap;
   word-break: keep-all;
-  text-shadow: 0 1px 0 #ffffff90;
+  text-wrap: nowrap;
+  letter-spacing: -.02em;
 }
-.blank-student-book .student-book-author {
-  margin: 0;
-  font-size: 3.6cqw;
-  color: var(--book-ink);
-  opacity: .72;
-  letter-spacing: .08em;
+.blank-book-cover small {
+  font-size: clamp(8px, 8cqw, 12px);
   white-space: nowrap;
+  opacity: .82;
+}
+.library-book-new::after { opacity: .4; }
+.library-book-new:hover .blank-book-cover,
+.library-book-new:focus-visible .blank-book-cover {
+  background: #f7e4bd18;
+  border-color: #fff0cf;
+  box-shadow: inset 5px 0 #efd9ad28, inset 7px 0 #efd9ad60, 0 0 16px #efd9ad33;
+}
+.focus-hardcover-book .blank-book-cover {
+  background: #e4cea322;
+  border-color: #f4ddb3;
+  box-shadow: inset 6px 0 #efd9ad30, inset 10px 0 #efd9ad60, 0 8px 24px #0004;
 }
 
 @keyframes focusBackdropFadeIn { from { opacity: 0; } to { opacity: 1; } }
