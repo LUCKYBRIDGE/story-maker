@@ -9,9 +9,20 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: IMG-01 이미지·무대 레이아웃 안전화
+## 현재 작업: POSTER-01 시작 화면 포스터 여백 및 프레이밍 최적화
 
-- 2026-09-12 사용자 첨부 요청으로 승인, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 2026-09-13 사용자 피드백(포스터 상·하단 빈 여백 고려로 인한 과도한 공백 및 심미성 저하)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 `origin/main` `c5d150ea6746c9469d4d5f7ce1e4ab6378f504ff`, branch `codex/poster-framing-aesthetic`.
+- 원본 포스터 아트(940×1672) 내부의 상단 빈 하늘(23%) 및 하단 빈 안개(16%) 영역을 걷어내고, 실제 일러스트의 자연스러운 구도(약 10:11)에 맞춰 `.poster-scene-space`의 종횡비를 10/11로 조정, 이미지를 `object-fit: cover; object-position: center 54.5%;`로 배치.
+- 옹고집전 및 토끼와 자라 테마 모두에서 소나무·기와집부터 인물, 강아지, 연못, 돌길·꽃까지 의미 있는 장면은 100% 온전히 보존하면서 불필요한 이중 여백을 제거하여 모바일(390×844) 스크롤 방지 및 심미성 대폭 향상.
+- `npm run check`, `npm test`(빌드+200/200), `git diff --check` 통과.
+- `start-screen.mjs`: 12개 뷰포트 통과.
+- `image-layout-safety.mjs`: 14개 뷰포트 × 48개 무대 조합(672개) 및 표지 81개 조합, 포스터 cover 검사 모두 통과.
+- 작업 브랜치 로컬 커밋 및 PR/동기화 준비 완료.
+
+## 최근 완료: IMG-01 이미지·무대 레이아웃 안전화
+
+- 2026-09-12 사용자 첨부 요청으로 승인, **DONE — 2026-09-13 main 병합(PR #27, c5d150e)**, Work Lead · G/A/B.
 - 기준 `origin/main` `002f844bb6373362b46b507481edef947a8990ba`, branch `codex/image-layout-safety`. 시작 시 로컬 변경 없음.
 - 범위와 인수 조건은 IMG-01 카드. 이미지 역할별 crop, 글상자와 무대 연동, 인물 확대·framing·표지 안전 영역 및 브라우저 회귀를 검증한다.
 - 저장/Excel/공유 파일/원본 자산/배포 형식 보존. 다음 READY 없음.
@@ -22,7 +33,7 @@
 - start-screen, display-settings, reader-layout, reader-history, reader-book, library-craft, docked-cuts 통과. 최종 qa:smoke의 start-screen/story-flow/sticky-memos/pinky-examples/library-home 5개 통과, `outputs/image-layout-smoke-final/results.json`. 긴 글·선택·기록·새로고침·표지·서재·편집·파일 가져오기 보존.
 - 오래된 진입 selector를 현재 홈 경로로 변경. 표시 설정 검사는 위치 동일 대신 크기 동일/상향 이동으로, 포스터 theme 비교는 스크롤과 독립인 문서 좌표로 수정. 이전 story-flow 1회 적용 대기 실패는 소스 변경 없이 최종 재실행 통과; 숨기거나 assertion을 완화하지 않음.
 - 실제 상반신 framing 자산은 현재0개여서 공통 정책은 DOM framing fixture로 검증. 현재 배경38개 육안 확인, 대표 포스터/무대/표지 PNG 육안 확인. 실제 iOS/Android·키보드/OS 파일창은 미검증. 극단 설정은 필요 시 세로 스크롤, 원본 포스터 자체의 종이 여백은 보존.
-- 작업 브랜치 로컬 커밋. 원격 push·main 병합·공개 배포 없음.
+- PR #27 생성 후 main 병합 완료 (`c5d150ea6746c9469d4d5f7ce1e4ab6378f504ff`). CI 및 Pages 배포 통과.
 
 ## 최근 완료: IA-01 서재 홈과 작업 화면 정돈
 

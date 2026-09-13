@@ -61,7 +61,7 @@ try {
         await page.locator('.nolstory-poster-img').evaluate(i=>i.decode());
       }
       const poster=await page.locator('.nolstory-poster-img').evaluate(i=>({fit:getComputedStyle(i).objectFit,transform:getComputedStyle(i).transform,loaded:i.naturalWidth>0,overflow:document.documentElement.scrollWidth>innerWidth}));
-      assert.deepEqual(poster,{fit:'contain',transform:'none',loaded:true,overflow:false});
+      assert.deepEqual(poster,{fit:'cover',transform:'none',loaded:true,overflow:false});
       if([390,844,1440].includes(width)) await page.screenshot({path:`${output}/start-${theme}-${width}x${height}.png`,fullPage:true});
     }
     await page.getByRole('button',{name:'이야기 읽기',exact:true}).click();

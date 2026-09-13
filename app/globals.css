@@ -243,8 +243,8 @@ img {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center 54.5%;
   border-radius: inherit;
   pointer-events: none;
 }
@@ -282,7 +282,7 @@ img {
 .poster-author { display: flex; align-items: center; justify-content: center; gap: 2cqi; margin: 3cqi 0 0; font-size: clamp(15px, 3.8cqi, 24px); font-weight: 800; line-height: 1.5; }
 .poster-author > span { color: #b68a3f; font-size: .8em; }
 .poster-description { margin: 1.5cqi 0 0; color: #626562; font-size: clamp(14px, 3.2cqi, 20px); font-weight: 500; }
-.poster-scene-space { position: relative; flex: none; width: 100%; aspect-ratio: 9 / 16; min-height: 0; margin-top: 12px; overflow: hidden; border-radius: 16px; background: radial-gradient(ellipse, #efe0c3, #fbf5e9 75%); }
+.poster-scene-space { position: relative; flex: none; width: 100%; aspect-ratio: 10 / 11; min-height: 0; margin-top: 12px; overflow: hidden; border-radius: 16px; background: radial-gradient(ellipse, #efe0c3, #fbf5e9 75%); }
 .poster-read { margin-top: 12px; width: 86%; justify-content: center; gap: 3cqi; padding: 3cqi 5cqi; font-size: clamp(18px, 4.5cqi, 28px); color: #251b0b; background: linear-gradient(115deg, #fff0a4, #ffcd58 55%, #dba740); border-color: #bc852e; box-shadow: inset 0 0 0 2px #fff2bf, 0 4px 0 #b38238, 0 8px 14px #72501f33; }
 .poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font-size: clamp(12px, 2.2cqi, 14px); font-weight: 400; line-height: 1.7; }
 
