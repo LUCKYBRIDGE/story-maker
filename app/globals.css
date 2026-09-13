@@ -11502,14 +11502,65 @@ img {
 .action-card-sub { font-size: 11px; line-height: 1.5; opacity: .85; word-break: keep-all; }
 .is-danger { color: #8f3222; }
 .focus-slot-notice { background: #3b241ce6; border-radius: 8px; color: #ffe0b7; padding: 12px; font-size: 13px; line-height: 1.6; }
-.blank-book-cover { width: 100%; aspect-ratio: 1 / 1.4; display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 8%; color: #fff0cf; background: #f7e4bd08; border: 2px solid #efd9ad9c; border-radius: 3px 7px 7px 3px; box-shadow: inset 5px 0 #efd9ad18, inset 7px 0 #efd9ad50; font-family: "Batang", serif; }
-.blank-book-cover > span:first-child { font-size: clamp(8px, 1vw, 13px); }
-.blank-book-cover > span:nth-child(2) { font-size: clamp(28px, 4vw, 48px); font-weight: 300; }
-.blank-book-cover strong { font-size: clamp(14px, 2vw, 25px); line-height: 1.5; }
-.blank-book-cover small { font-size: clamp(9px, 1vw, 12px); }
+/* Translucent wireframe storybook waiting for student writing */
+.blank-book-cover {
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 1 / 1.4;
+  max-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8%;
+  overflow: hidden;
+  color: #fff0cf;
+  background: #f7e4bd08;
+  border: 2px solid #efd9ad9c;
+  border-radius: 3px 7px 7px 3px;
+  box-shadow: inset 5px 0 #efd9ad18, inset 7px 0 #efd9ad50;
+  font-family: "Batang", serif;
+  text-align: center;
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+.blank-book-cover > span:first-child {
+  font-size: clamp(8px, 8cqw, 13px);
+  white-space: nowrap;
+  opacity: .88;
+}
+.blank-book-cover > span:nth-child(2) {
+  font-size: clamp(24px, 25cqw, 42px);
+  line-height: 1;
+  font-weight: 300;
+  opacity: .95;
+}
+.blank-book-cover strong {
+  font-size: clamp(13px, 13.5cqw, 20px);
+  line-height: 1.25;
+  font-weight: 700;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-wrap: nowrap;
+  letter-spacing: -.02em;
+}
+.blank-book-cover small {
+  font-size: clamp(8px, 8cqw, 12px);
+  white-space: nowrap;
+  opacity: .82;
+}
 .library-book-new::after { opacity: .4; }
-.library-book-new:hover .blank-book-cover, .library-book-new:focus-visible .blank-book-cover { background: #f7e4bd18; border-color: #fff0cf; }
-.focus-hardcover-book .blank-book-cover { background: #e4cea322; border-color: #f4ddb3; }
+.library-book-new:hover .blank-book-cover,
+.library-book-new:focus-visible .blank-book-cover {
+  background: #f7e4bd18;
+  border-color: #fff0cf;
+  box-shadow: inset 5px 0 #efd9ad28, inset 7px 0 #efd9ad60, 0 0 16px #efd9ad33;
+}
+.focus-hardcover-book .blank-book-cover {
+  background: #e4cea322;
+  border-color: #f4ddb3;
+  box-shadow: inset 6px 0 #efd9ad30, inset 10px 0 #efd9ad60, 0 8px 24px #0004;
+}
 
 @keyframes focusBackdropFadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bookFocusPop { from { opacity: 0; transform: translateY(18px) scale(.95); } to { opacity: 1; transform: none; } }
@@ -11660,7 +11711,7 @@ img {
   column-gap: clamp(16px, 2.2vw, 30px);
 }
 .library-item { transform-origin: center bottom; }
-.shelf-book { width: min(100%, calc(var(--row-height) * .57)); }
+.shelf-book { width: min(100%, calc(var(--row-height) * .52)); }
 .library-bookcase { transition: box-shadow 500ms ease; }
 .library-center-badge { padding-top: 0; }
 .library-book-emblem { width: 28px; height: 28px; margin-bottom: 6px; }

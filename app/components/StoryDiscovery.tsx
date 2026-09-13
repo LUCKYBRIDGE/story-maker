@@ -94,9 +94,30 @@ const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getEx
 function DiscoveryCover({ book }: { book: SelectedBook }) {
   const project = book.kind === "base" ? baseCoverProjects[book.theme]
     : book.kind === "mine" ? book.project : book.kind === "shared" ? book.file.story.project : null;
-  return project ? <BookCover project={project} /> : <div className="blank-book-cover">
-    <span>아직 쓰지 않은 책</span><span aria-hidden="true">＋</span>
-    <strong>새 이야기</strong><small>여기서 시작해요</small>
+  return project ? <BookCover project={project} /> : <div
+    className="student-book blank-book-cover blank-student-book"
+    data-layout="blank"
+    data-font="serif"
+    style={{
+      "--book-paper": book.paper,
+      "--book-ink": book.ink,
+      "--book-accent": book.accent,
+      "--book-title-ink": book.ink,
+      "--book-title-panel": "transparent",
+      "--book-title-size": "7.6cqw",
+      textAlign: "center",
+    } as CSSProperties}
+  >
+    <div className="student-book-face">
+      <span className="student-book-edition">나만의 이야기</span>
+      <div className="blank-book-emblem" aria-hidden="true">
+        <span className="blank-book-plus">＋</span>
+      </div>
+      <div className="book-title-group">
+        <h2 className="student-book-title blank-book-title">새 이야기</h2>
+        <p className="student-book-author">직접 쓰기</p>
+      </div>
+    </div>
   </div>;
 }
 
