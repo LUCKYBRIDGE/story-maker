@@ -23,7 +23,7 @@ try {
   await modal.waitFor({ state: 'visible' });
   const qrSvg = modal.locator('.qr-code-svg');
   await qrSvg.waitFor({ state: 'visible' });
-  
+
   // Verify modal elements
   const title = await modal.locator('.qr-modal-title').textContent();
   assert.equal(title, '교실 화면 바로 접속');
