@@ -1,3 +1,4 @@
+import { selectLocalBook } from './support/library-entry.mjs';
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
@@ -10,7 +11,7 @@ const browser=await chromium.launch();
 try {
 const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
 await page.goto(process.env.QA_URL||'http://localhost:3002');await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);await page.reload();
-await page.locator('.entry-template-options[open]').waitFor();await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
+await selectLocalBook(page);await page.getByRole('button',{name:'이어만들기',exact:true}).click();
 await page.locator('.creator-primary-nav button').last().click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await page.locator('.player-shell').waitFor();
 const actor=page.locator('.player-shell .story-stage-actor').first();const before=await actor.boundingBox();
 const choiceBox=await page.locator('.dialogue-box').boundingBox();assert.ok(Math.abs(choiceBox.height-900*.35)<2);assert.ok(choiceBox.y>=0);

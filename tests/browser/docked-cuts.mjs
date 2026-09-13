@@ -1,3 +1,4 @@
+import { selectLocalBook } from './support/library-entry.mjs';
 import { launchBrowser } from './support/runtime.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -10,8 +11,7 @@ try { for (const [width,height] of JSON.parse(process.env.QA_VIEWPORTS || "[[136
  await page.goto(process.env.QA_URL || 'http://localhost:3002');
  await page.evaluate(doc=>{localStorage.removeItem('storygame:projects:v1');localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc)},doc);
  await page.reload();
- await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
- await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();
+ await selectLocalBook(page);
 
  await page.getByRole('button',{name:'이어만들기',exact:true}).click();
  await page.getByRole('button',{name:'컷 꾸미기',exact:true}).first().click();

@@ -1,3 +1,4 @@
+import { selectLocalBook } from './support/library-entry.mjs';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {launchBrowser} from './support/runtime.mjs';
@@ -10,11 +11,10 @@ const browser=await launchBrowser('/tmp/reader-layout-qa');
 try {for(const [width,height] of [[1365,900],[390,844]]) {
 const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
 await page.addInitScript(doc=>{localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc);},doc);
-await page.goto(process.env.QA_URL||'http://localhost:3003');await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
+await page.goto(process.env.QA_URL||'http://localhost:3003');await selectLocalBook(page);await page.getByRole('button',{name:'이어만들기',exact:true}).click();
 await page.getByRole('button',{name:'이 컷 꾸미기',exact:true}).click();
 await page.getByRole('group',{name:'함께 말하는 화자',exact:true}).getByRole('checkbox',{name:'자라',exact:true}).check();
-await page.getByRole('button',{name:'창작 관리',exact:true}).click();
+await page.getByRole('button',{name:'서재로',exact:true}).click();await selectLocalBook(page);
 assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].draft.project.lines[0].coSpeakerNames),['자라']);
 await page.getByRole('button',{name:'읽기',exact:true}).click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
 const actor=page.locator('.player-shell .story-stage-actor').first();const before=await actor.boundingBox();
@@ -32,14 +32,13 @@ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWid
 const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
 const shortDoc=JSON.parse(doc);shortDoc.project.lines[1].text='함께 길을 나섰어요.';
 await page.addInitScript(doc=>{if(!localStorage.getItem('storygame:projects:v1')){localStorage.setItem('storygame:draft:v1',doc);localStorage.setItem('storygame:active:v1',doc);}},JSON.stringify(shortDoc));
-await page.goto(process.env.QA_URL||'http://localhost:3003');await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
-await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();await page.getByRole('button',{name:'이어만들기',exact:true}).click();
+await page.goto(process.env.QA_URL||'http://localhost:3003');await selectLocalBook(page);await page.getByRole('button',{name:'이어만들기',exact:true}).click();
 await page.getByRole('button',{name:'이 컷 꾸미기',exact:true}).click();
 await page.getByRole('group',{name:'함께 말하는 화자',exact:true}).getByRole('checkbox',{name:'자라',exact:true}).check();
 await page.getByRole('button',{name:'플레이에 적용',exact:true}).click();
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('storygame:projects:v1')).projects[0].playback.project.lines[0].coSpeakerNames?.includes('자라'));
 await page.reload();await page.locator('.creator-shell').waitFor();
-await page.getByRole('button',{name:'창작 관리',exact:true}).click();await page.getByRole('button',{name:'읽기',exact:true}).click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
+await page.getByRole('button',{name:'서재로',exact:true}).click();await selectLocalBook(page);await page.getByRole('button',{name:'읽기',exact:true}).click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
 await page.locator('.current-reading .dialogue-speaker').first().waitFor();
 assert.deepEqual(await page.locator('.current-reading .dialogue-speaker').allTextContents(),['토끼','자라']);
 await page.getByRole('button',{name:'지난 기록',exact:true}).click();

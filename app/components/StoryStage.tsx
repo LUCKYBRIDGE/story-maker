@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useStoryDisplaySettings } from "../hooks/useStoryDisplaySettings";
+import { useStageImageLayout } from "../hooks/useStageImageLayout";
 import { useSceneEffect } from "../hooks/useSceneEffect";
 import type { StorySceneEffect } from "../story-scene-effect";
 import type { resolveStoryStage } from "../story-stage-view";
@@ -23,9 +24,9 @@ export function StorySceneFrame({ stage, variant, speaker, heading, children, ef
 }) {
   const frameRef = useSceneEffect(effect, playbackKey);
   return <div ref={frameRef} className="story-scene-frame" data-scene-variant={variant}>
-    <StoryStageBackground background={stage.background} loading="eager" />
+    <StoryStageBackground background={stage.background} loading="eager" decorative />
     {heading && <div className="story-scene-heading">{heading}</div>}
-    <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} showBackground={false} />
+    <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} />
     {effect && effect.type !== "shake" && <div className="scene-effect-overlay" data-effect={effect.type} aria-hidden="true">
       {effect.type === "crack" && <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M48 42 L30 0 M48 42 L80 0 M48 42 L100 35 M48 42 L85 100 M48 42 L20 100 M48 42 L0 48 M30 0 L35 24 L48 42 L62 64 L85 100 M62 64 L100 68 M35 24 L12 16" /></svg>}
     </div>}
@@ -40,24 +41,45 @@ export function StoryStageCanvas({ stage, variant, speaker, showBackground = tru
   speaker?: "left" | "right" | "narration";
   showBackground?: boolean;
 }) {
+  const settings = useStoryDisplaySettings();
+  const canvasRef = useStageImageLayout(variant, JSON.stringify([stage.left, stage.right, settings.characterScales]));
   const loading = variant === "thumbnail" ? "lazy" : "eager";
-  return <div className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
+  return <div ref={canvasRef} className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
     {showBackground && <StoryStageBackground background={stage.background} loading={loading} />}
     <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right"} />
     <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left"} />
   </div>;
 }
 
-export function StoryStageBackground({ background, loading = "lazy" }: { background: BackgroundView; loading?: "lazy" | "eager" }) {
-  return <StageBackgroundImage key={`${background.id}:${background.src}`} background={background} loading={loading} />;
+export function StoryStageBackground({ background, loading = "lazy", decorative = false }: { background: BackgroundView; loading?: "lazy" | "eager"; decorative?: boolean }) {
+  return <StageBackgroundImage key={`${background.id}:${background.src}`} background={background} loading={loading} decorative={decorative} />;
 }
 
-function StageBackgroundImage({ background, loading }: { background: BackgroundView; loading: "lazy" | "eager" }) {
+function StageBackgroundImage({ background, loading, decorative }: { background: BackgroundView; loading: "lazy" | "eager"; decorative: boolean }) {
   const [failed, setFailed] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const image = imageRef.current;
+    const container = image?.parentElement;
+    if (!image || !container || decorative) return;
+    const fit = () => {
+      if (!image.naturalWidth || !container.clientHeight) return;
+      const ratio = (container.clientWidth / container.clientHeight) / (image.naturalWidth / image.naturalHeight);
+      const retainedArea = Math.min(ratio, 1 / ratio);
+      container.dataset.fit = background.meaningful || retainedArea < .6 ? "contain" : "cover";
+    };
+    fit();
+    image.addEventListener("load", fit);
+    const observer = new ResizeObserver(fit);
+    observer.observe(container);
+    return () => { image.removeEventListener("load", fit); observer.disconnect(); };
+  }, [background.meaningful, decorative]);
   if (!background.id) return null;
-  return <div className="story-stage-background" data-asset-id={background.id}>
-    {background.src && !failed ? <img src={resolveAssetUrl(background.src)} alt="" draggable={false} decoding="async" loading={loading} onError={() => setFailed(true)} />
-      : <span className="story-stage-background-error" role="img" aria-label="배경을 표시할 수 없어요">배경을 표시할 수 없어요</span>}
+  return <div className={`story-stage-background${decorative ? " story-stage-backdrop" : ""}`} data-asset-id={background.id}
+    data-fit={background.meaningful && !decorative ? "contain" : undefined}
+    style={background.src && !failed ? { "--scene-image": `url("${resolveAssetUrl(background.src)}")` } as CSSProperties : undefined}>
+    {background.src && !failed ? <img ref={imageRef} src={resolveAssetUrl(background.src)} alt="" draggable={false} decoding="async" loading={loading} onError={() => setFailed(true)} />
+      : !decorative && <span className="story-stage-background-error" role="img" aria-label="배경을 표시할 수 없어요">배경을 표시할 수 없어요</span>}
   </div>;
 }
 
@@ -78,22 +100,6 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
   const settings = useStoryDisplaySettings();
   const scale = character.scale * (settings.characterScales[character.scaleGroup] ?? 100) / 100;
   const [failed, setFailed] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const image = imageRef.current;
-    if (!image || scale === 1) return;
-    const anchorFeet = () => {
-      if (!image.naturalWidth) return;
-      const renderedHeight = Math.min(image.clientHeight, image.clientWidth * image.naturalHeight / image.naturalWidth);
-      // object-fit: contain + bottom alignment: pin the 800×1200 canvas foot line, not its transparent padding.
-      image.style.transformOrigin = `50% ${image.clientHeight - renderedHeight * (51 / 1200)}px`;
-    };
-    anchorFeet();
-    image.addEventListener("load", anchorFeet);
-    const observer = new ResizeObserver(anchorFeet);
-    observer.observe(image);
-    return () => { image.removeEventListener("load", anchorFeet); observer.disconnect(); };
-  }, [scale]);
   if (!character.id) return null;
   const variantClass = variant === "thumbnail" ? "scene-thumb-character"
     : variant === "editor" ? "editable-stage-character" : "stage-character";
@@ -102,7 +108,6 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
     return <span className={`${classes} story-stage-missing`} role="img" aria-label={`${character.label}: 이미지를 표시할 수 없어요`} data-asset-id={character.id}>이미지를 표시할 수 없어요</span>;
   }
   return <img
-    ref={imageRef}
     data-scale-group={character.scaleGroup}
     data-stature={character.scale < 1 ? "child" : undefined}
     style={{ "--actor-scale": scale, "--actor-facing": character.mirrored ? -1 : 1 } as CSSProperties}

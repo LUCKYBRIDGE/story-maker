@@ -4,7 +4,7 @@ const browser=await launchBrowser('/tmp/display-settings-qa');
 try {
  for(const [width,height] of [[390,844],[1365,900],[844,390]]) {
   const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
-  await page.goto('http://localhost:3003');await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
+  await page.goto(process.env.QA_URL || 'http://localhost:3003');await page.locator('.nolstory-poster-frame').waitFor({state:'attached'});
   await page.getByRole('button',{name:'이야기 읽기',exact:true}).click();
   await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await page.locator('.player-shell').waitFor();
   const box=page.locator('.dialogue-box');
@@ -19,7 +19,10 @@ try {
   await heightSlider.fill('45');
   await page.waitForFunction(()=>Math.abs(document.querySelector('.dialogue-box').getBoundingClientRect().height-innerHeight*.45)<2);
   assert.ok(Math.abs((await box.boundingBox()).height-height*.45)<2);
-  assert.deepEqual(await actor.boundingBox(),before,'dock size does not resize actors');
+  const moved=await actor.boundingBox();
+  assert.equal(moved.width,before.width,'dock size preserves actor width');
+  assert.equal(moved.height,before.height,'dock size preserves actor height');
+  assert.ok(moved.y<before.y,'larger dock moves actor upward');
   const scaleSlider=dialog.locator('.character-size-setting').filter({hasText:group.split(':')[1]}).getByRole('slider');
   await scaleSlider.fill('80');
   await page.waitForFunction(()=>getComputedStyle(document.querySelector('.story-stage-actor.left')).getPropertyValue('--actor-scale').trim()==='0.8');

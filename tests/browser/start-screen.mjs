@@ -16,7 +16,7 @@ try {
   await page.locator('.nolstory-poster-frame').waitFor({state:'attached'});
   await page.locator('.nolstory-poster-img').evaluate(img=>img.decode());
   const selectors=['.poster-brand','.poster-menu','.poster-heading','.poster-read','.poster-footer'];
-  const measure=()=>page.evaluate(selectors=>selectors.map(s=>{const r=document.querySelector(s).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};}),selectors);
+  const measure=()=>page.evaluate(selectors=>selectors.map(s=>{const r=document.querySelector(s).getBoundingClientRect();return {x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height};}),selectors);
   await page.evaluate(()=>document.fonts.ready);
   const before=await measure();
   const layout=await page.evaluate(()=>{

@@ -282,6 +282,7 @@ export function AssetPickerButton({
                 <div className="asset-picker-current">
                   <span className={`asset-picker-current-thumb ${type}`}>
                     <img
+                      data-background-role={selectedAsset.backgroundRole}
                       src={resolveAssetUrl(selectedAsset.src)}
                       alt=""
                       loading="lazy"
@@ -300,6 +301,7 @@ export function AssetPickerButton({
                   <div className="asset-picker-preview" aria-live="polite">
                     <span className={`asset-picker-current-thumb ${type}`}>
                       <img
+                        data-background-role={pendingAsset.backgroundRole}
                         src={resolveAssetUrl(pendingAsset.src)}
                         alt=""
                         loading="lazy"
@@ -494,6 +496,7 @@ export function AssetPickerButton({
                           >
                             <span className={`asset-picker-thumb ${asset.type}`}>
                               <img
+                                data-background-role={asset.backgroundRole}
                                 src={resolveAssetUrl(asset.src)}
                                 alt=""
                                 loading="lazy"
