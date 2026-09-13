@@ -24,7 +24,7 @@ export const CHARACTER_ASSETS = STORY_ASSETS.filter(
 export const BACKGROUND_ASSETS = STORY_ASSETS.filter(
   (asset) => asset.type === "background",
 );
-export const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전"];
+export const STORY_FILTER_TAGS = ["토끼와 자라", "옹고집전", "선녀와 나무꾼"];
 export const USAGE_FILTER_TAGS = ["원작 사용", "추가 연출"];
 export const FRAMING_FILTER_TAGS = ["전신", "상반신", "여러 인물"];
 export const SELECTION_TIER_TAGS = ["기본 추천", "추가 자료"];

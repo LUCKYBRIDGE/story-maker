@@ -92,7 +92,7 @@ export type SelectedBook =
 // Keep the previous finish available for the user's visual comparison.
 const LIBRARY_ROOM = { finish: "warm", room: "/library/parquet-room-clear.webp", shelf: "/library/oak-shelf-soft.webp" };
 // Previous: { finish: "original", room: "/library/sunlit-room.webp", shelf: "/library/oak-shelf.webp" }
-const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib") };
+const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib"), seonnyeo: getExampleProject("seonnyeo") };
 function DiscoveryCover({ book }: { book: SelectedBook }) {
   const project = book.kind === "base" ? baseCoverProjects[book.theme]
     : book.kind === "mine" ? book.project : book.kind === "shared" ? book.file.story.project : null;
@@ -251,6 +251,17 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       ink: "#2e2417",
       accent: "#8b6e46",
     },
+    {
+      kind: "base",
+      id: "seonnyeo",
+      theme: "seonnyeo",
+      title: "선녀와 나무꾼",
+      subtitle: "두 고향과 선택",
+      description: "선택, 신뢰, 관계와 두 고향을 다루는 이야기. 나무꾼의 입장에서 중요한 순간마다 선택해 보세요.",
+      paper: "#1a2c38",
+      ink: "#f5f0e6",
+      accent: "#76c2af",
+    },
   ];
 
   // 2. 내 작품 데이터
@@ -304,7 +315,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       if (filter !== "shared" || !sharedTheme) return true;
       const source = book.kind === "shared" ? book.file.story.project.source : undefined;
       return source && "baseStoryId" in source &&
-        source.baseStoryId === (sharedTheme === "rabbit" ? "rabbit-turtle" : "onggojib");
+        source.baseStoryId === (sharedTheme === "rabbit" ? "rabbit-turtle" : sharedTheme === "seonnyeo" ? "seonnyeo" : "onggojib");
     });
   const shelfBooks = filter === "all" || filter === "mine" ? [...visibleBooks, newStoryBook] : visibleBooks;
   const pagination = libraryPage(shelfBooks, page, capacity);
@@ -325,7 +336,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         if (saved?.version === 1 && !props.initialFilter) {
           if (["all", "base", "mine", "shared"].includes(saved.filter)) setFilter(saved.filter);
           if (Number.isSafeInteger(saved.page) && saved.page >= 0) setPage(saved.page);
-          if (["rabbit", "onggojib"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
+          if (["rabbit", "onggojib", "seonnyeo"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
           const book = [...booksToDisplay, newStoryBook].find(book => book.id === saved.selectedId);
           if (book) setSelectedBook(book);
         }
@@ -497,7 +508,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         </div>
       </div>
       {filter === "shared" && <div className="library-collection-note">
-        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "토끼와 자라" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
+        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "토끼와 자라" : sharedTheme === "seonnyeo" ? "선녀와 나무꾼" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
         <small>불러온 공유 작품은 지금 열린 세션에서만 보여요. 온라인 공개 서재는 준비 중이에요.</small>
         <button type="button" className="library-nav-btn" disabled={props.busy} onClick={() => fileInputRef.current?.click()}>공유 파일 열기</button>
         {sharedTheme && <button type="button" className="library-nav-btn" onClick={() => setSharedTheme(null)}>모든 공유 작품 보기</button>}
@@ -545,7 +556,9 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             const themeClass = isBase
               ? book.theme === "onggojib"
                 ? "library-book-onggojib"
-                : "library-book-rabbit"
+                : book.theme === "seonnyeo"
+                  ? "library-book-seonnyeo"
+                  : "library-book-rabbit"
               : "library-book-local";
             const accessibleLabel = book.kind === "new" ? "빈 책 · 새 이야기 만들기" : `${book.title} · ${
               isBase ? "기본 이야기" : isMine ? "내 작품" : isShared ? "공유 작품" : "이야기"

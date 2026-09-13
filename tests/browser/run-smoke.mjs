@@ -29,7 +29,7 @@ if (!url) {
   url = `http://127.0.0.1:${server.address().port}${prefix}/`;
 }
 const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'library-home'];
-const allowed = new Set(['library-home', 'start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import']);
+const allowed = new Set(['library-home', 'start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import', 'seonnyeo-e2e']);
 const results = [];
 try {
   assert.equal((await fetch(url, { signal: AbortSignal.timeout(10_000) })).status, 200);

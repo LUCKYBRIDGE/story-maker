@@ -34,7 +34,8 @@ try {
    const snapshot = () => page.evaluate(keys => Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)])), Object.keys(storage));
    assert.deepEqual(await snapshot(), storage);
    await openLibrary(page);
-   await page.getByRole('button', { name: `${index === 0 ? '토끼와 자라' : '옹고집전'} · 기본 이야기`, exact: true }).click();
+   const bookName = index === 0 ? '토끼와 자라' : index === 1 ? '옹고집전' : '선녀와 나무꾼';
+   await page.getByRole('button', { name: `${bookName} · 기본 이야기`, exact: true }).click();
    await page.getByRole('button', { name: '기본 작품 읽기', exact: true }).click();
    await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
    await page.locator('.player-shell').waitFor();

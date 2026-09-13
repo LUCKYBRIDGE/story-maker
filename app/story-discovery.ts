@@ -1,11 +1,12 @@
 import { cloneProject, type StoryProject } from "./story-data";
 import { orderedStoryFlowLines, storyFlowTargets } from "./story-flow";
 
-export type StoryTheme = "rabbit" | "onggojib";
+export type StoryTheme = "rabbit" | "onggojib" | "seonnyeo";
 export type DiscoveryScreen = "home" | "library" | "reader-entry" | "story-hub";
 export const BASE_STORIES = [
   { theme: "rabbit", id: "rabbit-turtle", title: "토끼와 자라", description: "위기에 빠진 토끼는 어떤 선택을 할까요?" },
   { theme: "onggojib", id: "onggojib", title: "옹고집전", description: "똑같이 생긴 두 옹고집, 진짜는 누구일까요?" },
+  { theme: "seonnyeo", id: "seonnyeo", title: "선녀와 나무꾼", description: "선택, 신뢰, 관계와 두 고향을 다루는 이야기" },
 ] as const;
 
 export function libraryPage<T>(items: readonly T[], page: number, size: number) {
