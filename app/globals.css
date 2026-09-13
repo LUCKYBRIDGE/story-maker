@@ -11612,7 +11612,7 @@ img {
 .creation-hub-modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1200;
+  z-index: 500;
   background: rgba(14, 34, 38, 0.68);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
