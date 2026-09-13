@@ -38,12 +38,32 @@ async function dimensions(page) {
   }
 }
 try {
-  for (const [width,height,columns,capacity] of [[1365,900,5,10],[820,1180,3,9],[390,844,2,6],[320,740,2,6]]) {
+  for (const [width,height,columns,capacity] of [[1365,900,5,10],[1280,800,5,10],[820,1180,3,9],[390,844,2,6],[320,740,2,6]]) {
     const page = await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
     await enter(page);
     await page.waitForFunction(size => Number(document.querySelector('.library-shelf').dataset.capacity) === size, capacity);
     assert.equal(await page.locator('.library-book').count(),3);
     assert.equal(await page.locator('.library-shelf').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),columns);
+    const newBookInfo = await page.evaluate(() => {
+      const item = document.querySelector('.library-item-new');
+      const blank = item?.querySelector('.blank-student-book');
+      const title = blank?.querySelector('.student-book-title');
+      const itemRect = item?.getBoundingClientRect();
+      const blankRect = blank?.getBoundingClientRect();
+      const itemPaddingBottom = item ? parseFloat(getComputedStyle(item).paddingBottom) : 0;
+      const titleLineHeight = title ? parseFloat(getComputedStyle(title).lineHeight) : 1;
+      return {
+        exists: Boolean(blank),
+        fitsInRow: blankRect && itemRect ? (blankRect.height + itemPaddingBottom) <= (itemRect.height + 1) : false,
+        clearanceAbove: itemRect && blankRect ? blankRect.top - itemRect.top : -1,
+        titleLines: title ? Math.round(title.offsetHeight / titleLineHeight) : 0,
+        titleText: title?.textContent
+      };
+    });
+    assert.ok(newBookInfo.exists, 'blank student book exists');
+    assert.ok(newBookInfo.fitsInRow, 'blank book height with padding does not exceed shelf row height');
+    assert.ok(newBookInfo.clearanceAbove > 5, 'blank book has positive clearance under upper shelf plank');
+    assert.equal(newBookInfo.titleLines, 1, '새 이야기 title renders on exactly 1 line without wrapping');
     await dimensions(page);
     await page.screenshot({path:`${output}/shelf-${width}.png`,fullPage:true});
     const before = await snapshot(page);
@@ -83,6 +103,7 @@ try {
     await page.getByRole('button',{name:'빈 책 · 새 이야기 만들기',exact:true}).click();
     await page.getByRole('dialog',{name:'새 이야기 만들기',exact:true}).waitFor();
     assert.equal(await page.locator('.focus-hardcover-book .blank-book-cover').count(),1);
+    assert.equal(await page.locator('.focus-hardcover-book .blank-student-book').count(),1);
     await page.screenshot({path:`${output}/new-book-${width}.png`,fullPage:true});
     await page.keyboard.press('Escape');
     assert.ok(await page.getByRole('button',{name:'빈 책 · 새 이야기 만들기',exact:true}).evaluate(el=>el===document.activeElement));
