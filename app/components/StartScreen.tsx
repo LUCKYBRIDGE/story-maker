@@ -6,17 +6,38 @@ export interface StartScreenProps {
   onOpenLibrary: () => void;
   onOpenReaderEntry: () => void;
   onOpenMyStories: () => void;
+  onToggleTheme?: () => void;
   selectedTheme?: "rabbit" | "onggojib";
   busy?: boolean;
 }
-export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
+export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories, onToggleTheme,
   selectedTheme: coverTheme = "onggojib", busy = false }: StartScreenProps) {
+  const nextThemeName = coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라";
   return (
     <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
       <div className="nolstory-poster-frame">
         <header className="poster-brand">
           <svg viewBox="0 0 48 36" aria-hidden="true"><path d="M24 7Q13 0 3 4v26q11-4 21 2 10-6 21-2V4Q35 0 24 7Z" fill="#123653" stroke="#c99239" strokeWidth="2"/><path d="M24 7v25" stroke="#e5b760" strokeWidth="2"/></svg>
-          <strong>놀스토리</strong>
+          <div className="poster-brand-title">
+            <strong>놀스토리</strong>
+            {onToggleTheme && (
+              <button
+                type="button"
+                className="poster-theme-refresh"
+                onClick={onToggleTheme}
+                disabled={busy}
+                aria-label={`다른 이야기 표지로 바꾸기 (${nextThemeName})`}
+                title={`다른 이야기 표지로 바꾸기 (${nextThemeName})`}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                  <path d="M16 21h5v-5" />
+                </svg>
+              </button>
+            )}
+          </div>
           <p>이야기로 만나는 <br />더 넓은 세상</p>
         </header>
         <nav className="poster-menu" aria-label="놀스토리 메인 메뉴">

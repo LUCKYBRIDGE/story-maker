@@ -9,18 +9,28 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SHELF-01 서재 '새 이야기' 반투명 와이어프레임 박스 글자 줄바꿈 및 선반 충돌 개선
+## 현재 작업: START-01 시작 화면 놀스토리 표지 새로고침(전환) 버튼 추가
 
-- 2026-09-13 사용자 피드백(철사형 반투명 와이어프레임 박스 디자인 선호 반영, 글씨 어색한 쪼개짐 및 선반 넘침 방지)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 2026-09-13 사용자 요청(시작 화면 "놀스토리" 옆에 작은 새로고침 버튼을 두고 클릭 시 현재 준비된 토끼와 자라 / 옹고집전 표지로 상호 전환)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 `origin/codex/library-blank-book-aesthetic` (`7cc6e15`), branch `codex/start-screen-theme-toggle`.
+- `StartScreen.tsx`: `.poster-brand-title` 그룹화, `onToggleTheme` 콜백 연결, 회전 화살표 SVG 아이콘 버튼(`.poster-theme-refresh`) 추가, 전환 대상 이야기 이름을 안내하는 `aria-label` 및 `title` 부여.
+- `StoryStudio.tsx`: `onToggleTheme={() => setSelectedStoryTheme(t => t === "rabbit" ? "onggojib" : "rabbit")}`로 시작 화면 표지 및 "이야기 읽기" 대상 동적 전환 연결.
+- `globals.css`: `.poster-brand > svg` 격리로 버튼 내부 SVG 오염 방지, 28px 골드/페이퍼 원형 서클 버튼 스타일링, hover 시 90도/active 시 180도 부드러운 회전 트랜지션, 12개 뷰포트 전체에서 브랜드 텍스트 높이 변화 0 (`themeShift: 0`) 달성.
+- `npm run check`, `npm test`(빌드+200/200), `git diff --check` 통과.
+- `start-screen.mjs` 12개 뷰포트 전체 레이아웃 쉬프트 0, 브라우저 실환경 스크린샷 검증 완료 (`outputs/start-toggle-*.png`).
+- 작업 브랜치 로컬 커밋 및 PR/동기화 준비 완료.
+
+## 최근 완료: SHELF-01 서재 '새 이야기' 반투명 와이어프레임 박스 글자 줄바꿈 및 선반 충돌 개선
+
+- 2026-09-13 사용자 피드백(철사형 반투명 와이어프레임 박스 디자인 선호 반영, 글씨 어색한 쪼개짐 및 선반 넘침 방지)으로 진행, **DONE — 2026-09-13 로컬 구현·검증 (PR #29 대기)**, Work Lead · G/A/B.
 - 기준 `origin/main` `67a05f6`, branch `codex/library-blank-book-aesthetic`.
 - 사용자가 선호하는 고유의 철사형 반투명 와이어프레임 박스(`.blank-book-cover`) 디자인과 서재의 감성을 온전히 보존.
 - 컨테이너 쿼리 단위(`cqw`) 도입 및 `white-space: nowrap; word-break: keep-all; text-wrap: nowrap;`로 "새 이야기" 단어가 `새 이야` / `기`로 어색하게 쪼개지는 현상 원천 해결.
 - `max-height: 100%`, `overflow: hidden`, `aspect-ratio: 1 / 1.4` 및 `.shelf-book` 폭 비율 정돈(`.52`)으로 1280×800 등 데스크톱·태블릿에서 플렉스 팽창으로 상단 목재 선반을 뚫고 올라가는 레이아웃 파괴 완전 차단.
 - `npm run check`, `npm test`(빌드+200/200), `git diff --check` 통과.
 - `library-craft.mjs`: 1365×900, 1280×800, 820×1180, 390×844, 320×740 전 뷰포트 선반 높이/클리어런스/1행 타이틀 검증 통과.
-- `library-home.mjs`: 8개 뷰포트 통과.
 - `library-motion.mjs`: FLIP 애니메이션 및 모션 축소 통과.
-- 작업 브랜치 로컬 커밋 및 PR/동기화 준비 완료.
+- PR #29 오픈 상태.
 
 ## 최근 완료: POSTER-01 시작 화면 포스터 여백 및 프레이밍 최적화
 
