@@ -285,6 +285,39 @@ img {
   height: 15px;
   display: block;
 }
+.poster-qr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid #c9923980;
+  background: #fff8eb80;
+  color: #78562e;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 200ms cubic-bezier(.2, 0, .1, 1), background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.poster-qr-btn:hover:not(:disabled) {
+  background: #fff3d6;
+  color: #3b2816;
+  border-color: #c99239;
+  transform: scale(1.08);
+}
+.poster-qr-btn:active:not(:disabled) {
+  transform: scale(.92);
+}
+.poster-qr-btn:focus-visible {
+  outline: 2px solid #c99239;
+  outline-offset: 2px;
+}
+.poster-qr-btn svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
 .poster-brand p { margin: 8px 0 0; color: #78562e; font-size: clamp(15px, 3cqi, 19px); font-weight: 500; line-height: 1.5; }
 .poster-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4%; width: 100%; margin-top: 3cqi; }
 .poster-button {
@@ -513,6 +546,183 @@ img {
 
 .modal-scroll-area {
   margin-top: 14px;
+}
+
+/* 🌟 교실 접속 QR 코드 모달 스타일 (Classroom QR Sharing Modal) */
+.qr-modal-dialog {
+  max-width: 440px;
+  background: #fffdf9;
+  border: 1.5px solid #d4af3745;
+  box-shadow: 0 24px 60px -12px rgba(45, 30, 15, 0.35), 0 0 0 1px rgba(180, 140, 80, 0.15);
+  border-radius: 24px;
+  padding: 32px 24px 28px;
+  text-align: center;
+}
+.qr-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.qr-modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-inline: 16px;
+}
+.qr-modal-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #855b27;
+  background: #faeccf;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.qr-modal-title {
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #2a1e12;
+  margin: 0 0 8px;
+  word-break: keep-all;
+}
+.qr-modal-desc {
+  font-size: 13.5px;
+  color: #6a5542;
+  margin: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.qr-code-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.qr-code-frame {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(40, 25, 10, 0.08);
+  border: 1.5px solid #e8dec8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qr-code-svg {
+  width: clamp(180px, 50vw, 220px);
+  height: clamp(180px, 50vw, 220px);
+  display: block;
+  border-radius: 4px;
+}
+.qr-code-loading {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #8a735c;
+}
+.qr-url-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  padding: 6px 6px 6px 12px;
+  background: #f5eedf80;
+  border: 1px solid #d5c7ab;
+  border-radius: 12px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.qr-url-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  color: #423224;
+  text-align: left;
+}
+.qr-copy-btn {
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid #b89154;
+  background: #ffffff;
+  color: #694317;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 180ms ease;
+}
+.qr-copy-btn:hover {
+  background: #fdf5e6;
+  color: #3b2207;
+  border-color: #8f652b;
+}
+.qr-copy-btn.is-copied {
+  background: #1b6338;
+  color: #ffffff;
+  border-color: #1b6338;
+}
+.qr-modal-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  background: #fdf8eb;
+  border: 1px solid #ebd9b5;
+  border-radius: 12px;
+  font-size: 12.5px;
+  color: #735327;
+  text-align: left;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+.qr-tip-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.qr-tip-text {
+  margin: 0;
+  word-break: keep-all;
+}
+.qr-tip-text strong {
+  color: #4a3416;
+}
+.qr-modal-footer {
+  width: 100%;
+}
+.qr-modal-confirm-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #123653;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.qr-modal-confirm-btn:hover {
+  background: #1b496e;
+}
+.qr-modal-confirm-btn:focus-visible {
+  outline: 2px solid #123653;
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -11433,7 +11643,8 @@ img {
 .library-room-content { max-width: 1200px; margin: auto; }
 .library-theater-header { margin: 0 auto 28px; }
 .library-header-bar { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 18px; }
-.library-header-tools { justify-self: end; }
+.library-header-tools { justify-self: end; display: inline-flex; align-items: center; gap: 8px; }
+.library-btn-qr svg { flex-shrink: 0; }
 .library-nav-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border: 1px solid #a68053; border-radius: 28px; color: #523b27; background: #fff8e6d9; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px #65402012; }
 .library-btn-back { justify-self: start; }
 .library-nav-btn:hover:not(:disabled) { background: #fff9ea; box-shadow: 0 4px 12px #52331d25; }
@@ -11610,8 +11821,8 @@ img {
   .story-discovery { padding: 16px 4vw 38px; background-attachment: scroll; }
   .library-header-bar { grid-template-columns: 1fr 1fr; gap: 4px; }
   .library-center-badge { grid-row: 2; grid-column: 1/-1; padding-top: 22px; }
-  .library-header-tools { grid-row: 1; grid-column: 2; }
-  .library-nav-btn { font-size: 12px; padding-inline: 14px; }
+  .library-header-tools { grid-row: 1; grid-column: 2; justify-content: flex-end; gap: 6px; }
+  .library-nav-btn { font-size: 12px; padding-inline: 12px; }
   .library-catalog-bar { margin-inline: 0; flex-direction: column; gap: 10px; }
   .library-filters { width: 100%; justify-content: center; }
   .library-filters button { font-size: 12px; padding-inline: 12px; }

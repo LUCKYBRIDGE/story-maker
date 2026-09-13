@@ -25,6 +25,7 @@ import { StoryFileDialog } from "./components/StoryFileDialog";
 import { createNolstoryProject, createNolstoryShared, downloadNolstoryFile, readNolstoryFile, parseNolstoryFile, type NolstoryFile, type NolstorySharedFile } from "./story-file";
 import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery";
 import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
+import { SiteQrModal } from "./components/SiteQrModal";
 import { CreationHub } from "./components/CreationHub";
 import { createProjectCollectionRepository, type ProjectCollectionRepository, type ProjectCollection, type CollectionResult } from "./story-project-collection";
 import { loadLandingVisit, markLandingVisited } from "./story-landing-visit";
@@ -300,6 +301,7 @@ export function StoryStudio() {
   const [busy, setBusy] = useState<UpdateMode | null>(null);
   const [busyStep, setBusyStep] = useState("");
   const [blankConfirmOpen, setBlankConfirmOpen] = useState(false);
+  const [siteQrModalOpen, setSiteQrModalOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [navigationReady, setNavigationReady] = useState(false);
   const [localDraftStatus, setLocalDraftStatus] = useState<EntryLocalDraftStatus>("checking");
@@ -2673,6 +2675,7 @@ export function StoryStudio() {
           notice={entryNotice}
           onBack={() => showDiscovery("home")}
           onCreation={() => setCreationHubOpen(true)}
+          onOpenQr={() => setSiteQrModalOpen(true)}
           onSelectStory={theme => { setSelectedStoryTheme(theme); }}
           onGroup={group => { setStoryHubGroup(group); }}
           onReadBase={(theme) => { void openPlay(0, "example", theme ?? selectedStoryTheme); }}
@@ -2693,6 +2696,7 @@ export function StoryStudio() {
             setLibraryInitialFilter("mine");
           }}
           onToggleTheme={() => setSelectedStoryTheme(t => t === "rabbit" ? "onggojib" : "rabbit")}
+          onOpenQr={() => setSiteQrModalOpen(true)}
           busy={Boolean(busy)}
         />}
         {fileDialog}
@@ -2720,6 +2724,10 @@ export function StoryStudio() {
           fileName={importConfirmation.fileName}
           onConfirm={confirmImport}
           onCancel={() => { setImportError(""); setImportConfirmation({ open: false, project: null }); }}
+        />
+        <SiteQrModal
+          open={siteQrModalOpen}
+          onClose={() => setSiteQrModalOpen(false)}
         />
       </>
     );

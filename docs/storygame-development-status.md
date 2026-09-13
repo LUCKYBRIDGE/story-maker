@@ -9,16 +9,33 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: START-01 시작 화면 놀스토리 표지 새로고침(전환) 버튼 추가
+## 현재 작업: QR-01 교실 공유용 사이트 접속 QR 버튼 및 모달 추가
 
-- 2026-09-13 사용자 요청(시작 화면 "놀스토리" 옆에 작은 새로고침 버튼을 두고 클릭 시 현재 준비된 토끼와 자라 / 옹고집전 표지로 상호 전환)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 2026-09-13 사용자 요청(교실에서 사이트 공유 시 편하도록 첫 표지 화면과 서재 화면에 접속 QR 버튼 추가)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 `origin/codex/start-screen-theme-toggle` (`2d0c10b`), branch `codex/classroom-share-qr-button`.
+- `story-qr-code.ts`: 외부 의존성(0 dependencies) 및 외부 네트워크 호출 없는 순수 TypeScript QR 코드 생성기 구현 (ISO/IEC 18004 표준, Medium ECC, 4-모듈 콰이어트 존 SVG 경로 생성).
+- `SiteQrModal.tsx`: 교실 공유 모달 컴포넌트 추가 (`ModalDialog` 기반, 벡터 SVG QR 코드 렌더링, 현재 URL 주소 표시, 클립보드 주소 복사 기능, 교실 수업용 안내 배지 및 빔프로젝터 팁 제공).
+- `StartScreen.tsx`: `.poster-brand-title` 헤더 영역에 28px 원형 QR 버튼(`.poster-qr-btn`) 추가.
+- `StoryDiscovery.tsx`: 서재 상단 `.library-header-tools`에 접속 QR 버튼(`.library-btn-qr`) 추가 및 와이어프레임 박스(`.blank-book-cover`) 완벽 보존.
+- `StoryStudio.tsx`: `siteQrModalOpen` 상태 및 `onOpenQr` 콜백을 시작 화면과 서재 화면에 일원화 연결.
+- `globals.css`: `.poster-qr-btn`, `.library-btn-qr`, `.qr-modal-*` 스타일링.
+- `npm run check`, `npm test`(빌드+203/203), `git diff --check` 통과.
+- `tests/story-qr-code.test.mjs`: URL 길이별 QR 데이터 생성, 콰이어트 존, ECC 레벨 단위 테스트 3건 통과.
+- `tests/browser/start-screen.mjs`: 12개 뷰포트 전체 레이아웃 쉬프트 0 (`themeShift: 0`), 44px+ 터치 검증 통과.
+- `tests/browser/library-craft.mjs`: 5개 뷰포트 전체 선반 클리어런스 및 1줄 타이틀 통과.
+- `tests/browser/qr-modal.mjs`: 시작 화면 및 서재 화면에서 QR 모달 열기/닫기/URL 검증 통과.
+- 작업 브랜치 로컬 커밋 및 PR/동기화 준비 완료.
+
+## 최근 완료: START-01 시작 화면 놀스토리 표지 새로고침(전환) 버튼 추가
+
+- 2026-09-13 사용자 요청(시작 화면 "놀스토리" 옆에 작은 새로고침 버튼을 두고 클릭 시 현재 준비된 토끼와 자라 / 옹고집전 표지로 상호 전환)으로 진행, **DONE — 2026-09-13 로컬 구현·검증 (PR #30 대기)**, Work Lead · G/A/B.
 - 기준 `origin/codex/library-blank-book-aesthetic` (`7cc6e15`), branch `codex/start-screen-theme-toggle`.
 - `StartScreen.tsx`: `.poster-brand-title` 그룹화, `onToggleTheme` 콜백 연결, 회전 화살표 SVG 아이콘 버튼(`.poster-theme-refresh`) 추가, 전환 대상 이야기 이름을 안내하는 `aria-label` 및 `title` 부여.
 - `StoryStudio.tsx`: `onToggleTheme={() => setSelectedStoryTheme(t => t === "rabbit" ? "onggojib" : "rabbit")}`로 시작 화면 표지 및 "이야기 읽기" 대상 동적 전환 연결.
 - `globals.css`: `.poster-brand > svg` 격리로 버튼 내부 SVG 오염 방지, 28px 골드/페이퍼 원형 서클 버튼 스타일링, hover 시 90도/active 시 180도 부드러운 회전 트랜지션, 12개 뷰포트 전체에서 브랜드 텍스트 높이 변화 0 (`themeShift: 0`) 달성.
 - `npm run check`, `npm test`(빌드+200/200), `git diff --check` 통과.
 - `start-screen.mjs` 12개 뷰포트 전체 레이아웃 쉬프트 0, 브라우저 실환경 스크린샷 검증 완료 (`outputs/start-toggle-*.png`).
-- 작업 브랜치 로컬 커밋 및 PR/동기화 준비 완료.
+- PR #30 오픈 상태 (CI 통과).
 
 ## 최근 완료: SHELF-01 서재 '새 이야기' 반투명 와이어프레임 박스 글자 줄바꿈 및 선반 충돌 개선
 

@@ -7,11 +7,12 @@ export interface StartScreenProps {
   onOpenReaderEntry: () => void;
   onOpenMyStories: () => void;
   onToggleTheme?: () => void;
+  onOpenQr?: () => void;
   selectedTheme?: "rabbit" | "onggojib";
   busy?: boolean;
 }
 export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories, onToggleTheme,
-  selectedTheme: coverTheme = "onggojib", busy = false }: StartScreenProps) {
+  onOpenQr, selectedTheme: coverTheme = "onggojib", busy = false }: StartScreenProps) {
   const nextThemeName = coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라";
   return (
     <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
@@ -34,6 +35,28 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
                   <path d="M3 3v5h5" />
                   <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
                   <path d="M16 21h5v-5" />
+                </svg>
+              </button>
+            )}
+            {onOpenQr && (
+              <button
+                type="button"
+                className="poster-qr-btn"
+                onClick={onOpenQr}
+                disabled={busy}
+                aria-label="교실 접속 QR 코드 열기"
+                title="교실 접속 QR 코드 열기"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="6.5" y="6.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <rect x="17.5" y="6.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <rect x="6.5" y="17.5" width="0.1" height="0.1" strokeWidth="3" />
+                  <path d="M14 14h3v3h-3z" />
+                  <path d="M20 14v3" />
+                  <path d="M14 20h6" />
                 </svg>
               </button>
             )}
