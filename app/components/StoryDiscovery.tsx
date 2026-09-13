@@ -103,11 +103,11 @@ function DiscoveryCover({ book }: { book: SelectedBook }) {
 }
 
 const EASTER_EGG_NOTES = [
-  { tag: "놀스토리 서재", main: null, sub: "한 권의 상상, 하나의 무대" },
-  { tag: "작은 쪽지 💌", main: "작은 상상이 무대가 돼요", sub: "언제든 새 이야기를 꺼내봐요 ✨" },
-  { tag: "작은 쪽지 🌿", main: "틀려도 괜찮아!", sub: "다시 쓰면 더 재미난 모험이 돼" },
-  { tag: "작은 쪽지 📖", main: "오늘 너의 책장엔", sub: "어떤 모험이 꽂히게 될까?" },
-  { tag: "작은 쪽지 🎭", main: "이 서재의 주인공은", sub: "바로 너야! 멋진 작가님" },
+  { main: null, sub: "한 권의 상상, 하나의 무대" },
+  { main: "틀려도 괜찮아!", sub: "다시 쓰면 더 재미난 모험이 돼" },
+  { main: "작은 상상이 무대가 돼요", sub: "언제든 새 이야기를 펼쳐봐요 ✨" },
+  { main: "오늘 너의 책장엔", sub: "어떤 모험이 꽂히게 될까?" },
+  { main: "이 서재의 주인공은", sub: "바로 너야! 멋진 작가님" },
 ];
 
 export function StoryDiscovery(props: StoryDiscoveryProps) {
@@ -511,15 +511,19 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           type="button"
           className={`library-top-frame ${isFrameTapping ? "is-tapping" : ""}`}
           onClick={cycleEasterEgg}
-          aria-label={currentFrameNote.main ? `${currentFrameNote.tag}: ${currentFrameNote.main} - ${currentFrameNote.sub}` : `서재 안내 액자 · ${countLabel}`}
-          title="눌러서 놀스토리 쪽지를 확인해보세요!"
+          aria-label={currentFrameNote.main ? `놀스토리 서재: ${currentFrameNote.main} - ${currentFrameNote.sub}` : `서재 안내 액자 · ${countLabel}`}
+          title="눌러서 놀스토리 서재 쪽지를 확인해보세요!"
         >
           <span className="library-frame-inner">
-            <span className="library-frame-tag">{currentFrameNote.tag}</span>
-            <strong className="library-frame-main" role={currentFrameNote.main ? undefined : "status"}>
-              {currentFrameNote.main ?? countLabel}
-            </strong>
-            <span className="library-frame-sub">{currentFrameNote.sub}</span>
+            <header className="library-frame-header">
+              <span className="library-frame-brand">놀스토리 서재</span>
+            </header>
+            <div className="library-frame-body">
+              <strong className="library-frame-main" role={currentFrameNote.main ? undefined : "status"}>
+                {currentFrameNote.main ?? countLabel}
+              </strong>
+              <span className="library-frame-sub">{currentFrameNote.sub}</span>
+            </div>
           </span>
         </button>
         <div className="library-top-plant" aria-hidden="true" />
