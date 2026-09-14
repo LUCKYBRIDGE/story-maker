@@ -9,7 +9,21 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SN-NARRATIVE-03 선녀와 나무꾼 판타지 규칙·네 엔딩(존중과 이별/지상에서의 약속/늦은 고백/돌이킬 수 없는 침묵) 및 HA-HB 감정선 완성
+## 현재 작업: SN-NARRATIVE-04 하늘길·귀환 시기와 네 엔딩 최종 정합화
+
+- 2026-09-14 사용자 직접 요청, **DONE — 로컬 수정·검증 완료**, Work Lead · G/A/B.
+- 기준: story-maker `305772e`, 원본 pinky-ne-site `1a3054f`; 양쪽 branch `codex/seonnyeo-sky-path-final`, 시작 시 작업 트리 깨끗함.
+- 범위: 원본 대본/분기맵/설정 기준서, HA 연결과 기존 연출 매핑, 관련 검사, 생성 작품과 출처 표시. 70장면 ID·4엔딩 보존. UI/이미지/저장 형식 변경 없음.
+- 승인 의도: 원본 `03-캐릭터-세계관-시점-기준서.md` §6·8. 기존 SN-NARRATIVE-03의 마모·품 안정·은하수 규칙은 당시 완료 이력이며 현재 규칙이 아니다.
+- 결과: 70장면 ID 집합·64경로·4엔딩 유지, 엔딩별 16경로. HA2→R4→C5R→Ending 1/2; HB→Ending 3; HC→Ending 4. 깨진 연결·순환·고립 장면 없음. 원본 대본은 725→646비트, 조건을 펼친 편집본은 162→166장·1689→1613컷.
+- 검증: 원본 `npm run test:seonnyeo` 7/7(전체 경로·조건 분리·원문/화자·knolstory 전수 일치·자산 경로), 독립 플레이어 여섯 대표 경로와 저장/복원·320/390/768/1366/844px 검사 통과.
+- story-maker: `npm run check` 통과, `npm test` 빌드 포함 207/207. 최신 로컬 미리보기에서 `pinky-examples` 11경로(선녀 6경로 포함), `seonnyeo-e2e` 3/3 통과. 1365/390px의 엔딩 완주·이전/재선택·기존 학생 저장본 불변, 복제/편집/적용/보관·1613컷 가져오기 확인. 네 결말 캡처 직접 확인.
+- 근거: `/tmp/seonnyeo-final-browser/results.json`, `/tmp/seonnyeo-final-browser/pinky-examples/results.json`, `/tmp/seonnyeo-source-browser.log`, `/tmp/seonnyeo-story-maker-tests-final.log`. 임시 실행 출력이며 유지되는 회귀 검사는 저장소 내 테스트 파일이다.
+- 최종 대조: 원본 diff 해시 일치, 다른 두 작품 데이터 불변, 생성 작품의 70 원전 ID 집합 보존, 양쪽 diff whitespace 통과. 이미지 파일·UI·저장 스키마 변경 없음.
+- 남은 일: 이번 요청의 로컬 수정·검증은 완료. 커밋·푸시·병합·공개 배포는 요청되지 않아 미수행. 실제 학생 독해/모바일 실기기 검수는 이번 증거에 포함하지 않음.
+- 다음 READY 없음.
+
+## 최근 완료: SN-NARRATIVE-03 선녀와 나무꾼 판타지 규칙·네 엔딩(존중과 이별/지상에서의 약속/늦은 고백/돌이킬 수 없는 침묵) 및 HA-HB 감정선 완성
 
 - 2026-09-14 사용자 직접 요청(날개옷 판타지 규칙 모순 해결, "이 계절의 마지막 보름밤" 및 하늘 귀환 후 회복 논리 일원화, 사슴 중매 설정 배제 및 뿌리 자산 정합성 확인, 4-B 수색 과정 선녀 주체성 강화, Ending 1~4 정체성/제목/위계 제거, HA-HB 감정선 차별화, 도덕 퀴즈형 선택지 탈피, 원본 커밋·1689컷 전수 동기화 및 검증), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · G/A/B.
 - 기준 origin/main `056a56c`, branch `codex/seonnyeo-narrative-stabilization`.

@@ -1,5 +1,6 @@
 // Run with Node's TS loader as documented in the example-source decision.
 import {writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {DEFAULT_PROJECT,cloneProject} from '../app/story-data.ts';
@@ -11,6 +12,8 @@ if(status && !process.env.ALLOW_DIRTY_STORY_SOURCE){
 }
 const {stories}=await import(pathToFileURL(`${root}/worker/story-data/stories.js`));
 const commit=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
+// A locally revised source must not claim to be the clean base commit.
+const sourceWorkingTree = status ? { diffSha256: createHash('sha256').update(execFileSync('git',['-C',root,'diff','HEAD','--binary'])).digest('hex') } : undefined;
 const missing=new Set();
 const assetId=path=>{if(!path)return '';const normalized=path.replace(/^\.\//,'games/ifstory/');const asset=STORY_ASSETS.find(asset=>asset.sourcePath===normalized);if(!asset)missing.add(path);return asset?.id??'';};
 const projects=stories.slice(0,2).map(story=>{
@@ -47,7 +50,7 @@ const seonnyeoStory = await compileSeonnyeo();
 const seonnyeoKnolstory = (exportKnolstory || exportNolstory)(seonnyeoStory);
 const seonnyeoProject = seonnyeoKnolstory.draft.project;
 delete seonnyeoProject.source;
-seonnyeoProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7);
+seonnyeoProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7) + (status ? ' + working tree' : '');
 const assetIds = new Set(STORY_ASSETS.map(a => a.id));
 for (const line of seonnyeoProject.lines) {
   for (const id of [line.leftAssetId, line.rightAssetId, line.backgroundId]) {
@@ -55,5 +58,5 @@ for (const line of seonnyeoProject.lines) {
   }
 }
 projects.push(seonnyeoProject);
-await writeFile(new URL('../app/story-examples.generated.json',import.meta.url),JSON.stringify({sourceCommit:commit,projects},null,2)+'\n');
+await writeFile(new URL('../app/story-examples.generated.json',import.meta.url),JSON.stringify({sourceCommit:commit,...(sourceWorkingTree ? {sourceWorkingTree} : {}),projects},null,2)+'\n');
 console.log(JSON.stringify({stories:projects.map(p=>({title:p.title,cuts:p.lines.length})),missingAssets:[...missing]}));

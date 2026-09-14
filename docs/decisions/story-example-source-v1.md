@@ -39,3 +39,12 @@ missingAssets가 빈 배열인지, 대사·연결 일치와 양 작품 재생을
 - `tests/helpers/example-graph.mjs`는 전체 연결·순환·경로·합류를 검사하며
   `tests/browser/pinky-examples.mjs`는 각 도달 가능한 결말의 대표 경로를 재생한다.
   22개 경로 전부의 시각/의미 검수나 사람의 연출 품질 승인을 뜻하지 않는다.
+
+
+## 로컬 원본 수정의 출처 (2026-09-14)
+
+원본 미커밋 변경을 의도적으로 미리 볼 때만 `ALLOW_DIRTY_STORY_SOURCE=1`을 사용한다.
+이 경우 `sourceCommit`은 기반 커밋이며 `sourceWorkingTree.diffSha256`에 원본의
+`git diff HEAD --binary` SHA-256을 함께 기록한다. 선녀 작품의 `updatedAt`에도
+working tree를 표시한다. 깨끗한 원본 커밋에서 재생성하면 이 보조 정보는 사라진다.
+선녀의 내용 계약은 원본 저장소의 review-main-004 대본·분기맵·설정 기준서에서 관리한다.
