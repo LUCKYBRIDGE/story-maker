@@ -180,7 +180,7 @@ try {
     await page.close();
   }
 
-  // Test 3: Export .nolstory & Re-import Verification
+  // Test 3: Export .knolstory & Re-import Verification
   {
     const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
     const errors = [];
@@ -191,23 +191,23 @@ try {
     await page.getByRole('button', { name: '창작 관리', exact: true }).click();
     await page.getByRole('heading', { name: '창작 관리', exact: true }).waitFor();
 
-    // Upload seonnyeo-namukkun.nolstory
-    await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').last().setInputFiles('../pinky-ne-site-publish/dist/ifstory03/seonnyeo-namukkun.nolstory');
-    await page.getByRole('dialog', { name: '놀스토리 파일 열기' }).waitFor();
+    // Upload seonnyeo-namukkun.knolstory
+    await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').last().setInputFiles('../pinky-ne-site-publish/dist/ifstory03/seonnyeo-namukkun.knolstory');
+    await page.getByRole('dialog', { name: /^(크놀스토리|놀스토리) 파일 열기$/ }).waitFor();
     await page.getByRole('button', { name: '편집본으로 추가', exact: true }).click();
 
-    // Verify project is loaded into storage with all 1570 cuts
+    // Verify project is loaded into storage with all 1564 cuts
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:projects:v1')));
     const importedProject = saved.projects.find(p => p.draft.project.title === '선녀와 나무꾼');
     assert.ok(importedProject, 'Imported project must exist in projects list');
-    assert.equal(importedProject.draft.project.lines.length, 1570, 'All 1570 cuts imported');
+    assert.equal(importedProject.draft.project.lines.length, 1564, 'All 1564 cuts imported');
     assert.ok(importedProject.draft.project.lines.every(l => l.backgroundId.startsWith('seonnyeo.background.')), 'All lines have seonnyeo backgrounds');
-    console.log('[E2E Import] .nolstory import successfully loaded 1570 cuts with backgrounds');
+    console.log('[E2E Import] .knolstory import successfully loaded 1564 cuts with backgrounds');
 
     await page.screenshot({ path: `${output}/seonnyeo-import-verified.png`, fullPage: true });
 
     assert.deepEqual(errors, []);
-    results.push({ test: 'nolstory-import-roundtrip', status: 'pass' });
+    results.push({ test: 'knolstory-import-roundtrip', status: 'pass' });
     await page.close();
   }
 

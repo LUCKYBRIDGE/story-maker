@@ -45,11 +45,11 @@ export function parseKnolstoryFile(text: string): StoryFileResult {
   if (new TextEncoder().encode(text).byteLength > MAX_KNOLSTORY_BYTES) return failure("파일은 10MB 이하로 열 수 있어요.");
   try {
     const value: unknown = JSON.parse(text);
-    if (!record(value) || !record(value.manifest)) return failure("놀스토리 파일의 안내 정보를 찾지 못했어요.");
+    if (!record(value) || !record(value.manifest)) return failure("크놀스토리 파일의 안내 정보를 찾지 못했어요.");
     const manifest = value.manifest;
     const rootFields = manifest.kind === "project" ? ["manifest", "assets", "draft", "playback"] : ["manifest", "assets", "story", "sharing"];
     if (Object.keys(value).some(key => !rootFields.includes(key)) || Object.keys(manifest).some(key => !["format", "version", "kind", "exportedAt", "appVersion"].includes(key))) return failure("지원하지 않는 첨부 파일이나 경로 정보가 있어요.");
-    if (!["knolstory", "nolstory"].includes(String(manifest.format)) || manifest.version !== 1 || !["project", "shared"].includes(String(manifest.kind)) || typeof manifest.exportedAt !== "string" || !isStrictIsoUtcTimestamp(manifest.exportedAt) || typeof manifest.appVersion !== "string") return failure("지원하지 않는 놀스토리 파일 버전이나 종류예요.");
+    if (!["knolstory", "nolstory"].includes(String(manifest.format)) || manifest.version !== 1 || !["project", "shared"].includes(String(manifest.kind)) || typeof manifest.exportedAt !== "string" || !isStrictIsoUtcTimestamp(manifest.exportedAt) || typeof manifest.appVersion !== "string") return failure("지원하지 않는 크놀스토리 파일 버전이나 종류예요.");
     const load = (data: unknown) => {
       const result = parseStoryDocument(data);
       if (!result.ok || result.source !== "current") throw new Error("작품 데이터 형식을 확인하지 못했어요. 파일을 바꾸지 말고 원래 기기에서 다시 보관해 주세요.");
@@ -104,7 +104,7 @@ export async function readKnolstoryFile(file: File): Promise<StoryFileResult> {
   const lowerName = file.name.toLowerCase();
   if (!lowerName.endsWith(".knolstory") && !lowerName.endsWith(".nolstory")) return failure(".knolstory 또는 .nolstory 파일을 선택해 주세요.");
   if (file.size > MAX_KNOLSTORY_BYTES) return failure("파일은 10MB 이하로 열 수 있어요.");
-  if (file.type && ![KNOLSTORY_MIME, NOLSTORY_MIME, "application/json", "application/octet-stream", "text/plain"].includes(file.type)) return failure("놀스토리 파일 형식이 아니에요.");
+  if (file.type && ![KNOLSTORY_MIME, NOLSTORY_MIME, "application/json", "application/octet-stream", "text/plain"].includes(file.type)) return failure("크놀스토리 파일 형식이 아니에요.");
   try { return parseKnolstoryFile(await file.text()); } catch { return failure("파일을 읽지 못했어요. 다시 선택해 주세요."); }
 }
 export function downloadKnolstoryFile(file: KnolstoryFile, title: string) {

@@ -6,11 +6,11 @@ const key='storygame:projects:v1',output='/tmp/story-file-qa';
 const fixture=JSON.parse(execFileSync(process.execPath,['--disable-warning=ExperimentalWarning','--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`
 import {DEFAULT_PROJECT,cloneProject} from './app/story-data.ts';
 import {createStoryDocument} from './app/story-project-document.ts';
-import {createNolstoryProject,createNolstoryShared,encodeNolstoryFile} from './app/story-file.ts';
+import {createKnolstoryProject,createKnolstoryShared,encodeKnolstoryFile} from './app/story-file.ts';
 const project=id=>({...cloneProject(DEFAULT_PROJECT),id,title:'파일 작품 '+id});
 const doc=p=>createStoryDocument({project:p,savedAt:'2026-09-10T00:00:00.000Z',appVersion:'qa'});
 const entry=id=>({draft:doc(project(id)),playback:doc({...project(id),title:'적용본 '+id})});
-console.log(JSON.stringify({a:encodeNolstoryFile(createNolstoryProject(entry('a'))),b:encodeNolstoryFile(createNolstoryProject(entry('b'))),c:encodeNolstoryFile(createNolstoryProject(entry('c'))),remix:encodeNolstoryFile(createNolstoryShared(project('remix-source'),true)),shared:encodeNolstoryFile(createNolstoryShared(project('shared')))}));
+console.log(JSON.stringify({a:encodeKnolstoryFile(createKnolstoryProject(entry('a'))),b:encodeKnolstoryFile(createKnolstoryProject(entry('b'))),c:encodeKnolstoryFile(createKnolstoryProject(entry('c'))),remix:encodeKnolstoryFile(createKnolstoryShared(project('remix-source'),true)),shared:encodeKnolstoryFile(createKnolstoryShared(project('shared')))}));
 `],{encoding:'utf8'}));
 const browser=await launchBrowser(output);
 const read=page=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
@@ -25,7 +25,7 @@ async function hub(page) {
 }
 async function open(page,text) {
  await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').setInputFiles({name:'fixture.knolstory',mimeType:'application/json',buffer:Buffer.from(text)});
- await page.getByRole('dialog',{name:'놀스토리 파일 열기'}).waitFor();
+ await page.getByRole('dialog',{name:/^(크놀스토리|놀스토리) 파일 열기$/}).waitFor();
 }
 async function toHub(page) {await page.getByRole('button',{name:'창작 관리',exact:true}).click();await page.getByRole('heading',{name:'창작 관리',exact:true}).waitFor();}
 try {
