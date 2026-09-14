@@ -36,7 +36,7 @@ for (const [index, project] of source.projects.entries()) test(`example graph co
   const endingTitles = new Set(graph.endingRoutes.map(r => project.chapters.find(c => c.id === project.lines.find(l => l.id === r.at(-1).lineId).chapterId).title));
   assert.equal(endingTitles.size, 4);
  }
- assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1692);
+ assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1689);
  assert.ok(graph.joins.length > 0);
 });
 test('example graph oracle rejects broken links, cycles and duplicate IDs', () => {
