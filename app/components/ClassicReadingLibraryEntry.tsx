@@ -59,9 +59,10 @@ export function ClassicReadingLibraryEntry() {
         const rabbitSelected = title === "토끼와 자라";
 
         if (availability) {
-          availability.textContent = rabbitSelected
+          const label = rabbitSelected
             ? "원작 읽기 · 이용 가능"
             : "원작 읽기 · 준비 중";
+          if (availability.textContent !== label) availability.textContent = label;
         }
 
         if (!rabbitSelected || !grid) {
