@@ -12,8 +12,8 @@
 ## 현재 작업: SN-NARRATIVE-01 선녀와 나무꾼 후반부 서사(익일 재선택·빛 소멸 일관성·신뢰 중심화) 개선 및 1632컷 동기화
 
 - 2026-09-14 사용자 직접 요청(선녀와 나무꾼 후반부 은폐 불일치 해결, 다음 날 재선택 분기 추가, 선녀옷 빛 소멸 일관성 확보, 나무꾼 상실 두려움 심리 보강, Ending 4 신뢰 붕괴 중심화 및 레포지토리/생성 데이터 1632컷 전수 동기화), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · G/A/B.
-- 기준 origin/main `81dd542`, branch `codex/seonnyeo-narrative-revision`.
-- 소스 저장소: GitHub `LUCKYBRIDGE/pinky-ne-site`의 `codex/seonnyeo-namukkun-implementation` (commit `e380e6f`).
+- 기준 origin/main `fe34a0b`, branch `codex/seonnyeo-narrative-revision`.
+- 소스 저장소: GitHub `LUCKYBRIDGE/pinky-ne-site`의 `main` (commit `73cf62f`).
 - 서사 개선:
   1. 문제 A: '하루만 숨긴다' 선택 후 이튿날 아침 신규 선택 4H(A: 더 늦기 전에 사실대로 말한다 -> HA1/HA2 / B: 조금만 더 미룬다 -> HB1/HB2/HB3)를 추가하여 추가 은폐가 플레이어의 직접 선택으로 일어나도록 수정.
   2. 문제 B: 선녀가 옷을 품에 안은 순간부터 은빛 소멸이 멈춘다는 묘사를 R1, HA1, E3-1에 자연스럽게 배치하여 며칠간의 숙고 기간(보름달까지)과의 모순 원천 해소.
