@@ -17,8 +17,8 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
   const nextThemeName = BASE_STORIES.find(story => story.theme === nextStoryTheme(coverTheme))!.title;
   const story = BASE_STORIES.find(story => story.theme === coverTheme)!;
   return (
-    <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
-      <div className="nolstory-poster-frame">
+    <main className={`knolstory-poster-viewport nolstory-poster-viewport theme-${coverTheme}`}>
+      <div className="knolstory-poster-frame nolstory-poster-frame">
         <header className="poster-brand">
           <svg viewBox="0 0 48 36" aria-hidden="true"><path d="M24 7Q13 0 3 4v26q11-4 21 2 10-6 21-2V4Q35 0 24 7Z" fill="#123653" stroke="#c99239" strokeWidth="2"/><path d="M24 7v25" stroke="#e5b760" strokeWidth="2"/></svg>
           <div className="poster-brand-title">
@@ -86,7 +86,7 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
             alt=""
             width={coverTheme === "seonnyeo" ? 1120 : coverTheme === "rabbit" ? 940 : 941}
             height={coverTheme === "seonnyeo" ? 1400 : 1672}
-            className="nolstory-poster-img"
+            className="knolstory-poster-img nolstory-poster-img"
             fetchPriority="high"
           />
         </div>

@@ -97,12 +97,12 @@ try {
     await page.screenshot({path:`${output}/plan-${width}.png`,fullPage:true});
     await openManagement(page);
     assert.equal(await page.getByRole('button',{name:'이어만들기',exact:true}).count(),0);
-    for (const name of ['파일로 보관','Excel·복구 도구','Excel 파일 열기','.nolstory 파일 열기']) assert.ok(await page.getByRole('button',{name,exact:true}).isVisible());
+    for (const name of ['파일로 보관','Excel·복구 도구','Excel 파일 열기','.knolstory 파일 열기']) assert.ok(await page.getByRole('button',{name,exact:true}).isVisible());
     await bounds(page,'.creation-hub button:visible');
     await page.screenshot({path:`${output}/management-${width}.png`,fullPage:true});
     const backup = page.waitForEvent('download');
     await page.getByRole('button',{name:'파일로 보관',exact:true}).click();
-    assert.ok((await backup).suggestedFilename().endsWith('.nolstory'));
+    assert.ok((await backup).suggestedFilename().endsWith('.knolstory'));
     await page.getByRole('button',{name:'Excel·복구 도구',exact:true}).click();
     await page.locator('#studio-project-tools').waitFor();
     assert.ok(await page.getByRole('button',{name:'Excel로 저장',exact:true}).isVisible());

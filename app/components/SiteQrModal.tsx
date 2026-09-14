@@ -55,8 +55,8 @@ export function SiteQrModal({ open, onClose, overrideUrl }: SiteQrModalProps) {
 
   return (
     <ModalDialog
-      overlayClassName="nolstory-studio-backdrop is-open qr-modal-backdrop"
-      dialogClassName="nolstory-studio-modal qr-modal-dialog"
+      overlayClassName="knolstory-studio-backdrop nolstory-studio-backdrop is-open qr-modal-backdrop"
+      dialogClassName="knolstory-studio-modal nolstory-studio-modal qr-modal-dialog"
       label="교실 접속 QR 코드"
       onClose={onClose}
     >

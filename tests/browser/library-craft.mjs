@@ -126,7 +126,7 @@ try {
   // Real shared imports exceed both desktop and mobile page capacities.
   const before = await snapshot(page);
   for (const text of fixtures.shared) {
-    await page.locator('input[accept=".nolstory"]').setInputFiles({name:'friend.nolstory',mimeType:'application/json',buffer:Buffer.from(text)});
+    await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').setInputFiles({name:'friend.knolstory',mimeType:'application/json',buffer:Buffer.from(text)});
     await page.getByRole('button',{name:'파일의 플레이 버전 읽기',exact:true}).click();
     await returnFromReader(page);
   }

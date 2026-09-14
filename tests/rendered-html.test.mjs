@@ -34,6 +34,7 @@ test("서버는 방문 기록을 읽기 전 중립 시작 화면을 렌더링한
   assert.match(html, /<title>놀스토리<\/title>/i);
   assert.match(html, /aria-busy="true"/);
   assert.match(html, /이야기를 준비하고 있어요/);
+  assert.doesNotMatch(html, /class="knolstory-poster-viewport/);
   assert.doesNotMatch(html, /class="nolstory-poster-viewport/);
   assert.doesNotMatch(html, /Google로 시작하기/);
 });

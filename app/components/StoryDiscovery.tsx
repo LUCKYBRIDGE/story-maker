@@ -3,7 +3,7 @@ import { UiIcon } from "./UiIcon";
 
 import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { libraryPage, type StoryTheme, type DiscoveryScreen } from "../story-discovery";
-import type { NolstorySharedFile } from "../story-file";
+import type { KnolstorySharedFile } from "../story-file";
 import { MAX_EDITABLE_PROJECTS, type ProjectCollection } from "../story-project-collection";
 import type { StoryProject } from "../story-data";
 import { COVER_THEMES, resolveStoryCover } from "../story-cover";
@@ -16,9 +16,9 @@ export type StoryHubGroup = "base" | "mine" | "shared";
 export interface StoryDiscoveryProps {
   initialFilter?: StoryHubGroup;
   onStoryFile: (file?: File) => void;
-  sharedFiles: NolstorySharedFile[];
-  onReadShared: (file: NolstorySharedFile) => void;
-  onRemixShared: (file: NolstorySharedFile) => void;
+  sharedFiles: KnolstorySharedFile[];
+  onReadShared: (file: KnolstorySharedFile) => void;
+  onRemixShared: (file: KnolstorySharedFile) => void;
   screen?: Exclude<DiscoveryScreen, "home">;
   theme?: StoryTheme;
   group?: StoryHubGroup;
@@ -73,7 +73,7 @@ export type SelectedBook =
       title: string;
       subtitle: string;
       description: string;
-      file: NolstorySharedFile;
+      file: KnolstorySharedFile;
       paper: string;
       ink: string;
       accent: string;
@@ -479,7 +479,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               ref={fileInputRef}
               hidden
               type="file"
-              accept=".nolstory"
+              accept=".knolstory,.nolstory"
               onChange={(e) => {
                 const file = e.currentTarget.files?.[0];
                 e.currentTarget.value = "";
@@ -895,7 +895,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                     </div>
                     <div className="action-card-text">
                       <strong className="action-card-title">파일로 보관</strong>
-                      <small className="action-card-sub">.nolstory 파일로 내 기기에 저장해요</small>
+                      <small className="action-card-sub">.knolstory 파일로 내 기기에 저장해요</small>
                     </div>
                   </button>
 

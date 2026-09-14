@@ -9,9 +9,21 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SN-DESIGN-01 선녀와 나무꾼 표지·책 디자인 및 선택지 글상자 상향 확장
+## 현재 작업: KNOL-01 nolstory -> knolstory 파일 형식·파일명 및 UI 명칭 전환
 
-- 2026-09-13~14 사용자 직접 요청(선녀와 나무꾼 표지/책 디자인 반영 및 선택지 글상자 위로 공간 확보·스크롤/잘림 제거), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · A/B.
+- 2026-09-14 사용자 직접 요청(nolstory -> knolstory 명칭/파일 형식/파일명 전환 및 깃허브 메인 반영), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 origin/main `32f4f61`, branch `codex/knolstory-file-format`.
+- 새 파일 규격: `.knolstory`, MIME `application/vnd.knolstory+json`, manifest format `"knolstory"`.
+- 하위 호환: 기존 학생 보관 `.nolstory` 파일 100% 투명 읽기/불러오기 지원 (`accept=".knolstory,.nolstory"`).
+- UI/CSS: 창작 관리, 서재, 프로젝트 도구의 백업/불러오기 버튼 및 안내 문구 `.knolstory`로 갱신. `.knolstory-*` 및 `.nolstory-*` 클래스 동시 지원.
+- ADR: `docs/decisions/knolstory-file-v1.md` 작성 및 기존 ADR 연계.
+- 증거: `npm run check`, `npm test` 206/206 통과. `npm run build:github` 통과.
+- 브라우저 검증: `qa:smoke` (start-screen, story-flow, sticky-memos, pinky-examples, library-home) 5개 전체 통과. `seonnyeo-e2e` (선녀와 나무꾼 E2E 및 .nolstory 1570컷 가져오기 왕복) 통과.
+- 메인 반영 준비 완료. 다음 READY 없음.
+
+## 최근 완료: SN-DESIGN-01 선녀와 나무꾼 표지·책 디자인 및 선택지 글상자 상향 확장
+
+- 2026-09-13~14 사용자 직접 요청(선녀와 나무꾼 표지/책 디자인 반영 및 선택지 글상자 위로 공간 확보·스크롤/잘림 제거), **DONE — PR #35 병합(`32f4f61`) 완료**, Work Lead · A/B.
 - 기준 origin/main `f31ceb1`, branch `codex/seonnyeo-cover-design`.
 - 시작 포스터 3작품 순환, 전용 일러스트, 서재·읽기·이어 만들기용 편집 가능한 책 표지. 기존 이야기와 저장 형식 보존.
 - 내장 ImageGen으로 기존 선녀·나무꾼 참고 일러스트 생성, WebP 1120×1400 등록. 사용자 후속 피드백에 따라 시작 화면 좌우 여백을 없애고 cover·중앙 25%로 달·얼굴·발 보존. 제작 프롬프트는 디자인 목업 README.

@@ -178,7 +178,7 @@ export function StoryFlowEditor({ project, line, onChange, onCreateBranches, onO
     </>}
     {flow?.type === "goto" && targetSelect(flow.targetLineId, targetLineId => onChange({ ...flow, targetLineId }), "다음 도착 컷")}
 
-    {passcodeModalOpen && <ModalDialog overlayClassName="nolstory-studio-backdrop is-open" dialogClassName="nolstory-studio-modal" label="선생님 승인 코드 입력" onClose={() => setPasscodeModalOpen(false)}>
+    {passcodeModalOpen && <ModalDialog overlayClassName="knolstory-studio-backdrop nolstory-studio-backdrop is-open" dialogClassName="knolstory-studio-modal nolstory-studio-modal" label="선생님 승인 코드 입력" onClose={() => setPasscodeModalOpen(false)}>
       <h2>선생님 승인 코드 입력</h2>
       <p>{passcodeReason || "선택지를 더 추가하거나 세 갈래 이상 만들려면 선생님 승인 코드가 필요해요."}</p>
       <div style={{ margin: "14px 0", padding: "12px", background: "var(--color-bg-subtle, #f3f4f6)", borderRadius: "8px", fontSize: "14px", lineHeight: "1.5" }}>
@@ -206,7 +206,7 @@ export function StoryFlowEditor({ project, line, onChange, onCreateBranches, onO
       </form>
     </ModalDialog>}
 
-    {pendingCount && <ModalDialog overlayClassName="nolstory-studio-backdrop is-open" dialogClassName="nolstory-studio-modal" label="기존 뒷이야기 연결" onClose={() => setPendingCount(null)}>
+    {pendingCount && <ModalDialog overlayClassName="knolstory-studio-backdrop nolstory-studio-backdrop is-open" dialogClassName="knolstory-studio-modal nolstory-studio-modal" label="기존 뒷이야기 연결" onClose={() => setPendingCount(null)}>
       <h2>먼저 쓴 뒷이야기를 어디에 연결할까요?</h2>
       <p>기존 글과 컷은 그대로 보관하고 연결만 바꿔요.</p>
       <p>이어질 첫 컷: {oldNext ? label(oldNext) : "없음"}</p>

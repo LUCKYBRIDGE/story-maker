@@ -1,5 +1,9 @@
 # `.nolstory` 파일 v1
 
+> [!NOTE]
+> 2026-09-14 사용자 결정으로 파일 형식 공식 명칭이 `knolstory`로 전환되었습니다.
+> 상세 규격 및 하위 호환 정책은 [`docs/decisions/knolstory-file-v1.md`](knolstory-file-v1.md)를 참조하세요. 기존 `.nolstory` 파일은 계속 100% 호환 읽기 지원됩니다.
+
 2026-09-10. 제품 범위는 `docs/storygame-detailed-design.md`의 사용자 확정 계약을 따른다.
 구현 기준은 `app/story-file.ts`, 검증은 `tests/story-file.test.mjs`다.
 

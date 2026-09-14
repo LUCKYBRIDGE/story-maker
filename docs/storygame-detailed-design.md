@@ -286,7 +286,7 @@ Landing·Library·Reader·창작 관리와 Studio의 세 단계는 [화면 역�
 유지한다. 구체적인 키·우선순위는 [화면 역할 계약](decisions/studio-screen-flow-v1.md)에 둔다.
 
 서재는 책 찾기·읽기·이어 만들기를 맡고 창작 관리는 가져오기·백업·삭제·저장 오류와
-Excel·복구 도구 진입을 맡는다. `.nolstory`와 Excel은 기기 안에서 읽고 공개 Google 시트는
+Excel·복구 도구 진입을 맡는다. `.knolstory`(`nolstory` 호환)와 Excel은 기기 안에서 읽고 공개 Google 시트는
 한 번 가져오며 자동 동기화하지 않는다. 계정·클라우드·온라인 공개 서재는 구현된 것처럼 표시하지 않는다.
 
 새 작품·템플릿·가져오기가 현재 작업을 교체할 때 기존 확인·체크포인트 경로를 사용한다.
@@ -1447,7 +1447,7 @@ Excel은 기존 이야기 구성 행을 이동하지 않고 표지 행을 덧붙
   필요할 때 도달 가능한 경로만 편집 seed로 복제한다. 빈 이야기 및 기본판 기반 창작을 지원한다.
 - 편집 작품은 최대 2개다. 생성·가져오기·이어만들기 모두 중앙 정책을 적용하며 세 번째 작품이
   기존 작품을 덮어쓰지 않는다. ID별 draft/적용된 playback/선택 ID를 분리하고 기존 단일 저장본을 보존한다.
-- 파일 확장자는 `.nolstory`, manifest kind는 project/shared다. project는 편집 백업,
+- 파일 확장자는 `.knolstory`(기존 `.nolstory` 100% 호환 읽기), manifest kind는 project/shared다. project는 편집 백업,
   shared는 슬롯을 소비하지 않는 읽기용이다. remix는 도메인에서 allowRemix를 확인하고 새 ID로 복제한다.
   같은 ID 파일은 명시적 유지/교체 선택을 거친다. 날짜만으로 자동 덮어쓰지 않는다.
   내장 자산은 참조하고 사용자 자산은 지원 범위에서만 포함한다. 크기·스키마·MIME·경로를 검증한다.

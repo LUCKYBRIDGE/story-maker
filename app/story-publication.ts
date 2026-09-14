@@ -1,7 +1,7 @@
 import { lineSpeakerNames } from "./story-speakers";
 import { cloneProject, type StoryProject } from "./story-data";
 import { orderedStoryFlowLines, storyFlowTargets } from "./story-flow";
-import { createNolstoryShared, encodeNolstoryFile, type NolstorySharedFile } from "./story-file";
+import { createKnolstoryShared, encodeKnolstoryFile, type KnolstorySharedFile } from "./story-file";
 import type { StorySource } from "./story-source";
 
 // This is an exact reading-content comparison, not similarity or proof of authorship.
@@ -32,7 +32,7 @@ export type SubmissionStatus = "draft" | "pending" | "needs_changes" | "approved
 export type Publication = {
   id: string; createdAt: string; fingerprint: string;
   baseStoryId?: string; schoolId?: string; sourceKind?: StorySource["kind"];
-  file: NolstorySharedFile;
+  file: KnolstorySharedFile;
 };
 export type PublicationQuery = {baseStoryId?: string; schoolId?: string; sourceKind?: StorySource["kind"]};
 export type Submission = {publicationId: string; status: SubmissionStatus};
@@ -43,8 +43,8 @@ function freeze<T>(value: T): T {
 export async function createPublication(project: StoryProject, options: {id: string; allowRemix: boolean; now?: string; schoolId?: string}): Promise<Publication> {
   if (!options.id.trim()) throw new Error("공유본 ID가 필요해요.");
   const now = options.now ?? new Date().toISOString();
-  const file = createNolstoryShared(project, options.allowRemix, now);
-  encodeNolstoryFile(file);
+  const file = createKnolstoryShared(project, options.allowRemix, now);
+  encodeKnolstoryFile(file);
   return freeze({id:options.id, createdAt:now, fingerprint:await storyFingerprint(file.story.project),
     ...(project.source?.kind === "baseEdition" ? {baseStoryId:project.source.baseStoryId} : {}),
     ...(options.schoolId ? {schoolId:options.schoolId} : {}),
@@ -59,9 +59,9 @@ export function transitionSubmission(submission: Submission, status: SubmissionS
   if (!allowed[submission.status].includes(status)) throw new Error("허용되지 않는 제출 상태 변경이에요.");
   return {...submission,status};
 }
-export async function remixSharedFile(file: NolstorySharedFile, id: string, publicationId?: string): Promise<StoryProject> {
+export async function remixSharedFile(file: KnolstorySharedFile, id: string, publicationId?: string): Promise<StoryProject> {
   if (!file.sharing.allowRemix) throw new Error("지은이가 고쳐 쓰기를 허용하지 않은 작품이에요.");
-  encodeNolstoryFile(file);
+  encodeKnolstoryFile(file);
   if (!id.trim() || id === file.story.project.id) throw new Error("고쳐 쓸 작품은 새 ID가 필요해요.");
   const project = cloneProject(file.story.project);
   const original = {originalTitle:project.title, originalAuthorDisplayName:file.sharing.authorDisplayName, originalFingerprint:await storyFingerprint(project)};

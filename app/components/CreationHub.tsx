@@ -67,7 +67,7 @@ export function CreationHub(props: Props) {
     if (busy) return;
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
-    if (file.name.endsWith(".nolstory")) {
+    if (file.name.endsWith(".knolstory") || file.name.endsWith(".nolstory")) {
       props.onStoryFile(file);
     } else if (file.name.endsWith(".xlsx") || file.type.includes("spreadsheet") || file.type.includes("excel")) {
       props.onExcel(file);
@@ -247,7 +247,7 @@ export function CreationHub(props: Props) {
                   <span className="import-box-icon" aria-hidden="true">📁</span>
                   <div>
                     <h3 className="import-box-title">파일로 가져오기</h3>
-                    <p className="import-box-sub">.nolstory 백업 파일이나 Excel 스프레드시트 대본을 불러옵니다.</p>
+                    <p className="import-box-sub">.knolstory 백업 파일이나 Excel 스프레드시트 대본을 불러옵니다.</p>
                   </div>
                 </div>
 
@@ -265,13 +265,13 @@ export function CreationHub(props: Props) {
                     onClick={() => storyFileInput.current?.click()}
                     disabled={busy}
                   >
-                    .nolstory 파일 열기
+                    .knolstory 파일 열기
                   </button>
                   <input
                     ref={storyFileInput}
                     hidden
                     type="file"
-                    accept=".nolstory"
+                    accept=".knolstory,.nolstory"
                     onChange={event => {
                       const file = event.currentTarget.files?.[0];
                       event.currentTarget.value = "";

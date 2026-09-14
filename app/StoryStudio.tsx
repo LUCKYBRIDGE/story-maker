@@ -23,7 +23,7 @@ import { normalizeAndValidateStoryProject } from "./story-project-validation";
 import { createStoryDocument } from "./story-project-document";
 import { STORY_PROJECT_APP_VERSION } from "./story-project-repository";
 import { StoryFileDialog } from "./components/StoryFileDialog";
-import { createNolstoryProject, createNolstoryShared, downloadNolstoryFile, readNolstoryFile, parseNolstoryFile, type NolstoryFile, type NolstorySharedFile } from "./story-file";
+import { createKnolstoryProject, createKnolstoryShared, downloadKnolstoryFile, readKnolstoryFile, parseKnolstoryFile, type KnolstoryFile, type KnolstorySharedFile } from "./story-file";
 import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery";
 import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
 import { SiteQrModal } from "./components/SiteQrModal";
@@ -238,9 +238,9 @@ export function StoryStudio() {
   const [active, setActive] = useState<StoryProject>(() =>
     cloneProject(DEFAULT_PROJECT),
   );
-  const [filePreview, setFilePreview] = useState<NolstoryFile | null>(null);
+  const [filePreview, setFilePreview] = useState<KnolstoryFile | null>(null);
   const [fileError, setFileError] = useState("");
-  const [sharedFiles, setSharedFiles] = useState<NolstorySharedFile[]>([]);
+  const [sharedFiles, setSharedFiles] = useState<KnolstorySharedFile[]>([]);
   const [allowFileRemix, setAllowFileRemix] = useState(false);
   const storyFileInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState("");
@@ -491,7 +491,7 @@ export function StoryStudio() {
   async function openStoryFile(file?: File) {
     if (!file || busy || entryBusy) return;
     setEntryBusy(true);
-    const result = await readNolstoryFile(file);
+    const result = await readKnolstoryFile(file);
     setEntryBusy(false);
     if (!result.ok) { showCollectionError(result.message); return; }
     setFileError("");
@@ -524,7 +524,7 @@ export function StoryStudio() {
     setNotice("파일의 편집본과 플레이 버전을 열었어요. 다른 작품은 그대로예요.");
   }
 
-  async function remixFile(file: NolstorySharedFile) {
+  async function remixFile(file: KnolstorySharedFile) {
     if (busy || entryBusy) return;
     setEntryBusy(true);
     try {
@@ -565,11 +565,11 @@ export function StoryStudio() {
       if (shared) {
         const playback = entry.playback?.project;
         if (!playback?.lines.length) { showCollectionError("먼저 플레이에 적용한 뒤 공유 파일로 보관해 주세요."); return; }
-        downloadNolstoryFile(createNolstoryShared(playback, allowFileRemix), playback.title);
+        downloadKnolstoryFile(createKnolstoryShared(playback, allowFileRemix), playback.title);
       } else {
-        downloadNolstoryFile(createNolstoryProject(entry), project.title);
+        downloadKnolstoryFile(createKnolstoryProject(entry), project.title);
       }
-      setNotice(shared ? "적용한 버전을 공유 파일로 보관했어요. 창작 메모는 제외했어요." : "편집본과 플레이 버전을 .nolstory 파일로 보관했어요.");
+      setNotice(shared ? "적용한 버전을 공유 파일로 보관했어요. 창작 메모는 제외했어요." : "편집본과 플레이 버전을 .knolstory 파일로 보관했어요.");
     } catch (error) { showCollectionError(error instanceof Error ? error.message : "파일로 보관하지 못했어요."); }
   }
 
@@ -665,7 +665,7 @@ export function StoryStudio() {
             if (["base", "mine", "shared"].includes(saved.group)) setStoryHubGroup(saved.group);
             setCreationHubOpen(saved.creation === true);
             if (Array.isArray(saved.shared)) setSharedFiles(saved.shared.flatMap((value: unknown) => {
-              const parsed = parseNolstoryFile(JSON.stringify(value));
+              const parsed = parseKnolstoryFile(JSON.stringify(value));
               return parsed.ok && "story" in parsed.file ? [parsed.file] : [];
             }));
             if (saved.creator === "local" && loaded.ok && loaded.value.projects.some(item => item.draft.project.id === loaded.value.selectedProjectId)) setCreatorAccess("local");
@@ -2812,8 +2812,8 @@ export function StoryStudio() {
             <p>평소에는 닫아 두고 이야기 쓰기에 집중할 수 있어요.</p>
           </div>
           <div className="project-tool-actions">
-            <button onClick={() => storyFileInputRef.current?.click()}>.nolstory 파일 열기</button>
-            <button onClick={() => saveStoryFile()}>.nolstory 편집 백업</button>
+            <button onClick={() => storyFileInputRef.current?.click()}>.knolstory 파일 열기</button>
+            <button onClick={() => saveStoryFile()}>.knolstory 편집 백업</button>
             <button onClick={() => saveStoryFile(true)} disabled={!active.lines.length}>공유 파일로 보관</button>
             <button onClick={() => excelInputRef.current?.click()}>
               Excel에서 불러오기
@@ -2833,7 +2833,7 @@ export function StoryStudio() {
             </button>
           </div>
           <label className="file-remix-option"><input type="checkbox" checked={allowFileRemix} onChange={event => setAllowFileRemix(event.target.checked)} />공유 파일을 받은 사람이 고쳐 쓰도록 허용</label>
-          <input ref={storyFileInputRef} hidden type="file" accept=".nolstory" onChange={event => { const file=event.currentTarget.files?.[0]; event.currentTarget.value=""; void openStoryFile(file); }} />
+          <input ref={storyFileInputRef} hidden type="file" accept=".knolstory,.nolstory" onChange={event => { const file=event.currentTarget.files?.[0]; event.currentTarget.value=""; void openStoryFile(file); }} />
           <div className="google-tool-row">
             <input
               type="url"
