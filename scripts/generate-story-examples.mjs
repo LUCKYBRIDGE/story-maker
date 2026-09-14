@@ -38,10 +38,10 @@ const projects=stories.slice(0,2).map(story=>{
  return project;
 });
 const { compileSeonnyeo } = await import(pathToFileURL(`${root}/scripts/story/compile-seonnyeo.mjs`));
-const { exportNolstory } = await import(pathToFileURL(`${root}/scripts/story/export-nolstory.mjs`));
+const { exportKnolstory, exportNolstory } = await import(pathToFileURL(`${root}/scripts/story/export-nolstory.mjs`));
 const seonnyeoStory = await compileSeonnyeo();
-const seonnyeoNolstory = exportNolstory(seonnyeoStory);
-const seonnyeoProject = seonnyeoNolstory.draft.project;
+const seonnyeoKnolstory = (exportKnolstory || exportNolstory)(seonnyeoStory);
+const seonnyeoProject = seonnyeoKnolstory.draft.project;
 delete seonnyeoProject.source;
 seonnyeoProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7);
 const assetIds = new Set(STORY_ASSETS.map(a => a.id));

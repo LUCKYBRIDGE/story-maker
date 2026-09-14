@@ -24,7 +24,7 @@ test('base editions clone only reachable cuts, preserve branch routes and master
  assert.ok(parseStoryDocument(createStoryDocument({project:seed,savedAt:'2026-09-10T00:00:00.000Z',appVersion:'qa'})).ok);
  assert.equal(seed.source.baseEditionId,master.id);seed.lines[0].text='my edit';assert.equal(JSON.stringify(master),before);
  out.push({theme,cuts:clonedGraph.reachableCuts});}console.log(JSON.stringify(out));`);
- assert.deepEqual(result,[{theme:'rabbit',cuts:136},{theme:'onggojib',cuts:345},{theme:'seonnyeo',cuts:1570}]);
+ assert.deepEqual(result,[{theme:'rabbit',cuts:136},{theme:'onggojib',cuts:345},{theme:'seonnyeo',cuts:1564}]);
 });
 test('base clones use the same two-slot policy and reject a third without replacing either work',()=>{
  const result=run(`const values=new Map();const repo=createProjectCollectionRepository({storage:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}});

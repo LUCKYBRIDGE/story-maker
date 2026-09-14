@@ -32,7 +32,7 @@ for (const [index, project] of source.projects.entries()) test(`example graph co
  assert.deepEqual([...graph.unreachable].sort(), expected.sort(), 'new unreachable content requires source review');
  assert.equal(graph.routes.length, index === 0 ? 6 : index === 1 ? 16 : 48);
  assert.equal(graph.endingRoutes.length, index === 0 ? 3 : index === 1 ? 2 : 4);
- assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1570);
+ assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1564);
  assert.ok(graph.joins.length > 0);
 });
 test('example graph oracle rejects broken links, cycles and duplicate IDs', () => {

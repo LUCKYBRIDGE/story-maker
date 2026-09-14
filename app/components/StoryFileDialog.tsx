@@ -7,7 +7,7 @@ export function StoryFileDialog({file, exists, error, onCancel, onImport, onRead
 }) {
   const project = "draft" in file ? file.draft.project : file.story.project;
   const readable = "story" in file ? file.story.project.lines.length > 0 : !!file.playback?.project.lines.length;
-  return <ModalDialog overlayClassName="blank-confirm-overlay" dialogClassName="import-dialog story-file-dialog" label="놀스토리 파일 열기" onClose={onCancel}>
+  return <ModalDialog overlayClassName="blank-confirm-overlay" dialogClassName="import-dialog story-file-dialog" label="크놀스토리 파일 열기" onClose={onCancel}>
     <h2>{project.title || "제목 없는 이야기"}</h2>
     <p>{"draft" in file ? "편집 백업 파일이에요. 편집본과 플레이 버전을 함께 보관해요." : "공유용 읽기 파일이에요. 편집 작품 자리를 사용하지 않아요."}</p>
     {"draft" in file && exists && <p>같은 ID의 작품이 있어요. 날짜로 자동 교체하지 않아요. 바꾸면 현재 편집본을 복구 기록에 남겨요.</p>}
