@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-13
+- 기준일: 2026-09-14
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,19 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: QR-01 교실 공유용 사이트 접속 QR 버튼 및 모달 추가
+## 현재 작업: SN-DESIGN-01 선녀와 나무꾼 표지·책 디자인 및 선택지 글상자 상향 확장
+
+- 2026-09-13~14 사용자 직접 요청(선녀와 나무꾼 표지/책 디자인 반영 및 선택지 글상자 위로 공간 확보·스크롤/잘림 제거), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · A/B.
+- 기준 origin/main `f31ceb1`, branch `codex/seonnyeo-cover-design`.
+- 시작 포스터 3작품 순환, 전용 일러스트, 서재·읽기·이어 만들기용 편집 가능한 책 표지. 기존 이야기와 저장 형식 보존.
+- 내장 ImageGen으로 기존 선녀·나무꾼 참고 일러스트 생성, WebP 1120×1400 등록. 사용자 후속 피드백에 따라 시작 화면 좌우 여백을 없애고 cover·중앙 25%로 달·얼굴·발 보존. 제작 프롬프트는 디자인 목업 README.
+- 선택지 화면(`[data-has-choices]`) 글상자가 35% 고정 높이에 갇혀 선택지가 잘리거나 스크롤되던 문제 해결: 글상자가 위로 자연스럽게 공간을 확보하며 확장(`height: auto`, `min-height: 35dvh`, `max-height: calc(100% - 80px)`), 대사 및 2~3개 선택지 모두 스크롤/잘림 없이 온전히 표시. `useStageImageLayout` rAF 스케줄링으로 ResizeObserver 루프 오류 원천 차단.
+- `npm run check`, 빌드, 전체 테스트 206/206 통과. `git diff --check` 통과.
+- `seonnyeo-design.mjs`: 320×740/390×844/820×1180/1365×900에서 키보드 표지 순환·프레이밍·읽기·서재·복제 표지 저장 통과.
+- `story-flow.mjs` (1365/820/390), `image-layout-safety.mjs` (672개 조합), `pinky-examples.mjs` (3개 전 예시 전 분기 경로) 통과.
+- 로컬 branch 변경 및 검증 완료. 메인 반영 준비 완료. 다음 READY 없음.
+
+## 최근 완료: QR-01 교실 공유용 사이트 접속 QR 버튼 및 모달 추가
 
 - 2026-09-13 사용자 요청(교실에서 사이트 공유 시 편하도록 첫 표지 화면과 서재 화면에 접속 QR 버튼 추가)으로 진행, **DONE — 2026-09-13 로컬 구현·검증**, Work Lead · G/A/B.
 - 기준 `origin/codex/start-screen-theme-toggle` (`2d0c10b`), branch `codex/classroom-share-qr-button`.

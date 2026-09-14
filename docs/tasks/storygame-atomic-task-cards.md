@@ -1622,3 +1622,11 @@ npm test
   6. 요청된12개와 추가2개 viewport에서 가로 넘침 및 실제 경계 검사, 대표 screenshot을 남긴다.
 - 검증: `npm run check`, `npm test`, `node tests/browser/image-layout-safety.mjs`, 관련 start-screen/display-settings/reader-layout/reader-history/reader-book/library-home/library-craft/docked-cuts 및 `npm run qa:smoke` (QA_URL 지정).
 - 중단: 실제 사용자 데이터/형식 변경이 필요하면 중단하고 범위를 확인한다. 되돌림은 본 작업 diff만 대상으로 한다. 증거와 미검증 사항을 상태표에 기록하고 인수 조건 충족 후 DONE, 다음 작업을 열지 않는다.
+
+## SN-DESIGN-01 — 선녀와 나무꾼 표지·책 디자인 및 선택지 글상자 상향 확장
+
+- 사용자: 세 기본 작품을 표지에서 알아보고 읽거나 이어 만들려는 학생, 선택지 분기를 읽을 때 잘림이나 스크롤 없이 선택지를 고르려는 학생.
+- 범위: StartScreen/StoryStudio, BookCover, story-examples/story-discovery, globals.css, useStageImageLayout, 자산 manifest/생성 catalog, public/story-assets의 신규 표지, 관련 자산 회귀·브라우저 검사와 디자인 문서.
+- 제약: 기존 인물 정체성과 의상 보존, 대본·분기·저장·Excel 형식 보존. 새 의존성 없음.
+- 인수: 세 표지 순환과 읽기 대상 일치, 선녀 책 표지가 서재·확대·읽기에서 일관되며 복사 후 편집 가능, 320/390/820/1365px에서 제목·인물 잘림과 가로 넘침 없음. 선택지가 있는 컷(`[data-has-choices]`)에서 글상자가 위로 자연스럽게 공간을 확보하며 확장되어 2~3개 선택지와 대사 문구가 내부 스크롤이나 잘림 없이 온전히 표시됨.
+- 증거: npm run check, npm test(206/206), story-flow.mjs, image-layout-safety.mjs, seonnyeo-design.mjs, pinky-examples.mjs 및 실제 브라우저 캡처. 공개 배포는 별도.

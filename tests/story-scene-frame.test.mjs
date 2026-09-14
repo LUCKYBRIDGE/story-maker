@@ -61,3 +61,11 @@ test("U2-02: 플레이 복귀 시 이중 rAF로 ref를 안전하게 복원하고
   // 버튼 active 피드백 확인
   assert.match(css, /\.cut-length-guide button:active/);
 });
+
+test("선택지가 있는 컷의 글상자는 고정 높이에 갇히지 않고 위로 확장되어 선택지와 대사를 온전히 표시한다", async () => {
+  const css = await source("app/globals.css");
+  assert.match(css, /\.player-shell \.story-scene-frame > \.dialogue-box\[data-has-choices\][\s\S]*?height:\s*auto;/);
+  assert.match(css, /\.player-shell \.dialogue-box\[data-has-choices\] > \.player-choices[\s\S]*?max-height:\s*none;/);
+  assert.match(css, /\.player-shell \.dialogue-box\[data-has-choices\] > \.player-choices[\s\S]*?overflow:\s*visible;/);
+  assert.match(css, /\.player-shell \.dialogue-box\[data-has-choices\] > \.reading-transcript[\s\S]*?max-height:\s*none;/);
+});

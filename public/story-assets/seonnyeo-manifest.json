@@ -901,5 +901,27 @@
     "src": "/story-assets/M04-celestial.png",
     "sourcePath": "games/ifstory03/assets/M04-celestial.png",
     "copyright": "놀퀴즈"
+  },
+  {
+    "id": "seonnyeo.background.poster-art",
+    "displayName": "seonnyeo.poster.art.webp",
+    "label": "달빛 아래 선녀와 나무꾼 · 표지",
+    "story": "선녀와 나무꾼",
+    "type": "background",
+    "category": "background",
+    "backgroundRole": "scene",
+    "group": "이야기 표지",
+    "pose": "배경",
+    "usage": "추가 연출",
+    "selectionTier": "기본 추천",
+    "tags": [
+      "선녀와 나무꾼",
+      "표지",
+      "달빛",
+      "연못"
+    ],
+    "src": "/story-assets/seonnyeo.poster.art.webp",
+    "sourcePath": "public/story-assets/seonnyeo.poster.art.webp",
+    "copyright": "놀퀴즈"
   }
 ]
