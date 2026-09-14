@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "ea1f338bbc228074b029e5981b806fd30abdb5d2",
+  "sourceCommit": "d84e970904f25be8fc404fbac4f629d914f9df66",
   "projects": [
     {
       "id": "pinky-review-main-002",
@@ -35,7 +35,7 @@
         "의관",
         "토끼"
       ],
-      "updatedAt": "pinky-ne-site ea1f338",
+      "updatedAt": "pinky-ne-site d84e970",
       "chapters": [
         {
           "id": "review-main-002:start",
@@ -2347,7 +2347,7 @@
         "가짜 옹고집",
         "조용한 옹고집"
       ],
-      "updatedAt": "pinky-ne-site ea1f338",
+      "updatedAt": "pinky-ne-site d84e970",
       "chapters": [
         {
           "id": "review-main-003:start",
@@ -45448,7 +45448,7 @@
           }
         }
       ],
-      "updatedAt": "pinky-ne-site ea1f338"
+      "updatedAt": "pinky-ne-site d84e970"
     }
   ]
 }
