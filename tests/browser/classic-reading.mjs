@@ -26,7 +26,7 @@ try {
   await page.screenshot({ path: `${output}/library-rabbit-classic-entry.png`, fullPage: true });
 
   await classicButton.click();
-  await page.waitForURL(/\/classic\/rabbit\/?$/);
+  await page.waitForURL(/\/classic\/rabbit(?:\.html)?\/?$/);
   await page.locator('.book-play-entry').waitFor();
   assert.ok((await page.locator('.student-book').innerText()).includes('토끼전'));
 
