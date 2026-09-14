@@ -5,10 +5,8 @@ import { useEffect } from "react";
 const CLASSIC_READING_CARD = "rabbit-classic-reading";
 
 function classicReadingUrl() {
-  const root = window.location.pathname.endsWith("/")
-    ? window.location.pathname
-    : `${window.location.pathname}/`;
-  return `${root}classic/rabbit/`;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return basePath ? `${basePath}/classic/rabbit.html` : "/classic/rabbit";
 }
 
 function createClassicReadingCard() {
