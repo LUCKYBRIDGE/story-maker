@@ -9,7 +9,10 @@ import type {
 } from "../../story-revision-cycle";
 
 function returnToLibrary() {
-  const target = window.location.pathname.replace(/\/classic\/rabbit\/?$/, "/");
+  const target = window.location.pathname.replace(
+    /\/classic\/rabbit(?:\.html|\/)?$/,
+    "/",
+  );
   window.location.assign(target || "/");
 }
 
