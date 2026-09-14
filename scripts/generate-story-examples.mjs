@@ -5,6 +5,10 @@ import {execFileSync} from 'node:child_process';
 import {DEFAULT_PROJECT,cloneProject} from '../app/story-data.ts';
 import {STORY_ASSETS} from '../app/story-assets.ts';
 const root=process.env.STORY_SOURCE_ROOT || '/Volumes/WAN2/apps/pinky-ne-site-publish';
+const status=execFileSync('git',['-C',root,'status','--porcelain'],{encoding:'utf8'}).trim();
+if(status && !process.env.ALLOW_DIRTY_STORY_SOURCE){
+  throw new Error(`Story source repository at ${root} has uncommitted changes:\n${status}\nCommit or stash them first, or pass ALLOW_DIRTY_STORY_SOURCE=1 to override.`);
+}
 const {stories}=await import(pathToFileURL(`${root}/worker/story-data/stories.js`));
 const commit=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const missing=new Set();

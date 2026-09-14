@@ -9,17 +9,29 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: KNOL-01 nolstory -> knolstory 파일 형식·파일명 및 UI 명칭 전환
+## 현재 작업: SN-NARRATIVE-01 선녀와 나무꾼 후반부 서사(익일 재선택·빛 소멸 일관성·신뢰 중심화) 개선 및 1632컷 동기화
 
-- 2026-09-14 사용자 직접 요청(nolstory -> knolstory 명칭/파일 형식/파일명 전환 및 깃허브 메인 반영), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · G/A/B.
-- 기준 origin/main `32f4f61`, branch `codex/knolstory-file-format`.
-- 새 파일 규격: `.knolstory`, MIME `application/vnd.knolstory+json`, manifest format `"knolstory"`.
-- 하위 호환: 기존 학생 보관 `.nolstory` 파일 100% 투명 읽기/불러오기 지원 (`accept=".knolstory,.nolstory"`).
-- UI/CSS: 창작 관리, 서재, 프로젝트 도구의 백업/불러오기 버튼 및 안내 문구 `.knolstory`로 갱신. `.knolstory-*` 및 `.nolstory-*` 클래스 동시 지원.
-- ADR: `docs/decisions/knolstory-file-v1.md` 작성 및 기존 ADR 연계.
-- 증거: `npm run check`, `npm test` 206/206 통과. `npm run build:github` 통과.
-- 브라우저 검증: `qa:smoke` (start-screen, story-flow, sticky-memos, pinky-examples, library-home) 5개 전체 통과. `seonnyeo-e2e` (선녀와 나무꾼 E2E 및 .nolstory 1570컷 가져오기 왕복) 통과.
+- 2026-09-14 사용자 직접 요청(선녀와 나무꾼 후반부 은폐 불일치 해결, 다음 날 재선택 분기 추가, 선녀옷 빛 소멸 일관성 확보, 나무꾼 상실 두려움 심리 보강, Ending 4 신뢰 붕괴 중심화 및 레포지토리/생성 데이터 1632컷 전수 동기화), **DONE — 2026-09-14 로컬 구현·검증**, Work Lead · G/A/B.
+- 기준 origin/main `81dd542`, branch `codex/seonnyeo-narrative-revision`.
+- 소스 저장소: GitHub `LUCKYBRIDGE/pinky-ne-site`의 `codex/seonnyeo-namukkun-implementation` (commit `e380e6f`).
+- 서사 개선:
+  1. 문제 A: '하루만 숨긴다' 선택 후 이튿날 아침 신규 선택 4H(A: 더 늦기 전에 사실대로 말한다 -> HA1/HA2 / B: 조금만 더 미룬다 -> HB1/HB2/HB3)를 추가하여 추가 은폐가 플레이어의 직접 선택으로 일어나도록 수정.
+  2. 문제 B: 선녀가 옷을 품에 안은 순간부터 은빛 소멸이 멈춘다는 묘사를 R1, HA1, E3-1에 자연스럽게 배치하여 며칠간의 숙고 기간(보름달까지)과의 모순 원천 해소.
+  3. 문제 C: 장면 14에서 상실에 대한 두려움으로 하루만 미루려는 나무꾼의 내면 독백 보강.
+  4. 문제 D: Ending 4에서 선녀가 떠나는 핵심 원인을 '직접 질문받고도 거짓말함'과 '선택권 박탈'에 의한 신뢰 완전 붕괴로 명확히 정립하고, 옷의 힘 소멸 위기는 추가 심각성으로 배치.
+  5. 문제 E: 장면 14 옷 발견 시 은빛이 기억보다 흐려져 있다는 약한 복선 보강.
+  6. 4개 엔딩(Ending 1~4) 정체성 100% 보존, 도달 경로 48개에서 64개로 자연스러운 확장.
+- 생성/검증 안전성:
+  - `generate-story-examples.mjs`에 소스 레포지토리의 git working tree clean 상태 사전 검사 로직 추가 (dirty working tree 시 안전한 중단 및 에러 출력).
+  - `pinky-ne-site` 원본 커밋(`e380e6f`) 및 push 완료 후 공식 생성기를 통해 `app/story-examples.generated.json` 재생성 (1632컷, sourceCommit 일치).
+- 증거:
+  - `pinky-ne-site`: `npm run test:seonnyeo` (7/7 전수 통과, 70장면, 717비트, 64경로, 156챕터, 1632컷).
+  - `story-maker`: `npm run check` (0 errors), `npm test` (207/207 통과), `QA_SUITES=seonnyeo-e2e node tests/browser/run-smoke.mjs` (3/3 통과, 1632컷 import 검증), `npm run qa:smoke` (5/5 전체 스위트 1365/390 반응형 통과).
 - 메인 반영 준비 완료. 다음 READY 없음.
+
+## 최근 완료: KNOL-01 nolstory -> knolstory 파일 형식·파일명 및 UI 명칭 전환
+
+- 2026-09-14 사용자 직접 요청(nolstory -> knolstory 명칭/파일 형식/파일명 전환 및 깃허브 메인 반영), **DONE — PR #38 병합(`81dd542`) 완료**, Work Lead · G/A/B.
 
 ## 최근 완료: SN-DESIGN-01 선녀와 나무꾼 표지·책 디자인 및 선택지 글상자 상향 확장
 
