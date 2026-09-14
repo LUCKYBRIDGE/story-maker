@@ -9,6 +9,11 @@ export const BASE_STORIES = [
   { theme: "seonnyeo", id: "seonnyeo", title: "선녀와 나무꾼", description: "선택, 신뢰, 관계와 두 고향을 다루는 이야기" },
 ] as const;
 
+export function nextStoryTheme(theme: StoryTheme): StoryTheme {
+  const index = BASE_STORIES.findIndex(story => story.theme === theme);
+  return BASE_STORIES[(index + 1) % BASE_STORIES.length].theme;
+}
+
 export function libraryPage<T>(items: readonly T[], page: number, size: number) {
   const capacity = Math.max(1, Math.floor(size));
   const pages = Math.max(1, Math.ceil(items.length / capacity));

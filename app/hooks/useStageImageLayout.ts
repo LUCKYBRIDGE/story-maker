@@ -80,18 +80,27 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
         image.dataset.layoutReady = "true";
       }
     };
+    let frameId: number | null = null;
+    const scheduleLayout = () => {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(() => {
+        frameId = null;
+        layout();
+      });
+    };
     layout();
-    const observer = new ResizeObserver(layout);
+    const observer = new ResizeObserver(scheduleLayout);
     observer.observe(stage);
     if (heading) observer.observe(heading);
     const dialogue = frame?.querySelector(".dialogue-box");
     if (dialogue) observer.observe(dialogue);
     images.forEach(image => image.addEventListener("load", layout));
-    window.addEventListener("resize", layout);
+    window.addEventListener("resize", scheduleLayout);
     return () => {
+      if (frameId !== null) cancelAnimationFrame(frameId);
       observer.disconnect();
       images.forEach(image => image.removeEventListener("load", layout));
-      window.removeEventListener("resize", layout);
+      window.removeEventListener("resize", scheduleLayout);
     };
   }, [variant, layoutKey]);
   return ref;

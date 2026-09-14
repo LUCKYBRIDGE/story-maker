@@ -76,10 +76,10 @@ test("옹고집전 아이들은 성인보다 작은 키로 렌더링한다", () 
 test("배경 표시 역할은 이전 picker category와 독립이고 의미 있는 장면을 보존한다", () => {
   const result=run(`
     const {STORY_ASSETS}=await import('./app/story-assets.ts');
-    const ids=['rabbit-turtle.background.rabbit-palace-reveal','rabbit-turtle.background.rabbit-turtle-shore-choice','rabbit-turtle.background.rabbit-turtle-bg-palace-confession','rabbit-turtle.background.rabbit-turtle-bg-palace-trap','onggojib.background.child-fever-cg-pixel','onggojib.background.warm-room-pixel','rabbit-turtle.background.rabbit-turtle-bg-grassland'];
+    const ids=['rabbit-turtle.background.rabbit-palace-reveal','rabbit-turtle.background.rabbit-turtle-shore-choice','rabbit-turtle.background.rabbit-turtle-bg-palace-confession','rabbit-turtle.background.rabbit-turtle-bg-palace-trap','onggojib.background.child-fever-cg-pixel','onggojib.background.warm-room-pixel','rabbit-turtle.background.rabbit-turtle-bg-grassland','seonnyeo.background.poster-art'];
     console.log(JSON.stringify({meaningful:ids.map(backgroundId=>resolveStoryStage({backgroundId}).background.meaningful),roles:STORY_ASSETS.filter(a=>a.type==='background').map(a=>a.backgroundRole)}));
   `);
-  assert.deepEqual(result.meaningful,[true,true,true,true,true,false,false]);
-  assert.equal(result.roles.length,52);
+  assert.deepEqual(result.meaningful,[true,true,true,true,true,false,false,true]);
+  assert.equal(result.roles.length,53);
   assert.ok(result.roles.every(role=>['scene','scenery'].includes(role)));
 });

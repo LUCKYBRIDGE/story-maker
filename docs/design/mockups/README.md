@@ -69,3 +69,14 @@
 
 무대·대사 위계·안전 여백을 참조하되 분기·선택지·점수·저장 방식은 이식하지 않는다.
 참고 저장소는 읽기 전용이다. 없으면 새 자료를 요청하고 재생 화면을 추측하지 않는다.
+
+
+## 선녀와 나무꾼 표지 자산 (SN-DESIGN-01)
+
+- 2026-09-14 구현 디자인. 사용자 요청에 따라 기존 세 작품의 시작·서재·읽기 흐름에 추가.
+- 서비스 파일: [seonnyeo.poster.art.webp](../../../public/story-assets/seonnyeo.poster.art.webp), 1120×1400, 내장 ImageGen 생성 후 WebP 인코딩. 제작 참고: `M01-celestial.png`, `M02-neutral.png`(인물), `onggojib.poster.art.webp`(기존 표지 품질·따뜻함).
+- 첫 화면은 영역을 cover로 채우고 중앙 25%에 맞춰 얼굴과 발을 보존. 책은 기존 `night` 표지·금색 글씨·`두 고향과 선택` 소개를 사용하며 같은 일러스트를 표시한다. 제목은 이미지에 굽지 않고 실제 텍스트로 유지한다.
+- 편집 가능한 기본 표지의 단일 설정은 `app/story-examples.ts`. 대본 원본은 변경하지 않으며 복제하면 기존 cover 데이터로 보존된다. 배경 목록에서도 선택 가능하다.
+- 생성 프롬프트(내장 도구):
+
+> Use case: illustration-story. Create one finished text-free cover illustration for Korean folktale 선녀와 나무꾼 in a children's interactive story library. Reference 1 locks the fairy identity, face, dark brown long hair with teal ribbon, ivory cloud embroidered outer robe and jade green hanbok. Reference 2 locks woodcutter identity, face, topknot and ivory headband, brown vest ivory sleeves gray-brown trousers. Preserve their head/body proportions and costumes. Reference 3 is supporting book illustration quality and warmth only, do not include its characters. Portrait canvas 1024x1280 (4:5), edge-to-edge painted illustration with no empty paper margins, no text, no typography, no logos. At twilight in a luminous jade Korean mountain pond with small waterfall, pines framing edges, a warm full moon and misty layered mountains above. Fairy on left and woodcutter on right stand on the same mossy bank, fully clothed, quietly looking toward each other with respectful space, hands relaxed. Both full bodies within the central 75% width, heads around 40% canvas height, feet around 90%. Small gentle deer near lower left, not covering people. Moonlit teal, jade, ivory and subtle warm gold; tender, magical, thoughtful rather than romantic spectacle. Detailed hand-painted storybook illustration, softly luminous, elegant rich colors, clean expressive faces consistent with references. Keep faces and feet away from all edges. This art will be used both as a landing poster and a small book-cover illustration, so retain legible silhouettes and avoid clutter.

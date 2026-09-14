@@ -1,5 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- 기존 로컬 포스터 원본을 보존합니다. */
+import { BASE_STORIES, nextStoryTheme, type StoryTheme } from "../story-discovery";
 import { resolveAssetUrl } from "../story-asset-url";
 export type EntryLocalDraftStatus = "checking" | "available" | "missing" | "failed";
 export interface StartScreenProps {
@@ -8,12 +9,13 @@ export interface StartScreenProps {
   onOpenMyStories: () => void;
   onToggleTheme?: () => void;
   onOpenQr?: () => void;
-  selectedTheme?: "rabbit" | "onggojib";
+  selectedTheme?: StoryTheme;
   busy?: boolean;
 }
 export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories, onToggleTheme,
   onOpenQr, selectedTheme: coverTheme = "onggojib", busy = false }: StartScreenProps) {
-  const nextThemeName = coverTheme === "rabbit" ? "옹고집전" : "토끼와 자라";
+  const nextThemeName = BASE_STORIES.find(story => story.theme === nextStoryTheme(coverTheme))!.title;
+  const story = BASE_STORIES.find(story => story.theme === coverTheme)!;
   return (
     <main className={`nolstory-poster-viewport theme-${coverTheme}`}>
       <div className="nolstory-poster-frame">
@@ -74,16 +76,16 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
         </nav>
         <section className="poster-heading" aria-live="polite" aria-atomic="true">
           <svg className="poster-leaves" viewBox="0 0 48 56" aria-hidden="true"><path d="M24 54Q23 30 32 8M25 40 10 25" fill="none" stroke="#7c8c59" strokeWidth="2"/><path d="M29 26Q18 10 35 2q8 14-6 24M23 40Q6 42 5 22q17 1 18 18M26 43q0-18 19-18-1 17-19 18" fill="#96a474"/></svg>
-          <h2><span>{coverTheme === "rabbit" ? "토끼" : "옹고"}</span>{coverTheme === "rabbit" ? "와 자라" : "집전"}</h2>
+          <h2><span>{coverTheme === "rabbit" ? "토끼" : coverTheme === "seonnyeo" ? "선녀" : "옹고"}</span>{coverTheme === "rabbit" ? "와 자라" : coverTheme === "seonnyeo" ? "와 나무꾼" : "집전"}</h2>
           <p className="poster-author"><span aria-hidden="true">✦</span> 이 이야기의 작가: 당신 <span aria-hidden="true">✦</span></p>
           <p className="poster-description">당신이 직접 만들어 가는 이야기</p>
         </section>
         <div className="poster-scene-space" aria-hidden="true">
           <img
-            src={resolveAssetUrl(`/story-assets/${coverTheme === "rabbit" ? "rabbit-turtle" : "onggojib"}.poster.art.webp`)}
+            src={resolveAssetUrl(`/story-assets/${story.id}.poster.art.webp`)}
             alt=""
-            width={coverTheme === "rabbit" ? 940 : 941}
-            height={1672}
+            width={coverTheme === "seonnyeo" ? 1120 : coverTheme === "rabbit" ? 940 : 941}
+            height={coverTheme === "seonnyeo" ? 1400 : 1672}
             className="nolstory-poster-img"
             fetchPriority="high"
           />

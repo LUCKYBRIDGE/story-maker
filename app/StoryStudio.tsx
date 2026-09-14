@@ -1,4 +1,5 @@
 "use client";
+import { nextStoryTheme } from "./story-discovery";
 import { remixSharedFile } from "./story-publication";
 
 import {
@@ -2696,14 +2697,14 @@ export function StoryStudio() {
             )}
           </>
         ) : <StartScreen
-          selectedTheme={selectedStoryTheme === "seonnyeo" ? "onggojib" : selectedStoryTheme}
+          selectedTheme={selectedStoryTheme}
           onOpenLibrary={() => showDiscovery("library")}
           onOpenReaderEntry={() => { void openPlay(0, "example", selectedStoryTheme); }}
           onOpenMyStories={() => {
             showDiscovery("library");
             setLibraryInitialFilter("mine");
           }}
-          onToggleTheme={() => setSelectedStoryTheme(t => t === "rabbit" ? "onggojib" : "rabbit")}
+          onToggleTheme={() => setSelectedStoryTheme(nextStoryTheme)}
           onOpenQr={() => setSiteQrModalOpen(true)}
           busy={Boolean(busy)}
         />}

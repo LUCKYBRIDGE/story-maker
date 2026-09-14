@@ -12857,16 +12857,22 @@ img {
   transform: scaleX(var(--actor-facing, 1));
   transform-origin: center bottom;
 }
-.player-shell .story-scene-frame > .dialogue-box,
-.player-shell .story-scene-frame > .dialogue-box.narration,
-.player-shell .story-scene-frame > .dialogue-box[data-has-choices],
-.player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) {
+.player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]),
+.player-shell .story-scene-frame > .dialogue-box.narration:not([data-has-choices]) {
   height: var(--dialogue-height, 35dvh); min-height: 0;
   max-height: var(--dialogue-height, 35dvh); flex: 0 0 var(--dialogue-height, 35dvh);
   box-sizing: border-box; overflow: hidden;
 }
-.player-shell .dialogue-box[data-has-choices] > .reading-transcript { flex: 1 1 40%; min-height: 0; max-height: 45%; }
-.player-shell .dialogue-box[data-has-choices] > .player-choices { flex: 1 1 50%; min-height: 0; }
+.player-shell .story-scene-frame > .dialogue-box[data-has-choices] {
+  height: auto; min-height: var(--dialogue-height, 35dvh);
+  max-height: calc(100% - var(--stage-heading-height, 64px) - 16px);
+  flex: 0 1 auto; box-sizing: border-box;
+  overflow-y: auto; overscroll-behavior: contain; z-index: 5;
+}
+.player-shell .dialogue-box[data-has-choices] > .reading-transcript { flex: 0 0 auto; min-height: 0; max-height: none; }
+.player-shell .dialogue-box[data-has-choices] .reading-scroll { flex: 0 0 auto; min-height: 0; max-height: none; overflow: visible; }
+.player-shell .dialogue-box[data-has-choices] > .player-choices { flex: 0 0 auto; min-height: 0; max-height: none; overflow: visible; margin: 12px 0 14px; }
+.player-shell .dialogue-box[data-has-choices] > .player-controls { flex: 0 0 auto; }
 .reader-display-settings { max-height: 88dvh; overflow-y: auto; }
 .display-setting-section { padding: 16px 0; border-top: 1px solid #78857755; }
 .display-setting-section p, .display-setting-note { font-size: 14px; line-height: 1.6; color: #526057; }
@@ -12919,3 +12925,13 @@ img {
 .asset-picker-thumb.background img[data-background-role="scene"],
 .scene-nearby-assets.background button img[data-background-role="scene"] { object-fit: contain; }
 .book-art > .story-stage-background::after { display: none; }
+
+/* SN-DESIGN-01: fill the poster frame; keep both figures inside its safe area. */
+.theme-seonnyeo .nolstory-poster-img { object-fit: cover; object-position: center 25%; }
+.theme-seonnyeo .poster-scene-space { background: #172d39; }
+.theme-seonnyeo .poster-heading h2 { font-size: clamp(32px, 9.5cqi, 60px); }
+.theme-seonnyeo .poster-heading h2 > span { color: #286657; }
+.theme-seonnyeo .poster-leaves { filter: hue-rotate(35deg); }
+@media (min-width: 960px) {
+  .theme-seonnyeo .poster-heading h2 { font-size: clamp(38px, 4.2vw, 60px); }
+}
