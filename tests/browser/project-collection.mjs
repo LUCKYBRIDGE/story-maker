@@ -61,7 +61,7 @@ try {
     await page.screenshot({path:`${output}/hub-${width}.png`,fullPage:true});
     if (width === 1365) {
       const before = (await read(page)).projects.map(entry => entry.draft.project);
-      await page.locator('.creation-hub input[type=file]:not([accept=".nolstory"])').setInputFiles({name:'third.xlsx',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',buffer:Buffer.from(fixture.xlsx,'base64')});
+      await page.locator('.creation-hub input[type=file]:not([accept*="nolstory"]):not([accept*="knolstory"])').setInputFiles({name:'third.xlsx',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',buffer:Buffer.from(fixture.xlsx,'base64')});
       await page.getByRole('button',{name:'편집본으로 열기',exact:true}).click();
       await page.getByRole('dialog',{name:'작품 가져오기 미리보기'}).getByRole('alert').waitFor();
       assert.deepEqual((await read(page)).projects.map(entry => entry.draft.project),before);

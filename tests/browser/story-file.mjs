@@ -15,12 +15,16 @@ console.log(JSON.stringify({a:encodeNolstoryFile(createNolstoryProject(entry('a'
 const browser=await launchBrowser(output);
 const read=page=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
 async function hub(page) {
- await page.locator('.entry-template-options[open]').waitFor({state:'attached'});
- await page.getByRole('button',{name:'나만의 이야기 창작 공작소 열기'}).click();
- await page.getByRole('heading',{name:'창작 관리',exact:true}).waitFor();
+ const createBtn = page.getByRole('button', {name: '나만의 이야기'});
+ if (await createBtn.isVisible()) {
+  await createBtn.click();
+ } else {
+  await page.getByRole('button', {name: '창작 관리', exact: true}).click();
+ }
+ await page.getByRole('heading', {name: '창작 관리', exact: true}).waitFor();
 }
 async function open(page,text) {
- await page.locator('input[accept=".nolstory"]').setInputFiles({name:'fixture.nolstory',mimeType:'application/json',buffer:Buffer.from(text)});
+ await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').setInputFiles({name:'fixture.knolstory',mimeType:'application/json',buffer:Buffer.from(text)});
  await page.getByRole('dialog',{name:'놀스토리 파일 열기'}).waitFor();
 }
 async function toHub(page) {await page.getByRole('button',{name:'창작 관리',exact:true}).click();await page.getByRole('heading',{name:'창작 관리',exact:true}).waitFor();}
@@ -44,7 +48,7 @@ try {
  await page.getByRole('button',{name:'파일 버전으로 교체',exact:true}).click();await toHub(page);
  saved=await read(page);assert.equal(saved.projects[0].draft.project.title,'바뀐 편집본');assert.equal(saved.projects[0].playback.project.title,'바뀐 적용본');assert.equal(saved.projects[1].draft.project.title,'파일 작품 b');
  const downloadPromise=page.waitForEvent('download');await page.getByRole('article',{name:'바뀐 편집본',exact:true}).getByRole('button',{name:'파일로 보관',exact:true}).click();
- const download=await downloadPromise;assert.ok(download.suggestedFilename().endsWith('-project.nolstory'));
+ const download=await downloadPromise;assert.ok(download.suggestedFilename().endsWith('-project.knolstory'));
  const backup=JSON.parse(await readFile(await download.path(),'utf8'));assert.deepEqual(backup.draft.project,saved.projects[0].draft.project);assert.deepEqual(backup.playback,saved.projects[0].playback);
  const beforeShared=await page.evaluate(key=>localStorage.getItem(key),key);
  await open(page,fixture.shared);assert.equal(await page.getByRole('button',{name:'편집본으로 추가',exact:true}).count(),0);
@@ -63,7 +67,7 @@ try {
  await page.getByRole('button',{name:/이야기 구성/}).click();
  await page.getByText('작품 기본·큰 생각·이야기 뼈대',{exact:true}).click();
  await page.getByRole('textbox',{name:'이야기 제목',exact:true}).fill('저장 실패 중 최신 제목');
- const emergency=page.waitForEvent('download');await page.getByRole('button',{name:'.nolstory 편집 백업',exact:true}).click();
+ const emergency=page.waitForEvent('download');await page.getByRole('button',{name:'.knolstory 편집 백업',exact:true}).click();
  const recovered=JSON.parse(await readFile(await (await emergency).path(),'utf8'));
  assert.equal(recovered.draft.project.title,'저장 실패 중 최신 제목');assert.equal(recovered.playback.project.title,'바뀐 적용본');
  assert.equal((await read(page)).projects[0].draft.project.title,'바뀐 편집본');

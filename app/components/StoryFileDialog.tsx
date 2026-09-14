@@ -1,8 +1,8 @@
 "use client";
 import { ModalDialog } from "./ModalDialog";
-import type { NolstoryFile } from "../story-file";
+import type { KnolstoryFile } from "../story-file";
 export function StoryFileDialog({file, exists, error, onCancel, onImport, onRead, onRemix, remixDisabled}: {
-  file: NolstoryFile; exists: boolean; error: string; onRemix: () => void; remixDisabled: boolean;
+  file: KnolstoryFile; exists: boolean; error: string; onRemix: () => void; remixDisabled: boolean;
   onCancel: () => void; onImport: (replace: boolean) => void; onRead: () => void;
 }) {
   const project = "draft" in file ? file.draft.project : file.story.project;

@@ -201,6 +201,7 @@ img {
    🌟 놀스토리 마스터 동화책 포스터 뷰 & 인터랙티브 핫스팟
    ========================================================= */
 
+.knolstory-poster-viewport,
 .nolstory-poster-viewport {
   min-height: 100dvh;
   display: grid;
@@ -209,6 +210,7 @@ img {
   background: radial-gradient(ellipse at 25% 35%, #344457 0%, transparent 52%), radial-gradient(ellipse at 78% 65%, #55412e 0%, transparent 52%), #0c1522;
 }
 
+.knolstory-poster-frame,
 .nolstory-poster-frame {
   container-type: inline-size;
   position: relative;
@@ -228,6 +230,7 @@ img {
   font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
   word-break: keep-all;
 }
+.knolstory-poster-frame::after,
 .nolstory-poster-frame::after {
   content: "";
   position: absolute;
@@ -238,6 +241,7 @@ img {
   box-shadow: inset 0 0 0 3px #fff9;
   pointer-events: none;
 }
+.knolstory-poster-img,
 .nolstory-poster-img {
   position: absolute;
   inset: 0;
@@ -354,15 +358,20 @@ img {
 .poster-footer { width: 94%; margin-top: 5cqi; padding-top: 2.5cqi; border-top: 1px solid #c8a46c; text-align: center; color: #57616a; font-size: clamp(12px, 2.2cqi, 14px); font-weight: 400; line-height: 1.7; }
 
 @media (max-width: 600px) {
+  .knolstory-poster-frame,
   .nolstory-poster-frame { padding: 4% 6% 5%; border-radius: 0; box-shadow: none; }
 }
 @media (min-width: 601px) {
+  .knolstory-poster-viewport,
   .nolstory-poster-viewport { padding: clamp(20px, 3vw, 48px); }
+  .knolstory-poster-frame,
   .nolstory-poster-frame { width: min(100%, 680px); max-width: 680px; padding: 28px 36px; }
 }
 /* A landscape spread uses the available width without shrinking the reading controls. */
 @media (min-width: 960px), (min-width: 740px) and (orientation: landscape) {
+  .knolstory-poster-viewport,
   .nolstory-poster-viewport { background: radial-gradient(ellipse at 50% 22%, #455366 0%, transparent 65%), radial-gradient(ellipse at 50% 85%, #665039 0%, transparent 58%), #0a121e; }
+  .knolstory-poster-frame,
   .nolstory-poster-frame {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -374,6 +383,7 @@ img {
     overflow: hidden;
   }
 
+  .knolstory-poster-frame::after,
   .nolstory-poster-frame::after { inset: 12px; border-radius: 16px; }
   .poster-brand { grid-column: 1; text-align: left; display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: center; }
   .poster-brand > svg { width: 42px; grid-row: span 2; }
@@ -393,6 +403,7 @@ img {
   .poster-footer { grid-column: 1; width: 100%; font-size: 12px; margin-top: 26px; padding-top: 16px; }
 }
 @media (min-width: 740px) and (max-width: 959px) and (orientation: landscape) {
+  .knolstory-poster-frame,
   .nolstory-poster-frame { column-gap: 20px; padding: 28px; }
   .poster-menu { grid-template-columns: 1fr; gap: 8px; margin-top: 18px; }
   .poster-heading { margin: 24px 0; }
@@ -412,6 +423,7 @@ img {
    🌟 '나만의 이야기' 창작 공작소 모달 & 바텀시트
    ========================================================= */
 
+.knolstory-studio-backdrop,
 .nolstory-studio-backdrop {
   position: fixed;
   inset: 0;
@@ -428,16 +440,19 @@ img {
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.knolstory-studio-backdrop.is-open,
 .nolstory-studio-backdrop.is-open {
   opacity: 1;
   pointer-events: auto;
 }
 
+.knolstory-studio-backdrop.is-closed,
 .nolstory-studio-backdrop.is-closed {
   opacity: 0;
   pointer-events: none;
 }
 
+.knolstory-studio-modal,
 .nolstory-studio-modal {
   background: #ffffff;
   width: 100%;
@@ -454,15 +469,20 @@ img {
   flex-direction: column;
 }
 
+.knolstory-studio-backdrop.is-open .knolstory-studio-modal,
+.knolstory-studio-backdrop.is-open .nolstory-studio-modal,
+.nolstory-studio-backdrop.is-open .knolstory-studio-modal,
 .nolstory-studio-backdrop.is-open .nolstory-studio-modal {
   transform: none;
 }
 
 @media (max-width: 600px) {
+  .knolstory-studio-backdrop,
   .nolstory-studio-backdrop {
     padding: 0;
     align-items: flex-end;
   }
+  .knolstory-studio-modal,
   .nolstory-studio-modal {
     max-height: 88dvh;
     border-bottom-left-radius: 0;
@@ -470,15 +490,24 @@ img {
     padding: 22px 16px 32px 16px;
     transform: translateY(100%);
   }
+  .knolstory-studio-backdrop.is-open .knolstory-studio-modal,
+  .knolstory-studio-backdrop.is-open .nolstory-studio-modal,
+  .nolstory-studio-backdrop.is-open .knolstory-studio-modal,
   .nolstory-studio-backdrop.is-open .nolstory-studio-modal {
     transform: none;
   }
 }
 
 @media (min-width: 768px) {
+  .knolstory-poster-viewport .knolstory-studio-modal,
+  .knolstory-poster-viewport .nolstory-studio-modal,
+  .nolstory-poster-viewport .knolstory-studio-modal,
   .nolstory-poster-viewport .nolstory-studio-modal { max-width: 860px; padding: 32px; }
 }
 @media (min-width: 1200px) {
+  .knolstory-poster-viewport .knolstory-studio-modal,
+  .knolstory-poster-viewport .nolstory-studio-modal,
+  .nolstory-poster-viewport .knolstory-studio-modal,
   .nolstory-poster-viewport .nolstory-studio-modal { max-width: 960px; padding: 40px; }
 }
 
@@ -11307,7 +11336,8 @@ img {
 @media (prefers-reduced-motion: reduce) { .theater-drape { visibility: hidden; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .nolstory-studio-backdrop, .nolstory-studio-modal { transition: none; }
+  .knolstory-studio-backdrop, .nolstory-studio-backdrop,
+  .knolstory-studio-modal, .nolstory-studio-modal { transition: none; }
 }
 
 /* Choices and joins share the existing manuscript/cut editing surface. */
@@ -11330,12 +11360,18 @@ img {
 /* The full studio name is text, not the square brand icon used by the editor. */
 .modal-header-banner .entry-brand { justify-content: center; flex-wrap: wrap; gap: 6px 14px; padding-inline: 36px; }
 .modal-header-banner .modal-brand-name { display: block; color: #145c62; letter-spacing: 0; word-break: keep-all; }
+.knolstory-poster-viewport .modal-main-desc,
 .nolstory-poster-viewport .modal-main-desc { font-size: 14px; line-height: 1.7; word-break: keep-all; }
+.knolstory-poster-viewport .blank-btn-text,
 .nolstory-poster-viewport .blank-btn-text { min-width: 0; word-break: keep-all; }
 @media (max-width: 480px) {
+  .knolstory-poster-viewport .entry-blank-story-button,
   .nolstory-poster-viewport .entry-blank-story-button { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; padding: 16px; }
+  .knolstory-poster-viewport .blank-btn-icon,
   .nolstory-poster-viewport .blank-btn-icon { width: 36px; height: 36px; }
+  .knolstory-poster-viewport .blank-btn-text strong,
   .nolstory-poster-viewport .blank-btn-text strong { font-size: 16px; }
+  .knolstory-poster-viewport .blank-btn-arrow,
   .nolstory-poster-viewport .blank-btn-arrow { grid-column: 2; justify-self: end; }
 }
 

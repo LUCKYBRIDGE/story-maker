@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import {DEFAULT_PROJECT,cloneProject,createBlankProject} from './app/story-data.ts';
 import {createStoryDocument} from './app/story-project-document.ts';
 import {createProjectCollectionRepository,STORY_COLLECTION_KEY} from './app/story-project-collection.ts';
-import {createNolstoryProject,createNolstoryShared,encodeNolstoryFile,parseNolstoryFile,readNolstoryFile,MAX_NOLSTORY_BYTES} from './app/story-file.ts';
+import {createKnolstoryProject,createKnolstoryShared,encodeKnolstoryFile,parseKnolstoryFile,readKnolstoryFile,MAX_KNOLSTORY_BYTES,createNolstoryProject,createNolstoryShared,encodeNolstoryFile,parseNolstoryFile,readNolstoryFile} from './app/story-file.ts';
 const doc=p=>createStoryDocument({project:p,savedAt:'2026-09-10T00:00:00.000Z',appVersion:'qa'});
 const project=id=>({...cloneProject(DEFAULT_PROJECT),id,source:{kind:'baseEdition',baseStoryId:'rabbit-turtle',baseEditionId:'original'}});
 ${body}`],{encoding:'utf8'});
@@ -14,23 +14,38 @@ ${body}`],{encoding:'utf8'});
 test('project file preserves identity, source, separate draft/playback and null or empty playback',()=>run(`
  const draft=project('a'),play=project('a');draft.lines[0].text='unapplied';play.lines[0].text='applied';
  for(const playback of [doc(play),null,doc({...createBlankProject(),id:'a'})]) {
- const entry={draft:doc(draft),playback};const result=parseNolstoryFile(encodeNolstoryFile(createNolstoryProject(entry)));
+ const entry={draft:doc(draft),playback};const file=createKnolstoryProject(entry);
+ assert.equal(file.manifest.format,'knolstory');
+ const result=parseKnolstoryFile(encodeKnolstoryFile(file));
  assert.ok(result.ok);assert.deepEqual(result.file.draft,entry.draft);assert.deepEqual(result.file.playback,playback);
  }
 `));
 test('shared export strips private notes without mutating reading version',()=>run(`
  const p=project('a');p.planning.freeNotes='private';p.sheetUrl='https://private.example';p.lines[0].purposeNote='private';
- const before=JSON.stringify(p),file=createNolstoryShared(p);assert.equal(file.sharing.allowRemix,false);
+ const before=JSON.stringify(p),file=createKnolstoryShared(p);assert.equal(file.sharing.allowRemix,false);
+ assert.equal(file.manifest.format,'knolstory');
  assert.equal(file.story.project.lines[0].text,p.lines[0].text);assert.equal(file.story.project.lines[0].purposeNote,'');
- assert.equal(file.story.project.sheetUrl,'');assert.equal(JSON.stringify(p),before);assert.ok(parseNolstoryFile(encodeNolstoryFile(file)).ok);
+ assert.equal(file.story.project.sheetUrl,'');assert.equal(JSON.stringify(p),before);assert.ok(parseKnolstoryFile(encodeKnolstoryFile(file)).ok);
 `));
 test('malformed schema, assets, paths, MIME, size and mismatched identity fail before import',()=>run(`
- const file=createNolstoryProject({draft:doc(project('a')),playback:doc(project('a'))});
- for(const alter of [f=>f.manifest.version=99,f=>f.playback.project.id='b',f=>f.assets.push({kind:'builtin',id:'../secret'}),f=>f.files={'x.js':'alert(1)'},f=>f.draft.project.chapters[0].backgroundId='https://evil/image',f=>f.assets[0].path='../image']) {
- const bad=structuredClone(file);alter(bad);assert.equal(parseNolstoryFile(JSON.stringify(bad)).ok,false);
+ const file=createKnolstoryProject({draft:doc(project('a')),playback:doc(project('a'))});
+ for(const alter of [f=>f.manifest.version=99,f=>f.manifest.format='unknown',f=>f.playback.project.id='b',f=>f.assets.push({kind:'builtin',id:'../secret'}),f=>f.files={'x.js':'alert(1)'},f=>f.draft.project.chapters[0].backgroundId='https://evil/image',f=>f.assets[0].path='../image']) {
+ const bad=structuredClone(file);alter(bad);assert.equal(parseKnolstoryFile(JSON.stringify(bad)).ok,false);
  }
- assert.equal(parseNolstoryFile('{broken').ok,false);
- for(const f of [new File(['x'],'x.txt'),new File([encodeNolstoryFile(file)],'x.nolstory',{type:'text/html'}),new File([new Uint8Array(MAX_NOLSTORY_BYTES+1)],'x.nolstory')]) assert.equal((await readNolstoryFile(f)).ok,false);
+ assert.equal(parseKnolstoryFile('{broken').ok,false);
+ for(const f of [new File(['x'],'x.txt'),new File([encodeKnolstoryFile(file)],'x.knolstory',{type:'text/html'}),new File([new Uint8Array(MAX_KNOLSTORY_BYTES+1)],'x.knolstory')]) assert.equal((await readKnolstoryFile(f)).ok,false);
+ // Backward compatibility: .nolstory files can be read
+ const legacyFile = structuredClone(file); legacyFile.manifest.format = 'nolstory';
+ const legacyText = JSON.stringify(legacyFile);
+ const parsedLegacy = parseKnolstoryFile(legacyText);
+ assert.ok(parsedLegacy.ok);
+ assert.equal(parsedLegacy.file.manifest.format, 'nolstory');
+ const legacyBlob = new File([legacyText], 'work.nolstory', { type: 'application/vnd.nolstory+json' });
+ const readLegacy = await readKnolstoryFile(legacyBlob);
+ assert.ok(readLegacy.ok);
+ const knolBlob = new File([encodeKnolstoryFile(file)], 'work.knolstory', { type: 'application/vnd.knolstory+json' });
+ const readKnol = await readKnolstoryFile(knolBlob);
+ assert.ok(readKnol.ok);
 `));
 test('import enforces two slots, explicit replacement, atomic failure and both saved versions',()=>run(`
  const map=new Map();let reject=false;const repo=createProjectCollectionRepository({storage:{getItem:k=>map.get(k)??null,setItem:(k,v)=>{if(reject)throw Error('quota');map.set(k,v);}}});

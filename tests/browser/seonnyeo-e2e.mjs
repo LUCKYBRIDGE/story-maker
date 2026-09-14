@@ -192,7 +192,7 @@ try {
     await page.getByRole('heading', { name: '창작 관리', exact: true }).waitFor();
 
     // Upload seonnyeo-namukkun.nolstory
-    await page.locator('input[accept=".nolstory"]').last().setInputFiles('../pinky-ne-site-publish/dist/ifstory03/seonnyeo-namukkun.nolstory');
+    await page.locator('input[accept*="knolstory"], input[accept*="nolstory"]').last().setInputFiles('../pinky-ne-site-publish/dist/ifstory03/seonnyeo-namukkun.nolstory');
     await page.getByRole('dialog', { name: '놀스토리 파일 열기' }).waitFor();
     await page.getByRole('button', { name: '편집본으로 추가', exact: true }).click();
 
