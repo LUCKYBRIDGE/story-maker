@@ -18,7 +18,7 @@ test('source provenance and original openings are pinned',()=>{
  assert.equal(source.projects[1].lines.filter(l=>l.flow?.type==='choice').length,8);
   if(source.projects[2]){
    assert.match(source.projects[2].lines[0].text,/깊은 산속 계곡/);
-   assert.equal(source.projects[2].lines.filter(l=>l.flow?.type==='choice').length,24);
+   assert.equal(source.projects[2].lines.filter(l=>l.flow?.type==='choice').length,25);
   }
 });
 
@@ -31,12 +31,12 @@ for (const [index, project] of source.projects.entries()) test(`example graph co
  const expected = oldRoutes.flatMap(([route, count]) => Array.from({length:count}, (_,i) => `review-main-003:${route}:${i}`));
  assert.deepEqual([...graph.unreachable].sort(), expected.sort(), 'new unreachable content requires source review');
  assert.equal(graph.routes.length, index === 0 ? 6 : index === 1 ? 16 : 64);
- assert.equal(graph.endingRoutes.length, index === 0 ? 3 : index === 1 ? 2 : 5);
+ assert.equal(graph.endingRoutes.length, index === 0 ? 3 : index === 1 ? 2 : 4);
  if (index === 2) {
   const endingTitles = new Set(graph.endingRoutes.map(r => project.chapters.find(c => c.id === project.lines.find(l => l.id === r.at(-1).lineId).chapterId).title));
   assert.equal(endingTitles.size, 4);
  }
- assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1689);
+ assert.equal(graph.reachableCuts, index === 0 ? 136 : index === 1 ? 345 : 1613);
  assert.ok(graph.joins.length > 0);
 });
 test('example graph oracle rejects broken links, cycles and duplicate IDs', () => {

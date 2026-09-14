@@ -24,7 +24,15 @@ async function textVisible(page, text) {
 try {
  for (const [index, project] of projects.entries()) {
   const graph = analyzeExample(project);
-  for (const [routeIndex, route] of graph.endingRoutes.entries()) {
+  const routes = [...graph.endingRoutes];
+  if (index === 2) {
+   // Shared terminal cuts must not hide the HA history in browser coverage.
+   for (const ending of ['E1-4','E2-4']) {
+    const route = graph.routes.find(route => route.some(step => graph.byId.get(step.lineId).directionNote.includes('원전 장면: HA1\n')) && graph.byId.get(route.at(-1).lineId).directionNote.includes(`원전 장면: ${ending}\n`));
+    assert.ok(route, `HA must reach ${ending}`); routes.push(route);
+   }
+  }
+  for (const [routeIndex, route] of routes.entries()) {
    const [width, height] = routeIndex % 2 === 0 ? [1365, 900] : [390, 844];
    const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
    const errors = []; page.on('pageerror', error => errors.push(error.message));

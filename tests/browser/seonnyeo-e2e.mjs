@@ -196,13 +196,13 @@ try {
     await page.getByRole('dialog', { name: /^(크놀스토리|놀스토리) 파일 열기$/ }).waitFor();
     await page.getByRole('button', { name: '편집본으로 추가', exact: true }).click();
 
-    // Verify project is loaded into storage with all 1689 cuts
+    // Verify project is loaded into storage with all 1613 cuts
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('storygame:projects:v1')));
     const importedProject = saved.projects.find(p => p.draft.project.title === '선녀와 나무꾼');
     assert.ok(importedProject, 'Imported project must exist in projects list');
-    assert.equal(importedProject.draft.project.lines.length, 1689, 'All 1689 cuts imported');
+    assert.equal(importedProject.draft.project.lines.length, 1613, 'All 1613 cuts imported');
     assert.ok(importedProject.draft.project.lines.every(l => l.backgroundId.startsWith('seonnyeo.background.')), 'All lines have seonnyeo backgrounds');
-    console.log('[E2E Import] .knolstory import successfully loaded 1689 cuts with backgrounds');
+    console.log('[E2E Import] .knolstory import successfully loaded 1613 cuts with backgrounds');
 
     await page.screenshot({ path: `${output}/seonnyeo-import-verified.png`, fullPage: true });
 

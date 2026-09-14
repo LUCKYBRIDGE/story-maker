@@ -1630,3 +1630,17 @@ npm test
 - 제약: 기존 인물 정체성과 의상 보존, 대본·분기·저장·Excel 형식 보존. 새 의존성 없음.
 - 인수: 세 표지 순환과 읽기 대상 일치, 선녀 책 표지가 서재·확대·읽기에서 일관되며 복사 후 편집 가능, 320/390/820/1365px에서 제목·인물 잘림과 가로 넘침 없음. 선택지가 있는 컷(`[data-has-choices]`)에서 글상자가 위로 자연스럽게 공간을 확보하며 확장되어 2~3개 선택지와 대사 문구가 내부 스크롤이나 잘림 없이 온전히 표시됨.
 - 증거: npm run check, npm test(206/206), story-flow.mjs, image-layout-safety.mjs, seonnyeo-design.mjs, pinky-examples.mjs 및 실제 브라우저 캡처. 공개 배포는 별도.
+
+
+## SN-NARRATIVE-04 — 하늘길·귀환 시기와 네 엔딩 최종 정합화
+
+- 선행: SN-NARRATIVE-03 완료, 2026-09-14 직접 요청으로 시작. Work Lead · G/A/B.
+- 가치/품질: 학생이 일관된 세계의 시간 안에서 인물 선택의 서로 다른 결과를 읽는다. 서사 개연성, 감정선, 선녀의 주체성, 분기 완주를 확인한다.
+- 허용: pinky-ne-site 원본 대본·분기맵·설정 기준서·기존 handoff, compile-seonnyeo 및 seonnyeo-visuals, seonnyeo 검사; story-maker 생성기·생성 작품·예시 검사·관련 브라우저 검사·출처 ADR·상태표·본 카드.
+- 금지: 새 엔딩, 이미지 생성/교체, 공통 UI/저장 형식/외부 서비스 변경.
+- 사전 점검: 양쪽 루트·브랜치·원격·깨끗한 상태와 fetch 후 main 동일성, 70장면/64경로/4엔딩, 실행되는 원본과 생성 경로 확인.
+- 절차: 1. 전체 대본/연결 진단 2. A-A/B-B 규칙·대본·HA 합류 수정 3. 원본에서 재생성 4. 전 경로/원문 보존/브라우저 확인 5. diff와 기존 상태표 정리.
+- 인수: (1) 모든 70 ID와 네 엔딩 유지 (2) R/HA→1·2, HB→3, HC→4 도달 및 조건 누출 없음 (3) 같은 귀환 기한과 두 폭풍 인과 (4) E2의 숙지된 잔류/E3의 자발적 대화/E4의 지상 이별 (5) 원본·생성물·문서 정합 및 학생 저장본 보존.
+- 검사: 원본 `npm run test:seonnyeo`; story-maker `npm run check`, `npm test`; 최신 미리보기 URL에서 `QA_SUITES=pinky-examples,seonnyeo-e2e node tests/browser/run-smoke.mjs`; 양쪽 `git diff --check`.
+- 중단: 사용자 변경 충돌, 원본 부재, 원문/분기 유실 시 해당 변경을 분리하고 상태표에 근거 기록. 승인 없는 main/배포 작업은 하지 않는다.
+- 상태표: 구현·검증 증거는 SN-NARRATIVE-04 현재 작업에만 기록. 다음 작업을 열지 않는다.
