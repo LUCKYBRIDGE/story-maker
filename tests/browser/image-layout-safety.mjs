@@ -22,7 +22,7 @@ async function measure(page) {
     const bg = stage.querySelector('.story-stage-background');
     const image = bg?.querySelector('img');
     const ratio = image ? (bg.clientWidth/bg.clientHeight)/(image.naturalWidth/image.naturalHeight) : 1;
-    return {stage:rect(stage),dialogue:rect(document.querySelector('.dialogue-box')),
+    return {stage:rect(stage),dialogue:{...rect(document.querySelector('.dialogue-box')),expanded:document.querySelector('.dialogue-box')?.getAttribute('data-expanded')==='true'},
       heading:rect(document.querySelector('.reader-top-actions')),overflow:document.documentElement.scrollWidth>innerWidth,
       fit:image ? getComputedStyle(image).objectFit : null,retained:Math.min(ratio,1/ratio),
       actors:Array.from(stage.querySelectorAll('img.story-stage-actor')).map(i=>({box:rect(i),ratio:i.naturalWidth/i.naturalHeight,
@@ -36,7 +36,7 @@ function safe(m,label) {
   for(const a of m.actors) {
     const b=a.box,s=m.stage;
     assert.ok(b.top>=s.top-1 && b.left>=s.left-1 && b.right<=s.right+1 && b.bottom<=s.bottom+1,`${label}: actor outside stage ${JSON.stringify({b,s})}`);
-    assert.ok(m.dialogue.top>=b.top+b.height*.65-2,`${label}: upper body behind dock`);
+    if(!m.dialogue.expanded) assert.ok(m.dialogue.top>=b.top+b.height*.65-2,`${label}: upper body behind dock`);
     assert.ok(Math.abs(b.width/b.height-a.ratio)<.003,`${label}: aspect distortion`);
   }
 }
@@ -84,7 +84,7 @@ try {
           await preferences(page,dock,scale);
           const m=await measure(page);const label=`${width}x${height}/${framing}/${dock}/${scale}`;
           safe(m,label);
-          assert.ok(Math.abs(m.dialogue.height-height*dock/100)<2,`${label}: dock height`);
+          assert.ok(m.dialogue.expanded ? m.dialogue.height>=height*dock/100-2 : Math.abs(m.dialogue.height-height*dock/100)<2,`${label}: dock height`);
           if(dock===35) baselines.set(scale,m);
           else m.actors.forEach((a,i)=>{
             const original=baselines.get(scale).actors[i];

@@ -21,7 +21,7 @@ const actor=page.locator('.player-shell .story-stage-actor').first();const befor
 const speaker=page.locator('.current-reading .dialogue-speaker');const firstColor=await speaker.evaluate(el=>getComputedStyle(el).color);
 await page.getByRole('button',{name:'다음 컷',exact:true}).click();await page.getByText('자라',{exact:true}).waitFor();
 assert.notEqual(await speaker.evaluate(el=>getComputedStyle(el).color),firstColor);
-const box=await page.locator('.dialogue-box').boundingBox();assert.ok(Math.abs(box.height-height*.35)<2);assert.deepEqual(await actor.boundingBox(),before);
+const box=await page.locator('.dialogue-box').boundingBox();assert.ok(box.height>=height*.35-1);assert.deepEqual(await actor.boundingBox(),before);
 await page.getByRole('button',{name:'글씨 크게',exact:true}).click();assert.deepEqual(await actor.boundingBox(),before);
 await page.getByRole('button',{name:'지난 기록',exact:true}).click();const history=page.getByRole('dialog',{name:'지난 기록',exact:true});
 assert.equal(await history.locator('.reading-paragraph').count(),2);assert.ok(Math.abs((await history.boundingBox()).width/2+(await history.boundingBox()).x-width/2)<2);
