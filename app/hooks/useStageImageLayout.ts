@@ -59,9 +59,12 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
       // Reserve transparent padding at the largest supported scale so visible feet do not drift.
       const footMargin = Math.max(0, ...actors.map(a => a.height * 1.4 * (1 - a.anchor)));
       const required = Math.ceil(Math.max(0, ...actors.map(a => a.height * a.scale * a.anchor)) + footMargin + 8);
-      // Only the lower body may sit behind the dock; retain at least 65% of every actor.
-      const dialogue = frame?.querySelector<HTMLElement>(".dialogue-box");
-      const available = window.innerHeight - 34 - top - (dialogue?.offsetHeight ?? 0) - 16;
+      // Base dock height on user display preference (--dialogue-height) so dynamic dialogue expansion never moves or rescales actors.
+      const playerShell = frame?.closest<HTMLElement>(".player-shell");
+      const dockProp = playerShell ? getComputedStyle(playerShell).getPropertyValue("--dialogue-height").trim() : "";
+      const dockPercent = parseFloat(dockProp) || 35;
+      const dockHeight = variant === "player" ? window.innerHeight * (dockPercent / 100) : (frame?.querySelector<HTMLElement>(".dialogue-box")?.offsetHeight ?? 0);
+      const available = window.innerHeight - 34 - top - dockHeight - 16;
       const lowerBody = Math.min(...actors.map(a => a.height * a.scale * .35), 0.35 * required);
       const overlap = variant === "player" && actors.length ? Math.max(0, Math.min(required - available, lowerBody)) : 0;
       frame?.style.setProperty("--stage-lower-overlap", `${overlap}px`);
@@ -93,7 +96,7 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
     observer.observe(stage);
     if (heading) observer.observe(heading);
     const dialogue = frame?.querySelector(".dialogue-box");
-    if (dialogue) observer.observe(dialogue);
+    if (dialogue && variant !== "player") observer.observe(dialogue);
     images.forEach(image => image.addEventListener("load", layout));
     window.addEventListener("resize", scheduleLayout);
     return () => {

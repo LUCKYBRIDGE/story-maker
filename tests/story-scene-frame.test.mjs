@@ -69,3 +69,11 @@ test("선택지가 있는 컷의 글상자는 고정 높이에 갇히지 않고 
   assert.match(css, /\.player-shell \.dialogue-box\[data-has-choices\] > \.player-choices[\s\S]*?overflow:\s*visible;/);
   assert.match(css, /\.player-shell \.dialogue-box\[data-has-choices\] > \.reading-transcript[\s\S]*?max-height:\s*none;/);
 });
+
+test("일반 대사 및 해설 글상자도 고정 높이에 갇히지 않고 위로 확장된다", async () => {
+  const css = await source("app/globals.css");
+  assert.match(css, /\.player-shell \.story-scene-frame > \.dialogue-box\[data-expanded="true"\],[\s\S]*?height:\s*auto;/);
+  assert.match(css, /\.player-shell \.story-scene-frame > \.dialogue-box\[data-expanded="true"\],[\s\S]*?min-height:\s*var\(--dialogue-height,\s*35dvh\);/);
+  assert.match(css, /\.player-shell \.story-scene-frame > \.dialogue-box\[data-expanded="true"\],[\s\S]*?max-height:\s*calc\(100% - var\(--stage-heading-height,\s*64px\) - 16px\);/);
+  assert.doesNotMatch(css, /\.player-shell \.story-scene-frame > \.dialogue-box:not\(\[data-has-choices\]\)[\s\S]*?flex:\s*0 0 var\(--dialogue-height/);
+});

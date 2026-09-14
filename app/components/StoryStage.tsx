@@ -42,7 +42,7 @@ export function StoryStageCanvas({ stage, variant, speaker, showBackground = tru
   showBackground?: boolean;
 }) {
   const settings = useStoryDisplaySettings();
-  const canvasRef = useStageImageLayout(variant, JSON.stringify([stage.left, stage.right, settings.characterScales]));
+  const canvasRef = useStageImageLayout(variant, JSON.stringify([stage.left, stage.right, settings.characterScales, settings.dialoguePercent]));
   const loading = variant === "thumbnail" ? "lazy" : "eager";
   return <div ref={canvasRef} className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
     {showBackground && <StoryStageBackground background={stage.background} loading={loading} />}
