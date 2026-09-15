@@ -20,6 +20,17 @@ import type {
   StoryRevisionResponse,
   StoryRevisionResponses,
 } from "../story-revision-cycle";
+import {
+  loadProjectReadingProgress,
+  saveReadingProgressSlot,
+  deleteReadingProgressSlot,
+  getLatestReadingSaveSlot,
+  findSafeTargetIndex,
+  type ProjectReadingProgress,
+  type ReadingSaveSlot,
+  type ReadingSaveSlotId,
+} from "../story-reading-progress";
+import { StoryBookmarkDialog } from "./StoryBookmarkDialog";
 
 export function DialogueText({ text }: { text: string }) {
   const parts = text.split(/(\([^()]*\)|（[^（）]*）)/g);
@@ -74,6 +85,9 @@ export interface StoryPlayerProps {
   isExample?: boolean;
   revisionResponses: StoryRevisionResponses;
   onRevisionResponse: (promptId: string, response: StoryRevisionResponse) => void;
+  initialHistory?: ReadingRecord[];
+  initialEndingChoice?: string;
+  initialChoiceEnded?: boolean;
 }
 
 export function StoryPlayer({
@@ -88,9 +102,16 @@ export function StoryPlayer({
   isExample = false,
   revisionResponses,
   onRevisionResponse,
+  initialHistory,
+  initialEndingChoice,
+  initialChoiceEnded,
 }: StoryPlayerProps) {
   const displaySettings = useStoryDisplaySettings();
   const [displayOpen, setDisplayOpen] = useState(false);
+  const [bookmarkOpen, setBookmarkOpen] = useState(false);
+  const [readingProgress, setReadingProgress] = useState<ProjectReadingProgress | null>(() =>
+    loadProjectReadingProgress(project.id),
+  );
   const characterGroups = useMemo(() => {
     const ids = new Set([...project.chapters, ...project.lines].flatMap(row => [row.leftAssetId, row.rightAssetId]));
     const groups = new Map<string, string>();
@@ -102,6 +123,7 @@ export function StoryPlayer({
   }, [project]);
   const [menu, setMenu] = useState<"return" | "chapters" | null>(null);
   const playerRef = useRef<HTMLElement>(null);
+  const pendingMove = useRef(false);
   const { lines, index, line, chapter, playableChapters, number, total } =
     selectStoryPlayerPosition(project, startIndex);
   const [restoredReading] = useState(() => {
@@ -114,13 +136,90 @@ export function StoryPlayer({
     } catch { /* A missing history does not prevent opening the current cut. */ }
     return {history: [] as ReadingRecord[], endingChoice: undefined, choiceEnded: false};
   });
-  const [history, setHistory] = useState<ReadingRecord[]>(restoredReading.history);
-  const [endingChoice, setEndingChoice] = useState<string | undefined>(restoredReading.endingChoice);
-  const [choiceEnded, setChoiceEnded] = useState(restoredReading.choiceEnded);
+  const [history, setHistory] = useState<ReadingRecord[]>(() => {
+    if (Array.isArray(initialHistory) && initialHistory.length > 0) {
+      return initialHistory.filter(item => item && typeof item.lineId === "string" && lines.some(l => l.id === item.lineId));
+    }
+    return restoredReading.history;
+  });
+  const [endingChoice, setEndingChoice] = useState<string | undefined>(
+    initialEndingChoice !== undefined ? initialEndingChoice : restoredReading.endingChoice,
+  );
+  const [choiceEnded, setChoiceEnded] = useState(
+    initialChoiceEnded !== undefined ? initialChoiceEnded : restoredReading.choiceEnded,
+  );
+
+  // 자동저장 1: 읽기를 진행할 때마다 현재 위치를 브라우저 로컬 저장소에 안전하게 기록
+  useEffect(() => {
+    if (!line || total === 0) return;
+    saveReadingProgressSlot(project.id, {
+      slotId: "auto",
+      slotLabel: "자동저장 1",
+      index,
+      lineId: line.id,
+      chapterId: chapter?.id,
+      chapterTitle: chapter ? `${chapter.order}장. ${chapter.title}` : undefined,
+      cutNumber: number,
+      totalCuts: total,
+      dialoguePreview: (line.text ?? "").trim().slice(0, 50),
+      speakerName: line.speaker || (line.type === "narration" ? "해설" : undefined),
+      history,
+      endingChoice,
+      choiceEnded,
+      savedAt: new Date().toISOString(),
+    });
+  }, [project.id, index, line, chapter, number, total, history, endingChoice, choiceEnded]);
+
+  const openBookmarks = () => {
+    setReadingProgress(loadProjectReadingProgress(project.id));
+    setBookmarkOpen(true);
+  };
+
+  const handleSaveManualSlot = (slotId: ReadingSaveSlotId) => {
+    if (!line || total === 0) return;
+    saveReadingProgressSlot(project.id, {
+      slotId,
+      slotLabel: slotId === "manual-1" ? "수동저장 1" : slotId === "manual-2" ? "수동저장 2" : "수동저장 3",
+      index,
+      lineId: line.id,
+      chapterId: chapter?.id,
+      chapterTitle: chapter ? `${chapter.order}장. ${chapter.title}` : undefined,
+      cutNumber: number,
+      totalCuts: total,
+      dialoguePreview: (line.text ?? "").trim().slice(0, 50),
+      speakerName: line.speaker || (line.type === "narration" ? "해설" : undefined),
+      history,
+      endingChoice,
+      choiceEnded,
+      savedAt: new Date().toISOString(),
+    });
+    setReadingProgress(loadProjectReadingProgress(project.id));
+  };
+
+  const handleDeleteSlot = (slotId: ReadingSaveSlotId) => {
+    deleteReadingProgressSlot(project.id, slotId);
+    setReadingProgress(loadProjectReadingProgress(project.id));
+  };
+
+  const handleResumeSlot = (slot: ReadingSaveSlot) => {
+    const targetIndex = findSafeTargetIndex(lines, slot);
+    if (targetIndex >= 0) {
+      const validHistory = Array.isArray(slot.history)
+        ? slot.history.filter((item) => item && typeof item.lineId === "string" && lines.some((l) => l.id === item.lineId))
+        : [];
+      setHistory(validHistory);
+      setEndingChoice(slot.endingChoice);
+      setChoiceEnded(slot.choiceEnded ?? false);
+      pendingMove.current = false;
+      onIndexChange(targetIndex);
+      setBookmarkOpen(false);
+      playerRef.current?.focus({ preventScroll: true });
+    }
+  };
+
   useLayoutEffect(() => {
     try { sessionStorage.setItem("storygame:reading-path:v1", JSON.stringify({projectId: project.id, index, history, endingChoice, choiceEnded})); } catch { /* optional tab history */ }
   }, [project.id, index, history, endingChoice, choiceEnded]);
-  const pendingMove = useRef(false);
   const branching = project.lines.some(line => line.flow);
   const targets = storyFlowTargets(lines, index);
   const nextTarget = line?.flow?.type === "choice" ? undefined : targets[0];
@@ -180,7 +279,7 @@ export function StoryPlayer({
 
   // 키보드 조작은 선택지를 건너뛰지 않으며 최신 재생 경로를 사용한다.
   const onPlayerKey = useEffectEvent((event: KeyboardEvent) => {
-      if (menu || displayOpen || (event.target instanceof Element && event.target.closest('[role="dialog"]')) || !shouldHandleStoryPlayerKey(event) ||
+      if (menu || displayOpen || bookmarkOpen || (event.target instanceof Element && event.target.closest('[role="dialog"]')) || !shouldHandleStoryPlayerKey(event) ||
         !(event.target instanceof Node) || !playerRef.current?.contains(event.target)) {
         return;
       }
@@ -230,6 +329,7 @@ export function StoryPlayer({
             <small>{number} / {total}</small>
           </details>
           <div className="reader-top-actions">
+            <button type="button" onClick={openBookmarks}>책갈피</button>
             <button type="button" onClick={() => setDisplayOpen(true)}>화면 설정</button>
             <button type="button" onClick={() => setMenu("chapters")}>이동</button>
             <button type="button" onClick={() => setMenu("return")}>돌아가기</button>
@@ -321,6 +421,22 @@ export function StoryPlayer({
             onClick={() => { playChapter(item.id); setMenu(null); }}>{item.order}장. {item.title}{item.id === chapter?.id ? " · 현재 장 처음으로" : ""}</button>)}
         </div>}
       </ModalDialog>}
+      {bookmarkOpen && (
+        <StoryBookmarkDialog
+          mode="manager"
+          projectTitle={project.title}
+          currentLine={line}
+          currentChapter={chapter}
+          currentCutNumber={number}
+          totalCuts={total}
+          progress={readingProgress}
+          latestSlot={getLatestReadingSaveSlot(readingProgress)}
+          onClose={() => setBookmarkOpen(false)}
+          onResume={handleResumeSlot}
+          onSaveManualSlot={handleSaveManualSlot}
+          onDeleteSlot={handleDeleteSlot}
+        />
+      )}
       <footer className="copyright-bar">
         © 놀퀴즈
       </footer>

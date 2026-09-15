@@ -11523,6 +11523,50 @@ img {
 .reader-menu-options { display: grid; gap: 10px; margin-top: 16px; }
 .reader-menu-options button { text-align: left; }
 .reader-menu-options [aria-current] { background: #e0ebe3; border-color: #376f58; }
+
+/* Bookmark and Reading Progress Save/Resume Dialog */
+.reader-bookmark-dialog { width: min(580px, 100%); display: flex; flex-direction: column; gap: 14px; }
+.bookmark-resume-summary { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.bookmark-resume-lead { font-size: 15px; line-height: 1.5; color: #384e45; margin: 0; }
+.bookmark-resume-lead strong { color: #172a23; }
+.bookmark-feedback-toast { padding: 10px 14px; background: #e1f5eb; border: 1px solid #7bc39e; border-radius: 8px; color: #1a5638; font-size: 14px; font-weight: 500; }
+.bookmark-current-location { padding: 12px 14px; background: #f1ede1; border: 1px solid #d4cdbb; border-radius: 12px; display: flex; flex-direction: column; gap: 6px; }
+.bookmark-current-location h3 { font-size: 13px; font-weight: 700; color: #556760; margin: 0; }
+.current-location-detail { font-size: 15px; color: #162620; margin: 0; }
+.current-location-preview { font-size: 13px; color: #4b5d55; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
+.bookmark-quick-saves { margin-top: 6px; padding-top: 8px; border-top: 1px dashed #d0c8b6; display: flex; flex-direction: column; gap: 6px; }
+.quick-saves-label { font-size: 13px; font-weight: 600; color: #44564e; }
+.quick-saves-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.quick-save-btn { min-height: 44px; padding: 8px 14px; background: #234839; color: #f7faf8 !important; border: 1px solid #1a382c; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.quick-save-btn:hover { background: #19382b; }
+.bookmark-slots-list { display: flex; flex-direction: column; gap: 8px; }
+.bookmark-slots-list h3 { font-size: 15px; color: #1f342c; margin: 0; }
+.bookmark-slots-help { font-size: 13px; color: #63776e; margin: 0; }
+.bookmark-slots-grid { display: grid; gap: 10px; }
+.bookmark-slot-card { padding: 12px 14px; border-radius: 10px; border: 1px solid #d4cdbb; background: #fffdf7; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 6px #0000000a; }
+.bookmark-slot-card.is-filled { border-color: #a8b8ae; }
+.bookmark-slot-card.is-auto-slot { background: #f6f9f7; border-color: #8da496; }
+.bookmark-slot-card.is-empty { opacity: 0.85; background: #fbf9f2; border-style: dashed; }
+.resume-target-card { background: #eef6f1; border: 2px solid #5a9e7d; }
+.slot-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.slot-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.badge-auto { background: #d8e9df; color: #1d5038; }
+.badge-manual { background: #e4ddcb; color: #49402e; }
+.slot-card-header time { font-size: 12px; color: #6a7c73; }
+.slot-card-body { display: flex; flex-direction: column; gap: 3px; }
+.slot-location { font-size: 14px; color: #172822; }
+.slot-preview { font-size: 13px; color: #4a5c54; line-height: 1.4; margin: 0; overflow-wrap: anywhere; }
+.slot-speaker { font-weight: 600; color: #243d33; }
+.slot-empty-text { font-size: 13px; color: #7b8e85; margin: 0; padding-block: 4px; }
+.slot-card-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 2px; }
+.slot-card-actions button { min-height: 44px; padding: 8px 12px; font-size: 13px; }
+.slot-resume-btn { font-weight: 600; }
+.slot-save-btn { background: #f1ede1 !important; color: #294036 !important; border-color: #b5beb0 !important; }
+.slot-delete-btn { color: #923a3a !important; border-color: #dcbcbc !important; background: transparent !important; }
+.slot-delete-btn:hover { background: #faeaea !important; }
+.bookmark-resume-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.resume-action-button { width: 100%; min-height: 48px; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.bookmark-dialog-footer { text-align: center; color: #7a8b83; margin-top: 4px; font-size: 12px; }
 .reading-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #cbd5d4; }
 .reading-tools > small { font-size: 12px; }
 .reading-tools [role="group"] { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
