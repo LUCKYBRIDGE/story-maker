@@ -4,6 +4,12 @@ import type { Chapter, StoryLine } from "./story-data";
 const assets = new Map(STORY_ASSETS.map(asset => [asset.id, asset]));
 
 export const CHARACTER_FACING = new Map<string, "left" | "right">([
+  ["onggojib.character.classic-master", "left"],
+  ["onggojib.character.classic-master-talisman", "right"],
+  ["onggojib.character.classic-mother", "left"],
+  ["onggojib.character.classic-mother-warm", "left"],
+  ["onggojib.character.classic-servant-door", "right"],
+  ["onggojib.character.classic-servant-usher", "right"],
   ["rabbit-turtle.character.turtle-unified-720x900", "left"],
   ["rabbit-turtle.character.turtle-child-unified-720x900", "left"],
   ["rabbit-turtle.character.rabbit-white-unified-720x900", "right"],

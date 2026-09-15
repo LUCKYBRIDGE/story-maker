@@ -367,6 +367,7 @@ const assets = paths.map((sourcePath) => {
 
 // This pack is synchronized from pinky-ne-site's approved story compiler.
 assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/seonnyeo-manifest.json'), 'utf8')));
+assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/onggojib-classic-manifest.json'), 'utf8')));
 
 const output = `// 이 파일은 scripts/generate-story-assets.mjs로 생성됩니다.
 // 원본: LUCKYBRIDGE/pinky-ne-site @ ${sourceCommit}
