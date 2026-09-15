@@ -71,7 +71,7 @@ async function worker() {
     cursor += 1;
     const asset = assets[index];
     // This story pack is already normalized by its canonical source generator.
-    if (asset.id.startsWith('seonnyeo.')) {
+    if (asset.id.startsWith('seonnyeo.') || asset.sourcePath.startsWith('public/story-assets/')) {
       await access(path.join(projectRoot, 'public', asset.src));
       continue;
     }

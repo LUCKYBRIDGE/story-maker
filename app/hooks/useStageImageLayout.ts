@@ -76,7 +76,8 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
         image.style.height = `${height * scale}px`;
         image.style.bottom = `${footMargin - height * scale * (1 - anchor)}px`;
         // Keep slot centers at their familiar positions, clamping enlarged/group content inside the stage.
-        const center = width * (image.classList.contains("left") ? .24 : .76);
+        const centeredGroup = actors.length === 1 && image.dataset.sharedActor === "true";
+        const center = width * (centeredGroup ? .5 : image.classList.contains("left") ? .24 : .76);
         image.style.left = `${Math.max(4, Math.min(width - actor.width * scale - 4, center - actor.width * scale / 2))}px`;
         image.style.right = "auto";
         image.dataset.footAnchor = String(anchor);
