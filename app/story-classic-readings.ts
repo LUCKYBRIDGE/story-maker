@@ -1,3 +1,4 @@
+import { RABBIT_CLASSIC_ART } from "./story-classic-rabbit-art";
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
 
 const BG_PALACE = "rabbit-turtle.background.rabbit-turtle-bg-palace";
@@ -248,7 +249,26 @@ const chapterSeeds: ChapterSeed[] = [
   },
 ];
 
-const built = chapterSeeds.map(buildChapter);
+const built = chapterSeeds.map((seed, chapterIndex) => {
+  const original = buildChapter(seed);
+  const art = RABBIT_CLASSIC_ART[chapterIndex];
+  const lines = original.lines.map((line, index) => {
+    const [backgroundId, leftAssetId, rightAssetId] = art[index];
+    return { ...line, backgroundId, leftAssetId, rightAssetId };
+  });
+  return {
+    chapter: {
+      ...original.chapter,
+      backgroundId: art[0][0],
+      // Empty cut slots must stay empty instead of inheriting the old chapter actors.
+      leftAssetId: "",
+      rightAssetId: "",
+      characterAssetIds: [...new Set(art.flatMap(([, left, right]) => [left, right]).filter(Boolean))],
+      backgroundAssetIds: [...new Set(art.map(([background]) => background))],
+    },
+    lines,
+  };
+});
 
 export const RABBIT_CLASSIC_READING: StoryProject = {
   id: "classic-rabbit-tale",

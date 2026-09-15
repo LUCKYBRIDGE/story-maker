@@ -526,18 +526,18 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.equal(
     originalRabbitTurtleAssets.filter((asset) => asset.type === "character")
       .length,
-    7,
+    13,
   );
   assert.equal(
     originalRabbitTurtleAssets.filter((asset) => asset.type === "background")
       .length,
-    9,
+    13,
   );
   assert.ok(
     parsedAssets
       .filter(
         (asset) =>
-          asset.story === "토끼와 자라" && asset.type === "character",
+          asset.story === "토끼와 자라" && asset.type === "character" && !asset.id.includes(".classic-"),
       )
       .every((asset) => asset.framing === "전신"),
   );

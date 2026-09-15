@@ -9,7 +9,19 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: OG-ART-01 옹고집전 원작 읽기 비주얼 서사
+## 현재 작업: RT-ART-01 토끼전 원작 읽기 이미지 보강
+
+- 2026-09-15 사용자 직접 요청, **DONE — 구현·로컬 검증 완료, PR 준비**, Work Lead · G/A/B. 사용자 요청의 56컷 인수 조건을 작업 계약으로 적용.
+- 기준 main `f96059d`, branch `codex/rabbit-classic-art-pass`, 실행 폴더 `/Volumes/WAN2/apps/story-maker-rabbit-art`. 기존 폴더의 책갈피 작업은 보존하고 별도 worktree 사용.
+- 결과: [56컷 자산 진단·배치표](design/rabbit-classic-art.md), 기존 42개 자산 실물 대조, 생성 전 필요 표 작성. 배경 4종과 투명 캐릭터 6종(약 2.6 MB)을 등록하고 56컷에 연결. 대본·화자·순서·ID·저장 형식 보존.
+- 사용자 후속 결정: 글상자+배경+좌우/중앙 캐릭터를 유지. 올인원 CG 2종은 `work/story-assets/rabbit-classic-art/`에 별도 보관하고 원작/배포에서 제외. 로컬 배경 제거는 사용자 허용 후 수행. 캐릭터는 균일 확대·축소/평행이동으로 정렬.
+- A: `npm run check` 통과(기존 미사용 변수 경고 1개), `npm test` 214/214 및 build 통과, 최종 자산 framing 보강 후 관련 검사 20/20, `npm run build:github` 통과.
+- B: 현재 배포 원작 56컷 기준선 확인. 개발 서버와 최종 GitHub Pages 산출물에서 1365×900/820×1180/390×844 각각 56컷 전수 이동. 이미지 decode·알파·발선·여백·글상자 비겹침·이전/다음·마지막 컷 확인. 주요 10장면 스크린샷은 [배치 문서](design/rabbit-classic-art.md)의 화면 증거 참조.
+- 회귀: 최종 static browser smoke `classic-reading`, `rabbit-art`, `story-flow`, `pinky-examples` 모두 통과. 키보드 이동·분기/합류·재선택·저장본 보존 포함. 실행 출력 `/tmp/rabbit-art-static-smoke/results.json`.
+- 한계: 모바일은 기존 배경 전체 표시와 흐린 여백 유지. 실제 모바일 기기 검수 미포함. 도사 장면은 별도 도사 그림 없이 용왕과 기존 서술로 표현(C). main 병합·공개 배포 미수행.
+- 다음 READY 없음.
+
+## 최근 완료: OG-ART-01 옹고집전 원작 읽기 비주얼 서사
 
 - 2026-09-15 사용자 직접 요청, **DONE — 구현·로컬 검증, PR #46 검토 대기**, Work Lead · G/A/B.
 - 기준 `origin/main` `5310509`, 작업 branch `codex/onggojib-classic-art-pass`, 시작 시 미커밋 변경 없음.

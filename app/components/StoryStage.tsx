@@ -46,8 +46,8 @@ export function StoryStageCanvas({ stage, variant, speaker, showBackground = tru
   const loading = variant === "thumbnail" ? "lazy" : "eager";
   return <div ref={canvasRef} className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
     {showBackground && <StoryStageBackground background={stage.background} loading={loading} />}
-    <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right"} />
-    <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left"} />
+    <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right" && !stage.left.sharedActor} />
+    <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left" && !stage.right.sharedActor} />
   </div>;
 }
 
@@ -108,6 +108,7 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
     return <span className={`${classes} story-stage-missing`} role="img" aria-label={`${character.label}: 이미지를 표시할 수 없어요`} data-asset-id={character.id}>이미지를 표시할 수 없어요</span>;
   }
   return <img
+    data-shared-actor={character.sharedActor || undefined}
     data-scale-group={character.scaleGroup}
     data-stature={character.scale < 1 ? "child" : undefined}
     style={{ "--actor-scale": scale, "--actor-facing": character.mirrored ? -1 : 1 } as CSSProperties}
