@@ -4,6 +4,16 @@ import type { Chapter, StoryLine } from "./story-data";
 const assets = new Map(STORY_ASSETS.map(asset => [asset.id, asset]));
 
 export const CHARACTER_FACING = new Map<string, "left" | "right">([
+  ["rabbit-turtle.character.classic-turtle-portrait", "left"],
+  ["rabbit-turtle.character.rabbit-shocked", "right"],
+  ["rabbit-turtle.character.rabbit-thinking", "right"],
+  ["rabbit-turtle.character.rabbit-suspicious", "right"],
+  ["rabbit-turtle.character.rabbit-speaking-truth", "left"],
+  ["rabbit-turtle.character.classic-rabbit-laugh", "right"],
+  ["rabbit-turtle.character.turtle-resolve", "left"],
+  ["rabbit-turtle.character.turtle-offer", "left"],
+  ["rabbit-turtle.character.turtle-tired", "left"],
+  ["rabbit-turtle.character.dragonking-sick-elder-attached", "left"],
   ["onggojib.character.classic-master", "left"],
   ["onggojib.character.classic-master-talisman", "right"],
   ["onggojib.character.classic-mother", "left"],
@@ -51,6 +61,7 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
       scale: asset?.story === "토끼와 자라" && asset.group === "어린 자라" ? 0.72
         : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62 : 1,
       mirrored: stageShouldMirror(id, side),
+      sharedActor: id === "rabbit-turtle.character.classic-riding",
     };
   };
   return {
