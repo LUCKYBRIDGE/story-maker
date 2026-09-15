@@ -1,3 +1,4 @@
+import { ONGGOJIB_CLASSIC_ART } from "./story-classic-onggojib-art";
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
 
 const BG_WINTER_COURTYARD = "onggojib.background.winter-courtyard-pixel";
@@ -287,7 +288,26 @@ const chapterSeeds: ChapterSeed[] = [
   },
 ];
 
-const built = chapterSeeds.map(buildChapter);
+const built = chapterSeeds.map((seed, chapterIndex) => {
+  const art = ONGGOJIB_CLASSIC_ART[chapterIndex];
+  const { chapter, lines } = buildChapter(seed);
+  const illustratedLines = lines.map((line, index) => {
+    const [backgroundId, leftAssetId, rightAssetId] = art[index];
+    return { ...line, backgroundId, leftAssetId, rightAssetId };
+  });
+  return {
+    chapter: {
+      ...chapter,
+      backgroundId: art[0][0],
+      // Each cut casts its actors; empty slots must not inherit a chapter actor.
+      leftAssetId: "",
+      rightAssetId: "",
+      characterAssetIds: [...new Set(art.flatMap(([, left, right]) => [left, right]).filter(Boolean))],
+      backgroundAssetIds: [...new Set(art.map(([background]) => background))],
+    },
+    lines: illustratedLines,
+  };
+});
 
 export const ONGGOJIB_CLASSIC_READING: StoryProject = {
   id: "classic-onggojib-tale",
@@ -305,8 +325,8 @@ export const ONGGOJIB_CLASSIC_READING: StoryProject = {
     align: "center",
     titleSize: 40,
     titleColor: "",
-    backgroundId: BG_WINTER_COURTYARD,
-    characterId: REAL,
+    backgroundId: "onggojib.background.classic-closed-house",
+    characterId: "onggojib.character.real-consistent-pixel",
     characterPosition: "center",
   },
   planning: {

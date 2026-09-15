@@ -9,7 +9,16 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SN-NARRATIVE-04 하늘길·귀환 시기와 네 엔딩 최종 정합화
+## 현재 작업: OG-ART-01 옹고집전 원작 읽기 비주얼 서사
+
+- 2026-09-15 사용자 직접 요청, **IN_PROGRESS**, Work Lead · G/A/B.
+- 기준 `origin/main` `5310509`, 작업 branch `codex/onggojib-classic-art-pass`, 시작 시 미커밋 변경 없음.
+- 범위: 71컷 시각 설계, 기존 모델 기준 신규 자산·카탈로그·원작 배치, 회귀 검사·세 크기 실화면 QA, PR·CI. 대본/화자/순서/ID·놀스토리·다른 원작·저장 형식 보존. 병합·배포 제외.
+- 설계·제작 목록: [컷별 비주얼 플랜](design/onggojib-classic-art.md). 사용자 첨부 요청의 인수 조건을 작업 계약으로 적용.
+- 완료 증거: 대본 불변·71컷 참조 검사, 정적 검사·전체 테스트·production/GitHub Pages build·browser smoke, 1365×900/820×1180/390×844 전수 이동·이미지/잘림 검수, PR CI.
+- 다음 READY 없음. 기존 완료 이력은 보존.
+
+## 최근 완료: SN-NARRATIVE-04 하늘길·귀환 시기와 네 엔딩 최종 정합화
 
 - 2026-09-14 사용자 직접 요청, **DONE — 로컬 수정·검증 완료**, Work Lead · G/A/B.
 - 기준: story-maker `305772e`, 원본 pinky-ne-site `1a3054f`; 양쪽 branch `codex/seonnyeo-sky-path-final`, 시작 시 작업 트리 깨끗함.
