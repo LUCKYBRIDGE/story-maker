@@ -2,19 +2,36 @@
 
 import { useEffect } from "react";
 
-const CLASSIC_READING_CARD = "rabbit-classic-reading";
+const CLASSIC_READING_CARD = "classic-reading";
 
-function classicReadingUrl() {
+const CLASSIC_READINGS: Record<
+  string,
+  { slug: string; ariaLabel: string; subtitle: string }
+> = {
+  "토끼와 자라": {
+    slug: "rabbit",
+    ariaLabel: "토끼전 원작 읽기",
+    subtitle: "고전 「토끼전」의 대표 이야기를 읽어요",
+  },
+  "옹고집전": {
+    slug: "onggojib",
+    ariaLabel: "옹고집전 원작 읽기",
+    subtitle: "고전 「옹고집전」의 대표 이야기를 읽어요",
+  },
+};
+
+function classicReadingUrl(slug: string) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-  return basePath ? `${basePath}/classic/rabbit.html` : "/classic/rabbit";
+  return basePath ? `${basePath}/classic/${slug}.html` : `/classic/${slug}`;
 }
 
-function createClassicReadingCard() {
+function createClassicReadingCard(reading: (typeof CLASSIC_READINGS)[string]) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "focus-action-card";
   button.dataset.classicReadingCard = CLASSIC_READING_CARD;
-  button.setAttribute("aria-label", "토끼전 원작 읽기");
+  button.dataset.classicReadingSlug = reading.slug;
+  button.setAttribute("aria-label", reading.ariaLabel);
   button.innerHTML = `
     <div class="action-card-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -24,11 +41,11 @@ function createClassicReadingCard() {
     </div>
     <div class="action-card-text">
       <strong class="action-card-title">원작 읽기</strong>
-      <small class="action-card-sub">고전 「토끼전」의 대표 이야기를 읽어요</small>
+      <small class="action-card-sub">${reading.subtitle}</small>
     </div>
   `;
   button.addEventListener("click", () => {
-    window.location.assign(classicReadingUrl());
+    window.location.assign(classicReadingUrl(reading.slug));
   });
   return button;
 }
@@ -54,16 +71,16 @@ export function ClassicReadingLibraryEntry() {
           ?.textContent?.trim();
         const grid = stage?.querySelector<HTMLElement>(".focus-action-grid") ?? null;
         const availability = stage?.querySelector<HTMLElement>(".focus-availability");
-        const rabbitSelected = title === "토끼와 자라";
+        const reading = title ? CLASSIC_READINGS[title] : undefined;
 
         if (availability) {
-          const label = rabbitSelected
+          const label = reading
             ? "원작 읽기 · 이용 가능"
             : "원작 읽기 · 준비 중";
           if (availability.textContent !== label) availability.textContent = label;
         }
 
-        if (!rabbitSelected || !grid) {
+        if (!reading || !grid) {
           removeClassicReadingCards();
           return;
         }
@@ -71,8 +88,12 @@ export function ClassicReadingLibraryEntry() {
         let card = grid.querySelector<HTMLElement>(
           `[data-classic-reading-card="${CLASSIC_READING_CARD}"]`,
         );
+        if (card && card.dataset.classicReadingSlug !== reading.slug) {
+          card.remove();
+          card = null;
+        }
         if (!card) {
-          card = createClassicReadingCard();
+          card = createClassicReadingCard(reading);
           grid.prepend(card);
         }
         removeClassicReadingCards(card);

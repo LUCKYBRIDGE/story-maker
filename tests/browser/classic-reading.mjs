@@ -13,10 +13,10 @@ try {
   await page.locator('.library-shelf').waitFor();
 
   await page.getByRole('button', { name: '토끼와 자라 · 기본 이야기', exact: true }).click();
-  const dialog = page.getByRole('dialog');
+  let dialog = page.getByRole('dialog');
   await dialog.waitFor();
 
-  const classicButton = page.getByRole('button', { name: '토끼전 원작 읽기', exact: true });
+  let classicButton = page.getByRole('button', { name: '토끼전 원작 읽기', exact: true });
   await classicButton.waitFor({ state: 'visible' });
   assert.equal(
     (await dialog.locator('.focus-availability').textContent())?.trim(),
@@ -35,7 +35,40 @@ try {
   assert.ok((await page.locator('.current-reading').innerText()).includes('아주 먼 옛날'));
   await page.screenshot({ path: `${output}/classic-reader-first-cut.png`, fullPage: true });
 
-  console.log({ entryVisible: true, routeOpened: true, firstCutLoaded: true });
+  // 재방문은 서재에서 시작하며 마지막에 열었던 책 상세가 복원될 수 있다.
+  // 실제 사용자처럼 Escape로 상세를 닫은 뒤 다른 책을 선택한다.
+  await page.goto(url);
+  await page.locator('.library-shelf').waitFor();
+  const restoredDialog = page.getByRole('dialog');
+  if (await restoredDialog.isVisible()) {
+    await page.keyboard.press('Escape');
+    await restoredDialog.waitFor({ state: 'hidden' });
+  }
+
+  await page.getByRole('button', { name: '옹고집전 · 기본 이야기', exact: true }).click();
+  dialog = page.getByRole('dialog');
+  await dialog.waitFor();
+
+  classicButton = page.getByRole('button', { name: '옹고집전 원작 읽기', exact: true });
+  await classicButton.waitFor({ state: 'visible' });
+  assert.equal(
+    (await dialog.locator('.focus-availability').textContent())?.trim(),
+    '원작 읽기 · 이용 가능',
+  );
+  assert.equal(await classicButton.locator('.action-card-title').textContent(), '원작 읽기');
+  await page.screenshot({ path: `${output}/library-onggojib-classic-entry.png`, fullPage: true });
+
+  await classicButton.click();
+  await page.waitForURL(/\/classic\/onggojib(?:\.html)?\/?$/);
+  await page.locator('.book-play-entry').waitFor();
+  assert.ok((await page.locator('.student-book').innerText()).includes('옹고집전'));
+
+  await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
+  await page.locator('.player-shell').waitFor();
+  assert.ok((await page.locator('.current-reading').innerText()).includes('옛날 어느 고을'));
+  await page.screenshot({ path: `${output}/classic-onggojib-first-cut.png`, fullPage: true });
+
+  console.log({ rabbitEntryVisible: true, onggojibEntryVisible: true, routesOpened: true, firstCutsLoaded: true });
   await page.close();
 } finally {
   await browser.close();
