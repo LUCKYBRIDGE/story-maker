@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-14
+- 기준일: 2026-09-15
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -11,11 +11,16 @@
 
 ## 현재 작업: OG-ART-01 옹고집전 원작 읽기 비주얼 서사
 
-- 2026-09-15 사용자 직접 요청, **IN_PROGRESS**, Work Lead · G/A/B.
+- 2026-09-15 사용자 직접 요청, **DONE — 구현·로컬 검증, PR #46 검토 대기**, Work Lead · G/A/B.
 - 기준 `origin/main` `5310509`, 작업 branch `codex/onggojib-classic-art-pass`, 시작 시 미커밋 변경 없음.
 - 범위: 71컷 시각 설계, 기존 모델 기준 신규 자산·카탈로그·원작 배치, 회귀 검사·세 크기 실화면 QA, PR·CI. 대본/화자/순서/ID·놀스토리·다른 원작·저장 형식 보존. 병합·배포 제외.
 - 설계·제작 목록: [컷별 비주얼 플랜](design/onggojib-classic-art.md). 사용자 첨부 요청의 인수 조건을 작업 계약으로 적용.
-- 완료 증거: 대본 불변·71컷 참조 검사, 정적 검사·전체 테스트·production/GitHub Pages build·browser smoke, 1365×900/820×1180/390×844 전수 이동·이미지/잘림 검수, PR CI.
+- 구현: 배경 9종 + 실제 투명 캐릭터/특수 자산 16종, 71컷 분리 배치. 올인원 CG 21종은 로컬 작업 보관소로 분리. 기존 자산 파일·대본·저장 형식 변경 없음.
+- A: `npm run check` 통과(기존 토끼전 미사용 변수 경고 1개), `npm test` production build/207개 통과, 신규 검사 포함 최종 unit 210/210, `npm run build:github` 통과. 오래된 Turbopack 캐시는 별도 보존 후 재빌드.
+- B: 개발 서버와 GitHub Pages 산출물에서 1365×900/820×1180/390×844 각각 71컷 전수 이동, 이미지 decode·알파·발선·여백·페이지 overflow·이전/다음·마지막 컷 확인. 전체 화면 목록 및 주요 장면 육안 검수. 증거 `/tmp/onggojib-art/static-art/onggojib-art/`, 로컬 제작 원본 `work/story-assets/onggojib-classic-art/`.
+- 회귀: 기본 browser smoke 6개 흐름과 추가 `onggojib-art` 검사. 새 전수 검사는 기본 smoke에 등록. 현재 원격 검증 결과는 [PR #46 Checks](https://github.com/LUCKYBRIDGE/story-maker/pull/46/checks)에서 해당 HEAD 기준으로 확인한다.
+- G: 작업 branch 커밋·push와 [PR #46](https://github.com/LUCKYBRIDGE/story-maker/pull/46) 생성. main 병합·공개 배포 미수행.
+- 한계: 실제 모바일 기기 검수는 포함하지 않음. 모바일은 기존 플레이어의 배경 전체 표시/흐린 여백을 유지. 부적 없는 짚 몸 1종은 후속 편집용 추가 자료이며 원작 컷에는 부적 붙은 몸·중간 변신·복귀가 연결됨.
 - 다음 READY 없음. 기존 완료 이력은 보존.
 
 ## 최근 완료: SN-NARRATIVE-04 하늘길·귀환 시기와 네 엔딩 최종 정합화
