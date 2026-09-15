@@ -35,9 +35,16 @@ try {
   assert.ok((await page.locator('.current-reading').innerText()).includes('아주 먼 옛날'));
   await page.screenshot({ path: `${output}/classic-reader-first-cut.png`, fullPage: true });
 
-  // 첫 방문에서 서재에 입장한 기록이 있으므로 재방문은 현재 제품 정책대로 서재에서 시작해야 한다.
+  // 재방문은 서재에서 시작하며 마지막에 열었던 책 상세가 복원될 수 있다.
+  // 실제 사용자처럼 Escape로 상세를 닫은 뒤 다른 책을 선택한다.
   await page.goto(url);
   await page.locator('.library-shelf').waitFor();
+  const restoredDialog = page.getByRole('dialog');
+  if (await restoredDialog.isVisible()) {
+    await page.keyboard.press('Escape');
+    await restoredDialog.waitFor({ state: 'hidden' });
+  }
+
   await page.getByRole('button', { name: '옹고집전 · 기본 이야기', exact: true }).click();
   dialog = page.getByRole('dialog');
   await dialog.waitFor();
