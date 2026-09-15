@@ -11582,7 +11582,8 @@ img {
   .book-play-entry .student-book { width: min(82vw, 430px); max-width: 430px; }
   .book-play-entry { justify-content: center; padding: 28px 24px 36px; }
   .reader-topbar { padding: 8px; }
-  .reader-top-actions button { padding-inline: 12px; }
+  .reader-top-actions { flex-wrap: wrap; justify-content: flex-end; }
+  .reader-top-actions button { padding-inline: 10px; font-size: 13px; }
   .reading-tools { gap: 6px; }
   .reading-tools > small { max-width: 45%; }
   .reading-scroll { max-height: 42dvh; }

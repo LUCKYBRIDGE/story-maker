@@ -329,7 +329,7 @@ export function StoryPlayer({
             <small>{number} / {total}</small>
           </details>
           <div className="reader-top-actions">
-            <button type="button" onClick={openBookmarks}>책갈피</button>
+            <button type="button" onClick={openBookmarks} aria-label="저장 및 이어읽기">저장·이어읽기</button>
             <button type="button" onClick={() => setDisplayOpen(true)}>화면 설정</button>
             <button type="button" onClick={() => setMenu("chapters")}>이동</button>
             <button type="button" onClick={() => setMenu("return")}>돌아가기</button>
