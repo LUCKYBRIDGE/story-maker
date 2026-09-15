@@ -35,9 +35,8 @@ try {
   assert.ok((await page.locator('.current-reading').innerText()).includes('아주 먼 옛날'));
   await page.screenshot({ path: `${output}/classic-reader-first-cut.png`, fullPage: true });
 
+  // 첫 방문에서 서재에 입장한 기록이 있으므로 재방문은 현재 제품 정책대로 서재에서 시작해야 한다.
   await page.goto(url);
-  await page.locator('.nolstory-poster-frame').waitFor();
-  await page.getByRole('button', { name: '서재 입장', exact: true }).click();
   await page.locator('.library-shelf').waitFor();
   await page.getByRole('button', { name: '옹고집전 · 기본 이야기', exact: true }).click();
   dialog = page.getByRole('dialog');
