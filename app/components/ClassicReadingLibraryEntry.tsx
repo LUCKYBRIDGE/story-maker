@@ -88,7 +88,7 @@ export function ClassicReadingLibraryEntry() {
         let card = grid.querySelector<HTMLElement>(
           `[data-classic-reading-card="${CLASSIC_READING_CARD}"]`,
         );
-        if (card?.dataset.classicReadingSlug !== reading.slug) {
+        if (card && card.dataset.classicReadingSlug !== reading.slug) {
           card.remove();
           card = null;
         }
