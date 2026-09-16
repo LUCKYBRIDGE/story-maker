@@ -1,3 +1,5 @@
+import { SEONNYEO_CLASSIC_READING } from "./story-classic-seonnyeo";
+import { ONGGOJIB_CLASSIC_READING } from "./story-classic-onggojib";
 import { RABBIT_CLASSIC_ART } from "./story-classic-rabbit-art";
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
 
@@ -322,5 +324,6 @@ export const RABBIT_CLASSIC_READING: StoryProject = {
 };
 
 export function getClassicReading(theme: "rabbit" | "onggojib" | "seonnyeo") {
-  return theme === "rabbit" ? RABBIT_CLASSIC_READING : null;
+  return theme === "rabbit" ? RABBIT_CLASSIC_READING
+    : theme === "onggojib" ? ONGGOJIB_CLASSIC_READING : SEONNYEO_CLASSIC_READING;
 }

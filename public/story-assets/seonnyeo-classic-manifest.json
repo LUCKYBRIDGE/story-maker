@@ -1,0 +1,112 @@
+[
+  {
+    "id": "seonnyeo.background.classic-sky-realm",
+    "displayName": "하늘나라.webp",
+    "label": "구름 너머 하늘나라",
+    "story": "선녀와 나무꾼",
+    "type": "background",
+    "category": "background",
+    "backgroundRole": "scenery",
+    "group": "하늘나라",
+    "pose": "배경",
+    "usage": "원작 사용",
+    "selectionTier": "기본 추천",
+    "tags": [
+      "선녀와 나무꾼",
+      "원작 읽기",
+      "하늘나라",
+      "구름"
+    ],
+    "src": "/story-assets/seonnyeo.background.classic-sky-realm.webp",
+    "sourcePath": "public/story-assets/seonnyeo.background.classic-sky-realm.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "seonnyeo.character.classic-deer",
+    "displayName": "사슴 · 도움을 청함",
+    "label": "사슴 · 도움을 청함",
+    "story": "선녀와 나무꾼",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "사슴",
+    "pose": "도움을 청함",
+    "usage": "원작 사용",
+    "selectionTier": "기본 추천",
+    "tags": [
+      "선녀와 나무꾼",
+      "원작 읽기",
+      "사슴",
+      "도움을 청함"
+    ],
+    "src": "/story-assets/seonnyeo.character.classic-deer.webp",
+    "sourcePath": "public/story-assets/seonnyeo.character.classic-deer.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "seonnyeo.character.classic-hunter",
+    "displayName": "사냥꾼 · 사슴을 찾음",
+    "label": "사냥꾼 · 사슴을 찾음",
+    "story": "선녀와 나무꾼",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "사냥꾼",
+    "pose": "사슴을 찾음",
+    "usage": "원작 사용",
+    "selectionTier": "기본 추천",
+    "tags": [
+      "선녀와 나무꾼",
+      "원작 읽기",
+      "사냥꾼",
+      "사슴을 찾음"
+    ],
+    "src": "/story-assets/seonnyeo.character.classic-hunter.webp",
+    "sourcePath": "public/story-assets/seonnyeo.character.classic-hunter.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "seonnyeo.character.classic-mother",
+    "displayName": "어머니 · 아들을 맞이함",
+    "label": "어머니 · 아들을 맞이함",
+    "story": "선녀와 나무꾼",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "어머니",
+    "pose": "아들을 맞이함",
+    "usage": "원작 사용",
+    "selectionTier": "기본 추천",
+    "tags": [
+      "선녀와 나무꾼",
+      "원작 읽기",
+      "어머니",
+      "아들을 맞이함"
+    ],
+    "src": "/story-assets/seonnyeo.character.classic-mother.webp",
+    "sourcePath": "public/story-assets/seonnyeo.character.classic-mother.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "seonnyeo.character.classic-children",
+    "displayName": "두 아이 · 손을 잡은 남매",
+    "label": "두 아이 · 손을 잡은 남매",
+    "story": "선녀와 나무꾼",
+    "type": "character",
+    "category": "character",
+    "framing": "여러 인물",
+    "group": "두 아이",
+    "pose": "손을 잡은 남매",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "선녀와 나무꾼",
+      "원작 읽기",
+      "두 아이",
+      "손을 잡은 남매"
+    ],
+    "src": "/story-assets/seonnyeo.character.classic-children.webp",
+    "sourcePath": "public/story-assets/seonnyeo.character.classic-children.webp",
+    "copyright": "놀퀴즈"
+  }
+]

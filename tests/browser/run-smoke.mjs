@@ -28,8 +28,8 @@ if (!url) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   url = `http://127.0.0.1:${server.address().port}${prefix}/`;
 }
-const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'library-home', 'classic-reading', 'onggojib-art', 'rabbit-art'];
-const allowed = new Set(['rabbit-art', 'onggojib-art', 'library-home', 'classic-reading', 'start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import', 'seonnyeo-e2e']);
+const suites = process.env.QA_SUITES?.split(',') || ['start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'library-home', 'classic-reading', 'seonnyeo-classic', 'onggojib-art', 'rabbit-art'];
+const allowed = new Set(['seonnyeo-classic', 'rabbit-art', 'onggojib-art', 'library-home', 'classic-reading', 'start-screen', 'story-flow', 'sticky-memos', 'pinky-examples', 'mobile-input', 'sheet-import', 'seonnyeo-e2e']);
 const results = [];
 try {
   assert.equal((await fetch(url, { signal: AbortSignal.timeout(10_000) })).status, 200);

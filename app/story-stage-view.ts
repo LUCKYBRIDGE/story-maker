@@ -59,7 +59,9 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
       placement: stagePlacementClass(id),
       // An age variant has its own stage stature; never distort its head/body proportions.
       scale: (asset?.story === "별주부전" || asset?.story === "토끼와 자라") && asset.group === "어린 자라" ? 0.72
-        : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62 : 1,
+        : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62
+        : asset?.story === "선녀와 나무꾼" && asset.group === "두 아이" ? 0.62
+        : asset?.story === "선녀와 나무꾼" && asset.group === "사슴" ? 0.72 : 1,
       mirrored: stageShouldMirror(id, side),
       sharedActor: id === "rabbit-turtle.character.classic-riding",
     };
