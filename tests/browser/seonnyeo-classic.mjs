@@ -26,6 +26,8 @@ try {
       await page.waitForFunction(() => [...document.querySelectorAll('.story-stage-actor')].every(i => i.dataset.layoutReady === 'true'));
       // Decoding and layout readiness precede the browser's painted frame.
       await page.waitForTimeout(200);
+      const required = { 17: 'woodcutter-holding-robe', 26: 'fairy-holding-first-baby', 36: 'fairy-carrying-children', 49: 'heavenly-bucket', 50: 'woodcutter-in-bucket', 57: 'celestial-horse', 64: 'woodcutter-riding-horse', 71: 'mother-offering-porridge', 73: 'horse-startled-by-porridge', 75: 'woodcutter-fallen', 76: 'celestial-horse-departing', 79: 'woodcutter-aged', 83: 'rooster-calling-sky' }[cut];
+      if (required) assert.equal(await page.locator(`.story-stage-actor[src*="classic-${required}.webp"]`).count(), 1, `${width}: cut ${cut} expected current artwork`);
       assert.equal(await page.locator('.story-stage-missing,.story-stage-background-error').count(), 0);
       const layout = await page.evaluate(() => {
         const text = document.querySelector('.dialogue-box');
@@ -33,7 +35,7 @@ try {
       });
       assert.equal(layout.overflow, false, `${width}: cut ${cut} page overflow`);
       assert.equal(layout.clipped, false, `${width}: cut ${cut} clipped text`);
-      if ([1, 4, 6, 21, 27, 35, 48, 52, 54, 64, 73, 83].includes(cut)) await page.screenshot({ path: `${output}/${width}-${cut}.png`, fullPage: true });
+      if ([1, 4, 6, 16, 17, 21, 26, 27, 32, 35, 36, 48, 49, 50, 52, 54, 57, 61, 64, 71, 73, 75, 76, 79, 83].includes(cut)) await page.screenshot({ path: `${output}/${width}-${cut}.png`, fullPage: true });
       if (cut < 83) await page.getByRole('button', { name: '다음 컷', exact: true }).click();
     }
     assert.match(await page.locator('.current-reading').innerText(), /꼬끼오/);

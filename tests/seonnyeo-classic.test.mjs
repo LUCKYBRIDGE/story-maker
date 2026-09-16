@@ -49,10 +49,10 @@ test('원작의 모든 배경·인물은 로컬 자산이고 빈 인물은 장 �
   assert.equal(project.lines.at(-1).leftAssetId, '');
 });
 
-test('원작의 새 인물 4종은 투명 캔버스·발선·안전 여백을 만족한다', async () => {
+test('원작의 새 인물·소품 18종은 투명 캔버스·발선·안전 여백을 만족한다', async () => {
   const { default: sharp } = await import('sharp');
   const newActors = assets.filter(a => a.id.startsWith('seonnyeo.character.classic-'));
-  assert.equal(newActors.length, 4);
+  assert.equal(newActors.length, 18);
   for (const asset of newActors) {
     const file = `public${asset.src}`;
     const metadata = await sharp(file).metadata();
@@ -86,4 +86,31 @@ test('아이와 사슴은 성인보다 작게 표시하고 사냥꾼 앞에는 �
     assert.equal(line.rightAssetId, 'seonnyeo.character.classic-hunter');
     assert.ok(!line.leftAssetId.endsWith('classic-deer'));
   }
+});
+
+test('주요 사건은 전용 동작으로 표시하고 떠난 인물을 중복 배치하지 않는다', () => {
+  const stage = (chapter, order) => stages[project.lines.findIndex(l => l.chapterId === `classic-seonnyeo-${chapter}` && l.order === order)];
+  const id = name => `seonnyeo.character.classic-${name}`;
+  assert.equal(stage(2,4).right.id, id('wing-robe'));
+  assert.equal(stage(3,2).right.id, id('fairy-holding-first-baby'));
+  assert.equal(stage(3,8).left.id, id('woodcutter-holding-robe'));
+  assert.equal(stage(4,1).right.id, id('fairy-carrying-children'));
+  assert.equal(stage(4,1).left.id, '');
+  assert.equal(stage(5,2).right.id, id('heavenly-bucket'));
+  assert.equal(stage(5,3).left.id, id('woodcutter-in-bucket'));
+  for (let order=1;order<=12;order++) assert.equal(stage(6,order).left.id, id('woodcutter-riding-horse'));
+  assert.equal(stage(6,11).right.id, id('mother-offering-porridge'));
+  assert.equal(stage(6,13).left.id, id('horse-startled-by-porridge'));
+  assert.equal(stage(6,15).left.id, id('woodcutter-fallen'));
+  assert.equal(stage(6,16).right.id, id('celestial-horse-departing'));
+  assert.equal(stage(6,17).right.id, '');
+  assert.equal(stage(6,19).left.id, id('woodcutter-aged'));
+  assert.equal(stage(6,23).right.id, id('rooster-calling-sky'));
+  assert.equal(stage(6,23).right.scale, .48);
+  assert.equal(stage(6,3).left.mirrored, false);
+  assert.equal(stage(6,3).right.mirrored, false);
+  assert.equal(stage(6,1).left.sharedActor, true);
+  assert.equal(stage(6,3).left.scale, 1.4);
+  assert.equal(stage(3,2).right.placement, 'framing-full');
+  assert.equal(stage(4,1).right.placement, 'framing-full');
 });

@@ -11,16 +11,15 @@
 
 ## 현재 작업: SN-CLASSIC-ART-02 원작 필수 이미지 제작·GitHub 반영
 
-- 2026-09-16 사용자 후속 요청, **BLOCKED — 구현분 검증·GitHub 공유 완료, 남은 이미지 생성 한도 대기**, Work Lead · G/A/B. 이전 원작읽기 로컬 변경을 보존하고 같은 `codex/seonnyeo-classic-reading` 브랜치에서 진행. `origin/main` `6846bc0`과 일치.
+- 2026-09-16 사용자 후속 요청, **DONE — 사용자 제공 14개 이미지 검수·배치·로컬 검증 완료, PR 공유**, Work Lead · G/A/B. 이전 원작읽기 로컬 변경을 보존하고 같은 `codex/seonnyeo-classic-reading` 브랜치에서 진행. `origin/main` `6846bc0`과 일치.
 - 목표: 배경·대본으로만 전달하던 필수 인물과 사건을 전용 이미지로 보여 주고, 원작읽기 전체 구현을 커밋·푸시·PR로 공유한다.
 - 범위: 원작 이미지·매니페스트·배치·생성기·관련 검사·연출 문서. 6장·83컷 문장·화자·순서·ID, 기존 놀스토리 및 학생 작품은 보존. main 병합·공개 배포 제외.
 - 인수: 캐릭터 기준본·투명 배경·800×1200·발선/여백 점검, 주요 사건 시각화, 3개 크기 전 컷 읽기, 원작·놀스토리 회귀, GitHub PR/CI 확인.
-- 구현분: 하늘나라 배경 1종에 이어 사슴·사냥꾼·어머니·두 아이 투명 자산 4종 생성·등록·배치. 800×1200, 알파 10% 발선 y=1149, 머리 여백149px/좌우≥48px. 균일 확대·축소와 평행이동만 사용. 기존 187개 자산 데이터·파일 유지.
-- A: `npm run check` 통과. `npm test` build 포함 220/220 통과. `npm run build:github -- --webpack` 통과. 자산 개수에 따른 기존 회귀 기대값 갱신, 투명·발선·잘림·배치/신장 검사 추가.
-- B: 1365×900/820×1180/390×844 전83컷 읽기·이미지 로드·책갈피·서재 복귀 검사 통과. 이미지 decode/실제 그리기까지 대기하도록 캡처 검사를 보강하고 최종 재검증 통과. 주요 장면 육안 확인. `classic-reading`, `pinky-examples` 11경로(기존 작품 보존) 통과. 증거 `/tmp/seonnyeo-classic-art-painted/results.json`, `/tmp/seonnyeo-classic-art-qa/results.json`. 실제 모바일 기기 미검수.
-- 막힘: 내장 imagegen이 `usage_limit_reached`를 반환(남은 4개 요청 모두 거부). 도구가 안내한 초기화는 2026-09-19 20:51경 KST. API 경로의 비용·키 사용은 승인되지 않아 호출하지 않음.
-- 미완료: 날개옷을 든 나무꾼, 두레박/탑승, 아이를 안은 선녀, 용마 귀환·낙마·호박죽, 수탉 등 사건 이미지. [연출 문서](design/seonnyeo-classic-art.md)의 현재 배치와 남은 제작 범위를 구분. 이를 포함한 전체 시각화 완료로 표시하지 않음.
-- G: 구현 커밋 `969add3` push, [Draft PR #53](https://github.com/LUCKYBRIDGE/story-maker/pull/53) 생성. 최신 원격 검증은 [PR Checks](https://github.com/LUCKYBRIDGE/story-maker/pull/53/checks)에서 확인. 남은 제작을 PR 본문에 명시. main 병합·운영 배포 미수행. 다음 READY 없음.
+- 구현: 하늘나라 배경 1종과 사슴·사냥꾼·어머니·두 아이 4종에 사용자 제공 사건 이미지 14종을 추가. 기존 187개 자산 유지, 총206개. 날개옷·첫째 출생·승천·두레박·용마 귀환·호박죽 사고·낙마·노년·수탉 결말을 컷별로 표시.
+- 정규화: 원본 PNG 보존, 800×1200 투명 WebP. 알파 10% 하단 y=1149±3, 안전 여백 검사 통과. 균일 축소·평행이동만 사용. 탑승 그림은 말 포함 성인 대비1.4배, 아이를 안은 선녀는 성인 슬롯 폭 유지. [연출·출처 기록](design/seonnyeo-classic-art.md).
+- A: `npm run check`, 전체221/221 검사, GitHub 정적 빌드(`npm run build:github -- --webpack`) 통과. Vinext 빌드 통과. 원문 보존·로컬 자산·알파·발선·여백·사건별 이미지·방향·상대 크기 검사.
+- B: 1365×900/820×1180/390×844에서 전83컷·새 이미지 실로드·텍스트 잘림/넘침·이전/다음·책갈피 복원·서재 복귀 통과. 주요 사건 캡처 육안 검수. `classic-reading`, `pinky-examples` 11경로·학생 저장본 보존 회귀 통과. 증거 `/tmp/seonnyeo-upload-verified/`. 실제 모바일 기기 미검수.
+- G: [PR #53](https://github.com/LUCKYBRIDGE/story-maker/pull/53)에 이미지 14종과 연출·검증을 후속 커밋으로 공유. 원격 CI 결과는 [PR Checks](https://github.com/LUCKYBRIDGE/story-maker/pull/53/checks)에서 확인하며 로컬 통과와 구분한다. main 병합·운영 배포 미수행. 다음 READY 없음.
 
 ## 최근 완료: SN-CLASSIC-01 선녀와 나무꾼 원작 읽기
 

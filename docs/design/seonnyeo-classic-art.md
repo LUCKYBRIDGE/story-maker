@@ -6,12 +6,12 @@
 ## 장면 원칙
 
 - 기존 선녀·나무꾼과 계곡·집·마당을 재사용한다. 다른 작품의 인물을 대역으로 넣지 않는다.
-- 목욕 장면은 빈 연못 풍경과 서술로 전달한다.
+- 목욕 장면은 인체 노출 없이 연못 풍경·벗어 놓은 날개옷과 서술로 전달한다.
 - 날개옷을 입을 때 선녀복으로 바꾸며, 승천 후에는 선녀 슬롯을 비운다.
 - 하늘나라에는 별도 배경을 사용해 지상의 집과 구별한다.
 - 사슴·사냥꾼·어머니·두 아이는 전용 투명 자산으로 표시한다. 사슴은 사냥꾼이 등장한 컷에서 숨겨 보이지 않게 한다.
 - 두 아이는 성인 키의 62%, 사슴은 72%로 표시한다. 원본 그림의 가로세로 비율은 보존한다.
-- 아직 미제작인 두레박·용마·수탉과 결합 동작(날개옷을 든 나무꾼, 아이를 안은 선녀, 낙마·호박죽)은 남은 제작 범위다. 2026-09-16 내장 생성 도구가 계정 한도 오류를 반환하여 제작하지 못했다. 빈 배경만으로 전체 시각화가 완료됐다고 간주하지 않는다.
+- 사용자 생성 이미지 14종으로 날개옷·출생·승천·두레박·용마·호박죽 사고·낙마·노년·수탉 장면을 표시한다. 컷별 연결은 배치 파일을 기준으로 한다.
 - 용마를 타는 장면에 서 있는 나무꾼을 대역으로 배치하지 않는다.
 - 새 인물은 기존 나무꾼을 그림체 참고로 생성했다. 기존 선녀·나무꾼 파일은 수정하지 않는다. 배경과 인물은 기존 플레이어처럼 분리한다.
 
@@ -59,3 +59,41 @@
 #### children
 
 > Use case: illustration-story. Create ONE isolated full-body game character sprite on a genuinely transparent alpha background, no backdrop, no floor, no cast shadow, no checkerboard painted into image, no words. Portrait 2:3 canvas. Subject entirely visible, generous margins on all sides. Match reference hand-painted Korean storybook animation style, soft natural colors, clean gentle outlines, NOT pixel art or chibi. Three-quarter view facing left. Reference is style only; do not copy the referenced man's identity for this new character. Exactly two young Korean siblings standing side by side holding hands, older child around 4 in a muted ochre jeogori with blue trousers, younger child around 2 in a pale peach jeogori with dusty rose trousers. Both have short dark hair, round but not exaggerated heads, simple cloth shoes, friendly natural expressions. Entire two small bodies visible, ages visibly different, unified pair sprite, no adults.
+
+## 사용자 제공 사건 이미지 14종 (2026-09-16)
+
+사용자가 ChatGPT에서 생성해 `outputs/seonnyeo-image-prompts/references/`에 제공했다.
+원본 PNG는 수정하지 않았다. 기존 나무꾼·지상/천상 선녀·어머니·아이를 참고한 얼굴,
+의복과 색감, 손발, 투명 배경을 비교 검수했다. 1024×1536 PNG를 원본에서 균일 축소·평행이동해
+800×1200 투명 WebP로 한 번 인코딩했다. 배경 제거·비균일 변형·부분 신체 보정은 하지 않았다.
+아래 파일은 모두 `public/story-assets/seonnyeo.character.classic-<접미사>.webp`다.
+
+| 제공 파일 번호 | 접미사 | 사용 사건 |
+|---|---|---|
+| 01 | wing-robe | 연못가의 날개옷 |
+| 02 | woodcutter-holding-robe | 날개옷을 집어 들고 선녀에게 보여 줌 |
+| 03 | fairy-carrying-children | 두 아이와 승천, 하늘나라 재회 |
+| 04 | heavenly-bucket | 하늘에서 내려오는 두레박 |
+| 05 | woodcutter-in-bucket | 두레박 탑승·상승 |
+| 06 | celestial-horse | 선녀가 마련한 용마와 금기 |
+| 07 | woodcutter-riding-horse | 지상 귀환·말 위에서 어머니와 대화 |
+| 08 | mother-offering-porridge | 어머니의 호박죽 권유 |
+| 09 | horse-startled-by-porridge | 등에 죽이 쏟아져 놀란 용마 |
+| 10 | woodcutter-fallen | 낙마한 나무꾼 |
+| 11 | celestial-horse-departing | 나무꾼을 남기고 떠나는 용마 |
+| 12 | rooster-calling-sky | 하늘을 향해 우는 수탉 |
+| 13 | woodcutter-aged | 세월이 흐른 뒤의 나무꾼 |
+| 14 | fairy-holding-first-baby | 첫째 출생 |
+
+12번 원본명 `12-rooster-calling-sk.png`, 13번 `13-woodcutter-age.png`는 그대로 보존하고
+등록 이름만 의도한 전체 이름으로 정리했다. 원본 14종 약 24MB를 배포용 합계 약 1.8MB로 줄였다.
+알파 10% 기준 하단 y=1149±3, 좌우 30px 이상 여백을 검사한다. 앉거나 넘어진 동작과 소품은
+선 자세의 머리 높이를 강제하지 않는다. 수탉은 성인보다 작게 표시하며, 결합 그림에는 별도 동일
+인물을 중복 배치하지 않는다. 오른쪽을 향한 새 나무꾼·용마는 방향 정보를 명시해 대화 상대를 바라본다.
+
+탑승 결합 그림은 말까지 포함한 전체 키를 성인 단독의 1.4배로 표시한다.
+아이를 안은 선녀와 탑승 인물은 성인 슬롯 폭을 사용해 작은 화면에서도 같은 인물의 키가 유지된다.
+
+특수 사건용 이미지이므로 자산 선택기에서는 `추가 자료`로 등록한다. 단독 탑승 장면은 기존
+결합 인물 중앙 배치 기능을 사용한다. 비교표·정규화 PNG·변환 측정치는 로컬
+`work/story-assets/seonnyeo-upload-review/`에 보존한다. 검증 결과와 GitHub 상태는 개발 상태표에서 관리한다.
