@@ -11821,8 +11821,51 @@ img {
 .reading-history-header-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
+}
+
+/* History jump navigation */
+.reading-history-dialog .history-jump-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #ede6d4;
+  padding: 3px 4px;
+  border-radius: 10px;
+  border: 1px solid #d4cbb8;
+}
+
+.reading-history-dialog .history-jump-btn {
+  min-height: 36px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #3b301c;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  white-space: nowrap;
+}
+
+.reading-history-dialog .history-jump-btn:hover {
+  background: #e4dbc5;
+  color: #172c22;
+}
+
+.reading-history-dialog .history-jump-btn.is-current {
+  background: #ffffff;
+  color: #164535;
+  border-color: #b5a990;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.reading-history-dialog .history-jump-btn.is-current:hover {
+  background: #fbf9f2;
+  border-color: #164535;
 }
 
 /* History font controls in header */
@@ -11891,11 +11934,13 @@ img {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-right: 10px;
+  padding: 6px 10px 32px 4px;
+  scroll-padding-bottom: 32px;
+  scroll-padding-top: 12px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   scrollbar-gutter: stable;
 }
 
@@ -11909,7 +11954,7 @@ img {
   border: 1px solid #dcd4be;
   background: #fffdf7;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-  transition: border-color 140ms ease, background 140ms ease;
+  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
 }
 
 .history-record-card.is-narration {
@@ -11920,6 +11965,24 @@ img {
 .history-record-card.is-dialogue {
   background: #ffffff;
   border-left: 4px solid #b5924d;
+}
+
+/* Highlight for current cut (메인 표시) */
+.history-record-card.is-current-cut {
+  border: 2px solid #1a4d38;
+  border-left-width: 6px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(18, 51, 38, 0.12), 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.history-record-card.is-current-cut.is-narration {
+  border-left-color: #215a42;
+  background: #fbf9f4;
+}
+
+.history-record-card.is-current-cut.is-dialogue {
+  border-left-color: #b3822b;
+  background: #ffffff;
 }
 
 .history-card-gutter {
@@ -11942,12 +12005,37 @@ img {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+.history-cut-index.is-current {
+  background: #194838;
+  color: #ffffff;
+  font-weight: 900;
+}
+
 .history-card-body {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.history-current-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.history-current-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #194838;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .reading-history-script .reading-paragraph {
@@ -12004,6 +12092,52 @@ img {
   padding-top: 6px;
   border-top: 1px dashed #dcd4be;
   flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .reading-history-backdrop {
+    padding: 1.5dvh 2vw;
+  }
+  .reading-history-dialog {
+    width: 96vw;
+    height: 92dvh;
+    max-height: 92dvh;
+    padding: 14px 12px;
+    gap: 10px;
+  }
+  .reading-history-header {
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+  .reading-history-header-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .reading-history-dialog .history-jump-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-height: 34px;
+  }
+  .reading-history-dialog .history-font-controls button {
+    min-width: 34px;
+    min-height: 34px;
+    padding: 2px 6px;
+  }
+  .reading-history-dialog .history-close-btn {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  .reading-history-script {
+    padding: 4px 6px 32px 2px;
+    scroll-padding-bottom: 32px;
+    gap: 10px;
+  }
+  .history-record-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
 }
 
 /* Choice sheets can cover the stage; its coordinate system never changes. */
