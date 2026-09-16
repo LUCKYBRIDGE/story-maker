@@ -11,7 +11,7 @@
 
 ## 현재 작업: SN-CLASSIC-ART-02 원작 필수 이미지 제작·GitHub 반영
 
-- 2026-09-16 사용자 후속 요청, **BLOCKED — 구현분 검증·GitHub 공유 진행, 남은 이미지 생성 한도 대기**, Work Lead · G/A/B. 이전 원작읽기 로컬 변경을 보존하고 같은 `codex/seonnyeo-classic-reading` 브랜치에서 진행. `origin/main` `6846bc0`과 일치.
+- 2026-09-16 사용자 후속 요청, **BLOCKED — 구현분 검증·GitHub 공유 완료, 남은 이미지 생성 한도 대기**, Work Lead · G/A/B. 이전 원작읽기 로컬 변경을 보존하고 같은 `codex/seonnyeo-classic-reading` 브랜치에서 진행. `origin/main` `6846bc0`과 일치.
 - 목표: 배경·대본으로만 전달하던 필수 인물과 사건을 전용 이미지로 보여 주고, 원작읽기 전체 구현을 커밋·푸시·PR로 공유한다.
 - 범위: 원작 이미지·매니페스트·배치·생성기·관련 검사·연출 문서. 6장·83컷 문장·화자·순서·ID, 기존 놀스토리 및 학생 작품은 보존. main 병합·공개 배포 제외.
 - 인수: 캐릭터 기준본·투명 배경·800×1200·발선/여백 점검, 주요 사건 시각화, 3개 크기 전 컷 읽기, 원작·놀스토리 회귀, GitHub PR/CI 확인.
@@ -20,7 +20,7 @@
 - B: 1365×900/820×1180/390×844 전83컷 읽기·이미지 로드·책갈피·서재 복귀 검사 통과. 이미지 decode/실제 그리기까지 대기하도록 캡처 검사를 보강하고 최종 재검증 통과. 주요 장면 육안 확인. `classic-reading`, `pinky-examples` 11경로(기존 작품 보존) 통과. 증거 `/tmp/seonnyeo-classic-art-painted/results.json`, `/tmp/seonnyeo-classic-art-qa/results.json`. 실제 모바일 기기 미검수.
 - 막힘: 내장 imagegen이 `usage_limit_reached`를 반환(남은 4개 요청 모두 거부). 도구가 안내한 초기화는 2026-09-19 20:51경 KST. API 경로의 비용·키 사용은 승인되지 않아 호출하지 않음.
 - 미완료: 날개옷을 든 나무꾼, 두레박/탑승, 아이를 안은 선녀, 용마 귀환·낙마·호박죽, 수탉 등 사건 이미지. [연출 문서](design/seonnyeo-classic-art.md)의 현재 배치와 남은 제작 범위를 구분. 이를 포함한 전체 시각화 완료로 표시하지 않음.
-- GitHub: 사용자에게 커밋·푸시 요청받음. 검증된 원작읽기와 4종 자산을 같은 브랜치의 draft PR로 공유하고 남은 제작을 기록. main 병합·공개 배포 미수행. 다음 READY 없음.
+- G: 구현 커밋 `969add3` push, [Draft PR #53](https://github.com/LUCKYBRIDGE/story-maker/pull/53) 생성. 최신 원격 검증은 [PR Checks](https://github.com/LUCKYBRIDGE/story-maker/pull/53/checks)에서 확인. 남은 제작을 PR 본문에 명시. main 병합·운영 배포 미수행. 다음 READY 없음.
 
 ## 최근 완료: SN-CLASSIC-01 선녀와 나무꾼 원작 읽기
 
