@@ -125,6 +125,44 @@ export function ReadingTranscript({ project, lines, history, currentLine, ending
   const style = { "--reading-font-size": `${autoFontSize}px` } as CSSProperties;
   const historyStyle = { "--reading-font-size": `${fontSize}px` } as CSSProperties;
   const records = [...history, ...(currentLine ? [{lineId: currentLine.id, choiceLabel: endingChoice}] : [])];
+  const historyScrollRef = useRef<HTMLDivElement>(null);
+  const currentCardRef = useRef<HTMLElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useLayoutEffect(() => {
+    if (!historyOpen) return;
+
+    const scrollToCurrent = () => {
+      if (historyScrollRef.current) {
+        historyScrollRef.current.scrollTop = historyScrollRef.current.scrollHeight;
+      }
+    };
+
+    scrollToCurrent();
+    const frameId = requestAnimationFrame(scrollToCurrent);
+    return () => cancelAnimationFrame(frameId);
+  }, [historyOpen, records.length]);
+
+  const handleScrollToFirst = () => {
+    if (historyScrollRef.current) {
+      historyScrollRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleScrollToCurrent = () => {
+    if (currentCardRef.current) {
+      currentCardRef.current.scrollIntoView({ block: "end", behavior: "smooth" });
+    } else if (historyScrollRef.current) {
+      historyScrollRef.current.scrollTo({
+        top: historyScrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const paragraph = (entry: StoryLine, current = false) => {
     const chapter = project.chapters.find(chapter => chapter.id === entry.chapterId);
     return <p className={`reading-paragraph ${entry.type} ${current ? "current-reading" : ""}`} aria-live={current ? "polite" : undefined}>
@@ -146,29 +184,61 @@ export function ReadingTranscript({ project, lines, history, currentLine, ending
       {currentLine && paragraph(currentLine, true)}
     </div>
     {historyOpen && createPortal(<div style={historyStyle}><ModalDialog overlayClassName="reader-menu-backdrop reading-history-backdrop" dialogClassName="reader-menu-dialog reading-history-dialog"
-      label="지난 기록" onClose={() => setHistoryOpen(false)}>
+      label="지난 기록" onClose={() => setHistoryOpen(false)} initialFocusRef={closeBtnRef}>
       <header className="reading-history-header">
         <div className="reading-history-title-group">
           <h2>지난 기록</h2>
           <span className="reading-history-badge">총 {records.length}컷</span>
         </div>
         <div className="reading-history-header-actions">
-          {fontControls}
-          <button type="button" className="history-close-btn" onClick={() => setHistoryOpen(false)} aria-label="닫기">
+          <div className="history-jump-nav" role="group" aria-label="기록 이동">
+            <button
+              type="button"
+              className="history-jump-btn"
+              onClick={handleScrollToFirst}
+              aria-label="대본 처음으로 이동"
+            >
+              처음으로
+            </button>
+            <button
+              type="button"
+              className="history-jump-btn is-current"
+              onClick={handleScrollToCurrent}
+              aria-label="지금 읽는 컷으로 이동"
+            >
+              지금 컷
+            </button>
+          </div>
+          <div className="history-font-controls" role="group" aria-label="글씨 크기">
+            <button type="button" aria-label="글씨 작게" disabled={fontSize <= 16} onClick={() => setFontSize(size => Math.max(16, size - 2))}>가−</button>
+            <output aria-live="polite">{fontSize}</output>
+            <button type="button" aria-label="글씨 크게" disabled={fontSize >= 32} onClick={() => setFontSize(size => Math.min(32, size + 2))}>가+</button>
+          </div>
+          <button ref={closeBtnRef} type="button" className="history-close-btn" onClick={() => setHistoryOpen(false)} aria-label="닫기">
             닫기
           </button>
         </div>
       </header>
-      <div className="reading-history-script" role="region" aria-label="지금까지 읽은 대본" tabIndex={0}>
+      <div className="reading-history-script" ref={historyScrollRef} role="region" aria-label="지금까지 읽은 대본" tabIndex={0}>
         {records.map((record, index) => {
           const entry = lines.find(line => line.id === record.lineId);
           if (!entry) return null;
           const isNarration = entry.type === "narration";
-          return <article key={`${record.lineId}:${index}`} className={`history-record-card ${isNarration ? "is-narration" : "is-dialogue"}`}>
+          const isCurrent = index === records.length - 1;
+          return <article
+            key={`${record.lineId}:${index}`}
+            ref={isCurrent ? (currentCardRef as React.Ref<HTMLElement>) : undefined}
+            className={`history-record-card ${isNarration ? "is-narration" : "is-dialogue"} ${isCurrent ? "is-current-cut" : ""}`}
+          >
             <div className="history-card-gutter">
-              <span className="history-cut-index">{index + 1}</span>
+              <span className={`history-cut-index ${isCurrent ? "is-current" : ""}`}>{index + 1}</span>
             </div>
             <div className="history-card-body">
+              {isCurrent && (
+                <div className="history-current-indicator">
+                  <span className="history-current-badge">지금 읽는 곳</span>
+                </div>
+              )}
               {paragraph(entry)}
               {record.choiceLabel && <div className="reading-choice-record">
                 <span className="choice-chip-tag">내 선택</span>
