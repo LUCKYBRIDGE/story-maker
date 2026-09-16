@@ -370,6 +370,16 @@ assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-as
 assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/onggojib-classic-manifest.json'), 'utf8')));
 assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/rabbit-classic-manifest.json'), 'utf8')));
 
+assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/seonnyeo-classic-manifest.json'), 'utf8')));
+
+// Keep the public title and legacy search alias stable when rebuilding the catalog.
+for (const asset of assets) {
+  if (asset.story === "토끼와 자라") {
+    asset.story = "별주부전";
+    if (asset.tags.includes("토끼와 자라") && !asset.tags.includes("별주부전")) asset.tags.unshift("별주부전");
+  }
+}
+
 const output = `// 이 파일은 scripts/generate-story-assets.mjs로 생성됩니다.
 // 원본: LUCKYBRIDGE/pinky-ne-site @ ${sourceCommit}
 
@@ -377,7 +387,7 @@ export type StoryAsset = {
   id: string;
   displayName: string;
   label: string;
-  story: "토끼와 자라" | "옹고집전" | "선녀와 나무꾼";
+  story: "별주부전" | "토끼와 자라" | "옹고집전" | "선녀와 나무꾼";
   type: "character" | "background";
   category: "character" | "background" | "special";
   group: string;

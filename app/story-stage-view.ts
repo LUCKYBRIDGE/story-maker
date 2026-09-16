@@ -4,6 +4,14 @@ import type { Chapter, StoryLine } from "./story-data";
 const assets = new Map(STORY_ASSETS.map(asset => [asset.id, asset]));
 
 export const CHARACTER_FACING = new Map<string, "left" | "right">([
+  ["seonnyeo.character.classic-woodcutter-holding-robe", "right"],
+  ["seonnyeo.character.classic-woodcutter-in-bucket", "right"],
+  ["seonnyeo.character.classic-celestial-horse", "right"],
+  ["seonnyeo.character.classic-woodcutter-riding-horse", "right"],
+  ["seonnyeo.character.classic-horse-startled-by-porridge", "right"],
+  ["seonnyeo.character.classic-woodcutter-fallen", "right"],
+  ["seonnyeo.character.classic-celestial-horse-departing", "right"],
+
   ["rabbit-turtle.character.classic-turtle-portrait", "left"],
   ["rabbit-turtle.character.rabbit-shocked", "right"],
   ["rabbit-turtle.character.rabbit-thinking", "right"],
@@ -29,7 +37,21 @@ export const CHARACTER_FACING = new Map<string, "left" | "right">([
   ["rabbit-turtle.character.physician-unified-720x900", "right"],
 ]);
 
+// These composites still represent one adult's pose, so use the adult slot width.
+const SEONNYEO_ADULT_COMPOSITES = new Set([
+  "seonnyeo.character.classic-fairy-carrying-children",
+  "seonnyeo.character.classic-fairy-holding-first-baby",
+  "seonnyeo.character.classic-woodcutter-in-bucket",
+  "seonnyeo.character.classic-woodcutter-riding-horse",
+  "seonnyeo.character.classic-horse-startled-by-porridge",
+]);
+const SEONNYEO_MOUNTED = new Set([
+  "seonnyeo.character.classic-woodcutter-riding-horse",
+  "seonnyeo.character.classic-horse-startled-by-porridge",
+]);
+
 export function stagePlacementClass(assetId: string) {
+  if (SEONNYEO_ADULT_COMPOSITES.has(assetId)) return "framing-full";
   const framing = assets.get(assetId)?.framing;
   return framing === "상반신" ? "framing-upper"
     : framing === "여러 인물" ? "framing-group"
@@ -58,10 +80,19 @@ export function resolveStoryStage(chapter?: Chapter | null, line?: StoryLine | n
       scaleLabel: asset?.group ?? "",
       placement: stagePlacementClass(id),
       // An age variant has its own stage stature; never distort its head/body proportions.
-      scale: (asset?.story === "별주부전" || asset?.story === "토끼와 자라") && asset.group === "어린 자라" ? 0.72
-        : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62 : 1,
+      scale: SEONNYEO_MOUNTED.has(id) ? 1.4
+        : (asset?.story === "별주부전" || asset?.story === "토끼와 자라") && asset.group === "어린 자라" ? 0.72
+        : asset?.story === "옹고집전" && ["아이", "둘째 아이", "막내 아이"].includes(asset.group) ? 0.62
+        : asset?.story === "선녀와 나무꾼" && asset.group === "두 아이" ? 0.62
+        : asset?.story === "선녀와 나무꾼" && asset.group === "사슴" ? 0.72
+        : asset?.story === "선녀와 나무꾼" && asset.group === "수탉" ? 0.48
+        : asset?.story === "선녀와 나무꾼" && asset.group === "날개옷" ? 0.65 : 1,
       mirrored: stageShouldMirror(id, side),
-      sharedActor: id === "rabbit-turtle.character.classic-riding",
+      sharedActor: id === "rabbit-turtle.character.classic-riding" || [
+        "seonnyeo.character.classic-woodcutter-in-bucket",
+        "seonnyeo.character.classic-woodcutter-riding-horse",
+        "seonnyeo.character.classic-horse-startled-by-porridge",
+      ].includes(id),
     };
   };
   return {

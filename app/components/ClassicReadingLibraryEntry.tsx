@@ -18,6 +18,11 @@ const CLASSIC_READINGS: Record<
     ariaLabel: "별주부전 원작 읽기",
     subtitle: "고전 「별주부전」의 대표 이야기를 읽어요",
   },
+  "선녀와 나무꾼": {
+    slug: "seonnyeo",
+    ariaLabel: "선녀와 나무꾼 원작 읽기",
+    subtitle: "전래 설화 「선녀와 나무꾼」의 대표 이야기를 읽어요",
+  },
   "옹고집전": {
     slug: "onggojib",
     ariaLabel: "옹고집전 원작 읽기",
