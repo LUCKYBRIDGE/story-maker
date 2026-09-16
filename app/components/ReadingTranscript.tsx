@@ -147,18 +147,40 @@ export function ReadingTranscript({ project, lines, history, currentLine, ending
     </div>
     {historyOpen && createPortal(<div style={historyStyle}><ModalDialog overlayClassName="reader-menu-backdrop reading-history-backdrop" dialogClassName="reader-menu-dialog reading-history-dialog"
       label="지난 기록" onClose={() => setHistoryOpen(false)}>
-      <header><h2>지난 기록</h2><button type="button" onClick={() => setHistoryOpen(false)}>닫기</button></header>
-      <div className="reading-tools">{fontControls}</div>
+      <header className="reading-history-header">
+        <div className="reading-history-title-group">
+          <h2>지난 기록</h2>
+          <span className="reading-history-badge">총 {records.length}컷</span>
+        </div>
+        <div className="reading-history-header-actions">
+          {fontControls}
+          <button type="button" className="history-close-btn" onClick={() => setHistoryOpen(false)} aria-label="닫기">
+            닫기
+          </button>
+        </div>
+      </header>
       <div className="reading-history-script" role="region" aria-label="지금까지 읽은 대본" tabIndex={0}>
         {records.map((record, index) => {
           const entry = lines.find(line => line.id === record.lineId);
           if (!entry) return null;
-          return <div key={`${record.lineId}:${index}`}>
-            {paragraph(entry)}
-            {record.choiceLabel && <p className="reading-choice-record">내 선택: {record.choiceLabel}</p>}
-          </div>;
+          const isNarration = entry.type === "narration";
+          return <article key={`${record.lineId}:${index}`} className={`history-record-card ${isNarration ? "is-narration" : "is-dialogue"}`}>
+            <div className="history-card-gutter">
+              <span className="history-cut-index">{index + 1}</span>
+            </div>
+            <div className="history-card-body">
+              {paragraph(entry)}
+              {record.choiceLabel && <div className="reading-choice-record">
+                <span className="choice-chip-tag">내 선택</span>
+                <strong className="choice-chip-text">{record.choiceLabel}</strong>
+              </div>}
+            </div>
+          </article>;
         })}
       </div>
+      <footer className="reading-history-footer">
+        <small>지금까지 읽어 내려온 이야기 대본 기록이에요.</small>
+      </footer>
     </ModalDialog></div>, document.body)}
   </div>;
 }

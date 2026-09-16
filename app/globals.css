@@ -11767,19 +11767,244 @@ img {
 /* Transcript belongs to the viewport, independent of the stage and speech dock. */
 .reading-history-backdrop { padding: 3dvh 3vw; }
 .reading-history-dialog {
-  display: flex; flex-direction: column; width: min(880px, 100%); overflow: hidden;
-  width: min(1200px, 94vw); height: 90dvh; max-height: 90dvh;
-  padding: clamp(16px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  width: min(840px, 94vw);
+  height: 88dvh;
+  max-height: 88dvh;
+  padding: 22px 24px;
+  background: #faf6ec !important;
+  border: 1px solid #cbbfab !important;
+  border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(220, 205, 170, 0.25) !important;
+  color: #1a2c24 !important;
+  gap: 14px;
+  overflow: hidden;
 }
-.reading-history-dialog > header, .reading-history-dialog > .reading-tools { flex-shrink: 0; }
-.reading-history-dialog .reading-tools { justify-content: flex-end; margin-bottom: 12px; }
-.reading-history-script { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; flex: 1 1 auto; }
+
+.reading-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dfd8c4;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.reading-history-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reading-history-title-group h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #12241c;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.reading-history-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #e3dbca;
+  color: #3b301c;
+  border: 1px solid #c7bc9f;
+}
+
+.reading-history-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* History font controls in header */
+.reading-history-dialog .history-font-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1ebd8;
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid #d4cbb8;
+}
+
+.reading-history-dialog .history-font-controls button {
+  min-width: 38px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #b5a990;
+  background: #ffffff;
+  color: #172c22;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.reading-history-dialog .history-font-controls button:hover:not(:disabled) {
+  background: #e8e0cc;
+  border-color: #8c7d60;
+}
+
+.reading-history-dialog .history-font-controls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.reading-history-dialog .history-font-controls output {
+  min-width: 2.5ch;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #243b2f;
+}
+
+.reading-history-dialog .history-close-btn {
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #b3a78f;
+  background: #ffffff;
+  color: #192e24;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.reading-history-dialog .history-close-btn:hover {
+  background: #f0e9d6;
+  border-color: #7b6d52;
+}
+
+/* History Script Area */
+.reading-history-script {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 10px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-gutter: stable;
+}
+
+/* History Card */
+.history-record-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #dcd4be;
+  background: #fffdf7;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.history-record-card.is-narration {
+  background: #f7f3e8;
+  border-left: 4px solid #557c69;
+}
+
+.history-record-card.is-dialogue {
+  background: #ffffff;
+  border-left: 4px solid #b5924d;
+}
+
+.history-card-gutter {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.history-cut-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #e8e0cc;
+  color: #4a3d24;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.history-card-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .reading-history-script .reading-paragraph {
-  color: #263a34; font-family: "Noto Serif KR", "Batang", serif;
-  font-size: var(--reading-font-size); line-height: 1.85; white-space: pre-wrap; margin: 0 0 1em;
+  color: #172820;
+  font-family: "Noto Serif KR", "Batang", serif;
+  font-size: var(--reading-font-size);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
-.reading-history-script .dialogue-speaker { color: #765014; }
-.reading-choice-record { color: #315e4e; background: #e5ede2; border-left: 3px solid #8a7044; padding: 8px 12px; margin: 0 0 1.2em; font-size: var(--reading-font-size); }
+
+.reading-history-script .dialogue-speaker {
+  font-weight: 800;
+  color: #164535;
+}
+
+/* Choice chip in history */
+.reading-history-dialog .reading-choice-record {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #e8f3ec;
+  border: 1px solid #8cbca4;
+  border-radius: 8px;
+  color: #0f3d28;
+  font-size: calc(var(--reading-font-size) * 0.82);
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.choice-chip-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #255d44;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.choice-chip-text {
+  font-weight: 700;
+  color: #0e3523;
+}
+
+.reading-history-footer {
+  text-align: center;
+  color: #4b5f54;
+  font-size: 12px;
+  font-weight: 600;
+  padding-top: 6px;
+  border-top: 1px dashed #dcd4be;
+  flex-shrink: 0;
+}
 
 /* Choice sheets can cover the stage; its coordinate system never changes. */
 .player-shell .story-scene-frame > .dialogue-box[data-has-choices] {
@@ -12998,8 +13223,6 @@ img {
 .player-shell .story-scene-frame > .dialogue-box:not([data-has-choices]) {
   max-height: min(65dvh, calc(100% - 64px));
 }
-.reading-history-dialog { background: #f7f0df; color: #263a34; border: 1px solid #cdbb98;
-  box-shadow: 0 18px 60px #0006, inset 0 0 60px #dacbad45; }
 .player-shell .dialogue-box > .reading-transcript > .reading-tools {
   height: 44px;
   z-index: 4;
