@@ -2674,7 +2674,7 @@ export function StoryStudio() {
               onManageLocal={id => { openCollectionProject(id); setProjectToolsOpen(true); }}
               onCopyBase={(theme) => { void copyBaseEdition(theme); }}
               onStartBlank={() => requestEntryChoice("빈 이야기", startBlankProject)}
-              onStartRabbit={() => requestEntryChoice("토끼와 자라 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
+              onStartRabbit={() => requestEntryChoice("별주부전 · 용궁에서 위기에 처하다", startRabbitTurtleContinuation)}
               onStartOnggojib={() => requestEntryChoice("옹고집전 · 처음 재판장에 끌려오다", startOnggojibContinuation)}
               onDeleteLocal={deleteCollectionProject}
               onBackupLocal={id => saveStoryFile(false, id)}
@@ -3434,7 +3434,7 @@ export function StoryStudio() {
 
       <footer className="creator-footer">
         <span>기본 제공 이미지 © 놀퀴즈</span>
-        <span>토끼와 자라·옹고집전 이미지는 학생 작품 제작에 사용 가능</span>
+        <span>별주부전·옹고집전 이미지는 학생 작품 제작에 사용 가능</span>
       </footer>
 
       {blankConfirmOpen && (

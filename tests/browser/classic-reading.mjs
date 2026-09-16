@@ -12,11 +12,11 @@ try {
   await page.getByRole('button', { name: '서재 입장', exact: true }).click();
   await page.locator('.library-shelf').waitFor();
 
-  await page.getByRole('button', { name: '토끼와 자라 · 기본 이야기', exact: true }).click();
+  await page.getByRole('button', { name: '별주부전 · 기본 이야기', exact: true }).click();
   let dialog = page.getByRole('dialog');
   await dialog.waitFor();
 
-  let classicButton = page.getByRole('button', { name: '토끼전 원작 읽기', exact: true });
+  let classicButton = page.getByRole('button', { name: '별주부전 원작 읽기', exact: true });
   await classicButton.waitFor({ state: 'visible' });
   assert.equal(
     (await dialog.locator('.focus-availability').textContent())?.trim(),
@@ -28,7 +28,7 @@ try {
   await classicButton.click();
   await page.waitForURL(/\/classic\/rabbit(?:\.html)?\/?$/);
   await page.locator('.book-play-entry').waitFor();
-  assert.ok((await page.locator('.student-book').innerText()).includes('토끼전'));
+  assert.ok((await page.locator('.student-book').innerText()).includes('별주부전'));
 
   await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
   await page.locator('.player-shell').waitFor();

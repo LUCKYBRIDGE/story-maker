@@ -10,7 +10,7 @@ try {
     const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
     await page.goto(process.env.QA_URL || 'http://localhost:3001');
     await page.locator('.poster-heading h2').waitFor();
-    for (const title of ['선녀와 나무꾼', '토끼와 자라', '옹고집전', '선녀와 나무꾼']) {
+    for (const title of ['선녀와 나무꾼', '별주부전', '옹고집전', '선녀와 나무꾼']) {
       const toggle = page.getByRole('button', { name: `다른 이야기 표지로 바꾸기 (${title})`, exact: true });
       await toggle.focus();
       await page.keyboard.press('Enter');

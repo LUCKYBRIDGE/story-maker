@@ -81,7 +81,7 @@ try {
  await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();await page.locator('.player-shell').waitFor();
  await page.getByRole('button',{name:'돌아가기',exact:true}).click();await page.getByRole('button',{name:'창작 관리로 돌아가기',exact:true}).click();
  await page.getByRole('button',{name:'메인으로',exact:true}).click();await page.getByRole('button',{name:/이야기 변경/}).click();
- await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();await page.getByRole('button',{name:'공유 작품 보기',exact:true}).click();
+ await page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true}).click();await page.getByRole('button',{name:'공유 작품 보기',exact:true}).click();
  await page.getByRole('button',{name:'고쳐 쓰기',exact:true}).click();
  await page.getByRole('button',{name:'새 작품으로 고쳐 쓰기',exact:true}).click();await toHub(page);
  const remixed=(await read(page)).projects[0].draft.project;

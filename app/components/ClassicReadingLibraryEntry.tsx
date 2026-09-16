@@ -8,10 +8,15 @@ const CLASSIC_READINGS: Record<
   string,
   { slug: string; ariaLabel: string; subtitle: string }
 > = {
+  "별주부전": {
+    slug: "rabbit",
+    ariaLabel: "별주부전 원작 읽기",
+    subtitle: "고전 「별주부전」의 대표 이야기를 읽어요",
+  },
   "토끼와 자라": {
     slug: "rabbit",
-    ariaLabel: "토끼전 원작 읽기",
-    subtitle: "고전 「토끼전」의 대표 이야기를 읽어요",
+    ariaLabel: "별주부전 원작 읽기",
+    subtitle: "고전 「별주부전」의 대표 이야기를 읽어요",
   },
   "옹고집전": {
     slug: "onggojib",

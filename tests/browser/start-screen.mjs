@@ -30,13 +30,13 @@ try {
   assert.ok(layout.font>=15,`small branding at ${width}`);
   await page.screenshot({path:`${output}/onggojib-${width}.png`,fullPage:true});
   await page.getByRole('button',{name:'서재 입장',exact:true}).click();
-  await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();
+  await page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true}).click();
   await page.getByRole('button',{name:'돌아가기',exact:true}).click();
   await page.getByRole('button',{name:'놀스토리 소개',exact:true}).click();
   await page.locator('.nolstory-poster-img').evaluate(img=>img.decode());
-  await page.waitForFunction(()=>document.querySelector('.poster-heading h2').textContent==='토끼와 자라');
+  await page.waitForFunction(()=>document.querySelector('.poster-heading h2').textContent==='별주부전');
   assert.deepEqual(await measure(),before,`theme layout shift at ${width}`);
-  assert.equal(await page.locator('.poster-heading h2').innerText(),'토끼와 자라');
+  assert.equal(await page.locator('.poster-heading h2').innerText(),'별주부전');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`overflow at ${width}`);
   for(const b of await page.locator('.poster-button').all()) { const r=await b.boundingBox(); assert.ok(r.height>=44 && r.width>=44); }
   await page.screenshot({path:`${output}/rabbit-${width}.png`,fullPage:true});

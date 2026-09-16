@@ -44,7 +44,7 @@ try {
     const first = (await read(page)).projects[0]; const firstId = first.draft.project.id;
     assert.equal(first.draft.project.lines[0].text,'적용 전 첫 작품 수정.');
     assert.equal(first.playback.project.lines[0].text,'첫 작품에서 쓴 문장.');
-    await page.getByRole('button',{name:'토끼와 자라 · 이어 쓰기',exact:true}).click();
+    await page.getByRole('button',{name:/별주부전 이어 쓰기/}).click();
     const input = page.getByLabel('현재 컷 글상자',{exact:true});
     await input.fill('두 번째 작품의 결말.');
     await home(page);
@@ -52,8 +52,8 @@ try {
     assert.notEqual(firstId,secondId); assert.equal(two.projects.length,2);
     assert.equal(two.projects[1].draft.project.source.kind,'baseEdition');
     assert.equal(two.projects[1].draft.project.lines.find(line => line.id === 'palace-continuation-line-7').text,'두 번째 작품의 결말.');
-    for (const name of ['빈 이야기부터 만들기','토끼와 자라 · 이어 쓰기','옹고집전 · 이어 쓰기']) {
-      assert.ok(await page.getByRole('button',{name,exact:true}).isDisabled());
+    for (const name of [/빈 이야기부터 만들기/,/별주부전 이어 쓰기/,/옹고집전 이어 쓰기/]) {
+      assert.ok(await page.getByRole('button',{name}).isDisabled());
     }
     assert.ok((await page.getByRole('status').innerText()).includes('두 작품'));
     for (const button of await page.locator('.creation-hub button:visible').all()) assert.ok((await button.boundingBox()).height >= 44);

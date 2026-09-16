@@ -521,7 +521,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   );
   const originalRabbitTurtleAssets = parsedAssets.filter(
     (asset) =>
-      asset.story === "토끼와 자라" && asset.usage === "원작 사용",
+      (asset.story === "별주부전" || asset.story === "토끼와 자라") && asset.usage === "원작 사용",
   );
   assert.equal(
     originalRabbitTurtleAssets.filter((asset) => asset.type === "character")
@@ -537,7 +537,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     parsedAssets
       .filter(
         (asset) =>
-          asset.story === "토끼와 자라" && asset.type === "character" && !asset.id.includes(".classic-"),
+          (asset.story === "별주부전" || asset.story === "토끼와 자라") && asset.type === "character" && !asset.id.includes(".classic-"),
       )
       .every((asset) => asset.framing === "전신"),
   );
@@ -547,13 +547,13 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.equal(recommendedAssets.length, 93);
   assert.equal(
     recommendedAssets.filter(
-      (asset) => asset.story === "토끼와 자라" && asset.type === "character",
+      (asset) => (asset.story === "별주부전" || asset.story === "토끼와 자라") && asset.type === "character",
     ).length,
     7,
   );
   assert.equal(
     recommendedAssets.filter(
-      (asset) => asset.story === "토끼와 자라" && asset.type === "background",
+      (asset) => (asset.story === "별주부전" || asset.story === "토끼와 자라") && asset.type === "background",
     ).length,
     12,
   );

@@ -65,10 +65,10 @@ export function sortStoryAssets(
       assetGroupRank(a, type) - assetGroupRank(b, type);
     if (groupDifference !== 0) return groupDifference;
     const storyDifference =
-      (a.story === "토끼와 자라" ? 0 : 1) -
-      (b.story === "토끼와 자라" ? 0 : 1);
+      ((a.story === "별주부전" || a.story === "토끼와 자라") ? 0 : 1) -
+      ((b.story === "별주부전" || b.story === "토끼와 자라") ? 0 : 1);
     if (storyDifference !== 0) return storyDifference;
-    if (type === "character" && a.story === "토끼와 자라") {
+    if (type === "character" && (a.story === "별주부전" || a.story === "토끼와 자라")) {
       const characterDifference =
         (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(a.group) + 1 || 99) -
         (RABBIT_TURTLE_CHARACTER_ORDER.indexOf(b.group) + 1 || 99);
