@@ -16,7 +16,7 @@ const commit=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}
 const sourceWorkingTree = status ? { diffSha256: createHash('sha256').update(execFileSync('git',['-C',root,'diff','HEAD','--binary'])).digest('hex') } : undefined;
 const missing=new Set();
 const assetId=path=>{if(!path)return '';const normalized=path.replace(/^\.\//,'games/ifstory/');const asset=STORY_ASSETS.find(asset=>asset.sourcePath===normalized);if(!asset)missing.add(path);return asset?.id??'';};
-const projects=stories.slice(0,2).map(story=>{
+const onggojibProjects=stories.slice(1,2).map(story=>{
  const project=cloneProject(DEFAULT_PROJECT);project.id=`pinky-${story.id}`;project.title=story.title;project.description=story.description;project.creativeMemos=[];project.sheetUrl='';project.updatedAt='pinky-ne-site '+commit.slice(0,7);
  project.planning=Object.fromEntries(Object.keys(project.planning).map(key=>[key,key==='structureMode'?'five':'']));
  project.planning.premise=story.description;project.planning.material=story.originalWork??story.title;
@@ -44,6 +44,11 @@ const projects=stories.slice(0,2).map(story=>{
  project.speakerNames=[...new Set(project.lines.filter(line=>line.type==='dialogue').map(line=>line.speakerName))];
  return project;
 });
+
+const { compileRabbit } = await import(pathToFileURL(`${root}/scripts/story/compile-rabbit.mjs`));
+const rabbitProject = await compileRabbit();
+rabbitProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7) + (status ? ' + working tree' : '');
+
 const { compileSeonnyeo } = await import(pathToFileURL(`${root}/scripts/story/compile-seonnyeo.mjs`));
 const { exportKnolstory, exportNolstory } = await import(pathToFileURL(`${root}/scripts/story/export-nolstory.mjs`));
 const seonnyeoStory = await compileSeonnyeo();
@@ -51,12 +56,16 @@ const seonnyeoKnolstory = (exportKnolstory || exportNolstory)(seonnyeoStory);
 const seonnyeoProject = seonnyeoKnolstory.draft.project;
 delete seonnyeoProject.source;
 seonnyeoProject.updatedAt = 'pinky-ne-site ' + commit.slice(0, 7) + (status ? ' + working tree' : '');
+
 const assetIds = new Set(STORY_ASSETS.map(a => a.id));
-for (const line of seonnyeoProject.lines) {
-  for (const id of [line.leftAssetId, line.rightAssetId, line.backgroundId]) {
-    if (id && !assetIds.has(id)) missing.add(id);
+for (const project of [rabbitProject, seonnyeoProject]) {
+  for (const line of project.lines) {
+    for (const id of [line.leftAssetId, line.rightAssetId, line.backgroundId]) {
+      if (id && !assetIds.has(id)) missing.add(id);
+    }
   }
 }
-projects.push(seonnyeoProject);
+
+const projects = [rabbitProject, ...onggojibProjects, seonnyeoProject];
 await writeFile(new URL('../app/story-examples.generated.json',import.meta.url),JSON.stringify({sourceCommit:commit,...(sourceWorkingTree ? {sourceWorkingTree} : {}),projects},null,2)+'\n');
 console.log(JSON.stringify({stories:projects.map(p=>({title:p.title,cuts:p.lines.length})),missingAssets:[...missing]}));

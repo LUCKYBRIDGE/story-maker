@@ -55,7 +55,7 @@ try {
     for(const theme of ['onggojib','rabbit']) {
       if(theme==='rabbit') {
         await page.getByRole('button',{name:'서재 입장',exact:true}).click();
-        await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();
+        await page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true}).click();
         await page.getByRole('button',{name:'돌아가기',exact:true}).click();
         await page.getByRole('button',{name:'놀스토리 소개',exact:true}).click();
         await page.locator('.nolstory-poster-img').evaluate(i=>i.decode());

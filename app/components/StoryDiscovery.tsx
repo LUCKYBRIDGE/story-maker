@@ -244,7 +244,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       kind: "base",
       id: "rabbit-turtle",
       theme: "rabbit",
-      title: "토끼와 자라",
+      title: "별주부전",
       subtitle: "용궁 속 지혜",
       description: "용왕님의 약을 구하러 뭍으로 나온 자라와 꾀를 낸 토끼의 아슬아슬한 모험 이야기.",
       paper: "#f7f1e3",
@@ -508,7 +508,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         </div>
       </div>
       {filter === "shared" && <div className="library-collection-note">
-        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "토끼와 자라" : sharedTheme === "seonnyeo" ? "선녀와 나무꾼" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
+        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "별주부전" : sharedTheme === "seonnyeo" ? "선녀와 나무꾼" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
         <small>불러온 공유 작품은 지금 열린 세션에서만 보여요. 온라인 공개 서재는 준비 중이에요.</small>
         <button type="button" className="library-nav-btn" disabled={props.busy} onClick={() => fileInputRef.current?.click()}>공유 파일 열기</button>
         {sharedTheme && <button type="button" className="library-nav-btn" onClick={() => setSharedTheme(null)}>모든 공유 작품 보기</button>}
@@ -1088,7 +1088,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                       <span>🐰</span>
                     </div>
                     <div className="action-card-text">
-                      <strong className="action-card-title">토끼와 자라 이어 쓰기</strong>
+                      <strong className="action-card-title">별주부전 이어 쓰기</strong>
                       <small className="action-card-sub">용궁 위기에서 다음 대사부터 써요</small>
                     </div>
                   </button>

@@ -50,7 +50,8 @@ function lineSpeaker(seed: LineSeed, leftAssetId: string, rightAssetId: string):
   if (seed.type === "narration") return "narration";
   if (seed.speakerName === "토끼" || seed.speakerName === "별주부") {
     const chosen = seed.speakerName === "토끼" ? RABBIT : TURTLE;
-    return (seed.leftAssetId || leftAssetId) === chosen ? "left" : "right";
+    if ((seed.leftAssetId || leftAssetId) === chosen) return "left";
+    if ((seed.rightAssetId || rightAssetId) === chosen) return "right";
   }
   return "right";
 }
@@ -272,11 +273,11 @@ const built = chapterSeeds.map((seed, chapterIndex) => {
 
 export const RABBIT_CLASSIC_READING: StoryProject = {
   id: "classic-rabbit-tale",
-  title: "토끼전",
-  description: "여러 토끼전 이본의 공통적인 중심 사건을 바탕으로 오늘날의 독자가 읽기 쉽게 풀어 쓴 원작 읽기입니다.",
+  title: "별주부전",
+  description: "여러 별주부전 이본의 공통적인 중심 사건을 바탕으로 오늘날의 독자가 읽기 쉽게 풀어 쓴 원작 읽기입니다.",
   cover: {
     author: "전래 이야기",
-    subtitle: "또 다른 이름, 별주부전",
+    subtitle: "또 다른 이름, 토끼전",
     authorNote: "여러 이본의 대표 서사를 바탕으로 현대어로 재구성했습니다.",
     layout: "classic",
     theme: "cream",

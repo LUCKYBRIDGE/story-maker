@@ -67,9 +67,9 @@ try {
     await dimensions(page);
     await page.screenshot({path:`${output}/shelf-${width}.png`,fullPage:true});
     const before = await snapshot(page);
-    const rabbit = page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true});
+    const rabbit = page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true});
     await rabbit.focus(); await page.keyboard.press('Enter');
-    const dialog = page.getByRole('dialog',{name:'토끼와 자라',exact:true});
+    const dialog = page.getByRole('dialog',{name:'별주부전',exact:true});
     await dialog.waitFor();
     assert.equal(await page.locator('.library-room-content').getAttribute('inert'),'');
     assert.ok(await page.getByText('원작 읽기 · 준비 중',{exact:true}).isVisible());
@@ -131,7 +131,7 @@ try {
     await returnFromReader(page);
   }
   assert.equal(await snapshot(page),before,'shared reading preserves editable collection');
-  await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).click();
+  await page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true}).click();
   await page.getByRole('button',{name:'공유 작품 보기',exact:true}).click();
   assert.equal(await page.locator('.library-book').count(),10,'related shared editions open on the shelf');
   await page.getByRole('button',{name:'모든 책',exact:true}).click();

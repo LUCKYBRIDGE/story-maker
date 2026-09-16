@@ -76,7 +76,7 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
         </nav>
         <section className="poster-heading" aria-live="polite" aria-atomic="true">
           <svg className="poster-leaves" viewBox="0 0 48 56" aria-hidden="true"><path d="M24 54Q23 30 32 8M25 40 10 25" fill="none" stroke="#7c8c59" strokeWidth="2"/><path d="M29 26Q18 10 35 2q8 14-6 24M23 40Q6 42 5 22q17 1 18 18M26 43q0-18 19-18-1 17-19 18" fill="#96a474"/></svg>
-          <h2><span>{coverTheme === "rabbit" ? "토끼" : coverTheme === "seonnyeo" ? "선녀" : "옹고"}</span>{coverTheme === "rabbit" ? "와 자라" : coverTheme === "seonnyeo" ? "와 나무꾼" : "집전"}</h2>
+          <h2><span>{coverTheme === "rabbit" ? "별주" : coverTheme === "seonnyeo" ? "선녀" : "옹고"}</span>{coverTheme === "rabbit" ? "부전" : coverTheme === "seonnyeo" ? "와 나무꾼" : "집전"}</h2>
           <p className="poster-author"><span aria-hidden="true">✦</span> 이 이야기의 작가: 당신 <span aria-hidden="true">✦</span></p>
           <p className="poster-description">당신이 직접 만들어 가는 이야기</p>
         </section>

@@ -30,7 +30,7 @@ try {
    }
  }
  await check(2,5);await page.screenshot({path:output+'/landscape.png',fullPage:true});
- const rabbit=page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true});
+ const rabbit=page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true});
  await rabbit.focus();
  await page.setViewportSize({width:820,height:1180});
  await page.waitForFunction(()=>document.getAnimations().some(a=>a.effect?.target?.matches?.('.library-item')));
@@ -61,7 +61,7 @@ try {
  assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>a.playState==='running').length),0,'reduced motion has no running effects');
  await rabbit.click();
  await page.setViewportSize({width:1365,height:900});
- await page.getByRole('dialog',{name:'토끼와 자라',exact:true}).waitFor();
+ await page.getByRole('dialog',{name:'별주부전',exact:true}).waitFor();
  await page.keyboard.press('Escape');assert.ok(await rabbit.evaluate(el=>el===document.activeElement));
  await page.close();console.log('2/3 shelves, empty shelves, interrupted resize, live book motion, focus and reduced motion passed');
 } finally {await browser.close();}

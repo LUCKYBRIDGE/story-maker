@@ -25,7 +25,7 @@ try {
   assert.ok(await page.getByRole('heading',{name:'서재',exact:true}).evaluate(el=>document.activeElement===el));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await page.screenshot({path:`${output}/library-${width}.png`,fullPage:true});
-  await page.getByRole('button',{name:'토끼와 자라 · 기본 이야기',exact:true}).focus();await page.keyboard.press('Enter');
+  await page.getByRole('button',{name:'별주부전 · 기본 이야기',exact:true}).focus();await page.keyboard.press('Enter');
   assert.ok(await page.getByRole('button',{name:'원작 전체 · 준비 중',exact:true}).isDisabled());
   await page.getByRole('button',{name:'공유 작품 보기',exact:true}).click();
   await page.getByRole('heading',{name:'아직 제공되는 공유 작품이 없어요',exact:true}).waitFor();
@@ -39,13 +39,13 @@ try {
   await page.locator('.player-shell').waitFor();
   await page.getByRole('button',{name:'돌아가기',exact:true}).click();
   await page.getByRole('button',{name:'이야기 목록으로 돌아가기',exact:true}).click();
-  await page.getByRole('heading',{name:'토끼와 자라 · 이야기 목록',exact:true}).waitFor();
+  await page.getByRole('heading',{name:'별주부전 · 이야기 목록',exact:true}).waitFor();
   assert.equal(await snapshot(page),before,'master reading does not write student storage');
   await page.getByRole('button',{name:'돌아가기',exact:true}).click();
   await page.getByRole('button',{name:'돌아가기',exact:true}).click();
   await page.getByRole('heading',{name:'서재',exact:true}).waitFor();
   await page.getByRole('button',{name:'메인으로',exact:true}).click();
-  assert.equal(await page.locator('.poster-heading h2').innerText(),'토끼와 자라');
+  assert.equal(await page.locator('.poster-heading h2').innerText(),'별주부전');
   await page.getByRole('button',{name:'놀스토리 작품 읽기',exact:true}).click();
   await page.getByRole('button',{name:'놀스토리 작품 보기',exact:true}).click();
   await page.screenshot({path:`${output}/story-hub-${width}.png`,fullPage:true});
