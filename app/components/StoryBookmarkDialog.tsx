@@ -114,7 +114,7 @@ export function StoryBookmarkDialog({
         <div className="bookmark-resume-actions">
           <button
             type="button"
-            className="primary-button resume-action-button"
+            className="bookmark-btn bookmark-btn-primary resume-action-button"
             onClick={() => onResume(latestSlot)}
           >
             이어읽기 ({latestSlot.cutNumber}번째 컷)
@@ -122,7 +122,7 @@ export function StoryBookmarkDialog({
           {onStartFresh && (
             <button
               type="button"
-              className="secondary-button resume-action-button"
+              className="bookmark-btn bookmark-btn-secondary resume-action-button"
               onClick={onStartFresh}
             >
               처음부터 읽기 (1번째 컷)
@@ -130,7 +130,7 @@ export function StoryBookmarkDialog({
           )}
           <button
             type="button"
-            className="ghost-button resume-action-button"
+            className="bookmark-btn bookmark-btn-ghost resume-action-button"
             onClick={() => setViewMode("manager")}
           >
             저장 목록에서 선택 (자동1 · 수동1~3)
@@ -162,47 +162,23 @@ export function StoryBookmarkDialog({
 
       {currentCutNumber > 0 && (
         <section className="bookmark-current-location">
-          <h3>현재 읽고 있는 위치</h3>
-          <p className="current-location-detail">
-            <strong>
+          <div className="current-location-header">
+            <span className="current-location-badge">현재 위치</span>
+            <strong className="current-location-detail">
               {currentChapter ? `${currentChapter.order}장. ${currentChapter.title} · ` : ""}
               {currentCutNumber} / {totalCuts}번째 컷
             </strong>
-          </p>
+          </div>
           {currentLine?.text && (
             <p className="current-location-preview">
-              {currentLine.speaker ? <span>{currentLine.speaker}: </span> : null}
-              “{currentLine.text.slice(0, 50)}”
+              {currentLine.speaker ? <span className="slot-speaker">{currentLine.speaker}: </span> : null}
+              “{currentLine.text.slice(0, 60)}{currentLine.text.length > 60 ? "…" : ""}”
             </p>
           )}
-
           {onSaveManualSlot && (
-            <div className="bookmark-quick-saves">
-              <span className="quick-saves-label">현재 위치 바로 저장:</span>
-              <div className="quick-saves-buttons">
-                <button
-                  type="button"
-                  className="quick-save-btn"
-                  onClick={() => handleSave("manual-1")}
-                >
-                  수동저장 1
-                </button>
-                <button
-                  type="button"
-                  className="quick-save-btn"
-                  onClick={() => handleSave("manual-2")}
-                >
-                  수동저장 2
-                </button>
-                <button
-                  type="button"
-                  className="quick-save-btn"
-                  onClick={() => handleSave("manual-3")}
-                >
-                  수동저장 3
-                </button>
-              </div>
-            </div>
+            <p className="current-location-guide">
+              아래 원하는 슬롯의 <strong>[현재 위치 저장]</strong> 버튼을 누르면 이 위치가 안전하게 보관돼요.
+            </p>
           )}
         </section>
       )}
@@ -240,7 +216,7 @@ export function StoryBookmarkDialog({
                       </strong>
                       {slot.dialoguePreview && (
                         <p className="slot-preview">
-                          {slot.speakerName ? <span>{slot.speakerName}: </span> : null}
+                          {slot.speakerName ? <span className="slot-speaker">{slot.speakerName}: </span> : null}
                           “{slot.dialoguePreview}”
                         </p>
                       )}
@@ -257,7 +233,7 @@ export function StoryBookmarkDialog({
                     <>
                       <button
                         type="button"
-                        className="primary-button slot-resume-btn"
+                        className="bookmark-btn bookmark-btn-primary slot-resume-btn"
                         onClick={() => onResume(slot)}
                       >
                         이곳에서 이어읽기
@@ -265,7 +241,7 @@ export function StoryBookmarkDialog({
                       {!isAuto && onSaveManualSlot && currentCutNumber > 0 && (
                         <button
                           type="button"
-                          className="secondary-button slot-save-btn"
+                          className="bookmark-btn bookmark-btn-secondary slot-save-btn"
                           onClick={() => handleSave(slotId)}
                           title="현재 위치로 덮어쓰기"
                         >
@@ -275,7 +251,7 @@ export function StoryBookmarkDialog({
                       {!isAuto && onDeleteSlot && (
                         <button
                           type="button"
-                          className="ghost-button slot-delete-btn"
+                          className="bookmark-btn bookmark-btn-danger slot-delete-btn"
                           onClick={() => handleDelete(slotId)}
                           title="저장 슬롯 비우기"
                         >
@@ -289,7 +265,7 @@ export function StoryBookmarkDialog({
                     currentCutNumber > 0 && (
                       <button
                         type="button"
-                        className="secondary-button slot-save-btn"
+                        className="bookmark-btn bookmark-btn-secondary slot-save-btn"
                         onClick={() => handleSave(slotId)}
                       >
                         현재 위치 저장
