@@ -11573,7 +11573,7 @@ img {
 .reading-tools button { min-width: 44px; min-height: 44px; border: 1px solid #778886; border-radius: 8px; background: #22383e; color: #fff6dd; font-size: 18px; }
 .reading-tools output { min-width: 2ch; text-align: center; font-size: 14px; }
 .reading-scroll { position: relative; max-height: 40dvh; min-height: 120px; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 16px; padding: 12px 10px 16px 0; scrollbar-gutter: stable; }
-.player-shell .story-scene-frame .dialogue-box .reading-paragraph { margin: 0 0 .9em; font-size: var(--reading-font-size); line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; color: #d8dfdf; font-family: "Noto Serif KR", "Batang", serif; }
+.player-shell .story-scene-frame .dialogue-box .reading-paragraph { margin: 0 0 .9em; font-size: var(--reading-font-size); line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; color: #d8dfdf; font-family: "Noto Serif KR", "Batang", serif; }
 .player-shell .story-scene-frame .dialogue-box .reading-paragraph.current-reading { color: #fff9e9; margin-bottom: 0; }
 .reading-paragraph .dialogue-speaker { margin-right: .35em; }
 .reading-paragraph.narration { padding-inline: .5em; }
