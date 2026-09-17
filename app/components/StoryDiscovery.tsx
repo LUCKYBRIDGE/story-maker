@@ -11,6 +11,12 @@ import { BookCover } from "./BookCover";
 import { getExampleProject } from "../story-examples";
 import { resolveAssetUrl } from "../story-asset-url";
 
+import { ClassicReadingLibraryEntry } from './ClassicReadingLibraryEntry';
+import { useShortStories } from './shortstory/ShortStoryProvider';
+import { ShortStoryArt } from './shortstory/ShortStoryReader';
+import { downloadShortStory } from '../shortstory/shortstory-file';
+import type { ShortStoryProject } from '../shortstory/shortstory-data';
+
 export type StoryHubGroup = "base" | "mine" | "shared";
 
 export interface StoryDiscoveryProps {
@@ -44,6 +50,7 @@ export interface StoryDiscoveryProps {
 }
 
 export type SelectedBook =
+  | { kind: "short"; id: string; title: string; subtitle: string; description: string; shortProject: ShortStoryProject; paper: string; ink: string; accent: string }
   | {
       kind: "base";
       id: string;
@@ -94,6 +101,7 @@ const LIBRARY_ROOM = { finish: "warm", room: "/library/parquet-room-clear.webp",
 // Previous: { finish: "original", room: "/library/sunlit-room.webp", shelf: "/library/oak-shelf.webp" }
 const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib"), seonnyeo: getExampleProject("seonnyeo") };
 function DiscoveryCover({ book }: { book: SelectedBook }) {
+  if (book.kind === "short") return <div className="short-library-cover"><ShortStoryArt page={{backgroundId:book.shortProject.cover.backgroundId,leftAssetId:book.shortProject.cover.characterId,rightAssetId:''}}/><strong>{book.title}</strong><small>{book.shortProject.authorDisplayName}</small><span>숏스토리</span></div>;
   const project = book.kind === "base" ? baseCoverProjects[book.theme]
     : book.kind === "mine" ? book.project : book.kind === "shared" ? book.file.story.project : null;
   return project ? <BookCover project={project} /> : <div className="blank-book-cover">
@@ -111,6 +119,7 @@ const EASTER_EGG_NOTES = [
 ];
 
 export function StoryDiscovery(props: StoryDiscoveryProps) {
+  const short = useShortStories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -309,8 +318,9 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
   };
 
   // 표준 테스트 및 페이지네이션 대상 책 목록 (기본 + 내 작품 + 공유)
-  const booksToDisplay = [...baseBooks, ...localBooks, ...sharedBooks];
-  const visibleBooks = booksToDisplay.filter(book => filter === "all" || book.kind === filter)
+  const shortBooks: SelectedBook[] = short.projects.map(project=>({kind:'short',id:`short:${project.id}`,title:project.title,subtitle:'숏스토리',description:project.description,shortProject:project,paper:'#f1e5cc',ink:'#294a42',accent:'#9e773b'}));
+  const booksToDisplay = [...baseBooks, ...localBooks, ...shortBooks, ...sharedBooks];
+  const visibleBooks = booksToDisplay.filter(book => filter === "all" || book.kind === filter || filter === "mine" && book.kind === "short")
     .filter(book => {
       if (filter !== "shared" || !sharedTheme) return true;
       const source = book.kind === "shared" ? book.file.story.project.source : undefined;
@@ -479,7 +489,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               ref={fileInputRef}
               hidden
               type="file"
-              accept=".knolstory,.nolstory"
+              accept=".knolstory,.nolstory,.shortstory"
               onChange={(e) => {
                 const file = e.currentTarget.files?.[0];
                 e.currentTarget.value = "";
@@ -489,6 +499,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           </div>
         </div>
 
+        {short.error && short.error !== props.notice && <p className="entry-error" role="alert">{short.error}</p>}
         {props.notice && (
           <p className="entry-error" role="alert">
             {props.notice}
@@ -551,7 +562,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
           {pagination.items.length === 0 && <div className="library-empty"><span aria-hidden="true">◇</span><h2>{filter === "mine" ? "첫 이야기를 기다리는 자리" : "아직 제공되는 공유 작품이 없어요"}</h2><p>{filter === "mine" ? "새 이야기를 만들면 여기에 한 권씩 꽂혀요." : "친구의 공유 파일을 열어 함께 읽어 보세요."}</p></div>}
           {pagination.items.map((book) => {
             const isBase = book.kind === "base";
-            const isMine = book.kind === "mine";
+            const isMine = book.kind === "mine" || book.kind === "short";
             const isShared = book.kind === "shared";
             const themeClass = isBase
               ? book.theme === "onggojib"
@@ -586,7 +597,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                   }
                 >
                   <DiscoveryCover book={book} />
-                  <span className="library-book-kind">{isBase ? "기본 이야기" : isMine ? "내 작품" : isShared ? "공유 작품" : "새 이야기 만들기"}</span>
+                  <span className="library-book-kind">{isBase ? "기본 이야기" : book.kind === "short" ? "숏스토리" : isMine ? "놀스토리" : isShared ? "공유 작품" : "새 이야기 만들기"}</span>
                 </button>
 
                 {/* 선반 바닥 나무 디테일 */}
@@ -746,7 +757,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
                 {selectedBook.title}
               </h2>
               <p className="focus-meta-desc">{selectedBook.description}</p>
-              {selectedBook.kind === "base" && <small className="focus-availability">원작 읽기 · 준비 중</small>}
+              {selectedBook.kind === "base" && <small className="focus-availability">원작 읽기 · 이용 가능</small>}
               <div className="focus-meta-filigree" aria-hidden="true">
                 ─ ◇ ─
               </div>
@@ -754,9 +765,18 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
 
             {/* 하단 4개 액션 카드 그리드 */}
             <div className="focus-action-grid">
+              {selectedBook.kind === 'short' && <>
+                <button className="focus-action-card is-primary" onClick={()=>{closeOverlay();short.open(selectedBook.shortProject);}}>숏스토리 읽기</button>
+                <button className="focus-action-card" onClick={()=>{closeOverlay();short.open(selectedBook.shortProject,true);}}>이어만들기</button>
+                <button className="focus-action-card" onClick={()=>downloadShortStory(selectedBook.shortProject)}>작업 파일로 저장 · .shortstory</button>
+                <button className="focus-action-card is-danger" onClick={()=>{short.remove(selectedBook.shortProject);closeOverlay();}}>작품 삭제</button>
+              </>}
+              {selectedBook.kind === 'new' && <button className="focus-action-card" onClick={()=>{closeOverlay();short.start();}}>숏스토리 만들기 · 짧은 그림책</button>}
               {/* 1) 기본 전래동화 선택 시 */}
               {selectedBook.kind === "base" && (
                 <>
+                  <ClassicReadingLibraryEntry theme={selectedBook.theme} title={selectedBook.title}/>
+                  {<button className="focus-action-card" onClick={()=>{closeOverlay();short.preset(selectedBook.theme);}}><div className="action-card-text"><strong className="action-card-title">숏스토리</strong><small className="action-card-sub">짧은 그림책을 읽고 직접 만들어요</small></div></button>}
                   <button
                     type="button"
                     className="focus-action-card is-primary"

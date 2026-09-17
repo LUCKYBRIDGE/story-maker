@@ -6,6 +6,9 @@ import { BookCover } from "./BookCover";
 import { resolveAssetUrl } from "../story-asset-url";
 import { ModalDialog } from "./ModalDialog";
 
+import { useShortStories } from './shortstory/ShortStoryProvider';
+import { downloadShortStory } from '../shortstory/shortstory-file';
+
 type Props = {
   collection: ProjectCollection;
   busy: boolean;
@@ -38,6 +41,7 @@ function formatSavedDate(isoString?: string): string {
 
 export function CreationHub(props: Props) {
   const { collection, busy, failed, notice } = props;
+  const short=useShortStories();
   const [sheetUrl, setSheetUrl] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
   const storyFileInput = useRef<HTMLInputElement>(null);
@@ -67,7 +71,7 @@ export function CreationHub(props: Props) {
     if (busy) return;
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
-    if (file.name.endsWith(".knolstory") || file.name.endsWith(".nolstory")) {
+    if (/\.(knolstory|nolstory|shortstory)$/i.test(file.name)) {
       props.onStoryFile(file);
     } else if (file.name.endsWith(".xlsx") || file.type.includes("spreadsheet") || file.type.includes("excel")) {
       props.onExcel(file);
@@ -107,6 +111,7 @@ export function CreationHub(props: Props) {
       </header>
 
       {notice && <p className="entry-error" role="alert">{notice}</p>}
+      {short.error && short.error !== props.notice && <p className="entry-error" role="alert">{short.error}</p>}
 
       {failed ? (
         <section className="creation-hub-panel creation-hub-failed">
@@ -247,7 +252,7 @@ export function CreationHub(props: Props) {
                   <span className="import-box-icon" aria-hidden="true">📁</span>
                   <div>
                     <h3 className="import-box-title">파일로 가져오기</h3>
-                    <p className="import-box-sub">.knolstory 백업 파일이나 Excel 스프레드시트 대본을 불러옵니다.</p>
+                    <p className="import-box-sub">.knolstory·.shortstory 작업 파일이나 놀스토리 Excel 대본을 불러옵니다.</p>
                   </div>
                 </div>
 
@@ -271,7 +276,7 @@ export function CreationHub(props: Props) {
                     ref={storyFileInput}
                     hidden
                     type="file"
-                    accept=".knolstory,.nolstory"
+                    accept=".knolstory,.nolstory,.shortstory"
                     onChange={event => {
                       const file = event.currentTarget.files?.[0];
                       event.currentTarget.value = "";
@@ -356,6 +361,7 @@ export function CreationHub(props: Props) {
               </div>
             </div>
           </section>
+          <section className="creation-hub-panel"><h2>숏스토리 · {short.projects.length}권</h2><p>짧은 그림책을 만들고 .shortstory 작업 파일로 보관해요.</p><button onClick={()=>{props.onHome();short.start();}}>새 숏스토리 만들기</button>{short.projects.map(project=><div className="short-saved-row" key={project.id}><strong>{project.title}</strong><button onClick={()=>{props.onHome();short.open(project,true);}}>이어만들기</button><button onClick={()=>downloadShortStory(project)}>작업 파일 저장</button><button onClick={()=>short.remove(project)}>삭제</button></div>)}</section>
         </>
       )}
       </div>

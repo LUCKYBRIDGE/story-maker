@@ -23,7 +23,10 @@ import { normalizeAndValidateStoryProject } from "./story-project-validation";
 import { createStoryDocument } from "./story-project-document";
 import { STORY_PROJECT_APP_VERSION } from "./story-project-repository";
 import { StoryFileDialog } from "./components/StoryFileDialog";
-import { createKnolstoryProject, createKnolstoryShared, downloadKnolstoryFile, readKnolstoryFile, parseKnolstoryFile, type KnolstoryFile, type KnolstorySharedFile } from "./story-file";
+import { useShortStories } from './components/shortstory/ShortStoryProvider';
+import { downloadShareHtml } from './share/share-html-export';
+import { knolStoryPayload } from './share/share-payload';
+import { createKnolstoryProject, downloadKnolstoryFile, readKnolstoryFile, parseKnolstoryFile, type KnolstoryFile, type KnolstorySharedFile } from "./story-file";
 import { StoryDiscovery, type StoryHubGroup } from "./components/StoryDiscovery";
 import { createBaseEditionDraft, type StoryTheme, type DiscoveryScreen } from "./story-discovery";
 import { SiteQrModal } from "./components/SiteQrModal";
@@ -241,7 +244,7 @@ export function StoryStudio() {
   const [filePreview, setFilePreview] = useState<KnolstoryFile | null>(null);
   const [fileError, setFileError] = useState("");
   const [sharedFiles, setSharedFiles] = useState<KnolstorySharedFile[]>([]);
-  const [allowFileRemix, setAllowFileRemix] = useState(false);
+  const shortStories = useShortStories();
   const storyFileInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState("");
   const [discoveryScreen, setDiscoveryScreen] = useState<DiscoveryScreen>("home");
@@ -403,7 +406,6 @@ export function StoryStudio() {
   }
 
   function resetProjectTools() {
-    setAllowFileRemix(false);
     setUndoDelete(null);
     setSplitUndo(null);
     setMemoPopupOpen(false);
@@ -490,6 +492,7 @@ export function StoryStudio() {
 
   async function openStoryFile(file?: File) {
     if (!file || busy || entryBusy) return;
+    if (file.name.toLowerCase().endsWith('.shortstory')) { const error = await shortStories.importFile(file); if (error) showCollectionError(error); else { setNotice(""); setEntryNotice(""); } return; }
     setEntryBusy(true);
     const result = await readKnolstoryFile(file);
     setEntryBusy(false);
@@ -565,11 +568,11 @@ export function StoryStudio() {
       if (shared) {
         const playback = entry.playback?.project;
         if (!playback?.lines.length) { showCollectionError("먼저 플레이에 적용한 뒤 공유 파일로 보관해 주세요."); return; }
-        downloadKnolstoryFile(createKnolstoryShared(playback, allowFileRemix), playback.title);
+        downloadShareHtml(knolStoryPayload(playback));
       } else {
         downloadKnolstoryFile(createKnolstoryProject(entry), project.title);
       }
-      setNotice(shared ? "적용한 버전을 공유 파일로 보관했어요. 창작 메모는 제외했어요." : "편집본과 플레이 버전을 .knolstory 파일로 보관했어요.");
+      setNotice(shared ? "적용한 버전을 읽기 전용 HTML로 보관했어요. 그림을 보려면 인터넷 연결이 필요해요." : "편집본과 플레이 버전을 .knolstory 파일로 보관했어요.");
     } catch (error) { showCollectionError(error instanceof Error ? error.message : "파일로 보관하지 못했어요."); }
   }
 
@@ -2818,7 +2821,7 @@ export function StoryStudio() {
           <div className="project-tool-actions">
             <button onClick={() => storyFileInputRef.current?.click()}>.knolstory 파일 열기</button>
             <button onClick={() => saveStoryFile()}>.knolstory 편집 백업</button>
-            <button onClick={() => saveStoryFile(true)} disabled={!active.lines.length}>공유 파일로 보관</button>
+            <button onClick={() => saveStoryFile(true)} disabled={!active.lines.length}>친구에게 공유 · HTML</button>
             <button onClick={() => excelInputRef.current?.click()}>
               Excel에서 불러오기
             </button>
@@ -2836,8 +2839,8 @@ export function StoryStudio() {
               새 작품 시작
             </button>
           </div>
-          <label className="file-remix-option"><input type="checkbox" checked={allowFileRemix} onChange={event => setAllowFileRemix(event.target.checked)} />공유 파일을 받은 사람이 고쳐 쓰도록 허용</label>
-          <input ref={storyFileInputRef} hidden type="file" accept=".knolstory,.nolstory" onChange={event => { const file=event.currentTarget.files?.[0]; event.currentTarget.value=""; void openStoryFile(file); }} />
+          <p>작업 파일(.knolstory)은 다시 편집할 원본, HTML은 친구가 읽는 공유본이에요.</p>
+          <input ref={storyFileInputRef} hidden type="file" accept=".knolstory,.nolstory,.shortstory" onChange={event => { const file=event.currentTarget.files?.[0]; event.currentTarget.value=""; void openStoryFile(file); }} />
           <div className="google-tool-row">
             <input
               type="url"

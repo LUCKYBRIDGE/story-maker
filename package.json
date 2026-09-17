@@ -21,7 +21,8 @@
     "check": "npm run lint && tsc --noEmit",
     "status:check": "node scripts/quick-status.mjs",
     "qa:smoke": "node tests/browser/run-smoke.mjs",
-    "qa:classroom": "QA_SUITES=mobile-input,sheet-import node tests/browser/run-smoke.mjs"
+    "qa:classroom": "QA_SUITES=mobile-input,sheet-import node tests/browser/run-smoke.mjs",
+    "template:shortstory": "node --experimental-strip-types scripts/generate-shortstory-template.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
