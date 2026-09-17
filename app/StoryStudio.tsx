@@ -664,7 +664,7 @@ export function StoryStudio() {
           const saved = JSON.parse(sessionStorage.getItem("storygame:navigation:v1") ?? "null");
           if (saved?.version === 1) {
             if (["home", "library", "reader-entry", "story-hub"].includes(saved.screen)) setDiscoveryScreen(!returning ? "home" : saved.screen === "home" ? "library" : saved.screen);
-            if (["rabbit", "onggojib", "seonnyeo"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
+            if (["rabbit", "onggojib", "seonnyeo", "heungbu"].includes(saved.theme)) setSelectedStoryTheme(saved.theme);
             if (["base", "mine", "shared"].includes(saved.group)) setStoryHubGroup(saved.group);
             setCreationHubOpen(saved.creation === true);
             if (Array.isArray(saved.shared)) setSharedFiles(saved.shared.flatMap((value: unknown) => {
