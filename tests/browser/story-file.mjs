@@ -60,9 +60,11 @@ try {
  if(width===1365) {
  await page.getByRole('article',{name:'바뀐 편집본',exact:true}).getByRole('button',{name:'이어만들기',exact:true}).click();
  await page.getByRole('button',{name:'파일·복구',exact:true}).click();
- const sharedDownload=page.waitForEvent('download');await page.getByRole('button',{name:'공유 파일로 보관',exact:true}).click();
- const shared=JSON.parse(await readFile(await (await sharedDownload).path(),'utf8'));
- assert.equal(shared.manifest.kind,'shared');assert.equal(shared.story.project.title,'바뀐 적용본');assert.equal(shared.sharing.allowRemix,false);
+ const sharedDownload=page.waitForEvent('download');await page.getByRole('button',{name:'친구에게 공유 · HTML',exact:true}).click();
+ const downloadedHtml=await sharedDownload;assert.ok(downloadedHtml.suggestedFilename().endsWith('.html'));
+ const html=await readFile(await downloadedHtml.path(),'utf8');
+ const shared=JSON.parse(html.match(/<script id="story-data" type="application\/json">([\s\S]*?)<\/script>/)[1]).payload;
+ assert.equal(shared.kind,'knolstory');assert.equal(shared.title,'바뀐 적용본');assert.equal(shared.runtimeVersion,1);assert.ok(!('planning' in shared));
  await page.evaluate(()=>{const original=Storage.prototype.setItem;window.restoreFileStorage=()=>{Storage.prototype.setItem=original;};Storage.prototype.setItem=function(k,v){if(k==='storygame:projects:v1')throw new DOMException('quota','QuotaExceededError');return original.call(this,k,v);};});
  await page.getByRole('button',{name:/이야기 구성/}).click();
  await page.getByText('작품 기본·큰 생각·이야기 뼈대',{exact:true}).click();

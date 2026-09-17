@@ -13559,3 +13559,50 @@ img {
 @media (min-width: 960px) {
   .theme-seonnyeo .poster-heading h2 { font-size: clamp(38px, 4.2vw, 60px); }
 }
+
+/* Independent short picture-book workspace; the game studio retains its layout. */
+.short-workspace { min-height:100dvh; background:#f2ede2; color:#302f28; padding:28px clamp(16px,4vw,64px); font-family:var(--font-sans),sans-serif; }
+.short-screen { max-width:1280px; margin:auto; }
+.short-workspace button,.short-workspace summary,.short-saved-row button { min-height:44px; padding:10px 16px; border:1px solid #b5b6a5; border-radius:12px; background:#fffcf4; color:#30473b; cursor:pointer; font:inherit; }
+.short-workspace button:focus-visible,.short-workspace summary:focus-visible,.short-workspace input:focus-visible,.short-workspace textarea:focus-visible,.short-workspace select:focus-visible { outline:3px solid #25796a; outline-offset:3px; }
+.short-workspace button:disabled { opacity:.4; cursor:default; }
+.short-header { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:24px; }
+.short-header h1 { font-family:serif; font-size:clamp(24px,3vw,36px); margin:4px 0; }
+.short-header small,.short-words>small { color:#68725d; letter-spacing:.08em; }
+.short-workspace .short-primary { background:#254e42; color:#fff9e9; border-color:#254e42; }
+.short-toolbar,.short-reader-tools,.short-section-heading,.short-page-actions,.short-saved-row { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.short-toolbar { padding:16px 0; border-block:1px solid #d5cebd; margin-bottom:26px; }
+.short-toolbar>span { margin-right:auto; font-size:14px; color:#52614a; }
+.short-toolbar>details { position:relative; }
+.short-toolbar>details[open] { width:100%; padding:16px; background:#fffcf4; border-radius:12px; }
+.short-transfer { max-width:720px; padding:16px 0; }
+.short-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:24px; }
+.short-page { background:#fffdf7; border:1px solid #e2dbc9; border-radius:16px; overflow:hidden; box-shadow:0 8px 24px #56452d0c; min-width:0; }
+.short-art { position:relative; aspect-ratio:16/10; overflow:hidden; background:linear-gradient(155deg,#d6e0ce,#ece3c8); }
+.short-art img { position:absolute; bottom:0; object-fit:contain; }
+.short-art .backgroundId { width:100%; height:100%; object-fit:cover; }
+.short-art .leftAssetId,.short-art .rightAssetId { height:90%; width:43%; object-position:bottom; }
+.short-art .leftAssetId { left:3%; }.short-art .rightAssetId { right:3%; }
+.short-art>small { position:absolute; bottom:0; background:#fff9df; padding:8px; }
+.short-words { padding:24px; }
+.short-words p,.short-print-page p { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.9; font-size:clamp(18px,2vw,22px); }
+.short-words h1 { font-family:serif; font-size:clamp(32px,5vw,52px); margin:12px 0; }
+.short-words h2 { font-family:serif; font-size:24px; margin:10px 0; }
+.short-workspace label { display:grid; gap:7px; margin:14px 0; color:#4f5949; font-size:14px; }
+.short-workspace input,.short-workspace textarea,.short-workspace select { width:100%; min-width:0; min-height:44px; padding:12px; border:1px solid #cfcebf; border-radius:8px; background:#fffefa; color:#302f28; font:inherit; font-size:16px; }
+.short-workspace textarea { resize:vertical; line-height:1.8; }
+.short-info { background:#e8e8db; padding:12px 24px; border-radius:16px; display:grid; grid-template-columns:2fr 1fr; gap:0 24px; }
+.short-info>label:nth-child(3),.short-info>details { grid-column:1/-1; }
+.short-section-heading { justify-content:space-between; margin:28px 0 16px; }
+.short-section-heading h2 { font-size:22px; }.short-section-heading span { color:#67725d; }
+.short-page-actions { margin-top:16px; }.short-page-actions button { flex:1; }
+.short-add { min-height:250px!important; border-style:dashed!important; background:transparent!important; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }.short-add span { font-size:36px; }
+.short-book { max-width:850px; margin:24px auto; }.short-book .short-art { max-height:430px; }.short-ending { min-height:400px; text-align:center; padding-top:90px; }
+.short-paging { display:flex; justify-content:center; align-items:center; gap:24px; margin:20px 0; }.short-reader-tools { justify-content:space-between; }
+.short-footer { text-align:center; margin:40px 0 10px; font-size:13px; color:#6d7163; }
+.short-error { background:#fff0d7; padding:16px; border-radius:12px; }
+.short-library-cover { background:#e9dfc3; color:#29483e; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10%; gap:8px; }.short-library-cover .short-art { width:100%; }.short-library-cover strong { font-family:serif; font-size:clamp(16px,2vw,28px); }.short-library-cover span { font-size:11px; border-top:1px solid; padding-top:8px; }
+.short-print-preview { position:fixed; inset:0; z-index:1000; overflow:auto; background:#eee8dc; padding:24px; }.short-print-controls { max-width:900px; margin:auto; }.short-print-controls button { margin:10px; }.short-print-page { background:white; max-width:760px; min-height:600px; padding:32px; margin:24px auto; }.short-print-page h1,.short-print-page h2 { margin:24px 0; }.short-writing-lines { height:240px; background:repeating-linear-gradient(transparent 0,transparent 39px,#999 40px,transparent 41px); }.short-saved-row { margin:16px 0; }
+@media(max-width:600px) { .short-header { flex-wrap:wrap; }.short-header>div { order:-1; width:100%; }.short-toolbar>span { width:100%; }.short-info { grid-template-columns:1fr; padding:12px 16px; }.short-words { padding:18px; }.short-section-heading h2 { font-size:20px; } }
+.short-booklet .short-print-page { width:128mm; height:185mm; min-height:0; padding:8mm; overflow:visible; }.short-booklet .short-print-page p { font-size:12pt; }
+@media print { body:has(.short-print-preview) { background:white; } body:has(.short-print-preview) .short-screen,body:has(.short-print-preview) .short-print-controls { display:none!important; }.short-workspace { padding:0; }.short-print-preview { position:static; padding:0; overflow:visible; background:white; }.short-print-page { break-after:page; break-inside:avoid; margin:0; min-height:90vh; max-width:none; }.short-booklet .short-print-sheets { display:grid; grid-template-columns:1fr 1fr; }.short-booklet .short-print-page { width:auto; height:185mm; min-height:0; overflow:visible; padding:8mm; margin:0; break-after:auto; }.short-booklet .short-print-page:nth-child(2n) { break-after:page; }.short-booklet .short-print-page p { font-size:12pt; }.short-print-page .short-art { print-color-adjust:exact; } }

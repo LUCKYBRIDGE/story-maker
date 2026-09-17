@@ -9,7 +9,19 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: PRESENTATION-02 공통 연출 시스템 v2
+## 현재 작업: SHORT-01 숏스토리와 작업·공유 파일 통합
+
+- 2026-09-17 사용자 직접 요청, **DONE — 로컬 구현·핵심 검증 완료**, Work Lead · A/B. 실제 기기·운영 배포 확인은 미수행.
+- branch `codex/shortstory-files`, 시작 HEAD `26a3f9a`. 사용자 제공 `스토리메이커_통합개발기획안_검증간소화.md`를 이번 통합 작업 계약으로 적용.
+- 구현: 서재 원작 액션 React 전환, 독립 숏스토리 Reader/Editor·자동 저장·내 작품/창작 관리, 별주부전 8장면·옹고집전/선녀와 나무꾼 6장면. `.shortstory` 복사본 가져오기·백업, 기존 놀스토리 저장/파일 호환 유지.
+- 파일·출력: 두 형식의 읽기 전용 HTML(놀스토리는 playback만), 숏스토리 4탭 Excel 왕복·양식 생성·공개 시트 한 번 읽기, 활동지·책·소책자/PDF 인쇄. 제품/형식 계약은 상세 설계의 ‘숏스토리와 작업·공유 파일’ 절 참조.
+- 변경 파일: `app/shortstory/`, `app/components/shortstory/`, `app/share/`, 서재/창작 관리/StoryStudio 연결부·CSS, 양식 생성기와 관련 검사. 기존 학생 작품 저장소는 마이그레이션하지 않음.
+- A: `npm run check`, `npm run build` 통과. 숏스토리 전용 및 기존 파일 호환 검사 통과(저장 충돌·용량 실패·손상 보존·Excel 왕복·공유 메모 제외 포함). `npm run template:shortstory` 실행 완료.
+- B: `node tests/browser/shortstory.mjs` 통과. 대표 읽기/편집/이어만들기·작업 파일 재열기·잘못된 파일 보존, 390px 넘침 없음, Chrome에서 `file://` HTML 직접 열기·연결 실패 안내·선택/엔딩·적용본 공유 확인. 소책자 12면→A4 6쪽 PDF 생성 확인. 전 작품/전 컷/전체 회귀는 미실행.
+- 남은 외부 확인: 실제 태블릿 HTML 파일 열기, 실물 양면 인쇄, 실제 공개 Google 시트 연결. 시트 CSV/열 변환은 자동 검사했으나 사용자 실제 시트는 제공되지 않음.
+- 커밋·푸시·main 병합·운영 배포 미수행. 다음 READY 없음.
+
+## 최근 완료: PRESENTATION-02 공통 연출 시스템 v2
 
 - 2026-09-17 사용자 직접 구현 요청, **DONE — 로컬 구현·핵심 검증 완료**, Work Lead · A/B.
 - branch `codex/presentation-system-v2`, 시작 HEAD `189240b`. 사용자 제공 개발안 v2를 이번 통합 작업 계약으로 적용. 기존 완료 이력 보존.
