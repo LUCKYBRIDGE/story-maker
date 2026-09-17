@@ -2,7 +2,7 @@
 import { UiIcon } from "./UiIcon";
 
 import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { libraryPage, type StoryTheme, type DiscoveryScreen } from "../story-discovery";
+import { BASE_STORIES, libraryPage, type StoryTheme, type DiscoveryScreen } from "../story-discovery";
 import type { KnolstorySharedFile } from "../story-file";
 import { MAX_EDITABLE_PROJECTS, type ProjectCollection } from "../story-project-collection";
 import type { StoryProject } from "../story-data";
@@ -99,7 +99,7 @@ export type SelectedBook =
 // Keep the previous finish available for the user's visual comparison.
 const LIBRARY_ROOM = { finish: "warm", room: "/library/parquet-room-clear.webp", shelf: "/library/oak-shelf-soft.webp" };
 // Previous: { finish: "original", room: "/library/sunlit-room.webp", shelf: "/library/oak-shelf.webp" }
-const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib"), seonnyeo: getExampleProject("seonnyeo") };
+const baseCoverProjects = { rabbit: getExampleProject("rabbit"), onggojib: getExampleProject("onggojib"), seonnyeo: getExampleProject("seonnyeo"), heungbu: getExampleProject("heungbu") };
 function DiscoveryCover({ book }: { book: SelectedBook }) {
   if (book.kind === "short") return <div className="short-library-cover"><ShortStoryArt page={{backgroundId:book.shortProject.cover.backgroundId,leftAssetId:book.shortProject.cover.characterId,rightAssetId:''}}/><strong>{book.title}</strong><small>{book.shortProject.authorDisplayName}</small><span>숏스토리</span></div>;
   const project = book.kind === "base" ? baseCoverProjects[book.theme]
@@ -271,6 +271,12 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       ink: "#f5f0e6",
       accent: "#76c2af",
     },
+    {
+      kind: "base", id: "heungbu-nolbu", theme: "heungbu",
+      title: "흥부와 놀부", subtitle: "서로의 몫",
+      description: "좋은 마음에도 의논이 필요할까요? 서로 다른 두 형제의 삶을 따라가며, 두 번의 선택으로 도움과 책임을 생각해 보세요.",
+      paper: "#eee1c6", ink: "#342b26", accent: "#866b40",
+    },
   ];
 
   // 2. 내 작품 데이터
@@ -325,7 +331,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
       if (filter !== "shared" || !sharedTheme) return true;
       const source = book.kind === "shared" ? book.file.story.project.source : undefined;
       return source && "baseStoryId" in source &&
-        source.baseStoryId === (sharedTheme === "rabbit" ? "rabbit-turtle" : sharedTheme === "seonnyeo" ? "seonnyeo" : "onggojib");
+        source.baseStoryId === BASE_STORIES.find(story => story.theme === sharedTheme)?.id;
     });
   const shelfBooks = filter === "all" || filter === "mine" ? [...visibleBooks, newStoryBook] : visibleBooks;
   const pagination = libraryPage(shelfBooks, page, capacity);
@@ -346,7 +352,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         if (saved?.version === 1 && !props.initialFilter) {
           if (["all", "base", "mine", "shared"].includes(saved.filter)) setFilter(saved.filter);
           if (Number.isSafeInteger(saved.page) && saved.page >= 0) setPage(saved.page);
-          if (["rabbit", "onggojib", "seonnyeo"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
+          if (["rabbit", "onggojib", "seonnyeo", "heungbu"].includes(saved.sharedTheme)) setSharedTheme(saved.sharedTheme);
           const book = [...booksToDisplay, newStoryBook].find(book => book.id === saved.selectedId);
           if (book) setSelectedBook(book);
         }
@@ -519,7 +525,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
         </div>
       </div>
       {filter === "shared" && <div className="library-collection-note">
-        <p>{sharedTheme ? `${sharedTheme === "rabbit" ? "별주부전" : sharedTheme === "seonnyeo" ? "선녀와 나무꾼" : "옹고집전"}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
+        <p>{sharedTheme ? `${BASE_STORIES.find(story => story.theme === sharedTheme)?.title}에서 시작한 공유 이야기` : "친구가 건네준 공유 파일을 이 서재에서 읽어요."}</p>
         <small>불러온 공유 작품은 지금 열린 세션에서만 보여요. 온라인 공개 서재는 준비 중이에요.</small>
         <button type="button" className="library-nav-btn" disabled={props.busy} onClick={() => fileInputRef.current?.click()}>공유 파일 열기</button>
         {sharedTheme && <button type="button" className="library-nav-btn" onClick={() => setSharedTheme(null)}>모든 공유 작품 보기</button>}
@@ -565,11 +571,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
             const isMine = book.kind === "mine" || book.kind === "short";
             const isShared = book.kind === "shared";
             const themeClass = isBase
-              ? book.theme === "onggojib"
-                ? "library-book-onggojib"
-                : book.theme === "seonnyeo"
-                  ? "library-book-seonnyeo"
-                  : "library-book-rabbit"
+              ? `library-book-${book.theme}`
               : "library-book-local";
             const accessibleLabel = book.kind === "new" ? "빈 책 · 새 이야기 만들기" : `${book.title} · ${
               isBase ? "기본 이야기" : isMine ? "내 작품" : isShared ? "공유 작품" : "이야기"
@@ -775,8 +777,8 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               {/* 1) 기본 전래동화 선택 시 */}
               {selectedBook.kind === "base" && (
                 <>
-                  <ClassicReadingLibraryEntry theme={selectedBook.theme} title={selectedBook.title}/>
-                  {<button className="focus-action-card" onClick={()=>{closeOverlay();short.preset(selectedBook.theme);}}><div className="action-card-text"><strong className="action-card-title">숏스토리</strong><small className="action-card-sub">짧은 그림책을 읽고 직접 만들어요</small></div></button>}
+                  {selectedBook.theme !== "heungbu" && <ClassicReadingLibraryEntry theme={selectedBook.theme} title={selectedBook.title}/>}
+                  {selectedBook.theme !== "heungbu" && <button className="focus-action-card" onClick={()=>{closeOverlay();short.preset(selectedBook.theme as Exclude<StoryTheme, "heungbu">);}}><div className="action-card-text"><strong className="action-card-title">숏스토리</strong><small className="action-card-sub">짧은 그림책을 읽고 직접 만들어요</small></div></button>}
                   <button
                     type="button"
                     className="focus-action-card is-primary"
