@@ -202,7 +202,7 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
     const id = createId();
     if (ids.has(id)) return { ok: false, code: "duplicate-id" };
     ids.add(id);
-    splitLines.push({ ...source, id, text });
+    splitLines.push({ ...source, id, text, presentation: source.presentation ? {look: source.presentation.look, actors: structuredClone(source.presentation.actors)} : undefined });
   }
   splitLines.forEach((line, index) => { if (index < splitLines.length - 1) line.flow = undefined; });
   const chapterLines = orderedLines(lines, source.chapterId);
@@ -217,7 +217,7 @@ export function splitStoryLine({ lines, lineId, createId }: DuplicateStoryLineOp
 export function canMergeStoryLines(first: StoryLine, second: StoryLine): boolean {
   if (first.chapterId !== second.chapterId) return false;
   // Merging would move or discard the second cut’s timed effect.
-  if (first.effect || second.effect || first.flow || second.flow) return false;
+  if (first.presentation || second.presentation || first.flow || second.flow) return false;
   if (first.type !== second.type) return false;
   if (first.type === "narration") return true;
   return (

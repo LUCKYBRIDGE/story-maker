@@ -1,3 +1,5 @@
+import { adaptPinkyPresentation } from '../app/pinky-presentation-adapter.ts';
+import { canonicalizeProjectPresentation } from '../app/story-presentation.ts';
 // Run with Node's TS loader as documented in the example-source decision.
 import {writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -35,7 +37,12 @@ const onggojibProjects=stories.slice(1,2).map(story=>{
    const leftAssetId=character('left'),rightAssetId=character('right');
    const active=beat.characters?.find(c=>c.name===beat.speaker||c.active);
    const line={...DEFAULT_PROJECT.lines[0],id:`${chapterId}:${i}`,chapterId,order:i+1,type:beat.type==='dialogue'?'dialogue':'narration',speaker:beat.type==='dialogue'?(active?.side==='right'?'right':'left'):'narration',speakerName:beat.speaker||'해설',text:beat.text||'',backgroundId:assetId(beat.bgImage??story.assets.backgrounds[beat.bg]),leftAssetId,rightAssetId,purposeNote:'',emotionNote:'',directionNote:''};
-   delete line.effect;delete line.flow;
+   delete line.effect;delete line.flow;delete line.presentation;
+   const presentation=adaptPinkyPresentation(beat);
+   if(presentation) {
+    if(['choice-prompt','continue-action'].includes(beat.id)){delete presentation.effects;delete presentation.transition;}
+    line.presentation=presentation;
+   }
    if(i===beats.length-1){line.flow=route.choice?.options.length>1?{type:'choice',options:route.choice.options.map(option=>({id:option.id,label:option.text,targetLineId:firstId(option.nextRoute)}))}:{type:'goto',targetLineId:route.choice?.options.length===1?firstId(route.choice.options[0].nextRoute):route.nextRoute?firstId(route.nextRoute):null};}
    project.lines.push(line);
   }
@@ -66,6 +73,6 @@ for (const project of [rabbitProject, seonnyeoProject]) {
   }
 }
 
-const projects = [rabbitProject, ...onggojibProjects, seonnyeoProject];
+const projects = [rabbitProject, ...onggojibProjects, seonnyeoProject].map(canonicalizeProjectPresentation);
 await writeFile(new URL('../app/story-examples.generated.json',import.meta.url),JSON.stringify({sourceCommit:commit,...(sourceWorkingTree ? {sourceWorkingTree} : {}),projects},null,2)+'\n');
 console.log(JSON.stringify({stories:projects.map(p=>({title:p.title,cuts:p.lines.length})),missingAssets:[...missing]}));

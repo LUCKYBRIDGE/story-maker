@@ -52,7 +52,7 @@ export function parseKnolstoryFile(text: string): StoryFileResult {
     if (!["knolstory", "nolstory"].includes(String(manifest.format)) || manifest.version !== 1 || !["project", "shared"].includes(String(manifest.kind)) || typeof manifest.exportedAt !== "string" || !isStrictIsoUtcTimestamp(manifest.exportedAt) || typeof manifest.appVersion !== "string") return failure("지원하지 않는 크놀스토리 파일 버전이나 종류예요.");
     const load = (data: unknown) => {
       const result = parseStoryDocument(data);
-      if (!result.ok || result.source !== "current") throw new Error("작품 데이터 형식을 확인하지 못했어요. 파일을 바꾸지 말고 원래 기기에서 다시 보관해 주세요.");
+      if (!result.ok) throw new Error("작품 데이터 형식을 확인하지 못했어요. 파일을 바꾸지 말고 원래 기기에서 다시 보관해 주세요.");
       return result.document;
     };
     let file: KnolstoryFile;

@@ -49,7 +49,7 @@ test("기존 v1 초안은 읽은 뒤 같은 저장 키에 문서 봉투로 마�
   assert.equal(result.loaded.source, "legacy-v1");
   assert.deepEqual(result.loaded.project.creativeMemos, []);
   assert.equal(result.stored.documentType, "story-maker-project");
-  assert.equal(result.stored.schemaVersion, 1);
+  assert.equal(result.stored.schemaVersion, 2);
   assert.equal(result.stored.savedAt, "2026-09-01T10:00:00.000Z");
   assert.equal("creativeMemos" in result.legacy, false);
 });

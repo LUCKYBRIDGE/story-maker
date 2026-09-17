@@ -1397,6 +1397,10 @@ export function StoryStudio() {
     } catch (error) { setNotice(error instanceof Error ? error.message : "갈래를 만들지 못했어요."); }
   }
 
+  const applyPresentation: import("./components/SceneEffectEditor").ApplyPresentation = (lineId, presentation, lookLineIds) => {
+    setDraft(project => ({...project, lines: project.lines.map(line => line.id===lineId ? {...line,presentation:structuredClone(presentation)} : lookLineIds.includes(line.id) ? {...line,presentation:{...line.presentation,look:structuredClone(presentation?.look)}} : line)}));
+  };
+
   function updateLine(lineId: string, changes: Partial<StoryLine>) {
     setDraft((project) => ({
       ...project,
@@ -3271,7 +3275,7 @@ export function StoryStudio() {
 
                 {selectedLine && <CutNavigation index={selectedStoryLineIndex} total={orderedDraftLines.length} onMove={moveThroughStory} onAdd={() => addLine("dialogue", true, selectedLine.id)} />}
                 {editorMode === "chapter" ? (
-                  <ScriptScreen
+                  <ScriptScreen onApplyPresentation={applyPresentation}
                     draft={draft}
                     selectedChapter={selectedChapter}
                     selectedChapterLines={selectedChapterLines}
@@ -3317,7 +3321,7 @@ export function StoryStudio() {
                     lineBodyRefs={lineBodyRefs}
                   />
                 ) : selectedLine ? (
-                  <SceneFocusEditor
+                  <SceneFocusEditor onApplyPresentation={applyPresentation}
                     draft={draft}
                     selectedChapter={selectedChapter}
                     selectedChapterLines={selectedChapterLines}

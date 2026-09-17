@@ -5,49 +5,66 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { useStoryDisplaySettings } from "../hooks/useStoryDisplaySettings";
 import { useStageImageLayout } from "../hooks/useStageImageLayout";
 import { useSceneEffect } from "../hooks/useSceneEffect";
-import type { StorySceneEffect } from "../story-scene-effect";
+import type { StoryPresentation, StoryActorOverride } from "../story-presentation";
+import { usePresentationTransition, type PresentationTransitionController } from "../hooks/usePresentationTransition";
 import type { resolveStoryStage } from "../story-stage-view";
 import { resolveAssetUrl } from "../story-asset-url";
 
 type CharacterView = ReturnType<typeof resolveStoryStage>["left"];
 type BackgroundView = ReturnType<typeof resolveStoryStage>["background"];
 
-export function StorySceneFrame({ stage, variant, speaker, heading, children, effect, playbackKey, navigation }: {
+export function StorySceneFrame({ stage, variant, speaker, heading, children, presentation, playbackKey, navigation, transitionController }: {
   stage: ReturnType<typeof resolveStoryStage>;
   variant: "editor" | "player";
   speaker?: "left" | "right" | "narration";
   heading?: ReactNode;
   navigation?: ReactNode;
   children: ReactNode;
-  effect?: StorySceneEffect;
+  presentation?: StoryPresentation;
+  transitionController?: PresentationTransitionController;
   playbackKey?: string | number;
 }) {
-  const frameRef = useSceneEffect(effect, playbackKey);
-  return <div ref={frameRef} className="story-scene-frame" data-scene-variant={variant}>
+  const previewTransition=usePresentationTransition(transitionController ? undefined : presentation?.transition,playbackKey);
+  const transition=transitionController??previewTransition;
+  const frameRef = useSceneEffect(presentation, playbackKey, transition.active);
+  useEffect(()=>{
+    const frame=frameRef.current;
+    if(!frame || !transition.active) return;
+    const layers=Array.from(frame.children).filter((node): node is HTMLElement => node instanceof HTMLElement && !node.classList.contains('presentation-transition'));
+    layers.forEach(node=>{node.inert=true;});
+    return ()=>layers.forEach(node=>{node.inert=false;});
+  },[transition.active,frameRef]);
+  return <div onKeyDownCapture={event=>{if(transition.active && event.key==='Tab'){event.preventDefault();frameRef.current?.querySelector<HTMLButtonElement>('.presentation-transition button')?.focus();}}} ref={frameRef} className="story-scene-frame" data-scene-variant={variant} data-look={presentation?.look?.type} data-look-intensity={presentation?.look?.intensity}>
     <StoryStageBackground background={stage.background} loading="eager" decorative />
     {heading && <div className="story-scene-heading">{heading}</div>}
-    <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} />
-    {effect && effect.type !== "shake" && <div className="scene-effect-overlay" data-effect={effect.type} aria-hidden="true">
-      {effect.type === "crack" && <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M48 42 L30 0 M48 42 L80 0 M48 42 L100 35 M48 42 L85 100 M48 42 L20 100 M48 42 L0 48 M30 0 L35 24 L48 42 L62 64 L85 100 M62 64 L100 68 M35 24 L12 16" /></svg>}
+    <StoryStageCanvas stage={stage} variant={variant} speaker={speaker} actors={presentation?.actors} />
+    {presentation?.look?.type==='fractured-reality' && <div className="presentation-fracture-look" aria-hidden="true"><RealityCrack /></div>}
+    {presentation?.effects?.map((effect,index)=>effect.type !== 'shake' && <div key={index} className="scene-effect-overlay" data-effect={effect.type} data-effect-index={index} aria-hidden="true">
+      {(effect.type==='crack'||effect.type==='screen-crack') && <RealityCrack />}
+    </div>)}
+    {transition.active && <div className="presentation-transition" data-transition={presentation?.transition?.type} data-phase={transition.phase} data-mode={presentation?.transition?.mode??"auto"} style={{"--transition-duration":`${presentation?.transition?.durationMs??900}ms`} as CSSProperties} role="dialog" aria-modal="true" aria-label={presentation?.transition?.title || '장면 전환'} onClick={event=>event.stopPropagation()}>
+      <small>{presentation?.transition?.cue}</small><h2>{presentation?.transition?.title}</h2><p>{presentation?.transition?.description}</p>
+      {transition.phase==='waiting-confirm' && <button type="button" autoFocus onClick={transition.confirm}>{presentation?.transition?.actionLabel || '계속'}</button>}
     </div>}
     {navigation}
     {children}
   </div>;
 }
 
-export function StoryStageCanvas({ stage, variant, speaker, showBackground = true }: {
+export function StoryStageCanvas({ stage, variant, speaker, showBackground = true, actors }: {
   stage: ReturnType<typeof resolveStoryStage>;
   variant: "thumbnail" | "editor" | "player";
   speaker?: "left" | "right" | "narration";
   showBackground?: boolean;
+  actors?: StoryPresentation["actors"];
 }) {
   const settings = useStoryDisplaySettings();
-  const canvasRef = useStageImageLayout(variant, JSON.stringify([stage.left, stage.right, settings.characterScales, settings.dialoguePercent]));
+  const canvasRef = useStageImageLayout(variant, JSON.stringify([stage.left, stage.right, actors, settings.characterScales, settings.dialoguePercent]));
   const loading = variant === "thumbnail" ? "lazy" : "eager";
   return <div ref={canvasRef} className="story-stage-canvas" data-stage-variant={variant} aria-label="이야기 무대">
     {showBackground && <StoryStageBackground background={stage.background} loading={loading} />}
-    <StoryStageCharacter character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right" && !stage.left.sharedActor} />
-    <StoryStageCharacter character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left" && !stage.right.sharedActor} />
+    <StoryStageCharacter override={actors?.left} character={stage.left} side="left" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "right" && !stage.left.sharedActor} />
+    <StoryStageCharacter override={actors?.right} character={stage.right} side="right" variant={variant} loading={loading} listener={variant !== "thumbnail" && speaker === "left" && !stage.right.sharedActor} />
   </div>;
 }
 
@@ -85,6 +102,7 @@ function StageBackgroundImage({ background, loading, decorative }: { background:
 
 type CharacterProps = {
   character: CharacterView;
+  override?: StoryActorOverride;
   side: "left" | "right";
   variant: "thumbnail" | "editor" | "player";
   listener?: boolean;
@@ -96,9 +114,9 @@ export function StoryStageCharacter(props: CharacterProps) {
   return <StageCharacterImage key={`${props.character.id}:${props.character.src}`} {...props} />;
 }
 
-function StageCharacterImage({ character, side, variant, listener = false, loading = "lazy" }: CharacterProps) {
+function StageCharacterImage({ character, side, variant, listener = false, loading = "lazy", override }: CharacterProps) {
   const settings = useStoryDisplaySettings();
-  const scale = character.scale * (settings.characterScales[character.scaleGroup] ?? 100) / 100;
+  const scale = (override?.scaleMultiplier??1) * character.scale * (settings.characterScales[character.scaleGroup] ?? 100) / 100;
   const [failed, setFailed] = useState(false);
   if (!character.id) return null;
   const variantClass = variant === "thumbnail" ? "scene-thumb-character"
@@ -108,10 +126,14 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
     return <span className={`${classes} story-stage-missing`} role="img" aria-label={`${character.label}: 이미지를 표시할 수 없어요`} data-asset-id={character.id}>이미지를 표시할 수 없어요</span>;
   }
   return <img
+    data-actor-side={side}
+    data-x-anchor={override?.xAnchor}
+    data-spectral={override?.spectral || undefined}
+    data-emphasis={override?.emphasis}
     data-shared-actor={character.sharedActor || undefined}
     data-scale-group={character.scaleGroup}
     data-stature={character.scale < 1 ? "child" : undefined}
-    style={{ "--actor-scale": scale, "--actor-facing": character.mirrored ? -1 : 1 } as CSSProperties}
+    style={{ "--actor-scale": scale, "--actor-facing": override?.facing ? ((character.mirrored !== (override.facing !== (side === "left" ? "right" : "left"))) ? -1 : 1) : character.mirrored ? -1 : 1, opacity: override?.opacity } as CSSProperties}
     className={`${classes} ${character.mirrored ? "mirrored" : ""}`}
     data-asset-id={character.id}
     src={resolveAssetUrl(character.src)}
@@ -121,4 +143,10 @@ function StageCharacterImage({ character, side, variant, listener = false, loadi
     decoding="async"
     onError={() => setFailed(true)}
   />;
+}
+
+function RealityCrack() {
+  const crackLines = "M49 43 L45 32 L48 24 L38 12 L30 0 M45 32 L35 26 L22 18 M49 43 L56 32 L53 20 L66 10 L75 0 M56 32 L68 25 L82 14 M49 43 L64 42 L74 38 L88 40 L100 36 M74 38 L83 48 L100 52 M49 43 L55 56 L67 68 L71 82 L82 100 M67 68 L80 76 L94 86 M49 43 L42 55 L45 70 L34 84 L24 100 M42 55 L30 66 L15 78 M49 43 L36 45 L25 41 L14 47 L0 43 M25 41 L17 31 L0 24";
+  const shardGaps = "M49 43 L45 32 L56 32 Z M49 43 L64 42 L55 56 Z M49 43 L42 55 L36 45 Z M55 56 L67 68 L71 82 L58 74 Z M42 55 L45 70 L34 84 L28 72 Z M45 32 L35 26 L48 24 Z M56 32 L68 25 L53 20 Z";
+  return <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path className="crack-gap" d={shardGaps}/><path className="crack-glow" d={crackLines}/><path className="crack-core" d={crackLines}/></svg>;
 }

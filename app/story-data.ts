@@ -1,8 +1,9 @@
+import { canonicalizeProjectPresentation } from "./story-presentation";
 import { lineSpeakerNames } from "./story-speakers";
 import type { StorySource } from "./story-source";
 import type { StoryCover } from "./story-cover";
 export type { StoryCover } from "./story-cover";
-import type { StorySceneEffect } from "./story-scene-effect";
+import type { StoryPresentation } from "./story-presentation";
 export type { StorySceneEffect } from "./story-scene-effect";
 import type { CreativeMemo } from "./creative-memos";
 import {
@@ -32,7 +33,7 @@ export type Chapter = {
 
 export type StoryLine = {
   flow?: import("./story-flow").StoryFlow;
-  effect?: StorySceneEffect;
+  presentation?: StoryPresentation;
   id: string;
   chapterId: string;
   order: number;
@@ -975,5 +976,5 @@ export function cloneProject(project: StoryProject): StoryProject {
       ),
     };
   });
-  return cloned;
+  return canonicalizeProjectPresentation(cloned);
 }

@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-16
+- 기준일: 2026-09-17
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,20 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SN-CLASSIC-ART-02 원작 필수 이미지 제작·GitHub 반영
+## 현재 작업: PRESENTATION-02 공통 연출 시스템 v2
+
+- 2026-09-17 사용자 직접 구현 요청, **DONE — 로컬 구현·핵심 검증 완료**, Work Lead · A/B.
+- branch `codex/presentation-system-v2`, 시작 HEAD `189240b`. 사용자 제공 개발안 v2를 이번 통합 작업 계약으로 적용. 기존 완료 이력 보존.
+- 범위: 공통 연출 모델·v1 migration·편집·플레이·파일/Excel 보존·Pinky 옹고집전 adapter. 신규 의존성·자산 생성·공개 배포 제외.
+- 인수: 복합 효과/명시적 분위기/진행 잠금 전환/상대 인물 배치, 구형 파일 호환과 고급 연출 왕복, 옹고집전 대표 연출 실제 화면 확인.
+- 구현: `app/story-presentation.ts`의 canonical 모델·검증·프리셋, v1→v2 migration(파일·복구 포함), Excel/Sheets envelope, 공유·지문, 컷 분할·복제·범위 적용. 기본 연출 버튼·고급 설정·인물 슬라이더/미리보기 드래그, 공통 SVG 균열·분위기·전환 진행 제어.
+- 상세 디자인 마감: 인물 선택 탭(Segmented control), 드래그 힌트/선택 링, 유기적 분기선·파편 SVG 균열 및 radial mask, 환영 명암·아우라 밸런스, 시점 전환 비네팅/큐 배지/시네마틱 스타일, 모바일 sticky footer 적용.
+- 옹고집전: 453컷의 원본 인물 배치 보존, 현실 균열 프리셋 1곳·균열 분위기 13컷·환영 11컷·시점 전환 2곳. 현재 Pinky 원본에 회상 표시는 없으며 공통 회상 기능/adapter는 지원. 예시 3작품의 연출 외 대본·ID·순서·분기·메타데이터가 기존과 같음을 비교 확인.
+- A: `npm run check`, `npm run build` 통과. presentation/document/checkpoint/effect/frame 핵심 검사 27/27 통과. 실제 XLSX 왕복·표시 열 수정 시 고급 연출 보존·공유/고쳐쓰기·fingerprint·v1 파일·미래/손상 거부·분할/분기 범위 포함. 별도 파일/저장소/공유 경계 검사도 통과. 양식 공식 생성기 실행, 8탭·숨김 보존 열 유지.
+- B: `node tests/browser/story-presentation.mjs` 통과. 1365×900 / 390×844에서 편집 범위 적용, 옹고집전 원본 대표 컷, 인물 비율/무대 폭, 전환 중 키보드·선택지 잠금, 이전 이동 시 전환 재생, 명시적 분위기, 동작 줄이기, 오류 없는 렌더 확인. 다이얼로그·고급설정·모바일 캡처 직접 검수 완료.
+- 사용자 요청에 따라 GitHub 메인 반영 진행. 다음 READY 없음.
+
+## 최근 완료: SN-CLASSIC-ART-02 원작 필수 이미지 제작·GitHub 반영
 
 - 2026-09-16 사용자 후속 요청, **DONE — 사용자 제공 14개 이미지 검수·배치·로컬 검증 완료, PR 공유**, Work Lead · G/A/B. 이전 원작읽기 로컬 변경을 보존하고 같은 `codex/seonnyeo-classic-reading` 브랜치에서 진행. `origin/main` `6846bc0`과 일치.
 - 목표: 배경·대본으로만 전달하던 필수 인물과 사건을 전용 이미지로 보여 주고, 원작읽기 전체 구현을 커밋·푸시·PR로 공유한다.

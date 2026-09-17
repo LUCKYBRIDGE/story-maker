@@ -105,7 +105,7 @@ export function createStoryBranches(project: StoryProject, lineId: string, count
   const oldLast = ordered.at(-1);
   const baseOrder = Math.max(0, ...project.chapters.map(chapter => chapter.order));
   const newChapter = (id: string, title: string, order: number) => ({ ...chapter, id, title, order, summary: "", purpose: "", mood: "", keyEvents: "", nextChapterIdea: "", storyStageKeys: [] });
-  const newLine = (id: string, chapterId: string, targetLineId: string | null): StoryLine => ({ ...source, id, chapterId, order: 1, type: "narration", speaker: "narration", speakerName: "해설", text: "", purposeNote: "", emotionNote: "", directionNote: "", effect: undefined, flow: { type: "goto", targetLineId } });
+  const newLine = (id: string, chapterId: string, targetLineId: string | null): StoryLine => ({ ...source, id, chapterId, order: 1, type: "narration", speaker: "narration", speakerName: "해설", text: "", purposeNote: "", emotionNote: "", directionNote: "", presentation: undefined, flow: { type: "goto", targetLineId } });
   return {
     ...project,
     chapters: [...project.chapters, ...newBranches.map((branch, i) => newChapter(branch.chapterId, `갈래 ${branches.indexOf(branch) + 1}`, baseOrder + i + 1)), newChapter(joinChapterId, "다시 만나는 이야기", baseOrder + newBranches.length + 1)],

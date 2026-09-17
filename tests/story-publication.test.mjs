@@ -15,7 +15,7 @@ assert.equal(await storyFingerprint(p),await storyFingerprint(clone));
 const fingerprint=await storyFingerprint(p);
 for(const change of [
  x=>x.title+=' new', x=>x.chapters[0].title+=' new', x=>x.lines[0].text+=' new',
- x=>x.lines[0].backgroundId='different-asset',x=>x.lines[0].effect={type:'shake',trigger:'on-enter',delayMs:0},
+ x=>x.lines[0].backgroundId='different-asset',x=>x.lines[0].presentation={effects:[{type:'shake',trigger:'scene-enter',delayMs:0}]},
  x=>x.lines[0].flow={type:'goto',targetLineId:null},
  x=>x.cover={...(x.cover??{}),subtitle:'new cover'},
 ]) {const changed=cloneProject(p);change(changed);assert.notEqual(await storyFingerprint(changed),fingerprint);}

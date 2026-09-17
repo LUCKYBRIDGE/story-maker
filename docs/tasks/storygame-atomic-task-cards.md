@@ -1644,3 +1644,16 @@ npm test
 - 검사: 원본 `npm run test:seonnyeo`; story-maker `npm run check`, `npm test`; 최신 미리보기 URL에서 `QA_SUITES=pinky-examples,seonnyeo-e2e node tests/browser/run-smoke.mjs`; 양쪽 `git diff --check`.
 - 중단: 사용자 변경 충돌, 원본 부재, 원문/분기 유실 시 해당 변경을 분리하고 상태표에 근거 기록. 승인 없는 main/배포 작업은 하지 않는다.
 - 상태표: 구현·검증 증거는 SN-NARRATIVE-04 현재 작업에만 기록. 다음 작업을 열지 않는다.
+
+
+## PRESENTATION-02 — 공통 연출 시스템 v2와 옹고집전 복원
+
+- 사용자 직접 요청(2026-09-17)의 [개발안 v2](../../놀스토리_연출_시스템_개발안_v2.md)를 통합 구현 계약으로 적용. 선행: CE-01 완료. Work Lead · A/B.
+- 가치: 학생이 빠른 연출을 선택하고 인물·분위기를 조절하며, 원본 예시의 시각적 의미를 플레이로 확인한다.
+- 허용: presentation/legacy adapter, 프로젝트 문서·저장/복구·파일·Excel·작품 지문, 컷 명령, 기존 편집기·플레이어·무대, 예시/양식 생성기와 산출물, 해당 검사·기준 문서.
+- 제외: 새 의존성·자산 제작·서버 저장·UI 전면 재작성·병합·배포. 시작 시 사용자 제공 개발안 파일을 보존하고 작업 branch에서 수정.
+- 절차: ① 원본 연출과 기존 저장 경계 확인 ② canonical 모델·v1 migration·spreadsheet envelope ③ 공통 렌더러·전환 제어·편집 UI ④ Pinky adapter 재생성 ⑤ 아래 범위 검증과 상태표 갱신.
+- 인수: (1) 구형 효과가 v2로 변환되고 미래/손상 버전은 거부 (2) 복합 연출이 파일·Excel·공유/고쳐쓰기에 유지 (3) 분위기가 컷마다 저장되고 분기 범위는 명시적 선택 (4) 전환 중 이동·선택지 잠금 (5) 인물 비율·발선과 화면 내 배치 유지 (6) 옹고집전 균열·환영·시점 전환을 일반 기능으로 재생.
+- 자동: `npm run check`, `npm run build`; `node --test tests/story-presentation.test.mjs tests/story-scene-effect.test.mjs tests/story-project-document.test.mjs tests/story-project-checkpoints.test.mjs` 및 변경된 저장/공유 경계 검사.
+- 화면: 개발 서버에서 `node tests/browser/story-presentation.mjs`, 1365×900 / 390×844 대표 컷·편집 적용·분기·이전 이동·동작 줄이기. 전체 작품 전수/장치 검사는 이번 범위 제외.
+- 중단: 저장본 손실 또는 소스 대본·연결의 의도치 않은 변경이 남으면 완료 처리하지 않는다. 실행/완료 증거는 상태표에만 기록한다.

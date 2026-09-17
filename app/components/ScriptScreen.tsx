@@ -43,6 +43,7 @@ export interface ScriptScreenProps {
   onChooseRevisionResponse: (promptId: string, response: StoryRevisionResponse) => void;
   onSelectLine: (lineId: string) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
+  onApplyPresentation?: import("./SceneEffectEditor").ApplyPresentation;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
   onCreateBranches?: (lineId: string, count: 2 | 3, existingPlacement: import("../story-flow").ExistingStoryPlacement) => void;
   onSplitLine: (lineId: string) => void;
@@ -73,6 +74,7 @@ export function ScriptScreen({
   onSelectLine,
   onChangeLineType,
   onUpdateLine,
+  onApplyPresentation,
   onSplitLine,
   onCreateBranches,
   onOpenStoryEditorScene,
@@ -208,7 +210,7 @@ export function ScriptScreen({
               이 컷 꾸미기
             </button>
           </header>
-          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker}>
+          <StorySceneFrame stage={resolveStoryStage(selectedChapter, selectedLine)} variant="editor" presentation={selectedLine.presentation} playbackKey={selectedLine.id} speaker={selectedLine.speaker}>
             <div className="dialogue-box">
               <p>{selectedLine.type === "narration"
                 ? <DialogueText text={selectedLine.text || "아래 글상자에 해설을 써 보세요."} />
@@ -397,7 +399,7 @@ export function ScriptScreen({
                 </div>
                 <div className="scene-card-actions">
                   <StoryFlowEditor project={draft} line={line} onChange={flow => onUpdateLine(line.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(line.id, count, placement) : undefined} onOpenLine={onOpenStoryEditorScene} />
-                  <SceneEffectEditor line={line} chapter={selectedChapter} onChange={effect => onUpdateLine(line.id, { effect })} />
+                  <SceneEffectEditor lines={draft.chapters.flatMap(c=>draft.lines.filter(l=>l.chapterId===c.id).sort((a,b)=>a.order-b.order))} onApplyPresentation={onApplyPresentation} line={line} chapter={selectedChapter} onChange={presentation => onUpdateLine(line.id, { presentation })} />
                   <button
                     type="button"
                     className="scene-add-button"
@@ -426,7 +428,7 @@ export function ScriptScreen({
                         ? `다음 컷(${index + 2}컷)과 하나로 합치기`
                         : canMergeWithPrev
                           ? `이전 컷(${index}컷)과 하나로 합치기`
-                          : line.effect || nextLine?.effect || prevLine?.effect
+                          : line.presentation || nextLine?.presentation || prevLine?.presentation
                             ? "연출 시점을 지키려면 효과를 먼저 없앤 뒤 합쳐 주세요"
                             : "대사·해설 종류와 인물이 같은 앞뒤 컷이 있을 때만 합칠 수 있어요"
                     }

@@ -92,7 +92,7 @@ function parseCheckpoint(value: unknown): StoryProjectCheckpoint | undefined {
     return undefined;
   }
   const parsed = parseStoryDocument(record.document);
-  if (!parsed.ok || parsed.source !== "current") return undefined;
+  if (!parsed.ok) return undefined;
   return {
     id: record.id,
     reason: record.reason,

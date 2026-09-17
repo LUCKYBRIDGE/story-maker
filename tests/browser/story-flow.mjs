@@ -27,7 +27,10 @@ for(const [name,text] of [['갈래 2','두 번째 갈래입니다.'],['갈래 3'
  }
  const overview = page.locator('.story-flow-overview');
  if (!await overview.evaluate(element => element.open)) {
-  await overview.locator('summary').click();
+  await overview.evaluate(element => {
+   element.open = true;
+   element.dispatchEvent(new Event('toggle'));
+  });
   await page.locator('.story-flow-overview[open]').waitFor();
  }
  await overview.getByRole('button',{name:`${name} · 1컷`,exact:true}).click();

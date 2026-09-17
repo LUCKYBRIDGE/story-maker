@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {selectLocalBook} from './support/library-entry.mjs';
+import {chromium} from 'playwright';
+const output=process.env.QA_OUTPUT||'/tmp/story-presentation-browser';await mkdir(output,{recursive:true});
+const doc=JSON.parse(execFileSync(process.execPath,['--disable-warning=ExperimentalWarning','--experimental-strip-types','--experimental-loader=./tests/node-types-loader.mjs','--input-type=module','-e',`
+import {readFileSync} from 'node:fs';import {cloneProject} from './app/story-data.ts';import {createStoryDocument} from './app/story-project-document.ts';
+const p=cloneProject(JSON.parse(readFileSync('app/story-examples.generated.json')).projects[1]);const original=p.lines;p.id='presentation-qa';p.title='옹고집 연출 확인';p.chapters=p.chapters.slice(0,1);p.continuation=undefined;
+p.lines=[original[0],original.find(l=>l.presentation?.effects?.some(e=>e.type==='screen-crack')),original.find(l=>l.presentation?.actors?.right?.spectral),original.find(l=>l.presentation?.transition),original[1],original[2]].map((l,i)=>({...l,id:'qa-'+i,chapterId:p.chapters[0].id,order:i+1,flow:undefined}));
+p.lines[4].presentation=undefined;p.lines[5].presentation={look:{type:'flashback'}};p.lines[3].flow={type:'choice',options:[{id:'a',label:'현재로',targetLineId:'qa-4'},{id:'b',label:'회상으로',targetLineId:'qa-5'}]};
+console.log(JSON.stringify(createStoryDocument({project:p,savedAt:'2026-09-17T00:00:00.000Z',appVersion:'qa'})));
+`],{encoding:'utf8'}));
+const browser=await chromium.launch({channel:'chrome',headless:true});const results=[];
+try {for(const [width,height] of [[1365,900],[390,844]]) {
+ const page=await browser.newPage({viewport:{width,height}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(process.env.QA_URL||'http://localhost:3017');await page.evaluate(doc=>{localStorage.setItem('storygame:draft:v1',JSON.stringify(doc));localStorage.setItem('storygame:active:v1',JSON.stringify(doc));},doc);await page.reload();await selectLocalBook(page);
+ console.log('selected book',width);
+ await page.getByRole('button',{name:'이어만들기',exact:true}).click();
+ await page.getByRole('button',{name:/✨ 연출 ·/}).first().click();
+ const dialog=page.getByRole('dialog').filter({has:page.getByRole('heading',{name:'✨ 연출',exact:true})});
+ await page.screenshot({path:`${output}/dialog-${width}.png`});
+ await dialog.locator('.presentation-advanced summary').click();
+ await page.screenshot({path:`${output}/dialog-advanced-${width}.png`});
+ await dialog.locator('.presentation-advanced summary').click();
+ await dialog.getByRole('button',{name:'🌫 회상',exact:true}).click();await dialog.getByLabel('분위기 적용 범위').selectOption('3');
+ await dialog.getByRole('button',{name:'적용',exact:true}).click();
+ await page.getByRole('button',{name:/✨ 연출 ·/}).first().click();await dialog.getByRole('button',{name:'⚡ 현실 균열',exact:true}).click();await dialog.getByLabel('분위기 적용 범위').selectOption('3');await dialog.getByRole('button',{name:'적용',exact:true}).click();
+ await page.getByRole('button',{name:'플레이에 적용',exact:true}).click();
+ if(!await page.locator('.creator-primary-nav button').nth(2).isVisible())await page.getByRole('button',{name:/편집 방법·이 장 정보/}).click();
+ await page.locator('.creator-primary-nav button').nth(2).click();await page.getByRole('button',{name:'이야기 펼치기',exact:true}).click();
+ const frame=page.locator('.player-shell .story-scene-frame');await frame.waitFor();
+ assert.equal(await frame.getAttribute('data-look'),'fractured-reality');
+ const next=page.getByRole('button',{name:'다음 컷',exact:true});const prev=page.getByRole('button',{name:'이전',exact:true});
+ await next.click();await next.click();await page.screenshot({path:`${output}/fractured-${width}.png`});
+ assert.ok(await frame.locator('[data-spectral="true"]').count());
+ const geometry=await frame.locator('img.story-stage-actor').evaluateAll(images=>images.map(img=>{const r=img.getBoundingClientRect(),s=img.parentElement.getBoundingClientRect();return {inside:r.left>=s.left-1&&r.right<=s.right+1,ratio:Math.abs(r.width/r.height-img.naturalWidth/img.naturalHeight)<.01};}));assert.ok(geometry.every(g=>g.inside&&g.ratio));
+ await next.click();await page.locator('.presentation-transition').waitFor();await page.locator('.player-shell').press('ArrowRight');assert.ok(await page.locator('.presentation-transition').isVisible());assert.ok(await page.locator('.player-choices button').first().isDisabled());
+ const confirm=page.locator('.presentation-transition button');await confirm.waitFor();await page.screenshot({path:`${output}/perspective-${width}.png`});await confirm.click();await page.getByRole('button',{name:'현재로',exact:false}).click();assert.equal(await frame.getAttribute('data-look'),null);
+ await prev.click();await page.locator('.presentation-transition button').click();await page.getByRole('button',{name:'회상으로',exact:false}).click();assert.equal(await frame.getAttribute('data-look'),'flashback');
+ await page.emulateMedia({reducedMotion:'reduce'});await prev.click();await page.locator('.presentation-transition button').click();await prev.click();assert.ok(await frame.locator('[data-spectral="true"]').count());
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);results.push({width,height,editorRange:true,choiceLock:true,previousReplay:true,reducedMotion:true,actorGeometry:geometry});await page.close();
+}await writeFile(`${output}/results.json`,JSON.stringify(results,null,2));console.log(results);}finally{await browser.close();}

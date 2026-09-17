@@ -1,3 +1,5 @@
+import { canonicalizeProjectPresentation } from "./story-presentation";
+import { PRESENTATION_COLUMNS, presentationCells } from "./story-presentation-spreadsheet";
 import { STORY_FLOW_COLUMNS, storyFlowCells } from "./story-flow-sheet";
 import { COVER_FIELDS } from "./story-cover";
 import ExcelJS, { type CellValue, type Worksheet } from "exceljs";
@@ -194,6 +196,7 @@ export function createStoryWorkbook(
   project: StoryProject,
   assets: StoryAsset[],
 ) {
+  project = canonicalizeProjectPresentation(project);
   const workbook = new ExcelJS.Workbook();
   workbook.creator = "놀퀴즈 스토리 스튜디오";
   workbook.created = new Date();
@@ -371,7 +374,7 @@ export function createStoryWorkbook(
         "컷 역할",
         "감정 메모",
         "연출 메모",
-        "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
+        ...PRESENTATION_COLUMNS,
         ...STORY_FLOW_COLUMNS,
         "함께 말하는 화자",
       ],
@@ -405,15 +408,17 @@ export function createStoryWorkbook(
           line.purposeNote,
           line.emotionNote,
           line.directionNote,
-          line.effect?.type ?? "", line.effect?.intensity ?? "",
-          line.effect?.trigger ?? "", line.effect ? line.effect.delayMs / 1000 : "",
+          ...presentationCells(line.presentation),
           ...storyFlowCells(line.flow),
           line.coSpeakerNames?.length ? JSON.stringify(line.coSpeakerNames) : "",
         ]),
     ],
-    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18, ...STORY_FLOW_COLUMNS.map(() => 26), 30],
+    [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18, 22, 22, 24, ...STORY_FLOW_COLUMNS.map(() => 26), 30],
   );
+  scenesSheet.getColumn(20).hidden = true;
+  scenesSheet.getCell(1,20).note = "웹 연출을 보존하는 데이터입니다. 직접 수정하지 않아도 됩니다.";
   for (let row = 2; row <= Math.max(500, scenesSheet.rowCount); row += 1) {
+    for (const [column, values] of [[15,"soft,normal,strong"],[16,"scene-enter,with-dialogue,after-delay"],[18,"없음,회상,균열된 현실"],[19,"없음,암전,하얀 전환,시점 전환"]] as const) scenesSheet.getCell(row,column).dataValidation={type:"list",allowBlank:true,formulae:[`"${values}"`]};
     scenesSheet.getCell(row, 4).dataValidation = {
       type: "list",
       allowBlank: false,
