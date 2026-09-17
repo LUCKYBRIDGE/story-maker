@@ -50,7 +50,7 @@ test("StoryDocument는 식별자·버전·주입된 앱 버전과 독립된 작�
   assert.deepEqual(result.input, result.original);
   assert.equal(result.projectReferenceIsShared, false);
   assert.equal(result.document.documentType, "story-maker-project");
-  assert.equal(result.document.schemaVersion, 1);
+  assert.equal(result.document.schemaVersion, 2);
   assert.equal(result.document.savedAt, "2026-09-01T09:30:00.000Z");
   assert.equal(result.document.appVersion, "test-app/1.2.3");
   assert.equal(result.document.assetCatalogVersion, "catalog-v2-alpha");

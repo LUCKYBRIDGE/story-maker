@@ -48,8 +48,19 @@ try {
    await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
    await page.locator('.player-shell').waitFor();
    let choices = 0;
+   const handleTransition = async (targetLine) => {
+    if (!targetLine?.presentation?.transition) return;
+    const overlay = page.locator('.presentation-transition');
+    if (targetLine.presentation.transition.mode === 'confirm') {
+     const confirmButton = overlay.locator('button');
+     await confirmButton.waitFor({ state: 'visible', timeout: 5000 });
+     await confirmButton.click();
+    }
+    await overlay.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+   };
    for (const step of route) {
     const line = graph.byId.get(step.lineId);
+    await handleTransition(line);
     await textVisible(page, line.text);
     if (line.flow?.type === 'choice') {
      choices++;
@@ -57,11 +68,17 @@ try {
      for (const option of line.flow.options) assert.ok(await page.getByRole('button', { name: option.label, exact: true }).isVisible());
      const option = line.flow.options[step.optionIndex];
      await page.getByRole('button', { name: option.label, exact: true }).click();
-     await textVisible(page, graph.byId.get(step.target).text);
+     const targetLine = graph.byId.get(step.target);
+     await handleTransition(targetLine);
+     await textVisible(page, targetLine.text);
      await page.getByRole('button', { name: '이전', exact: true }).click();
+     await handleTransition(line);
      await textVisible(page, line.text);
      await page.getByRole('button', { name: option.label, exact: true }).click();
-    } else if (step.target !== null) await page.getByRole('button', { name: '다음 컷', exact: true }).click();
+     await handleTransition(targetLine);
+    } else if (step.target !== null) {
+     await page.getByRole('button', { name: '다음 컷', exact: true }).click();
+    }
    }
    assert.ok(await page.getByRole('button', { name: '공연 마치기', exact: true }).isVisible());
    assert.ok(await page.getByRole('button', { name: '다음 컷', exact: true }).isDisabled());

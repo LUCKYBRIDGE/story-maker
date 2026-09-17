@@ -55,8 +55,8 @@ test('effects: local save/load, active version and clone preserve metadata witho
     console.log(JSON.stringify({draft,active,loaded,played,clone:cloneProject(project)}));
   `);
   assert.equal(result.draft.ok,true); assert.equal(result.active.ok,true);
-  assert.deepEqual(result.loaded.project.lines[0].effect,result.clone.lines[0].effect);
-  assert.deepEqual(result.played.project.lines[0].effect,result.clone.lines[0].effect);
+  assert.deepEqual(result.loaded.project.lines[0].presentation,result.clone.lines[0].presentation);
+  assert.deepEqual(result.played.project.lines[0].presentation,result.clone.lines[0].presentation);
   assert.ok(!('effect' in result.clone.lines[1]));
 });
 
@@ -74,7 +74,7 @@ test('effects: real XLSX round trip preserves every type and legacy blank column
     console.log(JSON.stringify({imported,expected:project.lines.map(l=>l.effect??null)}));
   `);
   assert.equal(result.imported.ok,true,JSON.stringify(result.imported.issues));
-  assert.deepEqual(result.imported.project.lines.map(l=>l.effect??null),result.expected);
+  assert.deepEqual(result.imported.project.lines.map(l=>l.presentation?.effects?.[0]??null),result.expected);
 });
 
 test('effects: invalid saved or imported effect never silently overwrites a work', () => {
@@ -84,25 +84,27 @@ test('effects: invalid saved or imported effect never silently overwrites a work
     const {importStoryProject} = await import('./app/story-sheet.ts');
     const {STORY_ASSETS} = await import('./app/story-assets.ts');
     const project=createCurrentV1ProjectFixture(); project.lines[0].effect={...effect,delayMs:-1};
-    const document=createStoryDocument({project,savedAt:'2026-09-08T00:00:00.000Z',appVersion:'test'});
-    const workbook=createStoryWorkbook(project,STORY_ASSETS);
+    const document={documentType:'story-maker-project',schemaVersion:1,project,savedAt:'2026-09-08T00:00:00.000Z',appVersion:'test'};
+    const workbook=createStoryWorkbook(createCurrentV1ProjectFixture(),STORY_ASSETS);
+    workbook.getWorksheet('컷 대본').getCell(2,14).value='shake';
+    workbook.getWorksheet('컷 대본').getCell(2,17).value=-1;
     const snapshot=await readStoryWorkbook(new File([await workbook.xlsx.writeBuffer()],'bad.xlsx'));
     console.log(JSON.stringify({saved:parseStoryDocument(document),sheet:importStoryProject(snapshot,'')}));
   `);
   assert.equal(result.saved.ok,false); assert.equal(result.sheet.ok,false);
   assert.ok(result.saved.issues.some(i=>i.path.endsWith('.effect')));
-  assert.ok(result.sheet.issues.some(i=>i.column==='연출 효과'));
+  assert.ok(result.sheet.issues.some(i=>['연출 효과','연출 데이터'].includes(i.column)));
 });
 
 test('effects: duplicate retains independent effect and merge refuses to discard timing', () => {
   const result = run(`
     const {duplicateStoryLine,canMergeStoryLines}=await import('./app/story-commands.ts');
-    const p=createCurrentV1ProjectFixture(); const first={...p.lines[0],effect};
-    const second={...first,id:'second',order:2,effect:undefined};
+    const p=createCurrentV1ProjectFixture(); const first={...p.lines[0],presentation:{effects:[effect]}};
+    const second={...first,id:'second',order:2,presentation:undefined};
     const duplicate=duplicateStoryLine({lines:[first],lineId:first.id,createId:()=> 'copy'});
     console.log(JSON.stringify({duplicate,merges:[canMergeStoryLines(first,second),canMergeStoryLines(second,first)]}));
   `);
   assert.equal(result.duplicate.ok,true);
-  assert.deepEqual(result.duplicate.lines[0].effect,result.duplicate.lines[1].effect);
+  assert.deepEqual(result.duplicate.lines[0].presentation,result.duplicate.lines[1].presentation);
   assert.deepEqual(result.merges,[false,false]);
 });

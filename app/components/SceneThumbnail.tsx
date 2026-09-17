@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { presentationLabel } from "../story-presentation";
 import { StoryStageCanvas } from "./StoryStage";
 
 import { ASSET_BY_ID } from "./AssetPickerButton";
@@ -59,7 +60,8 @@ export function SceneThumbnail({
     <div
       className={`scene-thumbnail ${line.type}`}
     >
-      <StoryStageCanvas stage={stage} variant="thumbnail" />
+      <StoryStageCanvas stage={stage} variant="thumbnail" actors={line.presentation?.actors} />
+      {line.presentation && <small className="presentation-cut-badge">{presentationLabel(line.presentation)}</small>}
       <span>
         {line.type === "narration"
           ? "해설"

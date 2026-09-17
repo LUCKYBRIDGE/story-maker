@@ -1,4 +1,5 @@
 "use client";
+import { usePresentationTransition } from "../hooks/usePresentationTransition";
 
 import { useStoryDisplaySettings, updateStoryDisplaySettings } from "../hooks/useStoryDisplaySettings";
 import { speakerColor } from "../story-speaker-colors";
@@ -220,6 +221,7 @@ export function StoryPlayer({
   useLayoutEffect(() => {
     try { sessionStorage.setItem("storygame:reading-path:v1", JSON.stringify({projectId: project.id, index, history, endingChoice, choiceEnded})); } catch { /* optional tab history */ }
   }, [project.id, index, history, endingChoice, choiceEnded]);
+  const transition = usePresentationTransition(line?.presentation?.transition, line?.id);
   const branching = project.lines.some(line => line.flow);
   const targets = storyFlowTargets(lines, index);
   const nextTarget = line?.flow?.type === "choice" ? undefined : targets[0];
@@ -230,7 +232,7 @@ export function StoryPlayer({
   const brokenLink = line?.flow?.type !== "choice" && nextTarget !== null && !canNext && total > 0;
   useEffect(() => { pendingMove.current = false; }, [index]);
   function goTo(targetId: string | null, choiceLabel?: string) {
-    if (pendingMove.current || !line) return;
+    if (transition.active || pendingMove.current || !line) return;
     if (targetId === null) { setEndingChoice(choiceLabel); setChoiceEnded(true); return; }
     const target = lines.findIndex(line => line.id === targetId);
     if (target < 0 || target === index) return;
@@ -240,7 +242,7 @@ export function StoryPlayer({
     playerRef.current?.focus({ preventScroll: true });
   }
   function goPrevious() {
-    if (pendingMove.current) return;
+    if (transition.active || pendingMove.current) return;
     if (choiceEnded) { setChoiceEnded(false); setEndingChoice(undefined); return; }
     const previousId = history.at(-1)?.lineId;
     const target = previousId ? lines.findIndex(line => line.id === previousId) : !branching ? index - 1 : -1;
@@ -279,6 +281,12 @@ export function StoryPlayer({
 
   // 키보드 조작은 선택지를 건너뛰지 않으며 최신 재생 경로를 사용한다.
   const onPlayerKey = useEffectEvent((event: KeyboardEvent) => {
+      if (transition.active && ['ArrowRight','ArrowLeft',' ','Enter'].includes(event.key)) {
+        if(event.target instanceof Element && event.target.closest('.presentation-transition button')) return;
+        event.preventDefault();
+        if(event.key===' ' || event.key==='Enter') transition.confirm();
+        return;
+      }
       if (menu || displayOpen || bookmarkOpen || (event.target instanceof Element && event.target.closest('[role="dialog"]')) || !shouldHandleStoryPlayerKey(event) ||
         !(event.target instanceof Node) || !playerRef.current?.contains(event.target)) {
         return;
@@ -310,6 +318,7 @@ export function StoryPlayer({
   }, []);
 
   const playChapter = (chapterId: string) => {
+    if(transition.active) return;
     const index = findFirstStoryLineIndexForChapter({ lines, chapterId });
     if (index >= 0) { setHistory([]); setChoiceEnded(false); setEndingChoice(undefined); pendingMove.current = false; onIndexChange(index); }
   };
@@ -320,7 +329,7 @@ export function StoryPlayer({
       <div
         className="story-stage"
       >
-        <StorySceneFrame stage={stage} variant="player" effect={line?.effect} playbackKey={line?.id} speaker={line?.speaker} heading={
+        <StorySceneFrame stage={stage} variant="player" transitionController={transition} presentation={line?.presentation} playbackKey={line?.id} speaker={line?.speaker} heading={
         <header className="reader-topbar">
           <details className="reader-story-info">
             <summary>이야기 정보</summary>
@@ -345,7 +354,7 @@ export function StoryPlayer({
           {line?.flow?.type === "choice" && !choiceEnded && <section className="player-choices" aria-label="이야기 선택지">
             <strong>어떻게 할까요?</strong>
             {line.flow.options.map((option, optionIndex) => <button type="button" key={option.id}
-              disabled={option.targetLineId !== null && (!option.targetLineId || !lines.some(line => line.id === option.targetLineId))}
+              disabled={transition.active || (option.targetLineId !== null && (!option.targetLineId || !lines.some(line => line.id === option.targetLineId)))}
               onClick={() => goTo(option.targetLineId, option.label || `선택 ${optionIndex + 1}`)}><b aria-hidden="true">{optionIndex + 1}</b><span>{option.label || `선택 ${optionIndex + 1}`}</span></button>)}
             <small>선택지를 골라야 이야기가 이어져요.</small>
           </section>}
@@ -355,7 +364,7 @@ export function StoryPlayer({
             <button
               type="button"
               className="ghost-button"
-              disabled={!canPrevious}
+              disabled={transition.active || !canPrevious}
               onClick={() => canPrevious && goPrevious()}
             >
               이전
@@ -363,7 +372,7 @@ export function StoryPlayer({
             <button
               type="button"
               className="primary-button"
-              disabled={!canNext}
+              disabled={transition.active || !canNext}
               onClick={() =>
                 canNext && goTo(nextTarget!)
               }

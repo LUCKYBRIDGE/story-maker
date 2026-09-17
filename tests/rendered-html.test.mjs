@@ -77,7 +77,7 @@ test("공식 Excel 양식은 웹과 같은 이야기 순서와 네 구성 묶음
   assert.deepEqual(planning.getCell("B16").dataValidation.formulae, [
     '"5단계,4단계,3단계"',
   ]);
-  assert.equal(workbook.getWorksheet("리소스")?.rowCount, 109);
+  assert.equal(workbook.getWorksheet("리소스")?.rowCount, 207);
   const creativeMemos = workbook.getWorksheet("창작 메모");
   assert.ok(creativeMemos);
   assert.deepEqual(

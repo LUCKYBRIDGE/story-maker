@@ -1,3 +1,4 @@
+import { normalizePresentation } from "./story-presentation";
 import { lineSpeakerNames } from "./story-speakers";
 import { cloneProject, type StoryProject } from "./story-data";
 import { orderedStoryFlowLines, storyFlowTargets } from "./story-flow";
@@ -20,7 +21,7 @@ export async function storyFingerprint(project: StoryProject): Promise<string> {
       lines: lines.flatMap((line,index) => line.chapterId !== chapter.id ? [] : [{
         type: line.type, speaker: line.speaker, speakerNames: lineSpeakerNames(line), text: line.text,
         backgroundId: line.backgroundId, leftAssetId: line.leftAssetId, rightAssetId: line.rightAssetId,
-        effect: line.effect ?? null, targets: targets(index),
+        presentation: line.presentation ? normalizePresentation(line.presentation) : null, targets: targets(index),
         choices: line.flow?.type === "choice" ? line.flow.options.map(option => option.label) : null,
       }]),
     })),

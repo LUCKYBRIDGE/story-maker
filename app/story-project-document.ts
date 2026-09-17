@@ -1,3 +1,4 @@
+import { canonicalizeProjectPresentation } from "./story-presentation";
 import type { StoryProject } from "./story-data";
 import {
   normalizeAndValidateStoryProject,
@@ -7,7 +8,7 @@ import {
 export type { StoryDocumentIssue } from "./story-project-validation";
 
 export const STORY_DOCUMENT_TYPE = "story-maker-project" as const;
-export const CURRENT_SCHEMA_VERSION = 1 as const;
+export const CURRENT_SCHEMA_VERSION = 2 as const;
 
 export type StoryDocumentEnvelope = {
   documentType: typeof STORY_DOCUMENT_TYPE;
@@ -16,6 +17,12 @@ export type StoryDocumentEnvelope = {
   appVersion: string;
   assetCatalogVersion?: string;
   project: StoryProject;
+};
+
+export type StoryDocumentEnvelopeV2 = StoryDocumentEnvelope;
+export type StoryDocumentEnvelopeV1 = Omit<StoryDocumentEnvelope, "schemaVersion" | "project"> & {
+  schemaVersion: 1;
+  project: Omit<StoryProject, "lines"> & {lines: (Omit<StoryProject["lines"][number], "presentation"> & {effect?: import("./story-scene-effect").StorySceneEffect})[]};
 };
 
 export type CreateStoryDocumentInput = {
@@ -70,7 +77,7 @@ export function createStoryDocument({
     savedAt,
     appVersion,
     ...(assetCatalogVersion === undefined ? {} : { assetCatalogVersion }),
-    project: structuredClone(project),
+    project: canonicalizeProjectPresentation(structuredClone(project)),
   };
 }
 
@@ -96,20 +103,13 @@ function createParsedDocument(
   }
 }
 
-function parseCurrentDocument(value: Record<string, unknown>): StoryDocumentLoadResult {
+function parseVersionedDocument(value: Record<string, unknown>, version: 1 | 2): StoryDocumentLoadResult {
   const issues: StoryDocumentIssue[] = [];
   if (value.documentType !== STORY_DOCUMENT_TYPE) {
     issues.push({
       code: "unsupported-document-type",
       path: "$.documentType",
       message: `documentType must be '${STORY_DOCUMENT_TYPE}'.`,
-    });
-  }
-  if (value.schemaVersion !== CURRENT_SCHEMA_VERSION) {
-    issues.push({
-      code: "unsupported-schema-version",
-      path: "$.schemaVersion",
-      message: `schemaVersion must be ${CURRENT_SCHEMA_VERSION}.`,
     });
   }
   if (typeof value.savedAt !== "string" || !isStrictIsoUtcTimestamp(value.savedAt)) {
@@ -132,6 +132,13 @@ function parseCurrentDocument(value: Record<string, unknown>): StoryDocumentLoad
       message: "assetCatalogVersion must not be blank when present.",
     });
   }
+  const rawProject = value.project as {lines?: Record<string, unknown>[]} | undefined;
+  if (Array.isArray(rawProject?.lines)) {
+    rawProject.lines.forEach((line, index) => {
+      const forbidden = version === 1 ? "presentation" : "effect";
+      if (line && typeof line === "object" && forbidden in line) issues.push({code:"invalid-value",path:`$.project.lines[${index}].${forbidden}`,message:`${forbidden} is not allowed in this document version.`});
+    });
+  }
   const normalized = normalizeAndValidateStoryProject(value.project);
   issues.push(...normalized.issues);
   if (issues.length > 0 || !normalized.project) return failure(issues);
@@ -144,7 +151,7 @@ function parseCurrentDocument(value: Record<string, unknown>): StoryDocumentLoad
         ? {}
         : { assetCatalogVersion: value.assetCatalogVersion as string }),
     },
-    "current",
+    version === 1 ? "legacy-v1" : "current",
   );
 }
 
@@ -159,7 +166,13 @@ export function parseStoryDocument(
     ]);
   }
   const value = input as Record<string, unknown>;
-  if ("documentType" in value || "schemaVersion" in value) return parseCurrentDocument(value);
+  if ("documentType" in value || "schemaVersion" in value) {
+    switch(value.schemaVersion) {
+      case 1: return parseVersionedDocument(value, 1); // Strict v1 fields, then migrate through normalization.
+      case 2: return parseVersionedDocument(value, 2); // Canonical only: reject legacy effect.
+      default: return failure([{code:"unsupported-schema-version",path:"$.schemaVersion",message:"지원하지 않는 작품 버전이에요. 원본 파일을 보관해 주세요."}]);
+    }
+  }
 
   const normalized = normalizeAndValidateStoryProject(value);
   if (normalized.issues.length > 0 || !normalized.project) return failure(normalized.issues);

@@ -437,6 +437,7 @@ export interface SceneFocusEditorProps {
   onAddAssetToChapter: (id: string, type: "character" | "background") => void;
   onMoveThroughStory: (delta: -1 | 1) => void;
   onChangeLineType: (lineId: string, type: StoryLine["type"]) => void;
+  onApplyPresentation?: import("./SceneEffectEditor").ApplyPresentation;
   onUpdateLine: (lineId: string, patch: Partial<StoryLine>) => void;
   onCreateBranches?: (lineId: string, count: 2 | 3, existingPlacement: import("../story-flow").ExistingStoryPlacement) => void;
   onOpenLine?: (line: StoryLine) => void;
@@ -465,6 +466,7 @@ export function SceneFocusEditor({
   onMoveThroughStory,
   onChangeLineType,
   onUpdateLine,
+  onApplyPresentation,
   onSplitLine,
   onCreateBranches,
   onOpenLine,
@@ -683,7 +685,7 @@ export function SceneFocusEditor({
             }} />;
         })}
       </div>
-      <StorySceneFrame stage={stage} variant="editor" effect={selectedLine.effect} playbackKey={selectedLine.id} speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
+      <StorySceneFrame stage={stage} variant="editor" presentation={selectedLine.presentation} playbackKey={selectedLine.id} speaker={selectedLine.speaker} navigation={nearbyNavigation("미리보기")}
         heading={<span className="story-scene-label">{selectedChapter.title || `${selectedChapter.order}장`}</span>}>
       {activeTab === "text" ? (
         <div
@@ -770,6 +772,7 @@ export function SceneFocusEditor({
         </div>
       )}
       </StorySceneFrame>
+      <SceneEffectEditor lines={orderedDraftLines} onApplyPresentation={onApplyPresentation} key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={presentation => onUpdateLine(selectedLine.id, { presentation })} />
 
       {activeTab !== "text" && (
         <SceneAssetChoicePanel
@@ -786,10 +789,9 @@ export function SceneFocusEditor({
       )}
 
       <details className="scene-advanced-settings" open={sceneSettingsOpen} onToggle={event => onSetSceneSettingsOpen(event.currentTarget.open)}>
-        <summary>컷 연결·연출·배치 가져오기</summary>
+        <summary>컷 연결·배치 가져오기</summary>
       <StoryFlowEditor project={draft} line={selectedLine} onChange={flow => onUpdateLine(selectedLine.id, { flow })} onCreateBranches={onCreateBranches ? (count, placement) => onCreateBranches(selectedLine.id, count, placement) : undefined} onOpenLine={onOpenLine} />
       {onOpenLine && <StoryFlowOverview project={draft} onOpenLine={onOpenLine} />}
-      <SceneEffectEditor key={selectedLine.id} line={selectedLine} chapter={selectedChapter} onChange={effect => onUpdateLine(selectedLine.id, { effect })} />
 
           <SceneStagingCopy
             key={selectedLine.id}

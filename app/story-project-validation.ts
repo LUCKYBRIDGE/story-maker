@@ -1,3 +1,4 @@
+import { isStoryPresentation, migrateLegacyPresentation, normalizePresentation } from "./story-presentation";
 import { isStorySource } from "./story-source";
 import { isStoryFlow } from "./story-flow";
 import { isStoryCover } from "./story-cover";
@@ -341,6 +342,10 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
     if (record.effect !== undefined && !isStorySceneEffect(record.effect)) {
       addIssue(issues, "invalid-value", `${path}.effect`, "Invalid scene effect settings.");
     }
+    if (record.presentation !== undefined && !isStoryPresentation(record.presentation)) {
+      addIssue(issues, "invalid-value", `${path}.presentation`, "Invalid presentation settings.");
+    }
+    if (record.effect !== undefined && record.presentation !== undefined) addIssue(issues, "invalid-value", path, "Conflicting legacy effect and presentation.");
     if (record.flow !== undefined && !isStoryFlow(record.flow)) {
       addIssue(issues, "invalid-value", `${path}.flow`, "선택지는 2개 또는 3개이며 문구와 도착 컷이 있어야 해요.");
     }
@@ -371,7 +376,7 @@ function normalizeLines(value: unknown, issues: StoryDocumentIssue[]): StoryLine
       emotionNote: optionalString(record, "emotionNote", path, issues),
       directionNote: optionalString(record, "directionNote", path, issues),
       ...(isStoryFlow(record.flow) ? { flow: structuredClone(record.flow) } : {}),
-      ...(isStorySceneEffect(record.effect) ? { effect: { ...record.effect } } : {}),
+      ...(isStoryPresentation(record.presentation) ? { presentation: normalizePresentation(record.presentation) } : isStorySceneEffect(record.effect) ? { presentation: migrateLegacyPresentation(record.effect) } : {}),
     };
   });
 }

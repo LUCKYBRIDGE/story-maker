@@ -2,7 +2,8 @@ import { isStorySource, type StorySource } from "./story-source";
 import { STORY_FLOW_COLUMNS, parseStoryFlowCells } from "./story-flow-sheet";
 import type { StoryFlow } from "./story-flow";
 import { COVER_FIELDS, DEFAULT_COVER, isStoryCover } from "./story-cover";
-import { isStorySceneEffect } from "./story-scene-effect";
+import { parsePresentationCells } from "./story-presentation-spreadsheet";
+import type { StoryPresentation } from "./story-presentation";
 import { STORY_ASSETS, type StoryAsset } from "./story-assets";
 import {
   cloneProject,
@@ -795,15 +796,9 @@ export function buildProjectFromSheet(
       const effectStrength = getValue(row, "연출 강도", "effect_intensity");
       const effectTrigger = getValue(row, "연출 시점", "effect_trigger");
       const effectDelay = getValue(row, "연출 지연(초)", "effect_delay");
-      const effect = effectType || effectStrength || effectTrigger || effectDelay ? {
-        type: effectType, intensity: effectStrength || "soft",
-        trigger: effectTrigger || "scene-enter", delayMs: Number(effectDelay || 0) * 1000,
-      } : undefined;
-      if (effect && !isStorySceneEffect(effect)) {
-        issues.push(issueAt(snapshot.source, row, ["연출 효과", "effect_type"], effectType,
-          "연출 효과 설정을 읽을 수 없어요.",
-          "효과: shake/flash-red/fade-black/crack/spotlight, 강도: soft/strong, 시점: scene-enter/with-dialogue/after-delay, 지연: 0~10초로 입력해 주세요."));
-      }
+      let presentation: StoryPresentation | undefined;
+      try { presentation = parsePresentationCells([effectType,effectStrength,effectTrigger,effectDelay,getValue(row,"장면 분위기"),getValue(row,"전환"),getRawValue(row,"연출 데이터")]); }
+      catch(error) { issues.push(issueAt(snapshot.source,row,["연출 데이터","연출 효과"],effectType,error instanceof Error ? error.message : "연출을 읽지 못했어요.","웹에서 다시 보관한 파일을 사용하거나 연출 열 값을 확인해 주세요.")); }
       let coSpeakerNames: string[] | undefined;
       const coSpeakers = getRawValue(row, "함께 말하는 화자");
       if (coSpeakers.trim()) {
@@ -820,7 +815,7 @@ export function buildProjectFromSheet(
       return {
         ...(flow ? { flow } : {}),
         ...(coSpeakerNames ? {coSpeakerNames} : {}),
-        ...(isStorySceneEffect(effect) ? { effect } : {}),
+        ...(presentation ? { presentation } : {}),
         id: lineId,
         chapterId,
         order: Number(getValue(row, "순서", "order")) || index + 1,

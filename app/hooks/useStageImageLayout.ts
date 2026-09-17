@@ -49,10 +49,11 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
         : Math.max(0, stage.clientHeight - 8) * .68;
       const actors = images.filter(image => image.naturalWidth).map(image => {
         const style = getComputedStyle(image);
-        const scale = Number(style.getPropertyValue("--actor-scale")) || 1;
+        const requestedScale = Number(style.getPropertyValue("--actor-scale")) || 1;
         const framing = image.classList.contains("framing-group") ? "group" : image.classList.contains("framing-upper") ? "upper" : "full";
         const slot = framing === "group" ? .62 : framing === "upper" ? .48 : .4;
         const height = Math.min(baseHeight, width * slot * image.naturalHeight / image.naturalWidth);
+        const scale = Math.min(requestedScale, Math.max(0, width - 8) / (height * image.naturalWidth / image.naturalHeight || 1));
         const anchor = footAnchor(image);
         return { image, scale, height, anchor, width: height * image.naturalWidth / image.naturalHeight };
       });
@@ -77,7 +78,7 @@ export function useStageImageLayout(variant: "thumbnail" | "editor" | "player", 
         image.style.bottom = `${footMargin - height * scale * (1 - anchor)}px`;
         // Keep slot centers at their familiar positions, clamping enlarged/group content inside the stage.
         const centeredGroup = actors.length === 1 && image.dataset.sharedActor === "true";
-        const center = width * (centeredGroup ? .5 : image.classList.contains("left") ? .24 : .76);
+        const center = width * (image.dataset.xAnchor !== undefined ? Number(image.dataset.xAnchor)/100 : centeredGroup ? .5 : image.classList.contains("left") ? .24 : .76);
         image.style.left = `${Math.max(4, Math.min(width - actor.width * scale - 4, center - actor.width * scale / 2))}px`;
         image.style.right = "auto";
         image.dataset.footAnchor = String(anchor);

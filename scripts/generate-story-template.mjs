@@ -209,7 +209,7 @@ const scenesSheet = addSheet(
       "컷 역할",
       "감정 메모",
       "연출 메모",
-      "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)",
+      "연출 효과", "연출 강도", "연출 시점", "연출 지연(초)", "장면 분위기", "전환", "연출 데이터",
       "진행 방식", "다음 도착 컷", ...[1,2,3].flatMap(i => [`선택 ${i} ID`, `선택 ${i} 문구`, `선택 ${i} 도착 컷`]),
       "함께 말하는 화자",
     ],
@@ -227,14 +227,17 @@ const scenesSheet = addSheet(
       "",
       "",
       "",
-      "", "", "", "",
+      "", "", "", "", "", "", "",
       ...Array(11).fill(""),
       "",
     ],
   ],
-  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18, ...Array(11).fill(26), 30],
+  [22, 22, 9, 11, 13, 22, 68, 34, 34, 34, 48, 42, 48, 18, 16, 20, 18, 22, 22, 24, ...Array(11).fill(26), 30],
 );
+scenesSheet.getColumn(20).hidden = true;
+scenesSheet.getCell(1,20).note = "고급 연출 보존용입니다. 직접 수정하지 않아도 됩니다.";
 for (let row = 2; row <= 500; row += 1) {
+  for (const [column,values] of [[15,"약하게,보통,강하게"],[16,"컷 시작,대사와 함께,잠시 뒤"],[18,"없음,회상,균열된 현실"],[19,"없음,암전,하얀 전환,시점 전환"]]) scenesSheet.getCell(row,column).dataValidation={type:"list",allowBlank:true,formulae:[`"${values}"`]};
   scenesSheet.getCell(row, 4).dataValidation = {
     type: "list",
     allowBlank: false,
