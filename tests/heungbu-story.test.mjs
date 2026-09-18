@@ -30,10 +30,10 @@ const { project, assets, stages } = JSON.parse(
   )
 );
 
-test("흥부와 놀부 9종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
+test("흥부와 놀부 12종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
   const { default: sharp } = await import("sharp");
   const heungbuAssets = assets.filter((a) => a.story === "흥부와 놀부" && a.type === "character");
-  assert.equal(heungbuAssets.length, 9);
+  assert.equal(heungbuAssets.length, 12);
 
   for (const asset of heungbuAssets) {
     const filePath = `public${asset.src}`;
@@ -123,7 +123,7 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
   assert.ok(ch6Lines.every((l) => l.leftAssetId === "heungbu.character.heungbu-default"));
   assert.ok(ch6Lines.every((l) => l.rightAssetId === "heungbu.character.wife-heungbu"));
 
-  // 감정·상황 변형 자산 3종(간절함, 기쁨, 호통) 실사용 검증
+  // 감정·상황 변형 자산 6종(간절함, 기쁨, 호통, 참회, 걱정, 경악) 실사용 검증
   const pleadingLines = project.lines.filter((l) => l.leftAssetId === "heungbu.character.heungbu-pleading");
   assert.ok(pleadingLines.length >= 10, "간절한 흥부 자산 10회 이상 실사용");
 
@@ -134,6 +134,17 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
     (l) => l.leftAssetId === "heungbu.character.nolbu-angry" || l.rightAssetId === "heungbu.character.nolbu-angry"
   );
   assert.ok(angryLines.length >= 10, "호통치는 놀부 자산 10회 이상 실사용");
+
+  const remorseLines = project.lines.filter(
+    (l) => l.leftAssetId === "heungbu.character.nolbu-remorse" || l.rightAssetId === "heungbu.character.nolbu-remorse"
+  );
+  assert.ok(remorseLines.length >= 10, "참회·몰락 놀부 자산 10회 이상 실사용");
+
+  const worriedLines = project.lines.filter((l) => l.rightAssetId === "heungbu.character.wife-heungbu-worried");
+  assert.ok(worriedLines.length >= 8, "걱정스런 흥부 아내 자산 8회 이상 실사용");
+
+  const shockedLines = project.lines.filter((l) => l.rightAssetId === "heungbu.character.wife-nolbu-shocked");
+  assert.ok(shockedLines.length >= 8, "경악한 놀부 아내 자산 8회 이상 실사용");
 });
 
 test("흥부와 놀부 프로젝트는 문서(JSON) 직렬화 및 역직렬화가 완벽히 동작한다", () => {

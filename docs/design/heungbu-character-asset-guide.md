@@ -16,7 +16,7 @@
 
 ---
 
-## 2. 현재 프로덕션 9종 정규화 자산 현황 (100% 매핑 완료)
+## 2. 현재 프로덕션 12종 정규화 자산 현황 (100% 매핑 완료)
 
 | 자산 ID | 파일명 | 인물 / 감정·상황 | 높이 | 접지(y) | top | left |
 |---|---|---|---|---|---|---|
@@ -29,6 +29,9 @@
 | `heungbu.character.heungbu-pleading` | `heungbu.character.heungbu-pleading.webp` | 흥부 (간절함·애원·가슴 졸임) | 1000px | 1149 | 150 | 139 |
 | `heungbu.character.heungbu-happy` | `heungbu.character.heungbu-happy.webp` | 흥부 (기쁨·환대·활짝 웃음) | 1000px | 1149 | 150 | 103 |
 | `heungbu.character.nolbu-angry` | `heungbu.character.nolbu-angry.webp` | 놀부 (호통·냉정·경고) | 1000px | 1149 | 150 | 35 |
+| `heungbu.character.nolbu-remorse` | `heungbu.character.nolbu-remorse.webp` | 놀부 (몰락·참회·부끄러움) | 1000px | 1149 | 150 | 230 |
+| `heungbu.character.wife-heungbu-worried` | `heungbu.character.wife-heungbu-worried.webp` | 흥부 아내 (근심·걱정·가슴앓이) | 950px | 1149 | 200 | 205 |
+| `heungbu.character.wife-nolbu-shocked` | `heungbu.character.wife-nolbu-shocked.webp` | 놀부 아내 (경악·당황·입 가림) | 960px | 1149 | 190 | 161 |
 
 ---
 

@@ -4972,5 +4972,75 @@ export const STORY_ASSETS: StoryAsset[] = [
     "src": "/story-assets/heungbu.character.nolbu-angry.webp",
     "sourcePath": "public/story-assets/heungbu.character.nolbu-angry.webp",
     "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.nolbu-remorse",
+    "displayName": "놀부 · 참회",
+    "label": "놀부 · 참회",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부",
+    "pose": "참회",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부",
+      "참회",
+      "몰락"
+    ],
+    "src": "/story-assets/heungbu.character.nolbu-remorse.webp",
+    "sourcePath": "public/story-assets/heungbu.character.nolbu-remorse.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.wife-heungbu-worried",
+    "displayName": "흥부 아내 · 걱정",
+    "label": "흥부 아내 · 걱정",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부 아내",
+    "pose": "걱정",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부 아내",
+      "걱정",
+      "근심"
+    ],
+    "src": "/story-assets/heungbu.character.wife-heungbu-worried.webp",
+    "sourcePath": "public/story-assets/heungbu.character.wife-heungbu-worried.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.wife-nolbu-shocked",
+    "displayName": "놀부 아내 · 경악",
+    "label": "놀부 아내 · 경악",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부 아내",
+    "pose": "경악",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부 아내",
+      "경악",
+      "놀람"
+    ],
+    "src": "/story-assets/heungbu.character.wife-nolbu-shocked.webp",
+    "sourcePath": "public/story-assets/heungbu.character.wife-nolbu-shocked.webp",
+    "copyright": "놀퀴즈"
   }
 ];
+

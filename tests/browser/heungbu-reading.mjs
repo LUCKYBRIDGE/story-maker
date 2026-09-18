@@ -111,9 +111,18 @@ try {
       } else if (routeIndex === 0 && line.id === 'scene-2-7') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-conflict-pleading-angry.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-4-10') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-heungbu-wife-worried.png` });
       } else if (routeIndex === 0 && line.id === 'scene-7-7') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-happy-treasure.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-10-12') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-wife-shocked.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-10-17') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-remorse.png` });
       }
 
       if (line.flow?.type === 'choice') {
