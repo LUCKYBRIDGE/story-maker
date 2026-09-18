@@ -51,6 +51,14 @@ async function textVisible(page, text) {
   }, text, { timeout: 10_000 });
 }
 
+async function waitForStageImages(page) {
+  try {
+    await page.waitForFunction(() => [...document.querySelectorAll('.story-stage-canvas img')].every(i => i.complete && i.naturalWidth > 0), { timeout: 3000 });
+    await page.locator('.story-stage-canvas img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
+  } catch {}
+  await page.waitForTimeout(150);
+}
+
 try {
   for (const [routeIndex, route] of graph.routes.entries()) {
     const [width, height] = routeIndex % 2 === 0 ? [1365, 900] : [390, 844];
@@ -92,11 +100,41 @@ try {
 
       // Capture screenshots at key dramatic moments
       if (i === 0) {
+        await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-${routeIndex}-opening.png` });
       } else if (line.flow?.type === 'choice') {
+        await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-${routeIndex}-choice-${choicesMade + 1}.png` });
       } else if (i === route.length - 1) {
+        await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-${routeIndex}-ending.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-2-7') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-conflict-pleading-angry.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-4-10') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-heungbu-wife-worried.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-6-2') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-swallow-children.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-7-1') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-gourd-roof-swallow.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-7-7') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-happy-treasure.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-9-2') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-monologue-swallow.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-10-12') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-wife-shocked.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-10-17') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-remorse.png` });
+      } else if (routeIndex === 2 && line.id === 'scene-5b-13') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-2-neighbor-grain.png` });
       }
 
       if (line.flow?.type === 'choice') {

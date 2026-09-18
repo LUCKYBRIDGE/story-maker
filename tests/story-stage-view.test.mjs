@@ -80,6 +80,6 @@ test("배경 표시 역할은 이전 picker category와 독립이고 의미 있�
     console.log(JSON.stringify({meaningful:ids.map(backgroundId=>resolveStoryStage({backgroundId}).background.meaningful),roles:STORY_ASSETS.filter(a=>a.type==='background').map(a=>a.backgroundRole)}));
   `);
   assert.deepEqual(result.meaningful,[true,true,true,true,true,false,false,true]);
-  assert.equal(result.roles.length,67);
+  assert.equal(result.roles.length,70);
   assert.ok(result.roles.every(role=>['scene','scenery'].includes(role)));
 });

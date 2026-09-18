@@ -68,7 +68,38 @@ try {
   assert.ok((await page.locator('.current-reading').innerText()).includes('옛날 어느 고을'));
   await page.screenshot({ path: `${output}/classic-onggojib-first-cut.png`, fullPage: true });
 
-  console.log({ rabbitEntryVisible: true, onggojibEntryVisible: true, routesOpened: true, firstCutsLoaded: true });
+  await page.goto(url);
+  await page.locator('.library-shelf').waitFor();
+  const restoredDialog2 = page.getByRole('dialog');
+  if (await restoredDialog2.isVisible()) {
+    await page.keyboard.press('Escape');
+    await restoredDialog2.waitFor({ state: 'hidden' });
+  }
+
+  await page.getByRole('button', { name: '흥부와 놀부 · 기본 이야기', exact: true }).click();
+  dialog = page.getByRole('dialog');
+  await dialog.waitFor();
+
+  classicButton = page.getByRole('button', { name: '흥부와 놀부 원작 읽기', exact: true });
+  await classicButton.waitFor({ state: 'visible' });
+  assert.equal(
+    (await dialog.locator('.focus-availability').textContent())?.trim(),
+    '원작 읽기 · 이용 가능',
+  );
+  assert.equal(await classicButton.locator('.action-card-title').textContent(), '원작 읽기');
+  await page.screenshot({ path: `${output}/library-heungbu-classic-entry.png`, fullPage: true });
+
+  await classicButton.click();
+  await page.waitForURL(/\/classic\/heungbu(?:\.html)?\/?$/);
+  await page.locator('.book-play-entry').waitFor();
+  assert.ok((await page.locator('.student-book').innerText()).includes('흥부전'));
+
+  await page.getByRole('button', { name: '이야기 펼치기', exact: true }).click();
+  await page.locator('.player-shell').waitFor();
+  assert.ok((await page.locator('.current-reading').innerText()).includes('옛날 어느 마을에'));
+  await page.screenshot({ path: `${output}/classic-heungbu-first-cut.png`, fullPage: true });
+
+  console.log({ rabbitEntryVisible: true, onggojibEntryVisible: true, heungbuEntryVisible: true, routesOpened: true, firstCutsLoaded: true });
   await page.close();
 } finally {
   await browser.close();
