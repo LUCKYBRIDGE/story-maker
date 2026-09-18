@@ -16,7 +16,7 @@
 
 ---
 
-## 2. 현재 프로덕션 12종 정규화 자산 현황 (100% 매핑 완료)
+## 2. 현재 프로덕션 15종 캐릭터 자산 현황 (100% 매핑 완료)
 
 | 자산 ID | 파일명 | 인물 / 감정·상황 | 높이 | 접지(y) | top | left |
 |---|---|---|---|---|---|---|
@@ -24,14 +24,27 @@
 | `heungbu.character.heungbu-young` | `heungbu.character.heungbu-young.webp` | 소년 흥부 (1장 전용) | 880px | 1149 | 270 | 225 |
 | `heungbu.character.nolbu-default` | `heungbu.character.nolbu-default.webp` | 성인 놀부 (장부와 정면) | 1000px | 1149 | 150 | 79 |
 | `heungbu.character.nolbu-young` | `heungbu.character.nolbu-young.webp` | 소년 놀부 (1장 전용) | 900px | 1149 | 250 | 225 |
-| `heungbu.character.wife-heungbu` | `heungbu.character.wife-heungbu.webp` | 흥부 아내 (30대 단정·자애) | 950px | 1149 | 200 | 179 |
+| `heungbu.character.wife-heungbu` | `heungbu.character.wife-heungbu.webp` | 흥부 아내 (20대 단정·자애) | 950px | 1149 | 200 | 206 |
 | `heungbu.character.wife-nolbu` | `heungbu.character.wife-nolbu.webp` | 놀부 아내 (30대 단아·단호) | 960px | 1149 | 190 | 202 |
 | `heungbu.character.heungbu-pleading` | `heungbu.character.heungbu-pleading.webp` | 흥부 (간절함·애원·가슴 졸임) | 1000px | 1149 | 150 | 139 |
 | `heungbu.character.heungbu-happy` | `heungbu.character.heungbu-happy.webp` | 흥부 (기쁨·환대·활짝 웃음) | 1000px | 1149 | 150 | 103 |
 | `heungbu.character.nolbu-angry` | `heungbu.character.nolbu-angry.webp` | 놀부 (호통·냉정·경고) | 1000px | 1149 | 150 | 35 |
 | `heungbu.character.nolbu-remorse` | `heungbu.character.nolbu-remorse.webp` | 놀부 (몰락·참회·부끄러움) | 1000px | 1149 | 150 | 230 |
-| `heungbu.character.wife-heungbu-worried` | `heungbu.character.wife-heungbu-worried.webp` | 흥부 아내 (근심·걱정·가슴앓이) | 950px | 1149 | 200 | 205 |
+| `heungbu.character.wife-heungbu-worried` | `heungbu.character.wife-heungbu-worried.webp` | 흥부 아내 (근심·걱정·가슴앓이) | 950px | 1149 | 200 | 210 |
 | `heungbu.character.wife-nolbu-shocked` | `heungbu.character.wife-nolbu-shocked.webp` | 놀부 아내 (경악·당황·입 가림) | 960px | 1149 | 190 | 161 |
+| `heungbu.character.children` | `heungbu.character.children.webp` | 아이들 남매 (흥부/놀부 자녀) | 880px | 1149 | 270 | 92 |
+| `heungbu.character.swallow` | `heungbu.character.swallow.webp` | 제비 (박씨 물고 횃대에 앉은 제비) | 900px | 1149 | 250 | 98 |
+| `heungbu.character.neighbor` | `heungbu.character.neighbor.webp` | 이웃 농부 (곡식 나눔) | 1000px | 1149 | 150 | 221 |
+
+---
+
+## 3. 프로덕션 전용 배경 및 포스터 자산
+
+| 자산 ID | 파일명 | 해상도 | 용도 및 설명 |
+|---|---|---|---|
+| `heungbu.poster.art` | `heungbu.poster.art.webp` | 940 × 1672 | 서재 화면 대표 포스터 아트 (박 타는 흥부 부부와 놀부, 제비) |
+| `heungbu.background.nolbu-mansion` | `heungbu.background.nolbu-mansion.webp` | 1600 × 900 | 놀부네 기와집 대문과 마당, 곳간 (2장, 4장, 8장, 9장, 10장) |
+| `heungbu.background.heungbu-gourd-roof` | `heungbu.background.heungbu-gourd-roof.webp` | 1600 × 900 | 박 열린 흥부 초가지붕과 마당 (6장, 7장 박 타기, 표지) |
 
 ---
 

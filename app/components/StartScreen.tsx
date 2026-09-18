@@ -82,9 +82,9 @@ export function StartScreen({ onOpenLibrary, onOpenReaderEntry, onOpenMyStories,
         </section>
         <div className="poster-scene-space" aria-hidden="true">
           <img
-            src={resolveAssetUrl(coverTheme === "heungbu" ? "/story-assets/BG06-cottage-autumn.webp" : `/story-assets/${story.id}.poster.art.webp`)}
+            src={resolveAssetUrl(`/story-assets/${story.id}.poster.art.webp`)}
             alt=""
-            width={coverTheme === "seonnyeo" ? 1120 : coverTheme === "rabbit" ? 940 : 941}
+            width={coverTheme === "seonnyeo" ? 1120 : 940}
             height={coverTheme === "seonnyeo" ? 1400 : 1672}
             className="knolstory-poster-img nolstory-poster-img"
             fetchPriority="high"

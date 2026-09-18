@@ -1,5 +1,6 @@
 import { SEONNYEO_CLASSIC_READING } from "./story-classic-seonnyeo";
 import { ONGGOJIB_CLASSIC_READING } from "./story-classic-onggojib";
+import { HEUNGBU_CLASSIC_READING } from "./story-classic-heungbu";
 import { RABBIT_CLASSIC_ART } from "./story-classic-rabbit-art";
 import type { Chapter, StoryLine, StoryProject } from "./story-data";
 
@@ -323,7 +324,11 @@ export const RABBIT_CLASSIC_READING: StoryProject = {
   updatedAt: "원작 읽기 기준본",
 };
 
-export function getClassicReading(theme: "rabbit" | "onggojib" | "seonnyeo") {
+export { HEUNGBU_CLASSIC_READING };
+
+export function getClassicReading(theme: "rabbit" | "onggojib" | "seonnyeo" | "heungbu") {
   return theme === "rabbit" ? RABBIT_CLASSIC_READING
-    : theme === "onggojib" ? ONGGOJIB_CLASSIC_READING : SEONNYEO_CLASSIC_READING;
+    : theme === "onggojib" ? ONGGOJIB_CLASSIC_READING
+    : theme === "seonnyeo" ? SEONNYEO_CLASSIC_READING
+    : HEUNGBU_CLASSIC_READING;
 }

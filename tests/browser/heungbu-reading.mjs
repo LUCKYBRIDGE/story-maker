@@ -114,15 +114,27 @@ try {
       } else if (routeIndex === 0 && line.id === 'scene-4-10') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-heungbu-wife-worried.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-6-2') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-swallow-children.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-7-1') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-gourd-roof-swallow.png` });
       } else if (routeIndex === 0 && line.id === 'scene-7-7') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-happy-treasure.png` });
+      } else if (routeIndex === 0 && line.id === 'scene-9-2') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-0-nolbu-monologue-swallow.png` });
       } else if (routeIndex === 0 && line.id === 'scene-10-12') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-nolbu-wife-shocked.png` });
       } else if (routeIndex === 0 && line.id === 'scene-10-17') {
         await waitForStageImages(page);
         await page.screenshot({ path: `${output}/route-0-nolbu-remorse.png` });
+      } else if (routeIndex === 2 && line.id === 'scene-5b-13') {
+        await waitForStageImages(page);
+        await page.screenshot({ path: `${output}/route-2-neighbor-grain.png` });
       }
 
       if (line.flow?.type === 'choice') {

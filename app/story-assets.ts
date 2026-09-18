@@ -5041,6 +5041,141 @@ export const STORY_ASSETS: StoryAsset[] = [
     "src": "/story-assets/heungbu.character.wife-nolbu-shocked.webp",
     "sourcePath": "public/story-assets/heungbu.character.wife-nolbu-shocked.webp",
     "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.children",
+    "displayName": "아이들",
+    "label": "아이들",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "아이들",
+    "pose": "기본",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "아이들",
+      "남매"
+    ],
+    "src": "/story-assets/heungbu.character.children.webp",
+    "sourcePath": "public/story-assets/heungbu.character.children.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.swallow",
+    "displayName": "제비",
+    "label": "제비",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "제비",
+    "pose": "박씨",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "제비",
+      "박씨"
+    ],
+    "src": "/story-assets/heungbu.character.swallow.webp",
+    "sourcePath": "public/story-assets/heungbu.character.swallow.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.neighbor",
+    "displayName": "이웃",
+    "label": "이웃",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "이웃",
+    "pose": "곡식",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "이웃",
+      "마을 사람"
+    ],
+    "src": "/story-assets/heungbu.character.neighbor.webp",
+    "sourcePath": "public/story-assets/heungbu.character.neighbor.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.poster.art",
+    "displayName": "heungbu.poster.art.webp",
+    "label": "흥부와 놀부 · 표지 포스터",
+    "story": "흥부와 놀부",
+    "type": "background",
+    "category": "background",
+    "backgroundRole": "scene",
+    "group": "이야기 표지",
+    "pose": "배경",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "표지",
+      "포스터",
+      "박 타기",
+      "제비"
+    ],
+    "src": "/story-assets/heungbu.poster.art.webp",
+    "sourcePath": "public/story-assets/heungbu.poster.art.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.background.nolbu-mansion",
+    "displayName": "놀부 집 · 기와집과 곳간",
+    "label": "놀부 집 · 기와집과 곳간",
+    "story": "흥부와 놀부",
+    "type": "background",
+    "category": "background",
+    "backgroundRole": "scene",
+    "group": "놀부 집",
+    "pose": "기와집",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "놀부 집",
+      "기와집",
+      "곳간",
+      "마당"
+    ],
+    "src": "/story-assets/heungbu.background.nolbu-mansion.webp",
+    "sourcePath": "public/story-assets/heungbu.background.nolbu-mansion.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.background.heungbu-gourd-roof",
+    "displayName": "흥부 집 · 박 열린 초가지붕",
+    "label": "흥부 집 · 박 열린 초가지붕",
+    "story": "흥부와 놀부",
+    "type": "background",
+    "category": "background",
+    "backgroundRole": "scene",
+    "group": "흥부 집",
+    "pose": "박 열린 지붕",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "흥부 집",
+      "초가집",
+      "박",
+      "가을"
+    ],
+    "src": "/story-assets/heungbu.background.heungbu-gourd-roof.webp",
+    "sourcePath": "public/story-assets/heungbu.background.heungbu-gourd-roof.webp",
+    "copyright": "놀퀴즈"
   }
 ];
 

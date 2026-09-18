@@ -30,10 +30,10 @@ const { project, assets, stages } = JSON.parse(
   )
 );
 
-test("흥부와 놀부 12종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
+test("흥부와 놀부 15종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
   const { default: sharp } = await import("sharp");
   const heungbuAssets = assets.filter((a) => a.story === "흥부와 놀부" && a.type === "character");
-  assert.equal(heungbuAssets.length, 12);
+  assert.equal(heungbuAssets.length, 15);
 
   for (const asset of heungbuAssets) {
     const filePath = `public${asset.src}`;
@@ -120,10 +120,10 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
   assert.ok(ch8Lines.every((l) => l.rightAssetId === "heungbu.character.wife-nolbu"));
 
   const ch6Lines = project.lines.filter((l) => l.chapterId === "chapter-6");
-  assert.ok(ch6Lines.every((l) => l.leftAssetId === "heungbu.character.heungbu-default"));
-  assert.ok(ch6Lines.every((l) => l.rightAssetId === "heungbu.character.wife-heungbu"));
+  assert.ok(ch6Lines.some((l) => l.rightAssetId === "heungbu.character.swallow"));
+  assert.ok(ch6Lines.some((l) => l.leftAssetId === "heungbu.character.children"));
 
-  // 감정·상황 변형 자산 6종(간절함, 기쁨, 호통, 참회, 걱정, 경악) 실사용 검증
+  // 감정·상황 변형 및 조연 자산 실사용 검증
   const pleadingLines = project.lines.filter((l) => l.leftAssetId === "heungbu.character.heungbu-pleading");
   assert.ok(pleadingLines.length >= 10, "간절한 흥부 자산 10회 이상 실사용");
 
@@ -145,6 +145,50 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
 
   const shockedLines = project.lines.filter((l) => l.rightAssetId === "heungbu.character.wife-nolbu-shocked");
   assert.ok(shockedLines.length >= 8, "경악한 놀부 아내 자산 8회 이상 실사용");
+
+  const childrenLines = project.lines.filter(
+    (l) => l.leftAssetId === "heungbu.character.children" || l.rightAssetId === "heungbu.character.children"
+  );
+  assert.ok(childrenLines.length >= 6, "아이들 남매 자산 6회 이상 실사용");
+
+  const swallowLines = project.lines.filter(
+    (l) => l.leftAssetId === "heungbu.character.swallow" || l.rightAssetId === "heungbu.character.swallow"
+  );
+  assert.ok(swallowLines.length >= 10, "제비 자산 10회 이상 실사용");
+
+  const neighborLines = project.lines.filter(
+    (l) => l.leftAssetId === "heungbu.character.neighbor" || l.rightAssetId === "heungbu.character.neighbor"
+  );
+  assert.ok(neighborLines.length >= 4, "이웃 농부 자산 4회 이상 실사용");
+});
+
+test("흥부와 놀부 전용 배경 2종과 대표 포스터는 규격을 만족하고 실사용된다", async () => {
+  const { default: sharp } = await import("sharp");
+
+  const mansion = assets.find((a) => a.id === "heungbu.background.nolbu-mansion");
+  assert.ok(mansion, "놀부 기와집 배경 등록 확인");
+  const mansionMeta = await sharp(`public${mansion.src}`).metadata();
+  assert.equal(mansionMeta.width, 1600);
+  assert.equal(mansionMeta.height, 900);
+
+  const gourd = assets.find((a) => a.id === "heungbu.background.heungbu-gourd-roof");
+  assert.ok(gourd, "박 열린 흥부 초가집 배경 등록 확인");
+  const gourdMeta = await sharp(`public${gourd.src}`).metadata();
+  assert.equal(gourdMeta.width, 1600);
+  assert.equal(gourdMeta.height, 900);
+
+  const poster = assets.find((a) => a.id === "heungbu.poster.art");
+  assert.ok(poster, "대표 포스터 아트 등록 확인");
+  const posterMeta = await sharp(`public${poster.src}`).metadata();
+  assert.equal(posterMeta.width, 940);
+  assert.equal(posterMeta.height, 1672);
+
+  // 실사용 검증
+  const mansionLines = project.lines.filter((l) => l.backgroundId === "heungbu.background.nolbu-mansion");
+  assert.ok(mansionLines.length >= 5, "놀부 기와집 배경 5컷 이상 실사용");
+
+  const gourdChapters = project.chapters.filter((c) => c.backgroundId === "heungbu.background.heungbu-gourd-roof");
+  assert.ok(gourdChapters.length >= 2, "박 열린 초가집 2개 장 이상 배경 지정");
 });
 
 test("흥부와 놀부 프로젝트는 문서(JSON) 직렬화 및 역직렬화가 완벽히 동작한다", () => {

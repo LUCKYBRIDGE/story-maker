@@ -777,7 +777,7 @@ export function StoryDiscovery(props: StoryDiscoveryProps) {
               {/* 1) 기본 전래동화 선택 시 */}
               {selectedBook.kind === "base" && (
                 <>
-                  {selectedBook.theme !== "heungbu" && <ClassicReadingLibraryEntry theme={selectedBook.theme} title={selectedBook.title}/>}
+                  <ClassicReadingLibraryEntry theme={selectedBook.theme} title={selectedBook.title}/>
                   {selectedBook.theme !== "heungbu" && <button className="focus-action-card" onClick={()=>{closeOverlay();short.preset(selectedBook.theme as Exclude<StoryTheme, "heungbu">);}}><div className="action-card-text"><strong className="action-card-title">숏스토리</strong><small className="action-card-sub">짧은 그림책을 읽고 직접 만들어요</small></div></button>}
                   <button
                     type="button"

@@ -10,11 +10,14 @@ const autumn = "seonnyeo.background.BG06-cottage-autumn";
 const snow = "seonnyeo.background.BG05-cottage-snow";
 const room = "seonnyeo.background.BG09-room-day";
 const night = "seonnyeo.background.BG-room-night";
+const nolbuMansion = "heungbu.background.nolbu-mansion";
+const heungbuGourdRoof = "heungbu.background.heungbu-gourd-roof";
+
 const chapterBackgrounds: Record<string, string> = {
-  "chapter-1": cottage, "chapter-2": cottage, "chapter-3": room,
+  "chapter-1": cottage, "chapter-2": nolbuMansion, "chapter-3": room,
   "chapter-4": snow, "chapter-5a": cottage, "chapter-5b": snow,
-  "chapter-6": cottage, "chapter-7": autumn, "chapter-8": cottage,
-  "chapter-9": cottage, "chapter-10": autumn, "chapter-11": snow,
+  "chapter-6": heungbuGourdRoof, "chapter-7": heungbuGourdRoof, "chapter-8": nolbuMansion,
+  "chapter-9": nolbuMansion, "chapter-10": nolbuMansion, "chapter-11": snow,
   "chapter-12a": room, "chapter-12b": cottage,
 };
 
@@ -22,7 +25,7 @@ export function getHeungbuProject(): StoryProject {
   const project = structuredClone(seed) as StoryProject;
   project.updatedAt = "2026-09-17T00:00:00.000Z";
   project.cover = {
-    ...DEFAULT_COVER, theme: "cream", backgroundId: autumn,
+    ...DEFAULT_COVER, theme: "cream", backgroundId: heungbuGourdRoof,
     characterId: "heungbu.character.heungbu-default",
     characterPosition: "center",
     subtitle: "도움과 책임을 생각하는 선택형 이야기", titleSize: 32,
@@ -36,6 +39,7 @@ export function getHeungbuProject(): StoryProject {
   for (const line of project.lines) {
     const cut = Number(line.id.split("-").at(-1));
     let background = "";
+    if (line.chapterId === "chapter-4" && cut >= 13 && cut <= 19) background = nolbuMansion;
     if (line.chapterId === "chapter-4" && cut >= 20) background = night;
     if (line.chapterId === "chapter-5a" && cut <= 4) background = room;
     if (line.chapterId === "chapter-7" && cut >= 12 && cut <= 15) background = night;

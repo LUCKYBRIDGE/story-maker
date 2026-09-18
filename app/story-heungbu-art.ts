@@ -13,6 +13,9 @@ const nolbuAngry = "heungbu.character.nolbu-angry";
 const nolbuRemorse = "heungbu.character.nolbu-remorse";
 const wifeHeungbuWorried = "heungbu.character.wife-heungbu-worried";
 const wifeNolbuShocked = "heungbu.character.wife-nolbu-shocked";
+const children = "heungbu.character.children";
+const swallow = "heungbu.character.swallow";
+const neighbor = "heungbu.character.neighbor";
 
 // [leftActorId, rightActorId]
 export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])[]> = {
@@ -20,9 +23,9 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
   "chapter-1": [
     [heungbuYoung, nolbuYoung], // 1: 해설
     [heungbuYoung, nolbuYoung], // 2: 해설
-    [heungbuYoung, ""],         // 3: 흥부
-    [heungbuYoung, ""],         // 4: 아이
-    [heungbuYoung, ""],         // 5: 해설
+    [heungbuYoung, children],   // 3: 흥부
+    [heungbuYoung, children],   // 4: 아이 ("배가 고파서…….")
+    [heungbuYoung, children],   // 5: 해설
     ["", nolbuYoung],          // 6: 놀부
     [heungbuYoung, nolbuYoung], // 7: 흥부
     [heungbuYoung, nolbuYoung], // 8: 해설
@@ -73,16 +76,16 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
   // 4장: 겨울 문턱 (23컷) - 흥부 집 겨울과 놀부 집 찾아감
   "chapter-4": [
     [heungbuDefault, wifeHeungbu],        // 1: 해설
-    [heungbuDefault, wifeHeungbu],        // 2: 해설
-    [heungbuDefault, wifeHeungbu],        // 3: 아이 1
-    [heungbuDefault, wifeHeungbu],        // 4: 아이 2
-    [heungbuDefault, wifeHeungbu],        // 5: 흥부
+    [children, wifeHeungbu],              // 2: 아이 1 ("아버지! 제 밥이 형 것보다 적어요!")
+    [children, wifeHeungbu],              // 3: 아이 2 ("네 그릇이 작은 거야!")
+    [heungbuDefault, children],           // 4: 흥부 ("싸우지 마라. 아버지 것 조금씩 줄게.")
+    [heungbuDefault, wifeHeungbu],        // 5: 흥부 아내
     [heungbuDefault, wifeHeungbu],        // 6: 해설
     [heungbuDefault, wifeHeungbuWorried], // 7: 흥부 아내
     [heungbuDefault, wifeHeungbuWorried], // 8: 흥부 아내 ("최 서방네 도운 건 나도 찬성이었어요...")
-    [heungbuDefault, wifeHeungbuWorried], // 9: 해설 ("쌀독의 바닥이 보이기 시작했다...")
-    [heungbuPleading, wifeHeungbuWorried],// 10: 흥부 ("아버지, 내일은 밥 많이 먹어도 돼요?" 에 대답 못함)
-    [heungbuPleading, wifeHeungbuWorried],// 11: 막내
+    [children, wifeHeungbuWorried],       // 9: 해설 ("쌀독의 바닥이 보이기 시작했다...")
+    [children, wifeHeungbuWorried],       // 10: 막내 ("아버지, 내일은 밥 많이 먹어도 돼요?")
+    [heungbuPleading, children],          // 11: 해설 ("흥부는 바로 대답하지 못했다...")
     [heungbuPleading, wifeHeungbuWorried],// 12: 흥부 아내 ("놀부 형님께 가 보는 건 어때요?...")
     [heungbuDefault, nolbuDefault],       // 13: 해설 (놀부 집 찾아감)
     [heungbuDefault, nolbuDefault],       // 14: 놀부 ("겨울을 날 곡식은 빌려주마...")
@@ -131,10 +134,10 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
     [heungbuPleading, wifeHeungbuWorried],// 7: 해설
     [heungbuDefault, ""],                 // 8: 해설
     [heungbuDefault, ""],                 // 9: 해설
-    [heungbuDefault, ""],                 // 10: 흥부
-    [heungbuDefault, ""],                 // 11: 해설
-    [heungbuDefault, ""],                 // 12: 흥부
-    [heungbuDefault, ""],                 // 13: 이웃
+    [heungbuDefault, neighbor],           // 10: 흥부 ("집 지붕이 많이 샌다고 들었어요...")
+    [heungbuDefault, neighbor],           // 11: 해설 (이웃이 곡식 한 말을 가져옴)
+    [heungbuDefault, neighbor],           // 12: 흥부 ("이건 안 주셔도 돼요.")
+    [heungbuDefault, neighbor],           // 13: 이웃 ("자네가 나를 도왔으니 나도 자네를 돕는 거지.")
     [heungbuDefault, wifeHeungbuWorried], // 14: 해설
     [heungbuDefault, wifeHeungbuWorried], // 15: 해설
     [heungbuDefault, wifeHeungbuWorried], // 16: 해설
@@ -144,40 +147,40 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
   // 6장: 제비가 머문 집 (15컷) - 제비 치료
   "chapter-6": [
     [heungbuDefault, wifeHeungbu],  // 1: 해설
-    [heungbuDefault, wifeHeungbu],  // 2: 해설
-    [heungbuDefault, wifeHeungbu],  // 3: 아이
-    [heungbuDefault, wifeHeungbu],  // 4: 흥부
-    [heungbuDefault, wifeHeungbu],  // 5: 해설
-    [heungbuDefault, wifeHeungbu],  // 6: 해설
-    [heungbuDefault, wifeHeungbu],  // 7: 흥부
-    [heungbuDefault, wifeHeungbu],  // 8: 흥부 아내
-    [heungbuDefault, wifeHeungbu],  // 9: 흥부
-    [heungbuDefault, wifeHeungbu],  // 10: 해설
-    [heungbuDefault, wifeHeungbu],  // 11: 해설
-    [heungbuDefault, wifeHeungbu],  // 12: 흥부 아내
-    [heungbuDefault, wifeHeungbu],  // 13: 흥부
-    [heungbuDefault, wifeHeungbu],  // 14: 해설
-    [heungbuDefault, wifeHeungbu],  // 15: 해설
+    [children, swallow],            // 2: 아이 ("아버지! 여기 와 봐요!")
+    [heungbuDefault, swallow],      // 3: 해설 ("새끼 제비 한 마리가 둥지 아래로...")
+    [heungbuDefault, swallow],      // 4: 흥부 ("살릴 수 있는지 한번 해 보자.")
+    [heungbuDefault, swallow],      // 5: 해설
+    [heungbuDefault, wifeHeungbu],  // 6: 흥부 ("여보, 남은 헝겊 조금 써도 될까?")
+    [heungbuDefault, wifeHeungbu],  // 7: 흥부 아내
+    [heungbuDefault, wifeHeungbu],  // 8: 흥부
+    [children, swallow],            // 9: 해설 ("아이들이 웃었다...")
+    [heungbuDefault, children],     // 10: 흥부 ("그건 제비보다 크잖아.")
+    [heungbuDefault, swallow],      // 11: 해설 ("가족은 함께 작은 부목을 만들고...")
+    [heungbuHappy, swallow],        // 12: 해설 ("얼마 뒤 제비는 다시 하늘로 날아올랐다.")
+    [heungbuHappy, wifeHeungbu],    // 13: 흥부 아내
+    [heungbuHappy, wifeHeungbu],    // 14: 흥부
+    [heungbuHappy, wifeHeungbu],    // 15: 해설
   ],
 
   // 7장: 박이 열리던 날 (18컷) - 박 타기
   "chapter-7": [
-    [heungbuDefault, wifeHeungbu],  // 1: 해설
-    [heungbuDefault, wifeHeungbu],  // 2: 아이들
-    [heungbuDefault, wifeHeungbu],  // 3: 막내
-    [heungbuHappy, wifeHeungbu],    // 4: 흥부 ("흥부가 첫 번째 박에 톱을 댔다.")
-    [heungbuHappy, wifeHeungbu],    // 5: 흥부 아내
-    [heungbuHappy, wifeHeungbu],    // 6: 해설 ("쩍! 박이 갈라지자 곡식과 비단이...")
+    [heungbuDefault, swallow],      // 1: 해설 ("제비가 다시 찾아왔다. 부리에는 작은 박씨...")
+    [children, swallow],            // 2: 아이들 ("작년에 그 제비다!")
+    [children, wifeHeungbu],        // 3: 해설 ("흥부 가족은 박씨를 심었다...")
+    [heungbuHappy, children],       // 4: 흥부 ("흥부가 첫 번째 박에 톱을 댔다.")
+    [children, heungbuHappy],       // 5: 아이들 ("아버지, 빨리요!")
+    [heungbuHappy, wifeHeungbu],    // 6: 해설 ("쩍! 박이 갈라지자...")
     [heungbuHappy, wifeHeungbu],    // 7: 흥부 ("세상에…….")
     [heungbuHappy, wifeHeungbu],    // 8: 해설
-    [heungbuHappy, wifeHeungbu],    // 9: 아이들
-    [heungbuHappy, wifeHeungbu],    // 10: 흥부 ("흥부는 말을 멈추고...")
-    [heungbuHappy, wifeHeungbu],    // 11: 흥부 아내 ("……우선 우리끼리 의논할까?")
+    [children, wifeHeungbu],        // 9: 아이들
+    [heungbuHappy, wifeHeungbu],    // 10: 흥부
+    [heungbuHappy, wifeHeungbu],    // 11: 흥부 아내
     [heungbuDefault, wifeHeungbu],  // 12: 해설
     [heungbuDefault, wifeHeungbu],  // 13: 해설
     [heungbuDefault, wifeHeungbu],  // 14: 흥부 아내
     [heungbuDefault, wifeHeungbu],  // 15: 흥부
-    [heungbuHappy, wifeHeungbu],    // 16: 해설 ("그 뒤 흥부는 이웃을 도왔다...")
+    [heungbuHappy, wifeHeungbu],    // 16: 해설
     [heungbuHappy, wifeHeungbu],    // 17: 해설
     [heungbuHappy, wifeHeungbu],    // 18: 해설
   ],
@@ -199,19 +202,19 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
 
   // 9장: 같아 보이는 방법 (13컷) - 놀부의 집착과 제비 다리
   "chapter-9": [
-    [nolbuDefault, ""], // 1: 해설
-    [nolbuDefault, ""], // 2: 놀부
-    [nolbuDefault, ""], // 3: 해설
-    [nolbuDefault, ""], // 4: 놀부
-    [nolbuDefault, ""], // 5: 해설
-    [nolbuDefault, ""], // 6: 해설
-    [nolbuDefault, ""], // 7: 놀부
-    [nolbuDefault, ""], // 8: 해설
-    [nolbuDefault, ""], // 9: 해설
-    [nolbuDefault, ""], // 10: 놀부
-    [nolbuDefault, ""], // 11: 해설
-    [nolbuDefault, ""], // 12: 놀부
-    [nolbuDefault, ""], // 13: 해설
+    [swallow, nolbuDefault], // 1: 해설
+    [swallow, nolbuDefault], // 2: 놀부 ("흥부한테는 잘도 생기더니.")
+    [swallow, nolbuDefault], // 3: 해설
+    [swallow, nolbuDefault], // 4: 놀부 ("내가 무슨 생각을 하는 거야.")
+    [swallow, nolbuDefault], // 5: 해설
+    [swallow, nolbuDefault], // 6: 해설
+    [swallow, nolbuDefault], // 7: 놀부 ("이건 아니지.")
+    [swallow, nolbuDefault], // 8: 해설
+    [swallow, nolbuDefault], // 9: 해설
+    [swallow, nolbuAngry],   // 10: 놀부 ("금방 고쳐 줄 거야.")
+    [swallow, nolbuAngry],   // 11: 해설
+    [swallow, nolbuRemorse], // 12: 놀부 ("이제 흥부하고 똑같이 한 거야.")
+    [swallow, nolbuRemorse], // 13: 해설
   ],
 
   // 10장: 다른 박 (19컷) - 놀부네 몰락
@@ -221,7 +224,7 @@ export const HEUNGBU_ACTORS: Record<string, readonly (readonly [string, string])
     [nolbuDefault, wifeNolbu],        // 3: 해설
     [nolbuDefault, wifeNolbu],        // 4: 해설
     [nolbuAngry, wifeNolbuShocked],   // 5: 놀부 ("뭐야, 이게!")
-    [nolbuAngry, wifeNolbuShocked],   // 6: 아이들
+    [children, wifeNolbuShocked],     // 6: 아이들 ("무서워요, 어머니!")
     [nolbuAngry, wifeNolbuShocked],   // 7: 놀부 아내 ("이제 그만해요.")
     [nolbuAngry, wifeNolbuShocked],   // 8: 놀부 ("첫 번째가 잘못된 거야. 다음 박이 진짜겠지.")
     [nolbuAngry, wifeNolbuShocked],   // 9: 해설 ("도깨비들이 튀어나왔다...")
