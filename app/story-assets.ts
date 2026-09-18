@@ -5178,4 +5178,3 @@ export const STORY_ASSETS: StoryAsset[] = [
     "copyright": "놀퀴즈"
   }
 ];
-
