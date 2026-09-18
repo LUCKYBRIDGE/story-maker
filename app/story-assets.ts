@@ -5,7 +5,7 @@ export type StoryAsset = {
   id: string;
   displayName: string;
   label: string;
-  story: "별주부전" | "토끼와 자라" | "옹고집전" | "선녀와 나무꾼";
+  story: "별주부전" | "토끼와 자라" | "옹고집전" | "선녀와 나무꾼" | "흥부와 놀부";
   type: "character" | "background";
   category: "character" | "background" | "special";
   group: string;
@@ -4773,6 +4773,204 @@ export const STORY_ASSETS: StoryAsset[] = [
     ],
     "src": "/story-assets/seonnyeo.character.classic-fairy-holding-first-baby.webp",
     "sourcePath": "public/story-assets/seonnyeo.character.classic-fairy-holding-first-baby.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.heungbu-default",
+    "displayName": "흥부 · 기본",
+    "label": "흥부 · 기본",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부",
+    "pose": "기본",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부",
+      "기본"
+    ],
+    "src": "/story-assets/heungbu.character.heungbu-default.webp",
+    "sourcePath": "public/story-assets/heungbu.character.heungbu-default.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.heungbu-young",
+    "displayName": "흥부 · 소년",
+    "label": "흥부 · 소년",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부",
+    "pose": "소년",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부",
+      "소년"
+    ],
+    "src": "/story-assets/heungbu.character.heungbu-young.webp",
+    "sourcePath": "public/story-assets/heungbu.character.heungbu-young.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.nolbu-default",
+    "displayName": "놀부 · 기본",
+    "label": "놀부 · 기본",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부",
+    "pose": "기본",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부",
+      "기본"
+    ],
+    "src": "/story-assets/heungbu.character.nolbu-default.webp",
+    "sourcePath": "public/story-assets/heungbu.character.nolbu-default.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.nolbu-young",
+    "displayName": "놀부 · 소년",
+    "label": "놀부 · 소년",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부",
+    "pose": "소년",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부",
+      "소년"
+    ],
+    "src": "/story-assets/heungbu.character.nolbu-young.webp",
+    "sourcePath": "public/story-assets/heungbu.character.nolbu-young.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.wife-heungbu",
+    "displayName": "흥부 아내 · 기본",
+    "label": "흥부 아내 · 기본",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부 아내",
+    "pose": "기본",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부 아내",
+      "기본"
+    ],
+    "src": "/story-assets/heungbu.character.wife-heungbu.webp",
+    "sourcePath": "public/story-assets/heungbu.character.wife-heungbu.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.wife-nolbu",
+    "displayName": "놀부 아내 · 기본",
+    "label": "놀부 아내 · 기본",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부 아내",
+    "pose": "기본",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부 아내",
+      "기본"
+    ],
+    "src": "/story-assets/heungbu.character.wife-nolbu.webp",
+    "sourcePath": "public/story-assets/heungbu.character.wife-nolbu.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.heungbu-pleading",
+    "displayName": "흥부 · 간절함",
+    "label": "흥부 · 간절함",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부",
+    "pose": "간절함",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부",
+      "간절함"
+    ],
+    "src": "/story-assets/heungbu.character.heungbu-pleading.webp",
+    "sourcePath": "public/story-assets/heungbu.character.heungbu-pleading.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.heungbu-happy",
+    "displayName": "흥부 · 기쁨",
+    "label": "흥부 · 기쁨",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "흥부",
+    "pose": "기쁨",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "흥부",
+      "기쁨"
+    ],
+    "src": "/story-assets/heungbu.character.heungbu-happy.webp",
+    "sourcePath": "public/story-assets/heungbu.character.heungbu-happy.webp",
+    "copyright": "놀퀴즈"
+  },
+  {
+    "id": "heungbu.character.nolbu-angry",
+    "displayName": "놀부 · 호통",
+    "label": "놀부 · 호통",
+    "story": "흥부와 놀부",
+    "type": "character",
+    "category": "character",
+    "framing": "전신",
+    "group": "놀부",
+    "pose": "호통",
+    "usage": "원작 사용",
+    "selectionTier": "추가 자료",
+    "tags": [
+      "흥부와 놀부",
+      "원작 읽기",
+      "놀부",
+      "호통"
+    ],
+    "src": "/story-assets/heungbu.character.nolbu-angry.webp",
+    "sourcePath": "public/story-assets/heungbu.character.nolbu-angry.webp",
     "copyright": "놀퀴즈"
   }
 ];
