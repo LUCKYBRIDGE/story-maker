@@ -42,7 +42,7 @@
 
 | 자산 ID | 파일명 | 해상도 | 용도 및 설명 |
 |---|---|---|---|
-| `heungbu.poster.art` | `heungbu.poster.art.webp` | 940 × 1672 | 서재 화면 대표 포스터 아트 (박 타는 흥부 부부와 놀부, 제비) |
+| `heungbu.poster.art` | `heungbu.poster.art.webp` | 940 × 1672 | 서재 화면 대표 포스터 아트 (초가집 앞의 흥부 가족과 놀부, 박씨를 문 제비) |
 | `heungbu.background.nolbu-mansion` | `heungbu.background.nolbu-mansion.webp` | 1600 × 900 | 놀부네 기와집 대문과 마당, 곳간 (2장, 4장, 8장, 9장, 10장) |
 | `heungbu.background.heungbu-gourd-roof` | `heungbu.background.heungbu-gourd-roof.webp` | 1600 × 900 | 박 열린 흥부 초가지붕과 마당 (6장, 7장 박 타기, 표지) |
 
