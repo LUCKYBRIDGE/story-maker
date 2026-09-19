@@ -45,3 +45,34 @@ test('example graph oracle rejects broken links, cycles and duplicate IDs', () =
  assert.throws(()=>analyzeExample({...p,lines:[{...p.lines[0],flow:{type:'goto',targetLineId:'a'}}]}),/cycle/);
  assert.throws(()=>analyzeExample({...p,lines:[p.lines[0],p.lines[0]]}),/duplicate cut/);
 });
+
+test('seonnyeo example speaker and stage placement invariants', () => {
+  const seonnyeo = source.projects[2];
+  assert.ok(seonnyeo, 'seonnyeo project must exist');
+
+  // 1. 나무꾼의 생각: right stage slot with M02 character asset, speaker=right
+  const thoughts = seonnyeo.lines.filter(l => l.speakerName === '나무꾼의 생각');
+  assert.ok(thoughts.length > 0, '나무꾼의 생각 cuts must exist');
+  for (const line of thoughts) {
+    assert.equal(line.speaker, 'right', `thought line ${line.id} must have speaker=right`);
+    assert.match(line.rightAssetId, /^seonnyeo\.character\.M02-/, `thought line ${line.id} must have M02 in rightAssetId`);
+  }
+
+  // 2. 일반 선녀(left)와 나무꾼(right) 공간 문법 보존
+  for (const line of seonnyeo.lines.filter(l => l.speakerName === '나무꾼')) {
+    assert.equal(line.speaker, 'right', `woodcutter line ${line.id} must have speaker=right`);
+    assert.match(line.rightAssetId, /^seonnyeo\.character\.M02-/, `woodcutter line ${line.id} must have M02 in rightAssetId`);
+  }
+  for (const line of seonnyeo.lines.filter(l => l.speakerName === '선녀')) {
+    assert.equal(line.speaker, 'left', `fairy line ${line.id} must have speaker=left`);
+    assert.match(line.leftAssetId, /^seonnyeo\.character\.M01-/, `fairy line ${line.id} must have M01 in leftAssetId`);
+  }
+
+  // 3. Ending 4 과거 목소리는 비실체 화자로 캐릭터 슬롯이 비어 있어야 함
+  const pastVoices = seonnyeo.lines.filter(l => ['선녀의 과거 목소리', '나무꾼의 과거 목소리'].includes(l.speakerName));
+  assert.ok(pastVoices.length >= 2, 'past voice lines must exist');
+  for (const line of pastVoices) {
+    assert.equal(line.leftAssetId, '', `line ${line.id} must have empty leftAssetId`);
+    assert.equal(line.rightAssetId, '', `line ${line.id} must have empty rightAssetId`);
+  }
+});
