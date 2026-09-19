@@ -1,5 +1,9 @@
 "use client";
 
+import { ASSET_REGISTRY } from "../assets/asset-registry";
+import { filterAssets } from "../assets/asset-query";
+import { rankAssets } from "../assets/asset-ranking";
+
 import { StoryFlowEditor, StoryFlowOverview } from "./StoryFlowEditor";
 import { SceneEffectEditor } from "./SceneEffectEditor";
 
@@ -12,7 +16,7 @@ import { countStoryCharacters, STORY_CUT_CHARACTER_LIMIT } from "../story-cut-le
 
 import { useState, type MutableRefObject } from "react";
 import type { Chapter, StoryLine, StoryProject } from "../story-data";
-import { STORY_ASSETS, type StoryAsset } from "../story-assets";
+import { type StoryAsset } from "../story-assets";
 import type { StoryApplyIssue } from "../story-apply-issues";
 import { resolveStoryStage } from "../story-stage-view";
 import { AssetPickerButton, ASSET_BY_ID } from "./AssetPickerButton";
@@ -23,7 +27,7 @@ import {
   AssetPreview,
 } from "./SceneThumbnail";
 import { AddSpeaker, assetName } from "./ResourceWidgets";
-import { groupStoryAssets, sortStoryAssets } from "../story-asset-picker-utils";
+import { groupStoryAssets } from "../story-asset-picker-utils";
 
 export interface ImageFieldProps {
   label: string;
@@ -91,6 +95,7 @@ export function ImageField({
           currentLabel={
             currentValue ? "현재 컷에서 사용 중" : "현재 선택"
           }
+          chapterAssetIds={allowedIds}
           favoriteIds={favoriteIds}
           recentIds={recentIds}
           onToggleFavorite={onToggleFavorite}
@@ -277,43 +282,16 @@ function SceneAssetChoicePanel({
       .filter((asset): asset is StoryAsset => asset?.type === type),
     type,
   );
-  const nearbyAssets = (() => {
-    const typeAssets = STORY_ASSETS.filter((asset) => asset.type === type);
-    const story =
-      referenceAsset?.story ??
-      allowedAssets[0]?.story ??
-      typeAssets.find((asset) => asset.selectionTier === "기본 추천")?.story;
-    const sorted = sortStoryAssets(typeAssets, type);
-    const ids = unique([
-      effectiveAssetId,
-      ...allowedAssets
-        .filter(
-          (asset) =>
-            !referenceAsset ||
-            (asset.story === referenceAsset.story &&
-              asset.group === referenceAsset.group),
-        )
-        .map((asset) => asset.id),
-      ...sorted
-        .filter(
-          (asset) =>
-            asset.story === story &&
-            asset.group === referenceAsset?.group,
-        )
-        .map((asset) => asset.id),
-      ...allowedAssets.map((asset) => asset.id),
-      ...sorted
-        .filter(
-          (asset) =>
-            asset.story === story && asset.selectionTier === "기본 추천",
-        )
-        .map((asset) => asset.id),
-    ]);
-    return ids
-      .map((id) => ASSET_BY_ID.get(id))
-      .filter((asset): asset is StoryAsset => asset?.type === type)
-      .slice(0, 6);
-  })();
+  const nearbyReference = ASSET_REGISTRY.resolve(effectiveAssetId) ?? ASSET_REGISTRY.resolve(allowedIds[0]);
+  const nearbyAssets = rankAssets(filterAssets(ASSET_REGISTRY.assets, {}, {
+    placementRoles: [type === "character" ? "character-slot" : "background-slot"],
+  }), {
+    currentAssetId: effectiveAssetId,
+    currentCharacterIds: nearbyReference?.characterIds,
+    currentStoryPackId: nearbyReference?.storyPackIds[0],
+    currentChapterAssetIds: allowedIds,
+    favoriteIds, recentIds,
+  }).slice(0, 6).map(asset => asset.legacy);
   const changed = previewAssetId !== selectedAssetId;
 
   return (
@@ -369,6 +347,7 @@ function SceneAssetChoicePanel({
           defaultLabel="장의 기본으로"
           applyButtonText="미리보기에서 확인"
           selectionContextKey={`${line.id}:${slot}:${selectedAssetId}`}
+          chapterAssetIds={allowedIds}
           favoriteIds={favoriteIds}
           recentIds={recentIds}
           onToggleFavorite={onToggleFavorite}
@@ -674,10 +653,11 @@ export function SceneFocusEditor({
         {(["left", "right", "background"] as const).map(slot => {
           const field = sceneAssetField(slot);
           const value = selectedLine[field] || selectedChapter[field];
-          return <AssetPickerButton key={slot} type={slot === "background" ? "background" : "character"}
+          return <AssetPickerButton key={slot} selectionContextKey={`${selectedLine.id}:${slot}`} type={slot === "background" ? "background" : "character"}
             label={slot === "left" ? "왼쪽 표정" : slot === "right" ? "오른쪽 표정" : "컷 배경"}
             buttonText={`${slot === "left" ? "왼쪽" : slot === "right" ? "오른쪽" : "배경"} · ${assetName(value) || "없음"}`}
             value={selectedLine[field]} currentValue={value} defaultValue={selectedChapter[field]} allowDefault
+            chapterAssetIds={slot === "background" ? selectedChapter.backgroundAssetIds : selectedChapter.characterAssetIds}
             favoriteIds={favoriteAssets} recentIds={recentAssets} onToggleFavorite={onToggleFavorite}
             onSelect={assetId => {
               if (assetId) onAddAssetToChapter(assetId, slot === "background" ? "background" : "character");

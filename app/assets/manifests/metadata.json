@@ -1,0 +1,4676 @@
+{
+  "rabbit-turtle.background.rabbit-palace-reveal": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "rabbit-turtle.background.rabbit-palace-reveal",
+    "subjects": [
+      "용궁",
+      "토끼의 진실"
+    ],
+    "containsCharacters": true
+  },
+  "rabbit-turtle.background.rabbit-turtle-shore-choice": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "rabbit-turtle.background.rabbit-turtle-shore-choice",
+    "subjects": [
+      "물가",
+      "토끼와 자라의 선택"
+    ],
+    "containsCharacters": true
+  },
+  "rabbit-turtle.background.rabbit-turtle-temptation": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "rabbit-turtle.background.rabbit-turtle-temptation",
+    "subjects": [
+      "들판",
+      "자라의 유혹"
+    ],
+    "containsCharacters": true
+  },
+  "rabbit-turtle.background.rabbit-turtle-temptation-opening": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "rabbit-turtle.background.rabbit-turtle-temptation-opening",
+    "subjects": [
+      "들판",
+      "이야기의 시작"
+    ],
+    "containsCharacters": true
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-flashback-rescue": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "subjects": [
+      "바닷속",
+      "구출 회상"
+    ],
+    "background": {
+      "location": "바닷속",
+      "space": "outdoor"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-grassland": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "들판",
+      "time": "낮"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-grassland-night": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "들판",
+      "time": "밤"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-palace": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-palace-confession": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-palace-trap": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-palace-welcome": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-river-winter": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "강가",
+      "space": "outdoor",
+      "season": "겨울"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-shore": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "물가",
+      "space": "outdoor"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-shore-discussion": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "물가",
+      "space": "outdoor"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-shore-escape": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "물가",
+      "space": "outdoor"
+    }
+  },
+  "rabbit-turtle.background.rabbit-turtle-bg-shore-herb": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "물가",
+      "space": "outdoor"
+    }
+  },
+  "onggojib.background.broken-celadon-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.broken-celadon-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "깨진 청자"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.child-carry-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.child-carry-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "아이를 업음"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.child-distance-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.child-distance-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "멀어진 아이"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.child-fever-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.child-fever-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "열이 난 아이"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.confession-folded-coat-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.confession-folded-coat-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "옷을 개며 고백"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.court-child-choice-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.court-child-choice-cg-pixel",
+    "subjects": [
+      "관아",
+      "아이의 선택"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.exiled-mirror-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.exiled-mirror-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "쫓겨난 뒤 거울"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.gate-stranger-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.gate-stranger-cg-pixel",
+    "subjects": [
+      "대문",
+      "낯선 사람"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.kind-father-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.kind-father-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "다정한 아버지"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.magistrate-yard-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "관아",
+      "space": "outdoor"
+    }
+  },
+  "onggojib.background.open-gate-kindness-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.open-gate-kindness-cg-pixel",
+    "subjects": [
+      "대문",
+      "문을 열어 줌"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.reconciliation-blue-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.reconciliation-blue-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "푸른 옷의 화해"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.reconciliation-borrowed-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.reconciliation-borrowed-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "빌린 옷의 화해"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.servant-lamp-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.servant-lamp-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "등불 든 하인"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.servant-water-basin-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.servant-water-basin-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "물대야 든 하인"
+    ],
+    "containsCharacters": true
+  },
+  "onggojib.background.snow-road-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "눈길",
+      "space": "outdoor",
+      "season": "겨울",
+      "weather": "눈"
+    }
+  },
+  "onggojib.background.snow-village-road-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "눈길",
+      "space": "outdoor",
+      "season": "겨울",
+      "weather": "눈"
+    }
+  },
+  "onggojib.background.spring-courtyard-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "옹고집의 집",
+      "space": "outdoor",
+      "season": "봄"
+    }
+  },
+  "onggojib.background.spring-room-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "옹고집의 집",
+      "space": "indoor",
+      "time": "낮",
+      "season": "봄"
+    }
+  },
+  "onggojib.background.warm-room-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "옹고집의 집",
+      "space": "indoor",
+      "mood": "따뜻함"
+    }
+  },
+  "onggojib.background.winter-courtyard-pixel": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "옹고집의 집",
+      "space": "outdoor",
+      "season": "겨울"
+    }
+  },
+  "onggojib.background.wood-chopping-cg-pixel": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "eventId": "onggojib.background.wood-chopping-cg-pixel",
+    "subjects": [
+      "옹고집전 장면",
+      "장작 패기"
+    ],
+    "containsCharacters": true
+  },
+  "rabbit-turtle.character.dragonking-command": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "명령"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-command",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-command-attached": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "화남"
+    ],
+    "actions": [
+      "명령"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-command-attached",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-critical-attached": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "아픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-critical-attached",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-critical-worse-attached": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "아픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-critical-worse-attached",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-sick-elder-attached": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "아픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-sick-elder-attached",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-young-attached": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "젊은 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-young-attached",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.palace-physician-worried": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.physician"
+    ],
+    "primaryCharacterId": "rabbit-turtle.physician",
+    "framing": "full",
+    "expressions": [
+      "걱정"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.palace-physician-worried",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-guilty-escape": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "미안함"
+    ],
+    "actions": [
+      "도망"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-guilty-escape",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-herb-bundle": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-herb-bundle",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-shocked": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-shocked",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-speaking-truth": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "말하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-speaking-truth",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-suspicious": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "의심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-suspicious",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-thinking": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "생각"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-thinking",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-ashamed": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "미안함"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-ashamed",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-child-flashback": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "회상"
+    ],
+    "actions": [],
+    "variantId": "어린 시절",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-child-flashback",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-herb-bundle": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-herb-bundle",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-offer": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "제안"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-offer",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-resolve": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-resolve",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-tired": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "피곤"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-tired",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-recovered-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "안도"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-recovered-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.dragonking-young-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.dragonking"
+    ],
+    "primaryCharacterId": "rabbit-turtle.dragonking",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "젊은 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.dragonking-young-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.physician-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.physician"
+    ],
+    "primaryCharacterId": "rabbit-turtle.physician",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.physician-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.rabbit-white-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.rabbit-white-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-child-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "어린 시절",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-child-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.turtle-unified-720x900": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.turtle-unified-720x900",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.child-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.child"
+    ],
+    "primaryCharacterId": "onggojib.child",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.child-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-firm-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-firm-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-firm-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-firm-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-gentle-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "온화"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-gentle-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-gentle-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "온화"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-gentle-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-offering-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "건네기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-offering-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-blue-offering-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "건네기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-blue-offering-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-gentle-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "온화"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-gentle-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.double-real-source-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.double-real-source-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.group-fake-child-story-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double",
+      "onggojib.child"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "group",
+    "expressions": [],
+    "actions": [
+      "말하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.group-fake-child-story-pixel",
+    "pairingStatus": "exception"
+  },
+  "onggojib.character.group-fake-servant-worker-payment-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double",
+      "onggojib.servant",
+      "onggojib.worker"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "group",
+    "expressions": [],
+    "actions": [
+      "나누기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.group-fake-servant-worker-payment-pixel",
+    "pairingStatus": "exception"
+  },
+  "onggojib.character.group-fake-wife-entering-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double",
+      "onggojib.wife"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.group-fake-wife-entering-pixel",
+    "pairingStatus": "exception"
+  },
+  "onggojib.character.group-fake-worker-reward-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double",
+      "onggojib.worker"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "group",
+    "expressions": [],
+    "actions": [
+      "나누기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.group-fake-worker-reward-pixel",
+    "pairingStatus": "exception"
+  },
+  "onggojib.character.group-real-ghost-servant-pass-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real",
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.group-real-ghost-servant-pass-pixel",
+    "pairingStatus": "exception"
+  },
+  "onggojib.character.magistrate-command-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.magistrate"
+    ],
+    "primaryCharacterId": "onggojib.magistrate",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "명령"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.magistrate-command-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.magistrate-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.magistrate"
+    ],
+    "primaryCharacterId": "onggojib.magistrate",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.magistrate-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.posol-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.guard"
+    ],
+    "primaryCharacterId": "onggojib.guard",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.posol-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-angry-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "화남"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-angry-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-borrowed-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "빌린 옷",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-borrowed-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-borrowed-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "빌린 옷",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-borrowed-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-exiled-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-exiled-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-exiled-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-exiled-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-exiled-pleading-v2-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "부탁"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-exiled-pleading-v2-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-remorse-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "후회"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-remorse-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-remorse-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "후회"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-remorse-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-resolve-consistent-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-resolve-consistent-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.real-resolve-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.real-resolve-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.second-child-hesitant-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.second-child"
+    ],
+    "primaryCharacterId": "onggojib.second-child",
+    "framing": "full",
+    "expressions": [
+      "망설임"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.second-child-hesitant-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.second-child-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.second-child"
+    ],
+    "primaryCharacterId": "onggojib.second-child",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.second-child-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.servant-household-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.servant",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "일하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.servant-household-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.servant-injured-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.servant",
+    "framing": "full",
+    "expressions": [
+      "아픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.servant-injured-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.servant-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.servant",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.servant-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.stranger-hidden-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.stranger"
+    ],
+    "primaryCharacterId": "onggojib.stranger",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.stranger-hidden-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.wife-concerned-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.wife"
+    ],
+    "primaryCharacterId": "onggojib.wife",
+    "framing": "full",
+    "expressions": [
+      "걱정"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.wife-concerned-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.wife-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.wife"
+    ],
+    "primaryCharacterId": "onggojib.wife",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.wife-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.wife-resolved-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.wife"
+    ],
+    "primaryCharacterId": "onggojib.wife",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.wife-resolved-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.worker-asking-v2-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.worker"
+    ],
+    "primaryCharacterId": "onggojib.worker",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "부탁"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.worker-asking-v2-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.worker-woodcutter-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.worker"
+    ],
+    "primaryCharacterId": "onggojib.worker",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "일하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.worker-woodcutter-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.worker-woodcutter-v2-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.worker"
+    ],
+    "primaryCharacterId": "onggojib.worker",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "일하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.worker-woodcutter-v2-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.youngest-child-cautious-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.youngest-child"
+    ],
+    "primaryCharacterId": "onggojib.youngest-child",
+    "framing": "full",
+    "expressions": [
+      "조심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.youngest-child-cautious-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.youngest-child-pixel": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "onggojib.youngest-child"
+    ],
+    "primaryCharacterId": "onggojib.youngest-child",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "pixel",
+    "poseSetId": "onggojib.character.youngest-child-pixel",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.background.BG01-valley-day": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "산속 계곡",
+      "space": "outdoor"
+    }
+  },
+  "seonnyeo.background.BG02-valley-storm": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "폭풍 속 계곡",
+      "space": "outdoor",
+      "weather": "폭풍"
+    }
+  },
+  "seonnyeo.background.BG03-valley-moon-gate": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "달빛 아래 계곡",
+      "space": "outdoor",
+      "time": "밤"
+    }
+  },
+  "seonnyeo.background.BG04-cottage-day": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "작은 집 마당",
+      "space": "outdoor"
+    }
+  },
+  "seonnyeo.background.BG05-cottage-snow": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "첫눈 내리는 마당",
+      "space": "outdoor",
+      "season": "겨울",
+      "weather": "눈"
+    }
+  },
+  "seonnyeo.background.BG06-cottage-autumn": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "가을의 작은 집",
+      "season": "가을"
+    }
+  },
+  "seonnyeo.background.BG09-room-day": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "작은 집 안",
+      "space": "indoor"
+    }
+  },
+  "seonnyeo.background.BG-room-night": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "밤의 작은 집",
+      "time": "밤"
+    }
+  },
+  "seonnyeo.background.BG-cottage-night": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "달빛 아래 마당",
+      "space": "outdoor",
+      "time": "밤"
+    }
+  },
+  "seonnyeo.background.BG-woodshed": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "장작 창고",
+      "space": "indoor"
+    }
+  },
+  "seonnyeo.background.BG-forest-roots": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "폭풍이 지나간 숲",
+      "space": "outdoor"
+    }
+  },
+  "seonnyeo.background.BG-roots-robe": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "뿌리 아래 흰 천"
+    }
+  },
+  "seonnyeo.background.BG-wardrobe-robe": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "달빛 속 선녀옷",
+      "time": "밤"
+    }
+  },
+  "seonnyeo.background.BG-empty-wardrobe": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "빈 장롱",
+      "space": "indoor"
+    }
+  },
+  "seonnyeo.character.M01-earth-neutral": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-earth-neutral",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-guarded": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "조심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-guarded",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-soft-smile": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "기쁨"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-soft-smile",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-bright": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "기쁨"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-bright",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-worried": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "걱정"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-worried",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-startled": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-startled",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-base": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "일반복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-base",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-celestial": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "선녀복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-celestial",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-hurt": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "아픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-hurt",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-homesick": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-homesick",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-base-guarded": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "조심"
+    ],
+    "actions": [],
+    "variantId": "일반복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-base-guarded",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-base-afraid": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "두려움"
+    ],
+    "actions": [],
+    "variantId": "일반복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-base-afraid",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-celestial-resolve": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "결심",
+      "슬픔"
+    ],
+    "actions": [],
+    "variantId": "선녀복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-celestial-resolve",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-celestial-warm": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "안도"
+    ],
+    "actions": [],
+    "variantId": "선녀복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-celestial-warm",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M01-resolved": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "full",
+    "expressions": [
+      "결심"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M01-resolved",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-neutral": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-neutral",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-dry-smile": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "기쁨"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-dry-smile",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-guilty": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "미안함"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-guilty",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-axe": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-axe",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-honest": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-honest",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-concerned": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "걱정"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-concerned",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-sad": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "슬픔"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-sad",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M02-surprised": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M02-surprised",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M03-neutral": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.eldest-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.eldest-fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M03-neutral",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M03-alarmed": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.eldest-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.eldest-fairy",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M03-alarmed",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M03-celestial": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.eldest-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.eldest-fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "선녀복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M03-celestial",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M04-neutral": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.second-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.second-fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M04-neutral",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M04-alarmed": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.second-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.second-fairy",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M04-alarmed",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.M04-celestial": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.second-fairy"
+    ],
+    "primaryCharacterId": "seonnyeo.second-fairy",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "선녀복",
+    "designVersionId": "story",
+    "poseSetId": "seonnyeo.character.M04-celestial",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.background.poster-art": {
+    "kind": "poster",
+    "placementRole": "none",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "hidden"
+  },
+  "onggojib.background.classic-closed-house": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "대문"
+    }
+  },
+  "onggojib.background.classic-cold-room": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "어머니 방",
+      "space": "indoor"
+    }
+  },
+  "onggojib.background.classic-hermitage": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "산중"
+    }
+  },
+  "onggojib.background.classic-gate-threshold": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "대문"
+    }
+  },
+  "onggojib.background.classic-poor-threshold": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "마을"
+    }
+  },
+  "onggojib.background.classic-gate-outside": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "대문"
+    }
+  },
+  "onggojib.background.classic-eaves": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "마을",
+      "mood": "따뜻함"
+    }
+  },
+  "onggojib.background.classic-open-house-empty": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "대문"
+    }
+  },
+  "onggojib.background.classic-court-records": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "관가"
+    }
+  },
+  "onggojib.character.classic-mother": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.mother"
+    ],
+    "primaryCharacterId": "onggojib.mother",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-mother",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-monk": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.monk"
+    ],
+    "primaryCharacterId": "onggojib.monk",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "부탁"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-monk",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-master": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.master"
+    ],
+    "primaryCharacterId": "onggojib.master",
+    "framing": "full",
+    "expressions": [
+      "온화"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-master",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-shocked": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-shocked",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-worn-reflection": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [
+      "생각"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-worn-reflection",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-straw-bound": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.straw"
+    ],
+    "primaryCharacterId": "onggojib.straw",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-straw-bound",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-straw-rising": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.straw"
+    ],
+    "primaryCharacterId": "onggojib.straw",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-straw-rising",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-talisman": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-talisman",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-double-seated": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.double"
+    ],
+    "primaryCharacterId": "onggojib.double",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "앉기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-double-seated",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-pointing": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.real"
+    ],
+    "primaryCharacterId": "onggojib.real",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-pointing",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-servant-door": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.servant",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-servant-door",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-servant-usher": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.servant"
+    ],
+    "primaryCharacterId": "onggojib.servant",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-servant-usher",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-mother-warm": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.mother"
+    ],
+    "primaryCharacterId": "onggojib.mother",
+    "framing": "full",
+    "expressions": [
+      "안도"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-mother-warm",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-master-talisman": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.master"
+    ],
+    "primaryCharacterId": "onggojib.master",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-master-talisman",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-straw-return": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.straw"
+    ],
+    "primaryCharacterId": "onggojib.straw",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-straw-return",
+    "pairingStatus": "missing-upper"
+  },
+  "onggojib.character.classic-straw-bare": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "onggojib"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "onggojib.straw"
+    ],
+    "primaryCharacterId": "onggojib.straw",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "onggojib.character.classic-straw-bare",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.background.classic-sea": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "바다",
+      "space": "outdoor"
+    }
+  },
+  "rabbit-turtle.background.classic-underwater": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "바닷속"
+    }
+  },
+  "rabbit-turtle.background.classic-palace-vista": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.background.classic-court": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "용궁"
+    }
+  },
+  "rabbit-turtle.character.classic-turtle-portrait": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-turtle-portrait",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.classic-riding": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit",
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-riding",
+    "pairingStatus": "exception"
+  },
+  "rabbit-turtle.character.classic-rabbit-laugh": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [
+      "기쁨"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-rabbit-laugh",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.classic-rabbit-leap": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-rabbit-leap",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.classic-rabbit-rock": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.rabbit"
+    ],
+    "primaryCharacterId": "rabbit-turtle.rabbit",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-rabbit-rock",
+    "pairingStatus": "missing-upper"
+  },
+  "rabbit-turtle.character.classic-turtle-water": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "rabbit-turtle"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "rabbit-turtle.turtle"
+    ],
+    "primaryCharacterId": "rabbit-turtle.turtle",
+    "framing": "upper",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "rabbit-turtle.character.classic-turtle-water",
+    "pairingStatus": "missing-full"
+  },
+  "seonnyeo.background.classic-sky-realm": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "하늘나라"
+    }
+  },
+  "seonnyeo.character.classic-deer": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.deer"
+    ],
+    "primaryCharacterId": "seonnyeo.deer",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "부탁"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-deer",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-hunter": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.hunter"
+    ],
+    "primaryCharacterId": "seonnyeo.hunter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-hunter",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-mother": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "seonnyeo.mother"
+    ],
+    "primaryCharacterId": "seonnyeo.mother",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-mother",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-children": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.children"
+    ],
+    "primaryCharacterId": "seonnyeo.children",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-children",
+    "pairingStatus": "exception"
+  },
+  "seonnyeo.character.classic-wing-robe": {
+    "kind": "prop",
+    "placementRole": "prop-layer",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "propId": "seonnyeo.wing-robe",
+    "subjects": [
+      "날개옷"
+    ]
+  },
+  "seonnyeo.character.classic-woodcutter-holding-robe": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-woodcutter-holding-robe",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-fairy-carrying-children": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.fairy",
+      "seonnyeo.children"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "group",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-fairy-carrying-children",
+    "pairingStatus": "exception"
+  },
+  "seonnyeo.character.classic-heavenly-bucket": {
+    "kind": "prop",
+    "placementRole": "prop-layer",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "propId": "seonnyeo.bucket",
+    "subjects": [
+      "두레박"
+    ]
+  },
+  "seonnyeo.character.classic-woodcutter-in-bucket": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-woodcutter-in-bucket",
+    "pairingStatus": "exception"
+  },
+  "seonnyeo.character.classic-celestial-horse": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.horse"
+    ],
+    "primaryCharacterId": "seonnyeo.horse",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-celestial-horse",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-woodcutter-riding-horse": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter",
+      "seonnyeo.horse"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "group",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-woodcutter-riding-horse",
+    "pairingStatus": "exception"
+  },
+  "seonnyeo.character.classic-mother-offering-porridge": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.mother"
+    ],
+    "primaryCharacterId": "seonnyeo.mother",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "제안"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-mother-offering-porridge",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-horse-startled-by-porridge": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter",
+      "seonnyeo.horse"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "group",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-horse-startled-by-porridge",
+    "pairingStatus": "exception"
+  },
+  "seonnyeo.character.classic-woodcutter-fallen": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-woodcutter-fallen",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-celestial-horse-departing": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.horse"
+    ],
+    "primaryCharacterId": "seonnyeo.horse",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-celestial-horse-departing",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-rooster-calling-sky": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.rooster"
+    ],
+    "primaryCharacterId": "seonnyeo.rooster",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-rooster-calling-sky",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-woodcutter-aged": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.woodcutter"
+    ],
+    "primaryCharacterId": "seonnyeo.woodcutter",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "노년",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-woodcutter-aged",
+    "pairingStatus": "missing-upper"
+  },
+  "seonnyeo.character.classic-fairy-holding-first-baby": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "seonnyeo"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "seonnyeo.fairy",
+      "seonnyeo.children"
+    ],
+    "primaryCharacterId": "seonnyeo.fairy",
+    "framing": "group",
+    "expressions": [],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "classic",
+    "poseSetId": "seonnyeo.character.classic-fairy-holding-first-baby",
+    "pairingStatus": "exception"
+  },
+  "heungbu.character.heungbu-default": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-default",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-young": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "어린 시절",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-young",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-default": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-default",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-young": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [],
+    "variantId": "어린 시절",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-young",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.wife-heungbu": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.wife-heungbu"
+    ],
+    "primaryCharacterId": "heungbu.wife-heungbu",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.wife-heungbu",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.wife-nolbu": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.wife-nolbu"
+    ],
+    "primaryCharacterId": "heungbu.wife-nolbu",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.wife-nolbu",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-pleading": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "부탁"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-pleading",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-happy": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [
+      "기쁨"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-happy",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-angry": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "화남"
+    ],
+    "actions": [
+      "명령"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-angry",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-remorse": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "후회"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-remorse",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.wife-heungbu-worried": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.wife-heungbu"
+    ],
+    "primaryCharacterId": "heungbu.wife-heungbu",
+    "framing": "full",
+    "expressions": [
+      "걱정"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.wife-heungbu-worried",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.wife-nolbu-shocked": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "characterIds": [
+      "heungbu.wife-nolbu"
+    ],
+    "primaryCharacterId": "heungbu.wife-nolbu",
+    "framing": "full",
+    "expressions": [
+      "놀람"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.wife-nolbu-shocked",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.children": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.children"
+    ],
+    "primaryCharacterId": "heungbu.children",
+    "framing": "full",
+    "expressions": [
+      "기본"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.children",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.swallow": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.swallow"
+    ],
+    "primaryCharacterId": "heungbu.swallow",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "건네기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.swallow",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.neighbor": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.neighbor"
+    ],
+    "primaryCharacterId": "heungbu.neighbor",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "건네기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.neighbor",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.poster.art": {
+    "kind": "poster",
+    "placementRole": "none",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "hidden"
+  },
+  "heungbu.background.nolbu-mansion": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "놀부 집"
+    }
+  },
+  "heungbu.background.heungbu-gourd-roof": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "secondary",
+    "background": {
+      "location": "흥부 집",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.character.heungbu-thinking": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [
+      "생각"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-thinking",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-working": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "일하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-working",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-swallow-care": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "치료하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-swallow-care",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-gourd-saw": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "박 타기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-gourd-saw",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.heungbu-sharing": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.heungbu"
+    ],
+    "primaryCharacterId": "heungbu.heungbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "나누기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.heungbu-sharing",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-thinking": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "생각"
+    ],
+    "actions": [],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-thinking",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-swallow-holding": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "망설임"
+    ],
+    "actions": [
+      "들기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-swallow-holding",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-ruined-seated": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [
+      "허탈"
+    ],
+    "actions": [
+      "주저앉기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-ruined-seated",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-working": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "일하기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-working",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.character.nolbu-sharing": {
+    "kind": "character",
+    "placementRole": "character-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "characterIds": [
+      "heungbu.nolbu"
+    ],
+    "primaryCharacterId": "heungbu.nolbu",
+    "framing": "full",
+    "expressions": [],
+    "actions": [
+      "나누기"
+    ],
+    "variantId": "기본 모습",
+    "designVersionId": "original",
+    "poseSetId": "heungbu.character.nolbu-sharing",
+    "pairingStatus": "missing-upper"
+  },
+  "heungbu.background.village-road-childhood": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "마을",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.background.family-storehouse-yard": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "부모님 집",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.background.family-room": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "초가집",
+      "space": "indoor"
+    }
+  },
+  "heungbu.background.poor-house-winter": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "흥부 집",
+      "season": "겨울",
+      "space": "outdoor",
+      "weather": "눈",
+      "state": "가난"
+    }
+  },
+  "heungbu.background.spring-field": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "마을",
+      "space": "outdoor",
+      "season": "봄"
+    }
+  },
+  "heungbu.background.heungbu-swallow-eaves": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "흥부 집",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.background.nolbu-swallow-eaves": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "놀부 집",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.background.nolbu-ruined-yard": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "놀부 집",
+      "space": "outdoor",
+      "state": "무너짐"
+    }
+  },
+  "heungbu.background.two-houses-path": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "마을",
+      "space": "outdoor"
+    }
+  },
+  "heungbu.background.family-dinner-night": {
+    "kind": "background",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "background": {
+      "location": "초가집",
+      "space": "indoor",
+      "time": "밤",
+      "mood": "따뜻함",
+      "state": "식사"
+    }
+  },
+  "heungbu.scene.gourd-treasure-burst": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "eventId": "heungbu.scene.gourd-treasure-burst",
+    "subjects": [
+      "사건 삽화",
+      "박 보물"
+    ],
+    "containsCharacters": false
+  },
+  "heungbu.scene.nolbu-broken-goods": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "eventId": "heungbu.scene.nolbu-broken-goods",
+    "subjects": [
+      "사건 삽화",
+      "잡동사니"
+    ],
+    "containsCharacters": false
+  },
+  "heungbu.scene.nolbu-goblin-chaos": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "eventId": "heungbu.scene.nolbu-goblin-chaos",
+    "subjects": [
+      "사건 삽화",
+      "도깨비"
+    ],
+    "containsCharacters": false
+  },
+  "heungbu.scene.nolbu-storm-collapse": {
+    "kind": "scene-illustration",
+    "placementRole": "background-slot",
+    "storyPackIds": [
+      "heungbu-nolbu"
+    ],
+    "qualityStatus": "legacy",
+    "pickerVisibility": "primary",
+    "eventId": "heungbu.scene.nolbu-storm-collapse",
+    "subjects": [
+      "사건 삽화",
+      "돌풍 붕괴"
+    ],
+    "containsCharacters": false
+  }
+}

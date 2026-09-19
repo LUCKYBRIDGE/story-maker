@@ -58,6 +58,7 @@ export function ResourcePool({
             ? "사용할 캐릭터 고르기"
             : "사용할 배경 고르기"
         }
+        chapterAssetIds={ids}
         favoriteIds={favoriteIds}
         recentIds={recentIds}
         onSelect={onAdd}

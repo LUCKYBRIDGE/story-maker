@@ -1,6 +1,6 @@
 # storygame 개발 상태표
 
-- 기준일: 2026-09-17
+- 기준일: 2026-09-19
 - 공유 기준 저장소: GitHub `LUCKYBRIDGE/story-maker`의 `main`과 현재 작업 PR
 - 로컬 실행 복사본: `/Volumes/WAN2/apps/story-maker` (Work/로컬 실행·실환경 검증용)
 - 실행 환경 계약: `docs/operations/github-first-hybrid-development.md`
@@ -9,7 +9,32 @@
 - 규칙: 대기 시 `READY`는 정확히 하나, 실행 중에는 그 작업만 `IN_PROGRESS`다.
   승인·외부 조건 대기 때문에 READY가 없으면 이유를 기록하고 구현을 멈춘다.
 
-## 현재 작업: SHORT-01 숏스토리와 작업·공유 파일 통합
+## 현재 작업: AL-02~12 Asset Library 전환 완료
+
+- 사용자 후속 요청: 남은 단계 연속 구현, 검증은 핵심 검사로 제한, 완료 후 GitHub 반영. **DONE — 로컬 구현·핵심 검증 완료, GitHub 공유 진행**, Work Lead · A/B.
+- branch `codex/asset-library-foundation`. 앞선 로컬 변경과 제공 계획 파일 보존.
+- 범위: 248개 정규 metadata, 검증기, 복합 Query/Ranking, 공통 Browser·캐릭터/작품/종류 View, 생성기 연동. 자유 소품 배치와 저장 schema 변경은 원래 계획대로 제외.
+- 구현: 248개 canonical metadata·4개 작품/36개 캐릭터 등록, 162 character/59 background/23 scene-illustration/2 prop/2 poster. 흥부 팩은 25/12/4/1 유지. 다른 작품의 동명 인물·변형·다인물을 연결하고 미확인 facet은 비워 둠.
+- 검색/화면: 동일 facet OR·교차 AND, 검색 별칭, 종류/캐릭터/작품 View, 대표 카드와 ‘다른 모습’, 조건 칩·해제·0개 회복, 슬롯 제약/추천 순서 분리. 즐겨찾기·최근 사용·미리보기·적용·취소·장의 자료 빠른 선택 유지. 소품 조회 전용.
+- 생성: 기존 생성기에서 누락되던 흥부 42개를 원본 manifest로 분리·연결. `--check`로 248개 catalog 재현과 v2 metadata coverage 확인. 기존 generated catalog·이미지·ID·저장/Excel schema는 변경 없음.
+- A: 도메인/기존 helper **16/16**, 변경된 화면 계약 **3/3**, metadata audit **오류 0**, `npm run check`, `npm run build`, `git diff --check` 통과. 기존 큰 chunk 빌드 안내는 유지.
+- B: `npm run qa:assets`에서 1365×900/390×844 캐릭터→행동, 작품/감정 다중 선택, View 전환 조건 보존, 0개 회복, 소품 적용 차단, 즐겨찾기, 미리보기 취소/적용, 겨울집 배경, 44px 버튼·키보드·가로 넘침 검사 통과. 캡처 `/tmp/asset-library-qa/` 직접 확인.
+- 남은 범위: 별도 후속인 prop 자유 배치·새 이미지 제작·실기기 확인. 단일 인물 150개는 대응 구도 미보유로 audit에 보고하며 승인 완료로 숨기지 않음. 기존 품질 검수 이력은 legacy 유지. 사용자 요청에 따라 전체 작품/전체 회귀를 로컬에서 반복하지 않음.
+- GitHub: 커밋/PR 공유 진행. main 병합·운영 배포 미수행. 다음 READY 없음.
+
+## 최근 완료: AL-01 Asset Library 분류 기반
+
+- 2026-09-19 사용자 제공 `Story_Maker_Asset_Library_v2_Development_Plan_Reviewed.md`와 직접 구현 요청. **DONE — 분류 기반 로컬 구현·검증 완료**, Work Lead · A.
+- branch `codex/asset-library-foundation`, 시작 HEAD `a96be9d`; 원래 미추적 계획 파일 보존.
+- 범위: AL-00 문서 정합화를 포함한 타입·작품/캐릭터 등록부·순수 adapter·ID fixture. AL-02 전체 의미 매핑과 Picker/UI 전환은 후속.
+- 기존 StoryAsset·ID·저장/Excel·Chapter Palette·생성기는 변경하지 않는다. 미매핑 정보는 legacy로 남긴다.
+- 변경: `app/assets/`의 타입·canonical 어휘·4개 Story Pack·7개 초기 Character·adapter·registry, ID fixture/검사, 관련 기준 문서. 정밀 매핑되지 않은 자산은 legacy로 보존.
+- A: foundation/기존 picker-utils 검사 **11/11**, `npm run check`(오류·경고 없음), `npm run build`, `git diff --check` 통과. 빌드의 500kB chunk 안내는 남음.
+- 한계: 새 계층은 기존 Picker에 아직 연결하지 않음. 화면·복합 검색·추천 동작과 소품 배치는 미변경. UI/실기기 검증 및 전체 회귀는 미수행.
+- 후속: AL-02 흥부와 놀부 42개 정밀 매핑·인수 카드 정비 후 READY 지정. 현재 다음 READY 없음.
+- 커밋·푸시·배포 미수행. 사용자 제공 계획 파일은 원래 미추적 상태 그대로 보존.
+
+## 최근 완료: SHORT-01 숏스토리와 작업·공유 파일 통합
 
 - 2026-09-17 사용자 직접 요청, **DONE — 로컬 구현·핵심 검증 완료**, Work Lead · A/B. 실제 기기·운영 배포 확인은 미수행.
 - branch `codex/shortstory-files`, 시작 HEAD `26a3f9a`. 사용자 제공 `스토리메이커_통합개발기획안_검증간소화.md`를 이번 통합 작업 계약으로 적용.

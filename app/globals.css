@@ -13606,3 +13606,44 @@ img {
 @media(max-width:600px) { .short-header { flex-wrap:wrap; }.short-header>div { order:-1; width:100%; }.short-toolbar>span { width:100%; }.short-info { grid-template-columns:1fr; padding:12px 16px; }.short-words { padding:18px; }.short-section-heading h2 { font-size:20px; } }
 .short-booklet .short-print-page { width:128mm; height:185mm; min-height:0; padding:8mm; overflow:visible; }.short-booklet .short-print-page p { font-size:12pt; }
 @media print { body:has(.short-print-preview) { background:white; } body:has(.short-print-preview) .short-screen,body:has(.short-print-preview) .short-print-controls { display:none!important; }.short-workspace { padding:0; }.short-print-preview { position:static; padding:0; overflow:visible; background:white; }.short-print-page { break-after:page; break-inside:avoid; margin:0; min-height:90vh; max-width:none; }.short-booklet .short-print-sheets { display:grid; grid-template-columns:1fr 1fr; }.short-booklet .short-print-page { width:auto; height:185mm; min-height:0; overflow:visible; padding:8mm; margin:0; break-after:auto; }.short-booklet .short-print-page:nth-child(2n) { break-after:page; }.short-booklet .short-print-page p { font-size:12pt; }.short-print-page .short-art { print-color-adjust:exact; } }
+
+/* Asset Library: shared facets and readable controls at desktop and phone widths. */
+.asset-browser-v2 { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.asset-browser-v2 > * { flex-shrink: 0; }
+.asset-browser-tabs, .asset-browser-nearby, .asset-browser-chips, .asset-browser-facets { display: flex; flex-wrap: wrap; gap: 8px; }
+.asset-browser-v2 button, .asset-browser-v2 summary { min-height: 44px; }
+.asset-browser-tabs button, .asset-browser-nearby button, .asset-browser-chips button, .asset-browser-facet button { border: 1px solid var(--line); background: var(--paper); border-radius: 12px; padding: 8px 12px; color: inherit; }
+.asset-browser-v2 button[aria-pressed="true"] { background: #e9efff; border-color: #526bb3; color: #263d7d; }
+.asset-browser-v2 :focus-visible { outline: 3px solid #526bb3; outline-offset: 3px; }
+.asset-browser-context { margin: 0; color: var(--muted); font-size: 13px; }
+.asset-browser-facet { flex: 1 1 150px; border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; min-width: 0; }
+.asset-browser-facet summary { cursor: pointer; display: list-item; align-content: center; font-weight: 700; }
+.asset-browser-facet > div { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 10px; max-height: 230px; overflow: auto; }
+.asset-browser-facet button { text-align: left; }
+.asset-browser-facet button small { opacity: .7; }
+.asset-browser-chips { padding: 10px; background: #f1f4fa; border-radius: 12px; }
+.asset-browser-characters { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.asset-browser-characters > button { display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 14px; padding: 14px 8px; background: var(--paper); color: inherit; }
+.asset-browser-characters .asset-picker-current-thumb { width: 92px; height: 104px; }
+.asset-browser-characters small { font-size: 11px; }
+.asset-browser-footer { position: sticky; bottom: -1px; z-index: 2; background: var(--paper); border-top: 1px solid var(--line); padding-top: 8px; }
+.asset-browser-footer .asset-picker-preview { margin: 0; padding: 6px; }
+.asset-browser-footer .asset-picker-current-thumb { width: 44px; height: 48px; }
+.asset-browser-footer .asset-picker-actions { position: static; flex-wrap: wrap; }
+.asset-browser-v2 .asset-picker-results { flex: 0 0 auto; overflow: visible; }
+@media (max-width: 600px) {
+  .asset-browser-v2 { padding: 14px; }
+  .asset-browser-v2 .asset-picker-current { display: none; }
+  .asset-browser-v2 .asset-picker-findbar { display: flex; }
+  .asset-browser-v2 .asset-picker-search { min-width: 0; width: 100%; }
+  .asset-browser-v2 .asset-picker-filter-toggle { flex-shrink: 0; }
+  .asset-browser-facet { flex-basis: 100px; }
+  .asset-browser-footer .asset-picker-actions > button { flex: 1; font-size: 12px; }
+}
+.asset-browser-v2 .asset-picker-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.asset-browser-footer .asset-picker-actions { display: flex; }
+.asset-browser-footer .asset-picker-actions > button { width: auto; min-width: 0; }
+@media (max-width: 600px) {
+  .asset-browser-footer .asset-picker-actions { flex-wrap: nowrap; gap: 6px; }
+  .asset-browser-footer .asset-picker-actions > button { padding: 8px; }
+}

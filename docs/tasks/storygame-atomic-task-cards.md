@@ -1657,3 +1657,42 @@ npm test
 - 자동: `npm run check`, `npm run build`; `node --test tests/story-presentation.test.mjs tests/story-scene-effect.test.mjs tests/story-project-document.test.mjs tests/story-project-checkpoints.test.mjs` 및 변경된 저장/공유 경계 검사.
 - 화면: 개발 서버에서 `node tests/browser/story-presentation.mjs`, 1365×900 / 390×844 대표 컷·편집 적용·분기·이전 이동·동작 줄이기. 전체 작품 전수/장치 검사는 이번 범위 제외.
 - 중단: 저장본 손실 또는 소스 대본·연결의 의도치 않은 변경이 남으면 완료 처리하지 않는다. 실행/완료 증거는 상태표에만 기록한다.
+
+## AL-01 — Asset Library Domain Foundation
+
+- 선행: 사용자 검토 계획(2026-09-19). AL-00 문서·기준선 정합화를 같은 작업에 포함.
+- 가치: 원하는 자료를 찾을 수 있도록 의미상 종류·작품·캐릭터 관계를 저장 형식과 분리한다.
+- 관점: 자산 편집·호환성·데이터 신뢰성. Work Lead, 증거 A.
+- 허용: `app/assets/`, foundation 테스트와 ID fixture, 분류 ADR·아키텍처·상세 설계·상태표.
+- 금지: 기존 ID·tags 변경, 생성기 교체, StoryProject/Excel 변경, Picker/UI 전환.
+- 사전 점검: main a96be9d, 248개(164 character/84 background), 미추적 계획 파일 보존.
+- 절차: 1. 문서 계약 동기화 2. 타입·등록부·순수 adapter 추가 3. 전수 ID fixture와 호환 검사 4. 상태표 갱신.
+- 인수: (1) 기존 248개 ID/URL/legacy 필드 보존 (2) 4개 작품과 별칭 조회 (3) 대표 인물 참조 유효
+  (4) backgroundRole로 사건을 추정하지 않음 (5) hidden도 ID 조회 가능 (6) 다인물·소품 표현과 원본 불변.
+- 검사: `node --test tests/asset-library-foundation.test.mjs tests/story-asset-picker-utils.test.mjs`,
+  `npm run check`, `npm run build`, `git diff --check`. UI 미변경으로 B/D 불필요.
+- 중단: 기존 데이터 변경 또는 ID 유실 시 DONE 금지. 되돌림은 새 도메인 계층만 분리하고 원본 유지.
+- 상태: 결과와 증거는 개발 상태표 AL-01에서 관리. 다음 카드 AL-02를 이 세션에서 실행하지 않는다.
+
+## AL-02~12 — Asset Library 통합 전환
+
+- 선행: AL-01. 사용자가 남은 계획을 연속 완료하도록 요청하여 단일 통합 과업으로 진행한다.
+- 학생 가치: 흥부의 동작, 여러 작품의 감정, 계절별 배경을 같은 선택 창에서 찾는다.
+- 관점: 학생 탐색 UX·자산 의미 분류·호환성. Work Lead, 증거 A/B.
+- 범위: `app/assets/`, 공통 Browser와 기존 진입점/CSS, 카탈로그 생성기·흥부 원본 manifest,
+  관련 테스트·기준 문서. 기존 자산 파일·ID·StoryProject/Excel·Chapter Palette는 보존.
+- 비범위: prop 자유 배치, 새 이미지 제작, 저장 migration, main 병합·운영 배포.
+- 순서: 1. 흥부 42개와 다른 작품 정규 metadata 2. 무결성 감사 3. Query와 Ranking
+  4. 기존 Picker 연결 후 Dialog 분리 5. 캐릭터/작품/종류 탐색과 배경 facet 6. 생성기 SSOT 연동.
+- 인수: (1) 흥부 25/12/4/1 분류와 캐릭터별 9개 모습 (2) 248개 metadata·캐릭터 참조 유효
+  (3) 같은 facet OR·다른 facet AND (4) View 변경 시 필터 보존/개별·전체 해제
+  (5) 추천은 포함 집합 불변 (6) 미리보기·적용·취소·즐겨찾기·최근 사용 유지
+  (7) 소품 조회 가능/적용 차단, 기존 hidden ID resolve와 카탈로그 재생성 보존.
+- 최소 검사: `node --test tests/asset-library-foundation.test.mjs tests/asset-library-query.test.mjs tests/story-asset-picker-utils.test.mjs`,
+  `node --test --test-name-pattern='화자·이미지|U1-08|G4-02' tests/rendered-html.test.mjs`,
+  `npm run assets:metadata:audit`, `node scripts/generate-story-assets.mjs --check`, `npm run check`, `npm run build`.
+- 실제 흐름: `QA_URL=http://localhost:3010 npm run qa:assets`의 1365×900 / 390×844 선택·취소·적용,
+  복합 필터·View 유지·즐겨찾기·소품·배경·키보드. 전체 작품/실기기 전수 검증은 요청에 따라 제외.
+- 중단: ID/저장 호환 손상, 미해결 잘못된 연결, 선택 전 실제 적용 발생 시 완료 금지.
+  되돌림은 기존 Picker 연결을 복구하고 원본 자산·사용자 저장본은 건드리지 않는다.
+- 상태·GitHub 증거는 개발 상태표의 현재 작업에서만 관리한다.
