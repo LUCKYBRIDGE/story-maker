@@ -5,20 +5,40 @@ import { HEUNGBU_ACTORS } from "./story-heungbu-art";
 
 // The supplied seed owns the script, IDs, planning and branches. This adapter
 // only dresses the reading edition; it never rewrites the source manuscript.
-const cottage = "seonnyeo.background.BG04-cottage-day";
-const autumn = "seonnyeo.background.BG06-cottage-autumn";
-const snow = "seonnyeo.background.BG05-cottage-snow";
-const room = "seonnyeo.background.BG09-room-day";
-const night = "seonnyeo.background.BG-room-night";
+const villageRoadChildhood = "heungbu.background.village-road-childhood";
+const familyStorehouseYard = "heungbu.background.family-storehouse-yard";
+const familyRoom = "heungbu.background.family-room";
+const poorHouseWinter = "heungbu.background.poor-house-winter";
+const springField = "heungbu.background.spring-field";
+const heungbuSwallowEaves = "heungbu.background.heungbu-swallow-eaves";
+const nolbuSwallowEaves = "heungbu.background.nolbu-swallow-eaves";
 const nolbuMansion = "heungbu.background.nolbu-mansion";
+const nolbuRuinedYard = "heungbu.background.nolbu-ruined-yard";
+const twoHousesPath = "heungbu.background.two-houses-path";
+const familyDinnerNight = "heungbu.background.family-dinner-night";
 const heungbuGourdRoof = "heungbu.background.heungbu-gourd-roof";
 
+// 사건 삽화 (Scene Illustrations)
+const gourdTreasureBurst = "heungbu.scene.gourd-treasure-burst";
+const brokenGoods = "heungbu.scene.nolbu-broken-goods";
+const goblinChaos = "heungbu.scene.nolbu-goblin-chaos";
+const stormCollapse = "heungbu.scene.nolbu-storm-collapse";
+
 const chapterBackgrounds: Record<string, string> = {
-  "chapter-1": cottage, "chapter-2": nolbuMansion, "chapter-3": room,
-  "chapter-4": snow, "chapter-5a": cottage, "chapter-5b": snow,
-  "chapter-6": heungbuGourdRoof, "chapter-7": heungbuGourdRoof, "chapter-8": nolbuMansion,
-  "chapter-9": nolbuMansion, "chapter-10": nolbuMansion, "chapter-11": snow,
-  "chapter-12a": room, "chapter-12b": cottage,
+  "chapter-1": villageRoadChildhood,
+  "chapter-2": familyStorehouseYard,
+  "chapter-3": familyRoom,
+  "chapter-4": poorHouseWinter,
+  "chapter-5a": springField,
+  "chapter-5b": poorHouseWinter,
+  "chapter-6": heungbuSwallowEaves,
+  "chapter-7": heungbuGourdRoof,
+  "chapter-8": nolbuMansion,
+  "chapter-9": nolbuSwallowEaves,
+  "chapter-10": nolbuMansion,
+  "chapter-11": poorHouseWinter,
+  "chapter-12a": familyRoom,
+  "chapter-12b": twoHousesPath,
 };
 
 export function getHeungbuProject(): StoryProject {
@@ -40,12 +60,25 @@ export function getHeungbuProject(): StoryProject {
     const cut = Number(line.id.split("-").at(-1));
     let background = "";
     if (line.chapterId === "chapter-4" && cut >= 13 && cut <= 19) background = nolbuMansion;
-    if (line.chapterId === "chapter-4" && cut >= 20) background = night;
-    if (line.chapterId === "chapter-5a" && cut <= 4) background = room;
-    if (line.chapterId === "chapter-7" && cut >= 12 && cut <= 15) background = night;
-    if (line.chapterId === "chapter-11" && cut >= 3 && cut <= 13) background = night;
-    if (line.chapterId === "chapter-12a" && cut >= 23) background = cut >= 29 ? autumn : cottage;
-    if (line.chapterId === "chapter-12b" && cut >= 29 && cut <= 31) background = night;
+    if (line.chapterId === "chapter-4" && cut >= 20) background = familyDinnerNight;
+    if (line.chapterId === "chapter-5a" && cut <= 4) background = familyRoom;
+    if (line.chapterId === "chapter-7" && cut <= 3) background = heungbuSwallowEaves;
+    if (line.chapterId === "chapter-7" && cut >= 6 && cut <= 7) background = gourdTreasureBurst;
+    if (line.chapterId === "chapter-7" && cut >= 12 && cut <= 15) background = familyDinnerNight;
+    if (line.chapterId === "chapter-8" && cut <= 3) background = nolbuSwallowEaves;
+    if (line.chapterId === "chapter-10" && cut >= 4 && cut <= 5) background = brokenGoods;
+    if (line.chapterId === "chapter-10" && cut >= 9 && cut <= 11) background = goblinChaos;
+    if (line.chapterId === "chapter-10" && cut >= 14 && cut <= 15) background = stormCollapse;
+    if (line.chapterId === "chapter-10" && cut >= 16) background = nolbuRuinedYard;
+    if (line.chapterId === "chapter-11" && cut <= 2) background = nolbuRuinedYard;
+    if (line.chapterId === "chapter-11" && cut >= 3 && cut <= 13) background = familyDinnerNight;
+    if (line.chapterId === "chapter-11" && cut >= 14) background = nolbuRuinedYard;
+    if (line.chapterId === "chapter-12a" && cut >= 23) background = springField;
+    if (line.chapterId === "chapter-12b" && cut <= 14) background = poorHouseWinter;
+    if (line.chapterId === "chapter-12b" && cut >= 15 && cut <= 22) background = springField;
+    if (line.chapterId === "chapter-12b" && cut >= 23 && cut <= 28) background = twoHousesPath;
+    if (line.chapterId === "chapter-12b" && cut >= 29 && cut <= 31) background = familyDinnerNight;
+    if (line.chapterId === "chapter-12b" && cut >= 32) background = twoHousesPath;
     line.backgroundId = background;
     if (background) {
       const chapter = project.chapters.find(chapter => chapter.id === line.chapterId)!;

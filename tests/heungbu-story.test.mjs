@@ -30,10 +30,10 @@ const { project, assets, stages } = JSON.parse(
   )
 );
 
-test("흥부와 놀부 15종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
+test("흥부와 놀부 25종 캐릭터 자산은 800x1200 규격, 투명도, 바닥선 y=1149를 만족한다", async () => {
   const { default: sharp } = await import("sharp");
   const heungbuAssets = assets.filter((a) => a.story === "흥부와 놀부" && a.type === "character");
-  assert.equal(heungbuAssets.length, 15);
+  assert.equal(heungbuAssets.length, 25);
 
   for (const asset of heungbuAssets) {
     const filePath = `public${asset.src}`;
@@ -116,7 +116,8 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
   assert.ok(!ch1Lines.some((l) => l.leftAssetId === "heungbu.character.heungbu-default"));
 
   const ch8Lines = project.lines.filter((l) => l.chapterId === "chapter-8");
-  assert.ok(ch8Lines.every((l) => l.leftAssetId === "heungbu.character.nolbu-default"));
+  assert.ok(ch8Lines.every((l) => l.leftAssetId.startsWith("heungbu.character.nolbu")));
+  assert.ok(ch8Lines.some((l) => l.leftAssetId === "heungbu.character.nolbu-thinking"));
   assert.ok(ch8Lines.every((l) => l.rightAssetId === "heungbu.character.wife-nolbu"));
 
   const ch6Lines = project.lines.filter((l) => l.chapterId === "chapter-6");
@@ -162,20 +163,19 @@ test("1장은 어린 시절 전용 자산, 이후 본편은 성인 및 아내 �
   assert.ok(neighborLines.length >= 4, "이웃 농부 자산 4회 이상 실사용");
 });
 
-test("흥부와 놀부 전용 배경 2종과 대표 포스터는 규격을 만족하고 실사용된다", async () => {
+test("흥부와 놀부 전용 배경과 사건 삽화는 1600x900 규격을 만족하고 외래 배경 없이 100% 자립 실사용된다", async () => {
   const { default: sharp } = await import("sharp");
 
-  const mansion = assets.find((a) => a.id === "heungbu.background.nolbu-mansion");
-  assert.ok(mansion, "놀부 기와집 배경 등록 확인");
-  const mansionMeta = await sharp(`public${mansion.src}`).metadata();
-  assert.equal(mansionMeta.width, 1600);
-  assert.equal(mansionMeta.height, 900);
+  const heungbuBgs = assets.filter((a) => a.story === "흥부와 놀부" && a.type === "background" && a.id !== "heungbu.poster.art");
+  assert.equal(heungbuBgs.length, 16, "배경 12종 + 사건 삽화 4종 = 총 16종 배경 자산 등록 확인");
 
-  const gourd = assets.find((a) => a.id === "heungbu.background.heungbu-gourd-roof");
-  assert.ok(gourd, "박 열린 흥부 초가집 배경 등록 확인");
-  const gourdMeta = await sharp(`public${gourd.src}`).metadata();
-  assert.equal(gourdMeta.width, 1600);
-  assert.equal(gourdMeta.height, 900);
+  for (const bg of heungbuBgs) {
+    const filePath = `public${bg.src}`;
+    assert.ok(existsSync(filePath), `배경 파일 존재 확인: ${filePath}`);
+    const meta = await sharp(filePath).metadata();
+    assert.equal(meta.width, 1600, `${bg.id} 너비 1600px`);
+    assert.equal(meta.height, 900, `${bg.id} 높이 900px`);
+  }
 
   const poster = assets.find((a) => a.id === "heungbu.poster.art");
   assert.ok(poster, "대표 포스터 아트 등록 확인");
@@ -183,12 +183,29 @@ test("흥부와 놀부 전용 배경 2종과 대표 포스터는 규격을 만�
   assert.equal(posterMeta.width, 940);
   assert.equal(posterMeta.height, 1672);
 
-  // 실사용 검증
-  const mansionLines = project.lines.filter((l) => l.backgroundId === "heungbu.background.nolbu-mansion");
+  // 실사용 및 외래 배경 배제 검증
+  const seonnyeoLines = project.lines.filter(
+    (l) => l.backgroundId?.startsWith("seonnyeo") || project.chapters.find((c) => c.id === l.chapterId)?.backgroundId?.startsWith("seonnyeo")
+  );
+  assert.equal(seonnyeoLines.length, 0, "선녀와 나무꾼 외래 배경 완전 배제 (0건)");
+
+  const mansionLines = project.lines.filter(
+    (l) => l.backgroundId === "heungbu.background.nolbu-mansion" || project.chapters.find((c) => c.id === l.chapterId)?.backgroundId === "heungbu.background.nolbu-mansion"
+  );
   assert.ok(mansionLines.length >= 5, "놀부 기와집 배경 5컷 이상 실사용");
 
-  const gourdChapters = project.chapters.filter((c) => c.backgroundId === "heungbu.background.heungbu-gourd-roof");
-  assert.ok(gourdChapters.length >= 2, "박 열린 초가집 2개 장 이상 배경 지정");
+  const gourdLines = project.lines.filter(
+    (l) => l.backgroundId === "heungbu.background.heungbu-gourd-roof" || project.chapters.find((c) => c.id === l.chapterId)?.backgroundId === "heungbu.background.heungbu-gourd-roof"
+  );
+  assert.ok(gourdLines.length >= 5, "박 열린 초가집 배경 5컷 이상 실사용");
+
+  // 사건 삽화 실사용 검증
+  const sceneBurst = project.lines.filter((l) => l.backgroundId === "heungbu.scene.gourd-treasure-burst");
+  assert.ok(sceneBurst.length >= 1, "흥부 박 보물 사건 삽화 실사용");
+  const sceneChaos = project.lines.filter((l) => l.backgroundId === "heungbu.scene.nolbu-goblin-chaos");
+  assert.ok(sceneChaos.length >= 1, "놀부 도깨비 난동 사건 삽화 실사용");
+  const sceneStorm = project.lines.filter((l) => l.backgroundId === "heungbu.scene.nolbu-storm-collapse");
+  assert.ok(sceneStorm.length >= 1, "폭풍 붕괴 사건 삽화 실사용");
 });
 
 test("흥부와 놀부 프로젝트는 문서(JSON) 직렬화 및 역직렬화가 완벽히 동작한다", () => {

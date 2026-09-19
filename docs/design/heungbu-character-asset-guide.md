@@ -16,15 +16,15 @@
 
 ---
 
-## 2. 현재 프로덕션 15종 캐릭터 자산 현황 (100% 매핑 완료)
+## 2. 프로덕션 25종 캐릭터 자산 현황 (100% 실사용 매핑 완료)
 
 | 자산 ID | 파일명 | 인물 / 감정·상황 | 높이 | 접지(y) | top | left |
 |---|---|---|---|---|---|---|
 | `heungbu.character.heungbu-default` | `heungbu.character.heungbu-default.webp` | 성인 흥부 (기본 온화형) | 1000px | 1149 | 150 | 160 |
-| `heungbu.character.heungbu-young` | `heungbu.character.heungbu-young.webp` | 소년 흥부 (1장 전용) | 880px | 1149 | 270 | 225 |
+| `heungbu.character.heungbu-young` | `heungbu.character.heungbu-young.webp` | 소년 흥부 (1장 소년기 회상 전용) | 900px | 1149 | 250 | 225 |
 | `heungbu.character.nolbu-default` | `heungbu.character.nolbu-default.webp` | 성인 놀부 (장부와 정면) | 1000px | 1149 | 150 | 79 |
-| `heungbu.character.nolbu-young` | `heungbu.character.nolbu-young.webp` | 소년 놀부 (1장 전용) | 900px | 1149 | 250 | 225 |
-| `heungbu.character.wife-heungbu` | `heungbu.character.wife-heungbu.webp` | 흥부 아내 (20대 단정·자애) | 950px | 1149 | 200 | 206 |
+| `heungbu.character.nolbu-young` | `heungbu.character.nolbu-young.webp` | 소년 놀부 (1장 소년기 회상 전용) | 910px | 1149 | 240 | 225 |
+| `heungbu.character.wife-heungbu` | `heungbu.character.wife-heungbu.webp` | 흥부 아내 (20대 단정·자애) | 949px | 1148 | 200 | 206 |
 | `heungbu.character.wife-nolbu` | `heungbu.character.wife-nolbu.webp` | 놀부 아내 (30대 단아·단호) | 960px | 1149 | 190 | 202 |
 | `heungbu.character.heungbu-pleading` | `heungbu.character.heungbu-pleading.webp` | 흥부 (간절함·애원·가슴 졸임) | 1000px | 1149 | 150 | 139 |
 | `heungbu.character.heungbu-happy` | `heungbu.character.heungbu-happy.webp` | 흥부 (기쁨·환대·활짝 웃음) | 1000px | 1149 | 150 | 103 |
@@ -35,16 +35,40 @@
 | `heungbu.character.children` | `heungbu.character.children.webp` | 아이들 남매 (흥부/놀부 자녀) | 880px | 1149 | 270 | 92 |
 | `heungbu.character.swallow` | `heungbu.character.swallow.webp` | 제비 (박씨 물고 횃대에 앉은 제비) | 900px | 1149 | 250 | 98 |
 | `heungbu.character.neighbor` | `heungbu.character.neighbor.webp` | 이웃 농부 (곡식 나눔) | 1000px | 1149 | 150 | 221 |
+| `heungbu.character.heungbu-thinking` | `heungbu.character.heungbu-thinking.webp` | 흥부 (생각·망설임·고민) | 998px | 1149 | 152 | 223 |
+| `heungbu.character.heungbu-working` | `heungbu.character.heungbu-working.webp` | 흥부 (소매 걷고 일하기·농사·수리) | 1001px | 1149 | 149 | 159 |
+| `heungbu.character.heungbu-swallow-care` | `heungbu.character.heungbu-swallow-care.webp` | 흥부 (다친 제비 부목 치료) | 1001px | 1149 | 149 | 234 |
+| `heungbu.character.heungbu-gourd-saw` | `heungbu.character.heungbu-gourd-saw.webp` | 흥부 (박 톱질하기) | 956px | 1149 | 194 | 91 |
+| `heungbu.character.heungbu-sharing` | `heungbu.character.heungbu-sharing.webp` | 흥부 (곡식 자루 건네기·나눔) | 998px | 1149 | 152 | 208 |
+| `heungbu.character.nolbu-thinking` | `heungbu.character.nolbu-thinking.webp` | 놀부 (고민·질투·계산) | 1001px | 1149 | 149 | 232 |
+| `heungbu.character.nolbu-swallow-holding` | `heungbu.character.nolbu-swallow-holding.webp` | 놀부 (손 안의 제비와 양심의 갈등) | 998px | 1149 | 152 | 218 |
+| `heungbu.character.nolbu-ruined-seated` | `heungbu.character.nolbu-ruined-seated.webp` | 놀부 (마당에 주저앉아 멍하니 허탈) | 758px | 1149 | 392 | 104 |
+| `heungbu.character.nolbu-working` | `heungbu.character.nolbu-working.webp` | 놀부 (괭이 들고 밭일·재기) | 1031px | 1150 | 120 | 38 |
+| `heungbu.character.nolbu-sharing` | `heungbu.character.nolbu-sharing.webp` | 놀부 (반쪽 떡 건네기·화해와 성장) | 999px | 1149 | 151 | 73 |
 
 ---
 
-## 3. 프로덕션 전용 배경 및 포스터 자산
+## 3. 프로덕션 전용 배경 및 사건 삽화 자산 (17종, 100% 외래 배경 배제)
 
-| 자산 ID | 파일명 | 해상도 | 용도 및 설명 |
-|---|---|---|---|
-| `heungbu.poster.art` | `heungbu.poster.art.webp` | 940 × 1672 | 서재 화면 대표 포스터 아트 (초가집 앞의 흥부 가족과 놀부, 박씨를 문 제비) |
-| `heungbu.background.nolbu-mansion` | `heungbu.background.nolbu-mansion.webp` | 1600 × 900 | 놀부네 기와집 대문과 마당, 곳간 (2장, 4장, 8장, 9장, 10장) |
-| `heungbu.background.heungbu-gourd-roof` | `heungbu.background.heungbu-gourd-roof.webp` | 1600 × 900 | 박 열린 흥부 초가지붕과 마당 (6장, 7장 박 타기, 표지) |
+| 자산 ID | 파일명 | 해상도 | 역할 | 용도 및 설명 |
+|---|---|---|---|---|
+| `heungbu.poster.art` | `heungbu.poster.art.webp` | 940 × 1672 | 포스터 | 서재 화면 대표 포스터 아트 (초가집 앞의 흥부 가족과 놀부, 박씨를 문 제비) |
+| `heungbu.background.nolbu-mansion` | `heungbu.background.nolbu-mansion.webp` | 1600 × 900 | 풍경 | 놀부네 기와집 대문과 마당, 곳간 (2장, 4장, 8장, 10장) |
+| `heungbu.background.heungbu-gourd-roof` | `heungbu.background.heungbu-gourd-roof.webp` | 1600 × 900 | 풍경 | 박 열린 흥부 초가지붕과 마당 (7장 박 타기, 표지) |
+| `heungbu.background.village-road-childhood` | `heungbu.background.village-road-childhood.webp` | 1600 × 900 | 장면 | 어린 시절 가을 시골 마을길 (1장 소년기 회상) |
+| `heungbu.background.family-storehouse-yard` | `heungbu.background.family-storehouse-yard.webp` | 1600 × 900 | 장면 | 부모님 집 곳간과 마당 (2장 곳간 앞 두 형제) |
+| `heungbu.background.family-room` | `heungbu.background.family-room.webp` | 1600 × 900 | 장면 | 전통 한옥 실내 (3장 분가 의논, 5a장 흥부 집 안, 12a장 겨울 실내) |
+| `heungbu.background.poor-house-winter` | `heungbu.background.poor-house-winter.webp` | 1600 × 900 | 장면 | 가난한 흥부네 겨울 초가집 (4장, 5b장, 11장, 12b장) |
+| `heungbu.background.spring-field` | `heungbu.background.spring-field.webp` | 1600 × 900 | 장면 | 봄 농사 밭과 일터 (5a장 놀부 밭, 12a장/12b장 공동 경작지) |
+| `heungbu.background.heungbu-swallow-eaves` | `heungbu.background.heungbu-swallow-eaves.webp` | 1600 × 900 | 장면 | 흥부네 초가집 제비 둥지 처마 (6장 제비 치료, 7장 제비 귀환) |
+| `heungbu.background.nolbu-swallow-eaves` | `heungbu.background.nolbu-swallow-eaves.webp` | 1600 × 900 | 장면 | 놀부네 기와 처마와 제비 둥지 (8장 처마 살핌, 9장 제비 갈등) |
+| `heungbu.background.nolbu-ruined-yard` | `heungbu.background.nolbu-ruined-yard.webp` | 1600 × 900 | 장면 | 박 재앙 후 처마와 담장이 무너진 마당 (10장 후반, 11장) |
+| `heungbu.background.two-houses-path` | `heungbu.background.two-houses-path.webp` | 1600 × 900 | 장면 | 두 형제의 집 사이에 자연스럽게 난 흙길 (12b장 결말) |
+| `heungbu.background.family-dinner-night` | `heungbu.background.family-dinner-night.webp` | 1600 × 900 | 장면 | 밤늦게 등불 켜진 따뜻한 방 (4장, 7장, 11장, 12b장 밥상) |
+| `heungbu.scene.gourd-treasure-burst` | `heungbu.scene.gourd-treasure-burst.webp` | 1600 × 900 | 사건 삽화 | 쩍! 박이 갈라지며 금은보화와 비단이 쏟아져 나오는 순간 (7-06~07) |
+| `heungbu.scene.nolbu-broken-goods` | `heungbu.scene.nolbu-broken-goods.webp` | 1600 × 900 | 사건 삽화 | 놀부 첫 박에서 헌 헝겊과 깨진 사기그릇이 터져 나오는 장면 (10-04~05) |
+| `heungbu.scene.nolbu-goblin-chaos` | `heungbu.scene.nolbu-goblin-chaos.webp` | 1600 × 900 | 사건 삽화 | 둘째 박에서 도깨비들이 튀어나와 갓을 뺏고 마당을 휘젓는 장면 (10-09~11) |
+| `heungbu.scene.nolbu-storm-collapse` | `heungbu.scene.nolbu-storm-collapse.webp` | 1600 × 900 | 사건 삽화 | 마지막 박에서 거센 물과 폭풍우가 쏟아져 기와집 한쪽이 무너지는 장면 (10-14~15) |
 
 ---
 

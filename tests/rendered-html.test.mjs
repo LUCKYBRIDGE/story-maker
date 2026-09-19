@@ -544,7 +544,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   const recommendedAssets = parsedAssets.filter(
     (asset) => asset.selectionTier === "기본 추천",
   );
-  assert.equal(recommendedAssets.length, 97);
+  assert.equal(recommendedAssets.length, 121);
   assert.equal(
     recommendedAssets.filter(
       (asset) => (asset.story === "별주부전" || asset.story === "토끼와 자라") && asset.type === "character",
@@ -580,6 +580,18 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
       (asset) => asset.story === "선녀와 나무꾼" && asset.type === "background",
     ).length,
     16,
+  );
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "흥부와 놀부" && asset.type === "character",
+    ).length,
+    10,
+  );
+  assert.equal(
+    recommendedAssets.filter(
+      (asset) => asset.story === "흥부와 놀부" && asset.type === "background",
+    ).length,
+    14,
   );
   assert.ok(
     parsedAssets
