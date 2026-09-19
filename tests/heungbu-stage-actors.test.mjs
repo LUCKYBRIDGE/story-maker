@@ -22,8 +22,28 @@ const { project } = JSON.parse(
 );
 
 const SPEAKER_ACTOR_MAP = {
-  "흥부": ["heungbu-default", "heungbu-young", "heungbu-pleading", "heungbu-happy"],
-  "놀부": ["nolbu-default", "nolbu-young", "nolbu-angry", "nolbu-remorse"],
+  "흥부": [
+    "heungbu-default",
+    "heungbu-young",
+    "heungbu-pleading",
+    "heungbu-happy",
+    "heungbu-thinking",
+    "heungbu-working",
+    "heungbu-swallow-care",
+    "heungbu-gourd-saw",
+    "heungbu-sharing",
+  ],
+  "놀부": [
+    "nolbu-default",
+    "nolbu-young",
+    "nolbu-angry",
+    "nolbu-remorse",
+    "nolbu-thinking",
+    "nolbu-swallow-holding",
+    "nolbu-ruined-seated",
+    "nolbu-working",
+    "nolbu-sharing",
+  ],
   "흥부 아내": ["wife-heungbu", "wife-heungbu-worried"],
   "놀부 아내": ["wife-nolbu", "wife-nolbu-shocked"],
   "아이": ["children"],
