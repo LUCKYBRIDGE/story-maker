@@ -100,7 +100,7 @@ export const HEUNGBU_CLASSIC_ART: readonly (readonly (readonly [string, string, 
     [autumn, heungbuDefault, wifeHeungbu],         // 4: 가장 잘 익은 박 하나를 내려놓았다
     [autumn, heungbuDefault, wifeHeungbu],         // 5: 슬근슬근 슥삭슥삭 박을 타기 시작했다
     [autumn, heungbuDefault, children],            // 6: 아이: 안에서 무슨 소리가 나는 것 같아요
-    [autumn, heungbuHappy, wifeHeungbuWorried],    // 7: 첫 번째 박에서 쌀과 곡식이 와르르 나왔다
+    [autumn, heungbuHappy, wifeHeungbu],           // 7: 첫 번째 박에서 쌀과 곡식이 와르르 나왔다
     [autumn, heungbuHappy, wifeHeungbu],           // 8: 흥부 아내: 세상에 쌀이에요
     [autumn, heungbuHappy, wifeHeungbu],           // 9: 흥부: 아이들이 배를 곯지 않아도 되겠소
     [autumn, heungbuHappy, wifeHeungbu],           // 10: 두 번째 박에서는 돈과 귀한 물건들이 나왔다
@@ -126,24 +126,24 @@ export const HEUNGBU_CLASSIC_ART: readonly (readonly (readonly [string, string, 
     [nolbuYard, heungbuDefault, nolbuDefault],     // 8: 흥부: 보답을 바라고 도와준 것은 아니었습니다
     [nolbuYard, "", nolbuDefault],                 // 9: 놀부 머릿속엔 박 속의 재물만 가득했다
     [nolbuRoom, "", nolbuDefault],                 // 10: 놀부: 제비 한 마리면 되는 일이었군
-    [nolbuYard, nolbuDefault, swallow],            // 11: 처마의 제비 둥지를 날마다 살폈다
-    [nolbuYard, nolbuAngry, swallow],              // 12: 새끼 제비들은 탈 없이 자랐고 놀부는 조급해졌다
+    [nolbuYard, swallow, nolbuDefault],            // 11: 처마의 제비 둥지를 날마다 살폈다
+    [nolbuYard, swallow, nolbuAngry],              // 12: 새끼 제비들은 탈 없이 자랐고 놀부는 조급해졌다
     [nolbuYard, "", nolbuAngry],                   // 13: 놀부: 언제 박씨를 얻는단 말이냐
-    [nolbuYard, nolbuAngry, swallow],              // 14: 새끼 제비를 잡아 일부러 다리를 다치게 했다
+    [nolbuYard, swallow, nolbuAngry],              // 14: 새끼 제비를 잡아 일부러 다리를 다치게 했다
     [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 15: 놀부 아내: 멀쩡한 제비를 왜 다치게 해요?
     [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 16: 놀부: 다시 고쳐 주면 되지 않소
-    [nolbuYard, nolbuDefault, swallow],            // 17: 다리를 묶어 주고 다음 봄을 기다렸다
-    [nolbuYard, nolbuDefault, swallow],            // 18: 이듬해 봄 제비가 박씨를 떨어뜨렸다
+    [nolbuYard, swallow, nolbuDefault],            // 17: 다리를 묶어 주고 다음 봄을 기다렸다
+    [nolbuYard, swallow, nolbuDefault],            // 18: 이듬해 봄 제비가 박씨를 떨어뜨렸다
     [nolbuYard, "", nolbuDefault],                 // 19: 놀부: 흥부보다 몇 배는 더 큰 부자가 되어 보자
   ],
 
   // 6장: 놀부가 박을 타다 (22컷)
   [
-    [autumn, nolbuDefault, wifeNolbu],             // 1: 가을이 되자 큼직한 박들이 열렸다
+    [autumn, wifeNolbu, nolbuDefault],             // 1: 가을이 되자 큼직한 박들이 열렸다
     [autumn, "", nolbuDefault],                    // 2: 놀부: 금은보화가 얼마나 많이 들어 있을까
-    [autumn, nolbuDefault, wifeNolbu],             // 3: 가장 큰 박부터 내려놓고 톱을 잡았다
+    [autumn, wifeNolbu, nolbuDefault],             // 3: 가장 큰 박부터 내려놓고 톱을 잡았다
     [autumn, "", nolbuDefault],                    // 4: 놀부: 금도 좋고 은도 좋다 나오너라
-    [autumn, nolbuDefault, wifeNolbu],             // 5: 슥삭슥삭 톱질 끝에 첫 번째 박이 갈라졌다
+    [autumn, wifeNolbu, nolbuDefault],             // 5: 슥삭슥삭 톱질 끝에 첫 번째 박이 갈라졌다
     [nolbuYard, neighbor, nolbuAngry],             // 6: 험상궂은 사람들이 우르르 튀어나왔다
     [nolbuYard, neighbor, nolbuAngry],             // 7: 놀부: 너희는 누구냐 내 보물은 어디 있느냐
     [nolbuYard, neighbor, nolbuAngry],             // 8: 사람들이 빚과 값을 내놓으라며 재물을 챙겼다
@@ -153,11 +153,11 @@ export const HEUNGBU_CLASSIC_ART: readonly (readonly (readonly [string, string, 
     [nolbuYard, neighbor, nolbuAngry],             // 12: 세 번째 박에서도 또 다른 사람들이 몰려나왔다
     [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 13: 놀부 아내: 이제 그만 타요 버립시다
     [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 14: 놀부: 안 되오 마지막 박에 보물이 있을 거요
-    [nolbuYard, nolbuAngry, wifeNolbuShocked],     // 15: 놀부는 손해를 보고도 멈추지 않았다
-    [nolbuYard, nolbuAngry, wifeNolbuShocked],     // 16: 탈 때마다 돈과 곡식이 사라지고 살림이 망가졌다
-    [emptyHouse, nolbuRemorse, wifeNolbuShocked],  // 17: 마지막 박에서 더러운 것들이 쏟아져 나왔다
+    [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 15: 놀부는 손해를 보고도 멈추지 않았다
+    [nolbuYard, wifeNolbuShocked, nolbuAngry],     // 16: 탈 때마다 돈과 곡식이 사라지고 살림이 망가졌다
+    [emptyHouse, wifeNolbuShocked, nolbuRemorse],  // 17: 마지막 박에서 더러운 것들이 쏟아져 나왔다
     [emptyHouse, "", nolbuRemorse],                // 18: 놀부: 아이고 내 재산 내 집 이게 무슨 일이냐
-    [emptyHouse, nolbuRemorse, wifeNolbuShocked],  // 19: 살림은 하루아침에 엉망이 되고 말았다
+    [emptyHouse, wifeNolbuShocked, nolbuRemorse],  // 19: 살림은 하루아침에 엉망이 되고 말았다
     [emptyHouse, nolbuRemorse, ""],                // 20: 행동을 따라 해도 처음부터 두 행동은 같지 않았다
     [emptyHouse, nolbuRemorse, ""],                // 21: 흥부는 도왔고 놀부는 제비를 다치게 했다
     [emptyHouse, nolbuRemorse, ""],                // 22: 모든 것을 잃은 놀부는 텅 빈 마당에 주저앉았다

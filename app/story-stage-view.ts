@@ -35,6 +35,7 @@ export const CHARACTER_FACING = new Map<string, "left" | "right">([
   ["rabbit-turtle.character.dragonking-young-unified-720x900", "left"],
   ["rabbit-turtle.character.dragonking-recovered-unified-720x900", "left"],
   ["rabbit-turtle.character.physician-unified-720x900", "right"],
+  ["heungbu.character.swallow", "right"],
 ]);
 
 // These composites still represent one adult's pose, so use the adult slot width.
