@@ -11,7 +11,7 @@
 
 ## 현재 작업: AL-02~12 Asset Library 전환 완료
 
-- 사용자 후속 요청: 남은 단계 연속 구현, 검증은 핵심 검사로 제한, 완료 후 GitHub 반영. **DONE — 로컬 구현·핵심 검증 완료, GitHub 공유 진행**, Work Lead · A/B.
+- 사용자 후속 요청: 남은 단계 연속 구현, 검증은 핵심 검사로 제한, 완료 후 GitHub 반영. **DONE — 로컬 구현·핵심 검증 완료, PR 공유**, Work Lead · A/B.
 - branch `codex/asset-library-foundation`. 앞선 로컬 변경과 제공 계획 파일 보존.
 - 범위: 248개 정규 metadata, 검증기, 복합 Query/Ranking, 공통 Browser·캐릭터/작품/종류 View, 생성기 연동. 자유 소품 배치와 저장 schema 변경은 원래 계획대로 제외.
 - 구현: 248개 canonical metadata·4개 작품/36개 캐릭터 등록, 162 character/59 background/23 scene-illustration/2 prop/2 poster. 흥부 팩은 25/12/4/1 유지. 다른 작품의 동명 인물·변형·다인물을 연결하고 미확인 facet은 비워 둠.
@@ -20,7 +20,7 @@
 - A: 도메인/기존 helper **16/16**, 변경된 화면 계약 **3/3**, metadata audit **오류 0**, `npm run check`, `npm run build`, `git diff --check` 통과. 기존 큰 chunk 빌드 안내는 유지.
 - B: `npm run qa:assets`에서 1365×900/390×844 캐릭터→행동, 작품/감정 다중 선택, View 전환 조건 보존, 0개 회복, 소품 적용 차단, 즐겨찾기, 미리보기 취소/적용, 겨울집 배경, 44px 버튼·키보드·가로 넘침 검사 통과. 캡처 `/tmp/asset-library-qa/` 직접 확인.
 - 남은 범위: 별도 후속인 prop 자유 배치·새 이미지 제작·실기기 확인. 단일 인물 150개는 대응 구도 미보유로 audit에 보고하며 승인 완료로 숨기지 않음. 기존 품질 검수 이력은 legacy 유지. 사용자 요청에 따라 전체 작품/전체 회귀를 로컬에서 반복하지 않음.
-- GitHub: 커밋/PR 공유 진행. main 병합·운영 배포 미수행. 다음 READY 없음.
+- GitHub: 구현 커밋 `ce3c6b9`를 push하고 [PR #64](https://github.com/LUCKYBRIDGE/story-maker/pull/64)를 draft로 공유. 원격 CI는 [PR Checks](https://github.com/LUCKYBRIDGE/story-maker/pull/64/checks)에서 확인하며 로컬 통과와 구분한다. main 병합·운영 배포 미수행. 다음 READY 없음.
 
 ## 최근 완료: AL-01 Asset Library 분류 기반
 
