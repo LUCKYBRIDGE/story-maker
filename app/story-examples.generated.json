@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "61b6dde578e8300f6bfb096c135a776cdb5c77c0",
+  "sourceCommit": "53d96c2b2d5e520d36d893942a21a922caf39275",
   "projects": [
     {
       "id": "pinky-review-main-002",
@@ -4778,7 +4778,7 @@
           }
         }
       ],
-      "updatedAt": "pinky-ne-site 61b6dde"
+      "updatedAt": "pinky-ne-site 53d96c2"
     },
     {
       "id": "pinky-review-main-003",
@@ -4824,7 +4824,7 @@
         "가짜 옹고집",
         "조용한 옹고집"
       ],
-      "updatedAt": "pinky-ne-site 61b6dde",
+      "updatedAt": "pinky-ne-site 53d96c2",
       "chapters": [
         {
           "id": "review-main-003:start",
@@ -25180,7 +25180,7 @@
           "chapterId": "14-v52",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -25188,7 +25188,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v52-8"
@@ -25332,7 +25332,7 @@
           "chapterId": "14-v52",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -25340,7 +25340,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v52-16"
@@ -25370,7 +25370,7 @@
           "chapterId": "14-v52",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -25378,7 +25378,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v52-18"
@@ -25389,7 +25389,7 @@
           "chapterId": "14-v52",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -25397,7 +25397,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v52-19"
@@ -25408,7 +25408,7 @@
           "chapterId": "14-v52",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -25416,7 +25416,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v52-20"
@@ -25427,7 +25427,7 @@
           "chapterId": "14-v52",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그토록 찾던 옷인데.\n막상 찾으니 왜 숨기고 싶은 거지?”",
           "leftAssetId": "",
@@ -25435,7 +25435,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v51-1"
@@ -26627,7 +26627,7 @@
           "chapterId": "E1-3-v2",
           "order": 2,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“눈이 차갑다고 깜짝 놀라더니.”",
           "leftAssetId": "",
@@ -26635,7 +26635,7 @@
           "backgroundId": "seonnyeo.background.BG05-cottage-snow",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-2\n배경: yard",
+          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-2\n인물: M02 / 표정: default\n배경: yard",
           "flow": {
             "type": "goto",
             "targetLineId": "E1-3-v2-3"
@@ -27121,7 +27121,7 @@
           "chapterId": "E2-3-v6",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“가족 생각이 나는 날에는, 그 이야기를 같이 들어야지.”",
           "leftAssetId": "seonnyeo.character.M01-soft-smile",
@@ -27129,7 +27129,7 @@
           "backgroundId": "seonnyeo.background.BG04-cottage-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-6\n배경: snow",
+          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-6\n인물: M02 / 표정: default\n배경: snow",
           "flow": {
             "type": "goto",
             "targetLineId": "E2-3-v6-7"
@@ -27140,7 +27140,7 @@
           "chapterId": "E2-3-v6",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘도 어머니 이야기를 하다 오래 하늘을 보았지.”",
           "leftAssetId": "seonnyeo.character.M01-soft-smile",
@@ -27148,7 +27148,7 @@
           "backgroundId": "seonnyeo.background.BG04-cottage-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-7\n배경: snow",
+          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-7\n인물: M02 / 표정: default\n배경: snow",
           "flow": {
             "type": "goto",
             "targetLineId": "E2-4-v5-1"
@@ -27330,7 +27330,7 @@
           "chapterId": "H1-v50",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -27338,7 +27338,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v50-4"
@@ -27349,7 +27349,7 @@
           "chapterId": "H1-v50",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -27357,7 +27357,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v50-5"
@@ -27368,7 +27368,7 @@
           "chapterId": "H1-v50",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -27376,7 +27376,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v50-6"
@@ -27387,7 +27387,7 @@
           "chapterId": "H1-v50",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금까지는 선녀가 결정할 일을 선녀에게 맡겼다.\n그런데 가장 중요한 순간에 나는 왜 혼자 결정하고 있지?”",
           "leftAssetId": "",
@@ -27395,7 +27395,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v49-1"
@@ -27615,7 +27615,7 @@
           "chapterId": "H3-v48",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하룻밤이 지났다. 오늘은 말하기로 했지.”",
           "leftAssetId": "",
@@ -27623,7 +27623,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v48-4"
@@ -27634,7 +27634,7 @@
           "chapterId": "H3-v48",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금이라도 창고에서 옷을 꺼내 사실대로 말해야 한다.”",
           "leftAssetId": "",
@@ -27642,7 +27642,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v48-5"
@@ -27653,7 +27653,7 @@
           "chapterId": "H3-v48",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“아니면…… 아직 마음이 정리되지 않았으니 조금만 더 미룰까?”",
           "leftAssetId": "",
@@ -27661,7 +27661,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "C4H-v47-1"
@@ -28644,7 +28644,7 @@
           "chapterId": "E1-3-v14",
           "order": 2,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“눈이 차갑다고 깜짝 놀라더니.”",
           "leftAssetId": "",
@@ -28652,7 +28652,7 @@
           "backgroundId": "seonnyeo.background.BG05-cottage-snow",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-2\n배경: yard",
+          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-2\n인물: M02 / 표정: default\n배경: yard",
           "flow": {
             "type": "goto",
             "targetLineId": "E1-3-v14-3"
@@ -28663,7 +28663,7 @@
           "chapterId": "E1-3-v14",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하루를 숨긴 일까지 잘한 일이 되는 건 아니지.”",
           "leftAssetId": "",
@@ -28671,7 +28671,7 @@
           "backgroundId": "seonnyeo.background.BG05-cottage-snow",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-3\n배경: yard",
+          "directionNote": "원전 장면: E1-3\n원전 컷: E1-3-3\n인물: M02 / 표정: default\n배경: yard",
           "flow": {
             "type": "goto",
             "targetLineId": "E1-3-v14-4"
@@ -29252,7 +29252,7 @@
           "chapterId": "HB1-v46",
           "order": 10,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하루를 넘기고 말았다.”",
           "leftAssetId": "seonnyeo.character.M01-worried",
@@ -29260,7 +29260,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: HB1\n원전 컷: HB1-10\n배경: room",
+          "directionNote": "원전 장면: HB1\n원전 컷: HB1-10\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "HB2-v45-1"
@@ -31060,7 +31060,7 @@
           "chapterId": "E4-2-v41",
           "order": 2,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“창고에 두면 언젠가 발견할지도 모른다.”",
           "leftAssetId": "",
@@ -31068,7 +31068,7 @@
           "backgroundId": "seonnyeo.background.BG-room-night",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-2\n배경: night",
+          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-2\n인물: M02 / 표정: guilty\n배경: night",
           "flow": {
             "type": "goto",
             "targetLineId": "E4-2-v41-3"
@@ -31098,7 +31098,7 @@
           "chapterId": "E4-2-v41",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“조금만 더.”",
           "leftAssetId": "",
@@ -31106,7 +31106,7 @@
           "backgroundId": "seonnyeo.background.BG-room-night",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-4\n배경: night",
+          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-4\n인물: M02 / 표정: guilty\n배경: night",
           "flow": {
             "type": "goto",
             "targetLineId": "E4-2-v41-5"
@@ -33142,7 +33142,7 @@
           "chapterId": "14-v73",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -33150,7 +33150,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v73-8"
@@ -33294,7 +33294,7 @@
           "chapterId": "14-v73",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -33302,7 +33302,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v73-16"
@@ -33332,7 +33332,7 @@
           "chapterId": "14-v73",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -33340,7 +33340,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v73-18"
@@ -33351,7 +33351,7 @@
           "chapterId": "14-v73",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -33359,7 +33359,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v73-19"
@@ -33370,7 +33370,7 @@
           "chapterId": "14-v73",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -33378,7 +33378,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v73-20"
@@ -33389,7 +33389,7 @@
           "chapterId": "14-v73",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그토록 찾던 옷인데.\n막상 찾으니 왜 숨기고 싶은 거지?”",
           "leftAssetId": "",
@@ -33397,7 +33397,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v72-1"
@@ -34684,7 +34684,7 @@
           "chapterId": "E2-3-v54",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘은 하늘이 보고 싶은 날인가 보다. 무슨 말을 할지 기다려 보자.”",
           "leftAssetId": "seonnyeo.character.M01-soft-smile",
@@ -34692,7 +34692,7 @@
           "backgroundId": "seonnyeo.background.BG04-cottage-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-9\n배경: snow",
+          "directionNote": "원전 장면: E2-3\n원전 컷: E2-3-9\n인물: M02 / 표정: default\n배경: snow",
           "flow": {
             "type": "goto",
             "targetLineId": "E2-4-v5-1"
@@ -34741,7 +34741,7 @@
           "chapterId": "H1-v71",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -34749,7 +34749,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v71-4"
@@ -34760,7 +34760,7 @@
           "chapterId": "H1-v71",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -34768,7 +34768,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v71-5"
@@ -34779,7 +34779,7 @@
           "chapterId": "H1-v71",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -34787,7 +34787,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v71-6"
@@ -34798,7 +34798,7 @@
           "chapterId": "H1-v71",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀도 이곳에서 잘 살고 있다.\n괜히 옷을 보여줘 모든 것을 흔드는 것이 더 나쁜 일 아닐까?”\n\n“……그걸 정할 사람은 내가 아니다.”",
           "leftAssetId": "",
@@ -34806,7 +34806,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v70-1"
@@ -35026,7 +35026,7 @@
           "chapterId": "H3-v69",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하룻밤이 지났다. 오늘은 말하기로 했지.”",
           "leftAssetId": "",
@@ -35034,7 +35034,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v69-4"
@@ -35045,7 +35045,7 @@
           "chapterId": "H3-v69",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금이라도 창고에서 옷을 꺼내 사실대로 말해야 한다.”",
           "leftAssetId": "",
@@ -35053,7 +35053,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v69-5"
@@ -35064,7 +35064,7 @@
           "chapterId": "H3-v69",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“아니면…… 아직 마음이 정리되지 않았으니 조금만 더 미룰까?”",
           "leftAssetId": "",
@@ -35072,7 +35072,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "C4H-v68-1"
@@ -38384,7 +38384,7 @@
           "chapterId": "14-v84",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -38392,7 +38392,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v84-8"
@@ -38536,7 +38536,7 @@
           "chapterId": "14-v84",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -38544,7 +38544,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v84-16"
@@ -38574,7 +38574,7 @@
           "chapterId": "14-v84",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -38582,7 +38582,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v84-18"
@@ -38593,7 +38593,7 @@
           "chapterId": "14-v84",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -38601,7 +38601,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v84-19"
@@ -38612,7 +38612,7 @@
           "chapterId": "14-v84",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -38620,7 +38620,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v84-20"
@@ -38631,7 +38631,7 @@
           "chapterId": "14-v84",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀가 혼자 찾아보겠다고 했을 때 나는 그 뜻을 따랐다.\n지금 이 옷이 필요한지 아닌지를 정할 사람도 내가 아니다.”",
           "leftAssetId": "",
@@ -38639,7 +38639,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v51-1"
@@ -38973,7 +38973,7 @@
           "chapterId": "14-v89",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -38981,7 +38981,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v89-8"
@@ -39125,7 +39125,7 @@
           "chapterId": "14-v89",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -39133,7 +39133,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v89-16"
@@ -39163,7 +39163,7 @@
           "chapterId": "14-v89",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -39171,7 +39171,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v89-18"
@@ -39182,7 +39182,7 @@
           "chapterId": "14-v89",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -39190,7 +39190,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v89-19"
@@ -39201,7 +39201,7 @@
           "chapterId": "14-v89",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -39209,7 +39209,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v89-20"
@@ -39220,7 +39220,7 @@
           "chapterId": "14-v89",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀가 혼자 찾아보겠다고 했을 때 나는 그 뜻을 따랐다.\n지금 이 옷이 필요한지 아닌지를 정할 사람도 내가 아니다.”",
           "leftAssetId": "",
@@ -39228,7 +39228,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v88-1"
@@ -39744,7 +39744,7 @@
           "chapterId": "H1-v87",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -39752,7 +39752,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v87-4"
@@ -39763,7 +39763,7 @@
           "chapterId": "H1-v87",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -39771,7 +39771,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v87-5"
@@ -39782,7 +39782,7 @@
           "chapterId": "H1-v87",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -39790,7 +39790,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v87-6"
@@ -39801,7 +39801,7 @@
           "chapterId": "H1-v87",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금까지는 선녀가 결정할 일을 선녀에게 맡겼다.\n그런데 가장 중요한 순간에 나는 왜 혼자 결정하고 있지?”",
           "leftAssetId": "",
@@ -39809,7 +39809,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v70-1"
@@ -43737,7 +43737,7 @@
           "chapterId": "14-v122",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -43745,7 +43745,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v122-8"
@@ -43889,7 +43889,7 @@
           "chapterId": "14-v122",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -43897,7 +43897,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v122-16"
@@ -43927,7 +43927,7 @@
           "chapterId": "14-v122",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -43935,7 +43935,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v122-18"
@@ -43946,7 +43946,7 @@
           "chapterId": "14-v122",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -43954,7 +43954,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v122-19"
@@ -43965,7 +43965,7 @@
           "chapterId": "14-v122",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -43973,7 +43973,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v122-20"
@@ -43984,7 +43984,7 @@
           "chapterId": "14-v122",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그토록 찾던 옷인데.\n막상 찾으니 왜 숨기고 싶은 거지?”",
           "leftAssetId": "",
@@ -43992,7 +43992,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v121-1"
@@ -44508,7 +44508,7 @@
           "chapterId": "H1-v120",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -44516,7 +44516,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v120-4"
@@ -44527,7 +44527,7 @@
           "chapterId": "H1-v120",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -44535,7 +44535,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v120-5"
@@ -44546,7 +44546,7 @@
           "chapterId": "H1-v120",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -44554,7 +44554,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v120-6"
@@ -44565,7 +44565,7 @@
           "chapterId": "H1-v120",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀도 이곳에서 잘 살고 있다.\n괜히 옷을 보여줘 모든 것을 흔드는 것이 더 나쁜 일 아닐까?”\n\n“……그걸 정할 사람은 내가 아니다.”",
           "leftAssetId": "",
@@ -44573,7 +44573,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v119-1"
@@ -44793,7 +44793,7 @@
           "chapterId": "H3-v118",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하룻밤이 지났다. 오늘은 말하기로 했지.”",
           "leftAssetId": "",
@@ -44801,7 +44801,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v118-4"
@@ -44812,7 +44812,7 @@
           "chapterId": "H3-v118",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금이라도 창고에서 옷을 꺼내 사실대로 말해야 한다.”",
           "leftAssetId": "",
@@ -44820,7 +44820,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v118-5"
@@ -44831,7 +44831,7 @@
           "chapterId": "H3-v118",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“아니면…… 아직 마음이 정리되지 않았으니 조금만 더 미룰까?”",
           "leftAssetId": "",
@@ -44839,7 +44839,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "C4H-v117-1"
@@ -45051,7 +45051,7 @@
           "chapterId": "HB1-v116",
           "order": 10,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하루를 넘기고 말았다.”",
           "leftAssetId": "seonnyeo.character.M01-worried",
@@ -45059,7 +45059,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: HB1\n원전 컷: HB1-10\n배경: room",
+          "directionNote": "원전 장면: HB1\n원전 컷: HB1-10\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "HB2-v115-1"
@@ -46107,7 +46107,7 @@
           "chapterId": "E4-2-v111",
           "order": 2,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“창고에 두면 언젠가 발견할지도 모른다.”",
           "leftAssetId": "",
@@ -46115,7 +46115,7 @@
           "backgroundId": "seonnyeo.background.BG-room-night",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-2\n배경: night",
+          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-2\n인물: M02 / 표정: guilty\n배경: night",
           "flow": {
             "type": "goto",
             "targetLineId": "E4-2-v111-3"
@@ -46145,7 +46145,7 @@
           "chapterId": "E4-2-v111",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“조금만 더.”",
           "leftAssetId": "",
@@ -46153,7 +46153,7 @@
           "backgroundId": "seonnyeo.background.BG-room-night",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-4\n배경: night",
+          "directionNote": "원전 장면: E4-2\n원전 컷: E4-2-4\n인물: M02 / 표정: guilty\n배경: night",
           "flow": {
             "type": "goto",
             "targetLineId": "E4-2-v111-5"
@@ -47228,7 +47228,7 @@
           "chapterId": "14-v129",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -47236,7 +47236,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v129-8"
@@ -47380,7 +47380,7 @@
           "chapterId": "14-v129",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -47388,7 +47388,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v129-16"
@@ -47418,7 +47418,7 @@
           "chapterId": "14-v129",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -47426,7 +47426,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v129-18"
@@ -47437,7 +47437,7 @@
           "chapterId": "14-v129",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -47445,7 +47445,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v129-19"
@@ -47456,7 +47456,7 @@
           "chapterId": "14-v129",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -47464,7 +47464,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v129-20"
@@ -47475,7 +47475,7 @@
           "chapterId": "14-v129",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그토록 찾던 옷인데.\n막상 찾으니 왜 숨기고 싶은 거지?”",
           "leftAssetId": "",
@@ -47483,7 +47483,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-20\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v128-1"
@@ -47562,7 +47562,7 @@
           "chapterId": "H1-v127",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -47570,7 +47570,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v127-4"
@@ -47581,7 +47581,7 @@
           "chapterId": "H1-v127",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -47589,7 +47589,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v127-5"
@@ -47600,7 +47600,7 @@
           "chapterId": "H1-v127",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -47608,7 +47608,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v127-6"
@@ -47619,7 +47619,7 @@
           "chapterId": "H1-v127",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀도 이곳에서 잘 살고 있다.\n괜히 옷을 보여줘 모든 것을 흔드는 것이 더 나쁜 일 아닐까?”\n\n“……그걸 정할 사람은 내가 아니다.”",
           "leftAssetId": "",
@@ -47627,7 +47627,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-7\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v126-1"
@@ -47847,7 +47847,7 @@
           "chapterId": "H3-v125",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“하룻밤이 지났다. 오늘은 말하기로 했지.”",
           "leftAssetId": "",
@@ -47855,7 +47855,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-3\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v125-4"
@@ -47866,7 +47866,7 @@
           "chapterId": "H3-v125",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금이라도 창고에서 옷을 꺼내 사실대로 말해야 한다.”",
           "leftAssetId": "",
@@ -47874,7 +47874,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-4\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "H3-v125-5"
@@ -47885,7 +47885,7 @@
           "chapterId": "H3-v125",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“아니면…… 아직 마음이 정리되지 않았으니 조금만 더 미룰까?”",
           "leftAssetId": "",
@@ -47893,7 +47893,7 @@
           "backgroundId": "seonnyeo.background.BG09-room-day",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n배경: room",
+          "directionNote": "원전 장면: H3\n원전 컷: H3-5\n인물: M02 / 표정: guilty\n배경: room",
           "flow": {
             "type": "goto",
             "targetLineId": "C4H-v124-1"
@@ -50206,7 +50206,7 @@
           "chapterId": "14-v142",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -50214,7 +50214,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v142-8"
@@ -50358,7 +50358,7 @@
           "chapterId": "14-v142",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -50366,7 +50366,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v142-16"
@@ -50396,7 +50396,7 @@
           "chapterId": "14-v142",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -50404,7 +50404,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v142-18"
@@ -50415,7 +50415,7 @@
           "chapterId": "14-v142",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -50423,7 +50423,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v142-19"
@@ -50434,7 +50434,7 @@
           "chapterId": "14-v142",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -50442,7 +50442,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v142-20"
@@ -50453,7 +50453,7 @@
           "chapterId": "14-v142",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀가 혼자 찾아보겠다고 했을 때 나는 그 뜻을 따랐다.\n지금 이 옷이 필요한지 아닌지를 정할 사람도 내가 아니다.”",
           "leftAssetId": "",
@@ -50461,7 +50461,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v141-1"
@@ -50540,7 +50540,7 @@
           "chapterId": "H1-v140",
           "order": 3,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 생각하자.”",
           "leftAssetId": "",
@@ -50548,7 +50548,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-3\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v140-4"
@@ -50559,7 +50559,7 @@
           "chapterId": "H1-v140",
           "order": 4,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“오늘 밤만 지나면…… 내일은 말할 수 있을 거야.”",
           "leftAssetId": "",
@@ -50567,7 +50567,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-4\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v140-5"
@@ -50578,7 +50578,7 @@
           "chapterId": "H1-v140",
           "order": 5,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“생각을 정리하고 내일 아침에 말하면 된다.”",
           "leftAssetId": "",
@@ -50586,7 +50586,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-5\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H1-v140-6"
@@ -50597,7 +50597,7 @@
           "chapterId": "H1-v140",
           "order": 6,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“지금까지는 선녀가 결정할 일을 선녀에게 맡겼다.\n그런데 가장 중요한 순간에 나는 왜 혼자 결정하고 있지?”",
           "leftAssetId": "",
@@ -50605,7 +50605,7 @@
           "backgroundId": "seonnyeo.background.BG-woodshed",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n배경: shed",
+          "directionNote": "원전 장면: H1\n원전 컷: H1-6\n인물: M02 / 표정: guilty\n배경: shed",
           "flow": {
             "type": "goto",
             "targetLineId": "H2-v119-1"
@@ -50939,7 +50939,7 @@
           "chapterId": "14-v144",
           "order": 7,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“뿌리 밑에 이렇게 깊이 있었구나.”",
           "leftAssetId": "",
@@ -50947,7 +50947,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-7\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v144-8"
@@ -51091,7 +51091,7 @@
           "chapterId": "14-v144",
           "order": 15,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀에게 가져다주면 된다.”",
           "leftAssetId": "",
@@ -51099,7 +51099,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-15\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v144-16"
@@ -51129,7 +51129,7 @@
           "chapterId": "14-v144",
           "order": 17,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“그러면 선녀는 하늘로 갈 수 있다.”",
           "leftAssetId": "",
@@ -51137,7 +51137,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-17\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v144-18"
@@ -51148,7 +51148,7 @@
           "chapterId": "14-v144",
           "order": 18,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“다시 돌아오지 못할 수도 있다.”",
           "leftAssetId": "",
@@ -51156,7 +51156,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-18\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v144-19"
@@ -51167,7 +51167,7 @@
           "chapterId": "14-v144",
           "order": 19,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“날이 어두우니 내일 돌려줘도 되지 않을까. ……집에 가면 바로 만날 텐데, 무슨 핑계를 대는 거지.”",
           "leftAssetId": "",
@@ -51175,7 +51175,7 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-19\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "14-v144-20"
@@ -51186,7 +51186,7 @@
           "chapterId": "14-v144",
           "order": 20,
           "type": "dialogue",
-          "speaker": "left",
+          "speaker": "right",
           "speakerName": "나무꾼의 생각",
           "text": "“선녀가 혼자 찾아보겠다고 했을 때 나는 그 뜻을 따랐다.\n지금 이 옷이 필요한지 아닌지를 정할 사람도 내가 아니다.”",
           "leftAssetId": "",
@@ -51194,14 +51194,14 @@
           "backgroundId": "seonnyeo.background.BG-forest-roots",
           "purposeNote": "",
           "emotionNote": "",
-          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n배경: roots",
+          "directionNote": "원전 장면: 14\n원전 컷: 14-21\n인물: M02 / 표정: axe\n배경: roots",
           "flow": {
             "type": "goto",
             "targetLineId": "C4-v128-1"
           }
         }
       ],
-      "updatedAt": "pinky-ne-site 61b6dde"
+      "updatedAt": "pinky-ne-site 53d96c2"
     }
   ]
 }
