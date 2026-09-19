@@ -238,7 +238,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
     creativeMemo,
   ] = await Promise.all([
     readFile(new URL("../app/StoryStudio.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"),
+    Promise.all([readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"), readFile(new URL("../app/components/assets/AssetBrowserDialog.tsx", import.meta.url), "utf8")]).then(parts => parts.join("\n")),
     readFile(new URL("../app/components/StartScreen.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/StoryPlanScreen.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/ResourceWidgets.tsx", import.meta.url), "utf8"),
@@ -373,7 +373,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(assetPicker, /원작 사용/);
   assert.match(assetPicker, /추가 연출/);
   assert.match(assetPicker, /기본 추천/);
-  assert.match(assetPicker, /추천 이미지/);
+  assert.match(assetPicker, /기본 추천만/);
   assert.match(assetPicker, /모든 이미지/);
   assert.match(assetPicker, /전신/);
   assert.match(assetPicker, /상반신/);
@@ -381,8 +381,8 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(resourceWidgets, /\+ 화자 추가/);
   assert.match(resourceWidgets, /화자 이름/);
   assert.match(assetPicker, /이미지 선택/);
-  assert.match(assetPicker, /태그로 좁히기/);
-  assert.match(assetPicker, /검색·태그 초기화/);
+  assert.match(assetPicker, /더 찾기/);
+  assert.match(assetPicker, /모두 지우기/);
   assert.match(sceneFocusEditor, /다른 이미지 고르기/);
   assert.match(resourceWidgets, /사용할 캐릭터 고르기/);
   assert.match(assetPicker, /createPortal/);
@@ -422,7 +422,7 @@ test("화자·이미지·외부 자료가 분리된 편집 도구로 유지된�
   assert.match(studio, /현재 편집/);
   assert.match(assetPicker, /즐겨찾기/);
   assert.match(assetPicker, /최근 사용/);
-  assert.match(assetPicker, /선택한 태그 지우기/);
+  assert.match(assetPicker, /모두 지우기/);
   assert.match(studio, /Excel에서 불러오기/);
   assert.match(studio, /Excel로 저장/);
   assert.match(studio, /시트에서 불러오기/);
@@ -704,7 +704,7 @@ test("U1-08: 같은 컷 왕복과 이미지 미리보기·적용·취소 계약�
       readFile(new URL("../app/StoryStudio.tsx", import.meta.url), "utf8"),
       readFile(new URL("../app/components/ScriptScreen.tsx", import.meta.url), "utf8"),
       readFile(new URL("../app/components/SceneFocusEditor.tsx", import.meta.url), "utf8"),
-      readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"),
+      Promise.all([readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"), readFile(new URL("../app/components/assets/AssetBrowserDialog.tsx", import.meta.url), "utf8")]).then(parts => parts.join("\n")),
       readFile(new URL("../app/story-editor-location.ts", import.meta.url), "utf8"),
       readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     ]);
@@ -723,12 +723,12 @@ test("U1-08: 같은 컷 왕복과 이미지 미리보기·적용·취소 계약�
   assert.match(sceneFocus, /onUpdateLine\(selectedLine\.id/);
   assert.doesNotMatch(sceneFocus, /className="scene-image-dropdowns"/);
 
-  assert.match(assetPicker, /pendingAssetId/);
+  assert.match(assetPicker, /setPending/);
   assert.match(assetPicker, /선택 미리보기/);
-  assert.match(assetPicker, /onSelect\(pendingAssetId\)/);
-  assert.match(assetPicker, /openedContextRef\.current !== selectionContextKey/);
+  assert.match(assetPicker, /onSelect\(pending\)/);
+  assert.match(assetPicker, /openedContext === context/);
   assert.match(assetPicker, /event\.key !== "Tab"/);
-  assert.match(assetPicker, /openerRef\.current\?\.focus/);
+  assert.match(assetPicker, /opener\.current\?\.focus/);
   assert.doesNotMatch(assetPicker, /onSelect\(asset\.id\)/);
 
   assert.match(studio, /currentLineBodySelection/);
@@ -743,7 +743,7 @@ test("U1-08: 같은 컷 왕복과 이미지 미리보기·적용·취소 계약�
 test("G4-02: 이미지 지연 로딩, 비동기 디코딩 및 플레이어 선로딩 성능 최적화 검사", async () => {
   const [sceneThumbSource, assetPickerSource, storyPlayerSource] = await Promise.all([
     readFile(new URL("../app/components/SceneThumbnail.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"),
+    Promise.all([readFile(new URL("../app/components/AssetPickerButton.tsx", import.meta.url), "utf8"), readFile(new URL("../app/components/assets/AssetBrowserDialog.tsx", import.meta.url), "utf8")]).then(parts => parts.join("\n")),
     readFile(new URL("../app/components/StoryPlayer.tsx", import.meta.url), "utf8"),
   ]);
 

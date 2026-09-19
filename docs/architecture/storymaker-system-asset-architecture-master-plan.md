@@ -81,9 +81,9 @@ Story Maker는 다음 제품 경계를 유지한다.
 | 작품 모델 | 버전 없는 `StoryProject` | Envelope·migration 필요 |
 | 기기 저장 | `localStorage`의 draft/active/backup | 저장소 adapter와 안전한 load 필요 |
 | 외부 보관 | Excel 왕복, 공개 Google 시트 읽기 | 공통 StoryDocument adapter로 유지 |
-| 자산 | 108개: 캐릭터 70, 배경 38 | 정식 manifest와 타입 분리 필요 |
-| 캐릭터 구도 | 전신 46, 상반신 19, 여러 인물 5 | Pair audit 전에는 완성도를 주장하지 않음 |
-| 추천 범위 | 기본 추천 49, 추가 자료 59 | visibility의 v1 호환 값으로 사용 |
+| 자산 | 2026-09-01 당시 108개; 2026-09-19 legacy 248개(캐릭터 164/background 84) | 정식 manifest와 타입 분리 필요 |
+| 캐릭터 구도 | 2026-09-01 당시 전신 46, 상반신 19, 여러 인물 5 | Pair audit 전에는 완성도를 주장하지 않음 |
+| 추천 범위 | 2026-09-01 당시 기본 추천 49, 추가 자료 59 | visibility의 v1 호환 값으로 사용 |
 | 분류 | `group/pose/framing/tags`와 런타임 taxonomy adapter | v2 정규 필드로 점진 이전 |
 | 검색 | 검색어 AND 선택된 모든 태그 | 패싯별 OR/교차 AND로 이전 필요 |
 | 방향 | 일부 asset ID의 하드코딩 Map | manifest metadata로 이전 필요 |
@@ -229,6 +229,7 @@ asset ID는 유지한다.
 type AssetType =
   | "character"
   | "background"
+  | "prop"
   | "scene-illustration";
 ```
 
@@ -236,7 +237,14 @@ type AssetType =
 - `background`: 인물을 올려놓는 무대
 - `scene-illustration`: 인물과 사건이 이미 결합된 완성 삽화
 
-`prop`은 별도 배치 기능이 확정될 때 추가한다. 현재 schema에 미리 넣지 않는다.
+`prop`은 분류·조회 모델에 포함한다. 실제 prop-layer 배치와 작품/Excel schema 변경은
+후속이다. 전체 AssetKind에는 poster/cover/thumbnail/reference를 별도로 포함한다.
+PlacementRole(character-slot/background-slot/prop-layer/none)은 의미상 종류와 분리한다.
+backgroundRole은 렌더링 정보이며 종류 분류의 기준이 아니다.
+
+Story Pack Registry는 작품 탐색·추천 컬렉션, Character Registry는 namespaced 인물 ID와
+대표 이미지를 관리한다. 다인물은 characterIds[]로 표현한다. 슬롯 제약(Constraint),
+사용자 복합 조건(Query), 결과 순서(Ranking)를 분리하며 탐색 View는 같은 Query를 공유한다.
 
 기존 `background + category=special` 자산은 audit으로 실제 background와
 scene-illustration을 구분한다. 기존 ID는 바꾸지 않는다.
@@ -478,21 +486,9 @@ Ranking은 Filter가 제외한 asset을 다시 결과에 넣지 않는다.
 
 정규 필드 값과 검색 alias를 분리한다.
 
-### 감정·상태 v2 초기값
-
-```text
-기본, 기쁨, 슬픔, 화남, 놀람, 걱정, 미안함, 결심, 피곤,
-의심, 생각, 아픔, 후회, 안도, 온화, 망설임, 조심, 회상
-```
-
-### 행동 v2 초기값
-
-```text
-말하기, 도망, 소품 들기, 제안, 명령, 부탁, 건네기, 일하기
-```
-
-`걷기`, `달리기`처럼 현재 catalog와 분류 규칙에 없는 값은 실제 자산이 생길 때
-추가한다.
+v2 canonical 감정·상태와 행동 목록은 `app/assets/manifests/vocabulary.ts`를 따른다.
+기존 regex는 전환기 검색 보조이며 정규 metadata의 SSOT가 아니다. 자산과 실제
+학생 과업이 확인될 때만 새 값을 추가한다.
 
 ### Alias 예
 
@@ -710,7 +706,7 @@ Audit은 전체 실패 개수뿐 아니라 Character별 Pair와 품질 현황을
 | Scene override를 기본 상속에 포함 | 1.0은 Chapter override까지 |
 | IndexedDB를 즉시 1.0 저장 기반으로 확정 | Repository 경계 후 측정하여 결정 |
 | 중첩 Boolean AST를 1.0 검색 기반으로 준비 | 실제 고급 과업이 생길 때 후속 도입 |
-| `prop` 타입을 미리 추가 | 별도 배치 기능이 확정될 때 추가 |
+| `prop` 자유 배치 | 분류 타입은 포함, 실제 배치와 저장 schema는 후속 |
 | 감정 Vocabulary에서 `후회` 누락 | v1 ADR·코드와 맞춰 포함 |
 | 실제 자산 없는 `걷기/달리기` 선반영 | catalog에 생길 때 추가 |
 | Character와 Asset에 StageProfile 중복 | Character 기본 + Asset별 보정으로 분리 |

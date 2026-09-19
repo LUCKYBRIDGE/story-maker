@@ -11,7 +11,7 @@ const sourceCandidates = [
 const sourceCommit = "cc9552b44b41d1be4e79244d35f0cfdb2e849610";
 const sourceRoot = sourceCandidates.find((candidate) => {
   try {
-    execFileSync("git", ["-C", candidate, "cat-file", "-e", `${sourceCommit}^{commit}`]);
+    execFileSync("git", ["-C", candidate, "cat-file", "-e", `${sourceCommit}^{commit}`], { stdio: "ignore" });
     return true;
   } catch {
     return false;
@@ -372,6 +372,8 @@ assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-as
 
 assets.push(...JSON.parse(await readFile(path.join(projectRoot, 'public/story-assets/seonnyeo-classic-manifest.json'), 'utf8')));
 
+assets.push(...JSON.parse(await readFile(path.join(projectRoot, "public/story-assets/heungbu-manifest.json"), "utf8")));
+
 // Keep the public title and legacy search alias stable when rebuilding the catalog.
 for (const asset of assets) {
   if (asset.story === "토끼와 자라") {
@@ -380,6 +382,13 @@ for (const asset of assets) {
   }
 }
 
+// Canonical v2 metadata is authored separately and must survive every catalog rebuild.
+const metadata = JSON.parse(await readFile(path.join(projectRoot, "app/assets/manifests/metadata.json"), "utf8"));
+const ids = new Set(assets.map(asset => asset.id));
+if (ids.size !== assets.length) throw new Error("Duplicate generated asset ID");
+for (const id of ids) if (!metadata[id]) throw new Error(`Missing v2 metadata: ${id}`);
+for (const id of Object.keys(metadata)) if (!ids.has(id)) throw new Error(`Orphan v2 metadata: ${id}`);
+
 const output = `// 이 파일은 scripts/generate-story-assets.mjs로 생성됩니다.
 // 원본: LUCKYBRIDGE/pinky-ne-site @ ${sourceCommit}
 
@@ -387,7 +396,7 @@ export type StoryAsset = {
   id: string;
   displayName: string;
   label: string;
-  story: "별주부전" | "토끼와 자라" | "옹고집전" | "선녀와 나무꾼";
+  story: "별주부전" | "토끼와 자라" | "옹고집전" | "선녀와 나무꾼" | "흥부와 놀부";
   type: "character" | "background";
   category: "character" | "background" | "special";
   group: string;
@@ -407,7 +416,14 @@ export const STORY_ASSET_SOURCE_COMMIT = "${sourceCommit}";
 export const STORY_ASSETS: StoryAsset[] = ${JSON.stringify(assets, null, 2)};
 `;
 
-await writeFile(path.join(projectRoot, "app/story-assets.ts"), output);
+if (process.argv.includes("--check")) {
+  const current = await readFile(path.join(projectRoot, "app/story-assets.ts"), "utf8");
+  const currentAssets = JSON.parse(current.split("export const STORY_ASSETS: StoryAsset[] = ")[1].trim().replace(/;$/, ""));
+  if (JSON.stringify(currentAssets) !== JSON.stringify(assets)) throw new Error("Generated catalog differs from checked-in catalog");
+  console.log("Catalog reproducible; canonical v2 metadata coverage complete.");
+} else {
+  await writeFile(path.join(projectRoot, "app/story-assets.ts"), output);
+}
 console.log(
   `Generated ${assets.length} assets (${assets.filter((item) => item.type === "character").length} characters, ${assets.filter((item) => item.type === "background").length} backgrounds).`,
 );

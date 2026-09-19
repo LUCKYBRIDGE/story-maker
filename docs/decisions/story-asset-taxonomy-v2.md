@@ -1,6 +1,6 @@
 # ADR — Story Asset Taxonomy v2
 
-- 상태: Accepted target architecture
+- 상태: Accepted / Asset Library 구현, 자유 소품 배치는 후속
 - 결정일: 2026-09-01
 - 대체 대상: `docs/decisions/story-asset-taxonomy-v1.md`
 - 관련 문서: `docs/architecture/storymaker-system-asset-architecture-master-plan.md`
@@ -22,7 +22,8 @@ StoryProject와 Excel을 바꾸지 않고 분류를 먼저 도입했다는 점�
 5. 품질 상태와 학생 Picker 노출 상태를 분리할 수 없다.
 6. 배경과 사건이 합성된 scene illustration을 명시적으로 구분하지 못한다.
 
-현재 카탈로그는 108개이며, 캐릭터 70개와 배경 38개로 구성된다. 이 규모에서는
+2026-09-01 당시 카탈로그는 108개였다. 2026-09-19 기준 248개이며, legacy 타입은
+캐릭터 164개와 background 84개다. background 수는 의미상 배경 수와 다르다. 이 규모에서는
 별도 검색 서버가 아니라 정규 metadata와 메모리 배열 검색이 적절하다.
 
 ## 결정
@@ -31,17 +32,24 @@ StoryProject와 Excel을 바꾸지 않고 분류를 먼저 도입했다는 점�
 
 - 기존 asset ID를 변경하지 않는다.
 - 현재 `StoryAsset`과 `tags` 검색을 목표 구조가 안정될 때까지 유지한다.
-- v2 metadata는 adapter 또는 정적 manifest로 먼저 추가한다.
+- v2 metadata의 SSOT는 `app/assets/manifests/metadata.json`, 캐릭터 등록부는 같은 폴더의 `characters.json`이다.
+- legacy catalog는 배치 호환 입력으로 유지하고 순수 adapter가 정규 metadata와 결합한다.
 - 이전 저장본과 Excel은 기존 ID로 계속 resolve한다.
-- generator가 v2 metadata를 직접 생성하기 전까지 분류 결과 fixture를 둔다.
+- generator는 정규 metadata의 누락/고아 ID를 검사하고 수동 metadata를 덮어쓰지 않는다.
+- 전수 legacy ID fixture와 `assets:metadata:audit`으로 호환과 연결을 검사한다.
 
-### 2. 활성 자산 타입을 세 종류로 구분한다
+### 2. 의미상 종류와 배치 슬롯을 분리한다
 
 ```ts
-type AssetType = "character" | "background" | "scene-illustration";
+type PickerAssetKind = "character" | "background" | "prop" | "scene-illustration";
+type AssetKind = PickerAssetKind | "poster" | "cover" | "thumbnail" | "reference";
+type AssetPlacementRole = "character-slot" | "background-slot" | "prop-layer" | "none";
 ```
 
-`prop`은 별도 배치 과업이 제품 범위로 확정될 때 추가한다.
+2026-09-19 검토 계획에 따라 `prop`은 분류·조회 모델에 포함한다. 실제 자유 배치와
+StoryProject/Excel schema 확장은 별도 후속 과업이다. 포스터 등 비편집 미디어는
+일반 Picker에서 숨기되 기존 ID 조회를 유지한다. `backgroundRole`로 종류를 추정하지
+않고 사건 삽화는 명시적 override로 구분한다.
 
 ### 3. 캐릭터 관계를 정규화한다
 
@@ -53,6 +61,9 @@ Character
   → Framing Asset
 ```
 
+- Character Registry는 작품별 namespace ID와 대표 이미지를 관리한다.
+- 다인물 자산은 `characterIds[]`와 선택적 `primaryCharacterId`로 표현한다.
+- 미매핑 캐릭터를 group 문자열로 정식 Entity처럼 생성하지 않는다.
 - 감정과 행동은 Variant가 아니다.
 - Variant는 어린 시절, 병든 상태와 의상 변화처럼 비교적 지속되는 외형이다.
 - 같은 표정·행동의 전신과 상반신은 같은 PoseSet에 속한다.
@@ -78,7 +89,10 @@ Character
 ```
 
 학생 UI에는 Boolean 용어를 노출하지 않는다. Filter는 결과 포함 여부를,
-Ranking은 포함된 결과의 순서만 결정한다.
+Ranking은 포함된 결과의 순서만 결정한다. 슬롯 호환 조건(Constraint), 사용자 조건
+(Query), 추천 문맥(Ranking)을 별도 모델로 유지한다. 종류별/캐릭터별/작품별은 같은
+Query를 공유하는 탐색 View이며, View 변경만으로 사용자 조건을 초기화하지 않는다.
+Story Pack Registry는 폴더가 아닌 탐색·추천 컬렉션이며 한 자산이 여러 작품에 속할 수 있다.
 
 ### 6. 1차 Facet만 먼저 도입한다
 
@@ -96,21 +110,10 @@ Ranking은 포함된 결과의 순서만 결정한다.
 
 ### 7. Vocabulary의 단일 기준을 사용한다
 
-감정·상태 초기값:
-
-```text
-기본, 기쁨, 슬픔, 화남, 놀람, 걱정, 미안함, 결심, 피곤,
-의심, 생각, 아픔, 후회, 안도, 온화, 망설임, 조심, 회상
-```
-
-행동 초기값:
-
-```text
-말하기, 도망, 소품 들기, 제안, 명령, 부탁, 건네기, 일하기
-```
-
-`걷기`, `달리기`처럼 현재 catalog에 없는 값은 자산과 과업이 생길 때 추가한다.
-Alias는 canonical 값과 별도로 관리한다.
+v2 canonical 값은 `app/assets/manifests/vocabulary.ts`에서 관리한다. 감정·상태와
+행동을 별도 타입으로 제한하며 기존 regex 분류는 정규 metadata의 근거로 사용하지
+않는다. Alias는 canonical 값과 별도로 관리한다. 새로운 값은 실제 자산과 학생
+과업이 확인될 때 추가한다.
 
 ### 8. Pair는 단계적으로 완성한다
 
@@ -158,6 +161,16 @@ type PickerVisibility = "primary" | "secondary" | "hidden";
 - 학생에게는 단순한 선택 UI를 제공하면서 내부 무결성을 높인다.
 - legacy 자산을 삭제하지 않고 새 Picker의 품질을 관리할 수 있다.
 - Story Pack을 추천 컨텍스트로 활용하면서 전역 검색을 유지할 수 있다.
+
+### 구현 경계
+
+- 일반 선택 창은 슬롯 호환 자료만 적용한다. 소품 둘러보기는 조회 전용이다.
+- 소품으로 분류된 구형 인물 슬롯 자산도 기존 작품에서는 원래 ID로 재생한다.
+- 일반 검색은 hidden/rejected/replace를 제외한다. 숨긴 즐겨찾기 ID는 삭제하지 않는다.
+- 기존 catalog의 품질 등급을 근거 없이 승인으로 승격하지 않는다. `legacy`는 품질 검수 이력이며
+  정규 metadata 매핑 여부와 별개다. 미확인 배경·화풍 값은 비워 둔다.
+- 다인물은 pair 예외, 대응 구도가 없는 단일 인물은 missing-full/missing-upper로 보고한다.
+  Pair 이미지 제작은 이번 분류 전환의 완료 조건이 아니다.
 
 ### 비용과 위험
 

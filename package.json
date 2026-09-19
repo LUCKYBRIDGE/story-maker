@@ -22,7 +22,9 @@
     "status:check": "node scripts/quick-status.mjs",
     "qa:smoke": "node tests/browser/run-smoke.mjs",
     "qa:classroom": "QA_SUITES=mobile-input,sheet-import node tests/browser/run-smoke.mjs",
-    "template:shortstory": "node --experimental-strip-types scripts/generate-shortstory-template.mjs"
+    "template:shortstory": "node --experimental-strip-types scripts/generate-shortstory-template.mjs",
+    "assets:metadata:audit": "node --experimental-strip-types --experimental-loader=./tests/node-types-loader.mjs scripts/audit-asset-library.mjs",
+    "qa:assets": "node tests/browser/asset-library.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
